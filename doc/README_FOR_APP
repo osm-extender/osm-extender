@@ -1,2 +1,12 @@
-Use this README file to introduce your application and point to useful places in the API for learning more.
-Run "rake doc:app" to generate API documentation for your models, controllers, helpers, and libraries.
+Section Management System
+=========================
+
+An application written by @robertgauld for the Aberdeen Scouts Active Support Unit.
+It is designed to allow easy management of any section within Scouting in the UK, although should require only minor tweaks to allow its use in other countries.
+
+Primerilly it was written to keep track of the things I personally hate tracking:
+* Who has earnt which badge
+* Who is due a joining in badge
+* Information for claiming Gift Aid
+* Information for census
+* How balanced my pack's programme is
