@@ -1,14 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Section Management System<%= ' - ' + yield(:title) if (yield(:title).length > 0) %></title>
+  <title><%= content_for?(:title) ? 'Section Management System - '+yield(:title) : 'Section Management System' %></title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <div id="page">
+    <div id="header">
+      <div id="primary_menu">
+        <div class="primary_menu_item"><%= link_to 'Home', root_url %></div>
+      </div><!-- primary_menu -->
 
+      <div id="banner">
+        <p style="font-weight: bolder; text-align: center;">BANNER GOES HERE</p>
+      </div><!-- banner -->
+
+      <div id="secondary_menu">
+        <% if @secondary_menu_items %>
+          <% @secondary_menu_items.each do |item| %>
+            <div class="secondary_menu_item"><%= link_to item[0], item[1] %></div>
+          <% end %>
+        <% end %>
+      </div><!-- secondary_menu -->
+
+      <% if flash %>
+        <div id="notices">
+        <% if flash[:error] %>
+            <div id="notices_error">
+              <%= flash[:error] %>
+            </div><!-- notices_error -->
+          <% end %>
+        <% if flash[:warning] %>
+            <div id="notices_warning">
+              <%= flash[:warning] %>
+            </div><!-- notices_warning -->
+          <% end %>
+          <% if flash[:error] %>
+            <div id="notices_notice">
+              <%= flash[:notice] %>
+            </div><!-- notices_notice -->
+          <% end %>
+        </div><!-- notices -->
+      <% end %>
+    </div><!-- header -->
+
+  
+    <div id="content">
 <%= yield %>
+    </div><!-- content -->
 
+
+  </div><!-- page -->
 </body>
 </html>
