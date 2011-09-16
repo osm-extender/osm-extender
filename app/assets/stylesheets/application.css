@@ -8,6 +8,7 @@
 
 *{margin:0px;}
 a{color:blue;}
+a:hover{color:green;}
 
 h1 {
     text-align:         center;
