@@ -15,9 +15,13 @@
           <div><%= link_to 'Help', root_url %></div>
         </div>
         <div id="primary_menu_user">
-          <div><%= link_to 'Sign up', root_url %></div>
-          <div><%= link_to 'My account', root_url %></div>
-          <div><%= link_to 'Sign in/out', root_url %></div>
+          <% if current_user %>
+            <div><%= link_to 'My account', root_url %></div>
+            <div><%= link_to 'Sign out', signout_path %></div>
+          <% else %>
+            <div><%= link_to 'Sign up', signup_path %></div>
+            <div><%= link_to 'Sign in', signin_path %></div>
+          <% end %>
         </div>
       </div><!-- primary_menu -->
 
@@ -69,6 +73,9 @@
 
   
     <div id="content">
+      <% if content_for?(:title) %>
+        <h1><%= yield(:title) %></h1>
+      <% end %>
 <%= yield %>
     </div><!-- content -->
 
