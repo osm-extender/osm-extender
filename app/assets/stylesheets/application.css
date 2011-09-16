@@ -27,11 +27,18 @@ h1 {
 #primary_menu {
     background-color:   #aaaaaa;
     padding:            10px;
+    height:             60px;
 }
-#primary_menu div {
+#primary_menu #nav {
+    float:              left;
+}
+#primary_menu #user {
+    float:              right;
+}
+#primary_menu div div {
     display:            inline-block;
 }
-#primary_menu div a {
+#primary_menu div div a {
     display:            table-cell;
     font-size:          large;
     text-align:         center;
@@ -47,7 +54,7 @@ h1 {
     text-decoration:    none;
     background:         #aaffaa;
 }
-#primary_menu div a:hover {
+#primary_menu div div a:hover {
     color:              #aaffaa;
     text-decoration:    underline;
     background:         black;
@@ -55,7 +62,6 @@ h1 {
 
 
 #banner {
-clear: both;
     background-color:   #cccccc;
     text-align:         center;
     height:             150px;
