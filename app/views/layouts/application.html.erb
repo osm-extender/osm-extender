@@ -25,6 +25,14 @@
         <% end %>
       </div><!-- secondary_menu -->
 
+      <div id="tertiary_menu">
+        <% if @tertiary_menu_items %>
+          <% @tertiary_menu_items.each do |item| %>
+            <div class="tertiary_menu_item"><%= link_to item[0], item[1] %></div>
+          <% end %>
+        <% end %>
+      </div><!-- tertiary_menu -->
+
       <% if flash %>
         <div id="notices">
         <% if flash[:error] %>

@@ -93,26 +93,38 @@ h1 {
     background:         black;
 }
 
+#tertiary_menu {
+    text-align:         center;
+}
+#tertiary_menu div.tertiary_menu_item {
+    display:            inline-block;
+    margin-left:        10px;
+    margin-right:       10px;
+    margin-top:         5px;
+}
+#tertiary_menu div.tertiary_menu_item a {
+    color:              blue;
+    text-decoration:    none;
+}
+#tertiary_menu div.tertiary_menu_item a:hover {
+    text-decoration:    underline;
+}
 
 #notices {
     padding:            5px;
     margin-left:        10%;
     margin-right:       30%;
 }
-
 #notices div {
     margin:             5px;
 }
-
 #notices_error {
     background-color:   #ff4444;
     font-weight:        bold;
 }
-
 #notices_warning {
     background-color:   #fff288;
 }
-
 #notices_notice {
     background-color:   #90f090;
 }
