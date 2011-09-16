@@ -53,10 +53,15 @@
               <%= flash[:warning] %>
             </div><!-- notices_warning -->
           <% end %>
-          <% if flash[:error] %>
+          <% if flash[:notice] %>
             <div id="notices_notice">
               <%= flash[:notice] %>
             </div><!-- notices_notice -->
+          <% end %>
+          <% if flash[:message] %>
+            <div id="notices_message">
+              <%= flash[:message] %>
+            </div><!-- notices_message -->
           <% end %>
         </div><!-- notices -->
       <% end %>
