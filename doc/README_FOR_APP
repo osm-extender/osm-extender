@@ -10,3 +10,10 @@ Primerilly it was written to keep track of the things I personally hate tracking
 * Information for claiming Gift Aid
 * Information for census
 * How balanced my pack's programme is
+
+
+Machine Specific COnfiguration
+==============================
+This system requires some setting up specific to the machine you are running it on.
+This configuration is stored in the config/machine.yml file, this is created by the setup script.
+
