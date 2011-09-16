@@ -27,12 +27,12 @@ h1 {
 #primary_menu {
     background-color:   #aaaaaa;
     padding:            10px;
-    height:             60px;
+    min-height:         60px;
 }
-#primary_menu #nav {
+#primary_menu_nav {
     float:              left;
 }
-#primary_menu #user {
+#primary_menu_user {
     float:              right;
 }
 #primary_menu div div {
