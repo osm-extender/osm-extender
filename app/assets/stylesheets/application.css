@@ -26,10 +26,10 @@ h1 {
     background-color:   #aaaaaa;
     padding:            10px;
 }
-#primary_menu div.primary_menu_item {
+#primary_menu div {
     display:            inline-block;
 }
-#primary_menu div.primary_menu_item a {
+#primary_menu div a {
     display:            table-cell;
     font-size:          large;
     text-align:         center;
@@ -45,7 +45,7 @@ h1 {
     text-decoration:    none;
     background:         #aaffaa;
 }
-#primary_menu div.primary_menu_item a:hover {
+#primary_menu div a:hover {
     color:              #aaffaa;
     text-decoration:    underline;
     background:         black;
@@ -53,6 +53,7 @@ h1 {
 
 
 #banner {
+clear: both;
     background-color:   #cccccc;
     text-align:         center;
     height:             150px;
@@ -68,10 +69,10 @@ h1 {
     padding:            10px;
     min-height:         40px;
 }
-#secondary_menu div.secondary_menu_item {
+#secondary_menu div {
     display:            inline-block;
 }
-#secondary_menu div.secondary_menu_item a {
+#secondary_menu div a {
     display:            table-cell;
     font-size:          large;
     text-align:         center;
@@ -87,7 +88,7 @@ h1 {
     text-decoration:    none;
     background:         #aaaaff;
 }
-#secondary_menu div.secondary_menu_item a:hover {
+#secondary_menu div a:hover {
     color:              #aaaaff;
     text-decoration:    underline;
     background:         black;
@@ -96,17 +97,17 @@ h1 {
 #tertiary_menu {
     text-align:         center;
 }
-#tertiary_menu div.tertiary_menu_item {
+#tertiary_menu div {
     display:            inline-block;
     margin-left:        10px;
     margin-right:       10px;
     margin-top:         5px;
 }
-#tertiary_menu div.tertiary_menu_item a {
+#tertiary_menu div a {
     color:              blue;
     text-decoration:    none;
 }
-#tertiary_menu div.tertiary_menu_item a:hover {
+#tertiary_menu div a:hover {
     text-decoration:    underline;
 }
 

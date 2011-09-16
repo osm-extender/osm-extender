@@ -10,7 +10,7 @@
   <div id="page">
     <div id="header">
       <div id="primary_menu">
-        <div class="primary_menu_item"><%= link_to 'Home', root_url %></div>
+        <div><%= link_to 'Home', root_url %></div>
       </div><!-- primary_menu -->
 
       <div id="banner">
@@ -20,7 +20,7 @@
       <div id="secondary_menu">
         <% if @secondary_menu_items %>
           <% @secondary_menu_items.each do |item| %>
-            <div class="secondary_menu_item"><%= link_to item[0], item[1] %></div>
+            <div><%= link_to item[0], item[1] %></div>
           <% end %>
         <% end %>
       </div><!-- secondary_menu -->
@@ -28,7 +28,7 @@
       <div id="tertiary_menu">
         <% if @tertiary_menu_items %>
           <% @tertiary_menu_items.each do |item| %>
-            <div class="tertiary_menu_item"><%= link_to item[0], item[1] %></div>
+            <div><%= link_to item[0], item[1] %></div>
           <% end %>
         <% end %>
       </div><!-- tertiary_menu -->
