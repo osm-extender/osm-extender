@@ -1,0 +1,32 @@
+<% provide :title, 'Sign up' %>
+
+<%= form_for @user do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_messages">
+      <h2>The following errors occured:</h2>
+      <ul>
+        <% for message in @user.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :name%>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :email_address %>
+    <%= f.text_field :email_address %>
+  </div>
+  <div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+  <div class="actions"><%= f.submit 'Sign up' %></div>
+<% end %>
+

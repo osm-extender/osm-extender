@@ -4,6 +4,10 @@ gem 'rails', '3.1.0'
 
 gem 'sqlite3'
 
+gem 'sorcery'
+
+#gem 'composite_primary_keys'
+
 
 # Gems used only for assets and not required
 # in production environments by default.
