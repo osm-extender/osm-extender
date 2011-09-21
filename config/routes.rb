@@ -1,10 +1,18 @@
 SectionManagementSystem::Application.routes.draw do
-  get "welcome/index"
+
+  get 'welcome/index'
+  get 'my_page' => 'welcome#my_page', :as => 'my_page'
 
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
   get 'signup' => 'users#new', :as => 'signup'
   
+  get 'my_account' => 'my_account#show', :as => 'my_account'
+  get 'my_account/edit' => 'my_account#edit', :as => 'edit_my_account'
+  put 'my_account/update' => 'my_account#update', :as => 'update_my_account'
+  get 'my_account/edit_password' => 'my_account#edit_password', :as => 'change_my_password'
+  put 'my_account/update_password' => 'my_account#update_password', :as => 'update_my_password'
+
   match 'activate_account/:id' => 'users#activate_account', :as => 'activate_account'
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
 

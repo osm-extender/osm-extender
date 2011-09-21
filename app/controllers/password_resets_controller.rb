@@ -28,7 +28,7 @@ class PasswordResetsController < ApplicationController
         redirect_to root_path, :notice => 'Password sucessfully changed.'
       end
     else
-      render :action => :edit, :id=>@token
+      render :action => :edit
     end
   end
 end

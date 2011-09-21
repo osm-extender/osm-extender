@@ -1,0 +1,2 @@
+module MyAccountHelper
+end

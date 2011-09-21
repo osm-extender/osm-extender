@@ -16,7 +16,8 @@
         </div>
         <div id="primary_menu_user">
           <% if current_user %>
-            <div><%= link_to 'My account', root_url %></div>
+            <div><%= link_to 'My page', my_page_path %></div>
+            <div><%= link_to 'My account', my_account_path %></div>
             <div><%= link_to 'Sign out', signout_path %></div>
           <% else %>
             <div><%= link_to 'Sign up', signup_path %></div>
@@ -36,14 +37,6 @@
           <% end %>
         <% end %>
       </div><!-- secondary_menu -->
-
-      <div id="tertiary_menu">
-        <% if @tertiary_menu_items %>
-          <% @tertiary_menu_items.each do |item| %>
-            <div><%= link_to item[0], item[1] %></div>
-          <% end %>
-        <% end %>
-      </div><!-- tertiary_menu -->
 
       <% if flash %>
         <div id="notices">
@@ -76,6 +69,13 @@
       <% if content_for?(:title) %>
         <h1><%= yield(:title) %></h1>
       <% end %>
+      <div id="tertiary_menu">
+        <% if @tertiary_menu_items %>
+          <% @tertiary_menu_items.each do |item| %>
+            <div><%= link_to item[0], item[1] %></div>
+          <% end %>
+        <% end %>
+      </div><!-- tertiary_menu -->
 <%= yield %>
     </div><!-- content -->
 

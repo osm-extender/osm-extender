@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
   
   private
   def password_different_types?
+puts 'CHECK: password_different_types?'
     require_different_types = 2
     lower_case = password.gsub(/[^a-z]/, '').length
     upper_case = password.gsub(/[^A-Z]/, '').length
@@ -48,6 +49,7 @@ class User < ActiveRecord::Base
   end
   
   def password_not_email_address?
+puts 'CHECK: password_not_email_address?'
     if password.eql?(email_address)
       errors.add(:password, 'is not allowed to be your email address')
       return false

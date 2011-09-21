@@ -1,0 +1,13 @@
+<% provide :title, 'My Account' %>
+
+<h2>Personal Details</h2>
+
+<div class="field">
+  <%= label_tag :name %><br/>
+  <%= current_user.name %>
+</div>
+
+<div class="field">
+  <%= label_tag :email_address %><br/>
+  <%= current_user.email_address %>
+</div>
