@@ -16,12 +16,15 @@ class User < ActiveRecord::Base
   
   
   def change_password!(new_password, new_password_confirmation=new_password)
-    unless new_password.eql?(new_password_confirmation)
-      errors.add(:password_confirmation, 'does not match password')
+    if !new_password.eql?(new_password_confirmation)
+      errors.add(:password_confirmation, 'does not match')
       return false
 # TODO Also check password validations
+    elsif self.password.valid?
+      return super(new_password)
     else
-      super(new_password)
+      errors.add(:password, 'validation errors occured')
+      return false
     end
   end
 

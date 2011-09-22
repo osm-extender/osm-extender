@@ -19,18 +19,24 @@ class MyAccountController < ApplicationController
     end
   end
 
-  def edit_password
+  def change_password
     @user = current_user
   end
   
   def update_password
     @user = current_user
 
-    if true # TODO - Replace with code to try and change password
-      redirect_to my_account_path, notice: 'Sucessfully changed your password.'
+    if @user && login(@user.email_address, params[:current_password]) # TODO - replace with a check_password method
+      if @user.change_password!(params[:new_password], params[:new_password_confirmation])
+        redirect_to my_account_path, notice: 'Sucessfully changed your password.'
+      else
+        render :action => :change_password
+      end
     else
-      render :action => :edit_password
+      flash[:error] = 'Incorrect current password.'
+      render :action => :change_password
     end
+
   end
   
   private
