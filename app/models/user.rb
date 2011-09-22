@@ -27,12 +27,12 @@ class User < ActiveRecord::Base
   
   private
   def password_different_types?
-puts 'CHECK: password_different_types?'
     require_different_types = 2
-    lower_case = password.gsub(/[^a-z]/, '').length
-    upper_case = password.gsub(/[^A-Z]/, '').length
-    numeric = password.gsub(/[^0-9]/, '').length
-    other = password.length - (lower_case + upper_case + numeric)
+    pass = send(sorcery_config.password_attribute_name)
+    lower_case = pass.gsub(/[^a-z]/, '').length
+    upper_case = pass.gsub(/[^A-Z]/, '').length
+    numeric = pass.gsub(/[^0-9]/, '').length
+    other = pass.length - (lower_case + upper_case + numeric)
 
     types = (lower_case == 0) ? 0 : 1
     types += (upper_case == 0) ? 0 : 1
@@ -48,8 +48,7 @@ puts 'CHECK: password_different_types?'
   end
   
   def password_not_email_address?
-puts 'CHECK: password_not_email_address?'
-    if password.eql?(email_address)
+    if send(sorcery_config.password_attribute_name).eql?(email_address)
       errors.add(:password, 'is not allowed to be your email address')
       return false
     else
