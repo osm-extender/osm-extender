@@ -21,6 +21,7 @@ class UsersController < ApplicationController
   
   def activate_account
     user = User.load_from_activation_token(params[:id])
+
     if user && user.activate!
       flash[:notice] = 'Your account was successfully activated.'
       redirect_to signin_path
