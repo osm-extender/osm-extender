@@ -9,22 +9,18 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email_address
   validates_format_of :email_address, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :message => 'does not look like an email address'
   
-  validates_presence_of :password, :on=>:create
-  validates_confirmation_of :password, :on=>:create
-  validates_length_of :password, :minimum=>8, :on=>:create
-  validate :password_different_types?, :password_not_email_address?, :on=>:create
-  
-  
+  validates_presence_of :password, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+  validates_confirmation_of :password, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+  validates_length_of :password, :minimum=>8, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+  validate :password_different_types?, :password_not_email_address?, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+
+
   def change_password!(new_password, new_password_confirmation=new_password)
-    if !new_password.eql?(new_password_confirmation)
+    unless new_password.eql?(new_password_confirmation)
       errors.add(:password_confirmation, 'does not match')
       return false
-# TODO Also check password validations
-    elsif self.password.valid?
-      return super(new_password)
     else
-      errors.add(:password, 'validation errors occured')
-      return false
+      return super(new_password)
     end
   end
 

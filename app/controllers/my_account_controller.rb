@@ -26,7 +26,7 @@ class MyAccountController < ApplicationController
   def update_password
     @user = current_user
 
-    if @user && login(@user.email_address, params[:current_password]) # TODO - replace with a check_password method
+    if User.authenticate(@user.email_address, params[:current_password]) == @user
       if @user.change_password!(params[:new_password], params[:new_password_confirmation])
         redirect_to my_account_path, notice: 'Sucessfully changed your password.'
       else
