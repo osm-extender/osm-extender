@@ -39,9 +39,11 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl'
-  gem 'cucumber'
+  gem 'cucumber-rails'
   gem 'webrat'
+  gem 'database_cleaner'
 end
 
+gem 'simplecov', '>=0.3.8', :require=>false, :group=>:test
 
 gem 'therubyracer'

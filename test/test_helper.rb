@@ -1,3 +1,9 @@
+# Generate test coverage report
+require 'simplecov'
+SimpleCov.coverage_dir(File.join('tmp', 'coverage', 'unit'))
+SimpleCov.start 'rails'
+
+# Origonal top of file
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'

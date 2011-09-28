@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   
   private
   def not_authenticated
-    flash[:error] = 'You must be logged in to access this resource.'
+    flash[:error] = 'You must be signed in to access this resource.'
     redirect_to signin_path
   end
 

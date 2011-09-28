@@ -10,7 +10,7 @@ class UsersController < ApplicationController
     if @user.save
       user = login(params[:user][:email_address], params[:user][:password])
       if user
-        redirect_back_or_to root_url, :notice => 'Sucessfully signed up & signed in.'
+        redirect_back_or_to root_url, :notice => 'Your signup was successful, you are now signed in.'
       else
         redirect_to root_url, :notice => 'Your signup was successful.'
       end

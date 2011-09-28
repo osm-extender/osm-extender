@@ -13,7 +13,7 @@ class PasswordResetsController < ApplicationController
   def edit
     @token = params[:token]
     @user = User.load_from_reset_password_token(@token)
-    not_authenticated if !@user
+    redirect_to root_path if !@user
   end
 
   def update

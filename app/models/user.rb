@@ -1,3 +1,4 @@
+#TODO Check password does not contain name
 class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
@@ -9,18 +10,26 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email_address
   validates_format_of :email_address, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :message => 'does not look like an email address'
   
+  validates_presence_of :password, :on => :create
+  validates_confirmation_of :password, :on => :create
   validates_presence_of :password, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
-  validates_confirmation_of :password, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+  validates_presence_of :password, :on => :create
   validates_length_of :password, :minimum=>8, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
   validate :password_different_types?, :password_not_email_address?, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
 
 
   def change_password!(new_password, new_password_confirmation=new_password)
+    # TODO check validty of password
+    if new_password.empty?
+      errors.add(:password, "can't be blank")
+    end
     unless new_password.eql?(new_password_confirmation)
       errors.add(:password_confirmation, 'does not match')
-      return false
-    else
+    end
+    unless errors.any?
       return super(new_password)
+    else
+      return false
     end
   end
 
@@ -41,18 +50,12 @@ class User < ActiveRecord::Base
 
     if types < require_different_types
       errors.add(:password, "does not use at least #{require_different_types} different types of character, you used #{types}")
-      return false
-    else
-      return true
     end
   end
   
   def password_not_email_address?
-    if send(sorcery_config.password_attribute_name).eql?(email_address)
+    if send(sorcery_config.password_attribute_name).downcase.strip.eql?(email_address.downcase.strip)
       errors.add(:password, 'is not allowed to be your email address')
-      return false
-    else
-      return true
     end
   end
   
