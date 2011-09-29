@@ -1,6 +1,6 @@
 # Generate test coverage report
 require 'simplecov'
-SimpleCov.coverage_dir(File.join('tmp', 'coverage', 'unit'))
+SimpleCov.coverage_dir(File.join('tmp', 'coverage', 'rake'))
 SimpleCov.start 'rails'
 
 # Origonal top of file
