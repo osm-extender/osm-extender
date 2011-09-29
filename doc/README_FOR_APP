@@ -12,8 +12,13 @@ Primerilly it was written to keep track of the things I personally hate tracking
 * How balanced my pack's programme is
 
 
-Machine Specific COnfiguration
+Machine Specific Configuration
 ==============================
 This system requires some setting up specific to the machine you are running it on.
 This configuration is stored in the config/machine.yml file, this is created by the setup script.
 
+
+License
+=======
+I am still deciding which license to release the code under,
+until then if you wish to use this code you will need to gain my permission, which is easily done.
