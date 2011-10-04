@@ -41,6 +41,7 @@ group :development, :test do
   gem 'factory_girl'
   gem 'cucumber-rails'
   gem 'webrat'
+  gem 'email_spec'
   gem 'database_cleaner'
 end
 

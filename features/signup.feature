@@ -3,8 +3,13 @@ Feature: Sign up
     In order to use the site
     I want to be able to create an account
 
+    As a site administrator
+    In order to better support users
+    I want to know users have a valid email address
+
     Scenario: Signup
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -14,6 +19,12 @@ Feature: Sign up
         Then I should have 1 user
         And I should see "Your signup was successful"
 	And I should be on the root page
+        And "somebody@somewhere.com" should receive an email with subject /Activate Your Account/
+        When I open the email with subject /Activate Your Account/
+        When I click the first link in the email
+        Then I should see "Your account was successfully activated."
+	And I should be on the signin page
+        And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
 
     Scenario: Signup (no name)
         Given I have no users
@@ -119,22 +130,8 @@ Feature: Sign up
 	And I should be on the users page
 
 
-    Scenario: Activate Account
-        Given I have no users
-        And I have the following user records
-            | email_address     | password |
-            | alice@example.com | Alice%12 |
-        And "alice@example.com" has activate_account_token "abc123"
-        When I go to activate_account token="abc123"
-        Then I should see "Your account was successfully activated."
-	And I should be on the signin page
-
     Scenario: Activate Account (bad token)
         Given I have no users
-        And I have the following user records
-            | email_address     | password |
-            | alice@example.com | Alice%12 |
-        And "alice@example.com" has activate_account_token "abc123"
         When I go to activate_account token="123abc"
         Then I should see "We were unable to activate your account."
 	And I should be on the root page

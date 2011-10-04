@@ -59,4 +59,15 @@ class User < ActiveRecord::Base
     end
   end
   
+  public
+  # fix sorcery bug involving sqlite
+  def self.load_from_token(token, token_attr_name, token_expiration_date_attr)
+    return nil if token.blank?
+    user = User.find_by_sql("SELECT * from users WHERE trim(#{token_attr_name}) = '#{token}'").first
+    if !user.blank? && !user.send(token_expiration_date_attr).nil?
+      return Time.now.utc < user.send(token_expiration_date_attr) ? user : nil
+    end
+    user
+  end
+  
 end

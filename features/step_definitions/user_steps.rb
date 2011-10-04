@@ -1,8 +1,11 @@
-Given /^I have the following (.+) records?$/ do |factory, table|
-  table.hashes.each do |hash|
-    FactoryGirl.create(factory, hash)
+# Override handling of click_first_link_in_email to remove host name
+module EmailHelpers
+  def click_first_link_in_email(email = current_email)
+    link = links_in_email(email).first
+    visit '/' + link.match(/^(?:https?:\/\/[^\/]+)?\/(.+)$/)[1]
   end
 end
+
 
 Given /^"([^"]*)" has password_reset_token "([^"]*)"$/ do |email, reset_token|
   user = User.find_by_email_address(email)
@@ -11,20 +14,13 @@ Given /^"([^"]*)" has password_reset_token "([^"]*)"$/ do |email, reset_token|
   user.save!
 end
 
-Given /^"([^"]*)" has activate_account_token "([^"]*)"$/ do |email, activation_token|
-  user = User.find_by_email_address(email)
-  user.activation_token = activation_token
-  user.activation_token_expires_at = Time.now + 10.minutes
-  user.save!
-end
-
 Given /^I have no users$/ do
   User.delete_all
 end
 
-When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |username, password|
+When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |email, password|
   visit signin_url
-  fill_in 'Email address', :with => username
+  fill_in 'Email address', :with => email
   fill_in 'Password', :with => password
   click_button 'Sign in'
 end

@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   end
   
   def activate_account
-    user = User.load_from_activation_token(params[:id])
+    user = User.load_from_activation_token(params[:id].to_s)
 
     if user && user.activate!
       flash[:notice] = 'Your account was successfully activated.'
