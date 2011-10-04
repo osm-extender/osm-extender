@@ -23,6 +23,7 @@ Rails.application.config.sorcery.configure do |config|
   config.session_timeout = 30.minutes
   # config.session_timeout_from_last_action = false                   # use the last action as the beginning of 
                                                                       # session timeout.
+  config.session_timeout_from_last_action = true
   
   # -- http_basic_auth --
   # config.controller_to_realm_map = {"application" => "Application"} # What realm to display for which controller name.
