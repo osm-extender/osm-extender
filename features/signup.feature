@@ -13,8 +13,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "aB3$hj37"
-        And I fill in "Password confirmation" with "aB3$hj37"
+        And I fill in "Password" with "P@55word"
+        And I fill in "Password confirmation" with "P@55word"
         And I press "Sign up"
         Then I should have 1 user
         And I should see "Your signup was successful"
@@ -30,8 +30,8 @@ Feature: Sign up
         Given I have no users
         When I go to the signup page
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "aB3$hj37"
-        And I fill in "Password confirmation" with "aB3$hj37"
+        And I fill in "Password" with "P@55word"
+        And I fill in "Password confirmation" with "P@55word"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Name can't be blank"
@@ -87,6 +87,30 @@ Feature: Sign up
         And I should not see "Your signup was successful"
 	And I should be on the users page
 
+    Scenario: Signup (password is email address)
+        Given I have no users
+        When I go to the signup page
+        And I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "Password" with "somebody@somewhere.com"
+        And I fill in "Password confirmation" with "somebody@somewhere.comm"
+        And I press "Sign up"
+        Then I should have 0 users
+        And I should see "Password is not allowed to be your email address"
+	And I should be on the users page
+
+    Scenario: Signup (password contains part of name)
+        Given I have no users
+        When I go to the signup page
+        And I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "Password" with "Som890%^"
+        And I fill in "Password confirmation" with "Som890%^"
+        And I press "Sign up"
+        Then I should see "Password is not allowed to contain part of your name"
+	And I should be on the users page
+        And I should have 0 users
+
     Scenario: Signup (no email)
         Given I have no users
         When I go to the signup page
@@ -116,7 +140,7 @@ Feature: Sign up
         Given I have no users
         And I have the following user records
             | email_address     | password |
-            | alice@example.com | Alice%12 |
+            | alice@example.com | P@55word |
         And "alice@example.com" is an activated account
         When I go to the signup page
         And I fill in "Name" with "Somebody"

@@ -1,4 +1,3 @@
-#TODO Check password does not contain name
 class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
@@ -15,9 +14,8 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_confirmation_of :password, :on => :create
   validates_presence_of :password, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
-  validates_presence_of :password, :on => :create
   validates_length_of :password, :minimum=>8, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
-  validate :password_different_types?, :password_not_email_address?, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+  validate :password_different_types, :password_not_email_address, :password_not_name, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
 
 
   def change_password!(new_password, new_password_confirmation=new_password)
@@ -37,7 +35,8 @@ class User < ActiveRecord::Base
 
   
   private
-  def password_different_types?
+  # TODO make password_complexity - is length ^ alphabet_size > threshold ???
+  def password_different_types
     require_different_types = 2
     pass = send(sorcery_config.password_attribute_name)
     lower_case = pass.gsub(/[^a-z]/, '').length
@@ -55,9 +54,21 @@ class User < ActiveRecord::Base
     end
   end
   
-  def password_not_email_address?
+  def password_not_email_address
     if send(sorcery_config.password_attribute_name).downcase.strip.eql?(email_address.downcase.strip)
       errors.add(:password, 'is not allowed to be your email address')
+    end
+  end
+
+  def password_not_name
+    block_size = 2
+    name = self.name.downcase
+    pass = send(sorcery_config.password_attribute_name).downcase
+    for i in 0..(name.length - block_size)
+      find = name[i..(i+(block_size-1))]
+      if pass.include?(find)
+        errors.add(:password, 'is not allowed to contain part of your name')
+      end
     end
   end
 
