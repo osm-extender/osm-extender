@@ -12,6 +12,15 @@ Feature: Sign in
         Then I should see "Sucessfully signed in."
 	And I should be on the my_page page
 
+    Scenario: Signin (differing email case)
+        Given I have the following user records
+	    | email_address     | password |
+	    | alice@example.com | Alice%12 |
+        And "alice@example.com" is an activated account
+        When I signin as "ALICE@example.com" with password "Alice%12"
+        Then I should see "Sucessfully signed in."
+	And I should be on the my_page page
+
     Scenario: Signin (with redirect)
         Given I have the following user records
 	    | email_address     | password |

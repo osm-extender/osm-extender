@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   
   attr_accessible :name, :email_address, :password, :password_confirmation
 
+  before_save :email_is_lowercase
+
   validates_presence_of :name
 
   validates_presence_of :email_address
@@ -58,7 +60,11 @@ class User < ActiveRecord::Base
       errors.add(:password, 'is not allowed to be your email address')
     end
   end
-  
+
+  def email_is_lowercase
+    email_address.downcase!
+  end
+
   public
   # fix sorcery bug involving sqlite
   def self.load_from_token(token, token_attr_name, token_expiration_date_attr)
