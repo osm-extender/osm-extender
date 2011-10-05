@@ -49,7 +49,7 @@ Feature: Sign up
         And I should not see "Your signup was successful"
 	And I should be on the users page
 
-    Scenario: Signup (password too short)
+    Scenario: Signup (password too easy)
         Given I have no users
         When I go to the signup page
         And I fill in "Name" with "Somebody"
@@ -58,20 +58,7 @@ Feature: Sign up
         And I fill in "Password confirmation" with "a"
         And I press "Sign up"
         Then I should have 0 users
-        And I should see "Password is too short"
-        And I should not see "Your signup was successful"
-	And I should be on the users page
-
-    Scenario: Signup (password too easy)
-        Given I have no users
-        When I go to the signup page
-        And I fill in "Name" with "Somebody"
-        And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "aaaaaaaa"
-        And I fill in "Password confirmation" with "aaaaaaaa"
-        And I press "Sign up"
-        Then I should have 0 users
-        And I should see "Password does not use at least 2 different types of character"
+        And I should see "isn't complex enough"
         And I should not see "Your signup was successful"
 	And I should be on the users page
 

@@ -6,7 +6,7 @@ Feature: Sign out
     Scenario: Signout
         Given I have the following user records
 	    | email_address     | password |
-	    | alice@example.com | alice%12 |
+	    | alice@example.com | P@55word |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "alice%12"
         And I go to the signout page

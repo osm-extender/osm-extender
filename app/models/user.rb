@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_length_of :password, :minimum=>8, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
-  validate :password_different_types, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
+  validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
 
   def change_password!(new_password, new_password_confirmation=new_password)
@@ -32,29 +32,37 @@ class User < ActiveRecord::Base
 
   
   private
-  # TODO make password_complexity - is length ^ alphabet_size > threshold ???
-  def password_different_types
-    require_different_types = 2
+  # Use Steve Gibson's Password Haystacks logic to ensure password is sufficently secure
+  # https://www.grc.com/haystack.htm
+  # As of 5th October 2011, a haystack of 6 x 10^15 gives:
+  # * Online attack: 2 thousand centuries
+  # * Offline fast: 18 hours
+  # * Massive array: 1 minute
+  def password_complexity
+    minimum_haystack = 6 * (10**18)
     pass = send(sorcery_config.password_attribute_name)
-    lower_case = pass.gsub(/[^a-z]/, '').length
-    upper_case = pass.gsub(/[^A-Z]/, '').length
-    numeric = pass.gsub(/[^0-9]/, '').length
-    other = pass.length - (lower_case + upper_case + numeric)
 
-    types = (lower_case == 0) ? 0 : 1
-    types += (upper_case == 0) ? 0 : 1
-    types += (numeric == 0) ? 0 : 1
-    types += (other == 0) ? 0 : 1
+    alphabet_size = 0
+    alphabet_size += 26 if pass.gsub(/[^a-z]/, '').length > 0
+    alphabet_size += 26 if pass.gsub(/[^A-Z]/, '').length > 0
+    alphabet_size += 10 if pass.gsub(/[^0-9]/, '').length > 0
+    alphabet_size += 33 if pass.gsub(/[a-zA-Z0-9]/, '').length > 0
 
-    if types < require_different_types
-      errors.add(:password, "does not use at least #{require_different_types} different types of character, you used #{types}")
+    haystack_size = alphabet_size * (alphabet_size+1)**(pass.length-1)
+
+    if haystack_size < 6 * (10**15)
+      errors.add(:password, "isn't complex enough, try increasing its length or adding more types of character (upper case, lower case, numeric and symbol)")
     end
+
+    return haystack_size
   end
   
   def password_not_email_address
     if send(sorcery_config.password_attribute_name).downcase.strip.eql?(email_address.downcase.strip)
       errors.add(:password, 'is not allowed to be your email address')
+      return false
     end
+    return true
   end
 
   def password_not_name
@@ -65,8 +73,10 @@ class User < ActiveRecord::Base
       find = name[i..(i+(block_size-1))]
       if pass.include?(find)
         errors.add(:password, 'is not allowed to contain part of your name')
+        return false
       end
     end
+    return true
   end
 
   def email_is_lowercase

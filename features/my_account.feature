@@ -114,7 +114,7 @@ Feature: My Account
 	Then I should see "You must be signed in"
 	And I should be on the signin page
 
-    Scenario: Change Password (too short)
+    Scenario: Change Password (too easy)
         Given I have the following user records
 	    | email_address     | password |
 	    | alice@example.com | P@55word |
@@ -125,21 +125,7 @@ Feature: My Account
 	And I fill in "New password" with "a"
 	And I fill in "New password confirmation" with "a"
 	And I press "Change password"
-	Then I should see "Password is too short"
-	And I should be on the update_my_password page
-
-    Scenario: Change Password (too easy)
-        Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
-        And "alice@example.com" is an activated account
-        When I signin as "alice@example.com" with password "P@55word"
-        And I go to the change my password page
-	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "aaaaaaaa"
-	And I fill in "New password confirmation" with "aaaaaaaa"
-	And I press "Change password"
-	Then I should see "Password does not use at least 2 different types of character"
+	Then I should see "isn't complex enough"
 	And I should be on the update_my_password page
 
     Scenario: Change Password (no confirmation)

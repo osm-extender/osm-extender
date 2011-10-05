@@ -57,7 +57,7 @@ Feature: Forgotten Password
         Then I should see "Password can't be blank"
 	And I should be on "/password_resets/abc123"
 
-    Scenario: Reset Password (too short)
+    Scenario: Reset Password (too easy)
         Given I have the following user records
             | email_address     | password |
             | alice@example.com | P@55word |
@@ -67,20 +67,7 @@ Feature: Forgotten Password
         And I fill in "Password" with "a"
         And I fill in "Password confirmation" with "a"
         And I press "Reset password"
-        Then I should see "Password is too short"
-	And I should be on "/password_resets/abc123"
-
-    Scenario: Reset Password (too easy)
-        Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
-        And "alice@example.com" is an activated account
-        And "alice@example.com" has password_reset_token "abc123"
-        When I go to reset_password token="abc123"
-        And I fill in "Password" with "aaaaaaaa"
-        And I fill in "Password confirmation" with "aaaaaaaa"
-        And I press "Reset password"
-        Then I should see "Password does not use at least 2 different types of character"
+        Then I should see "isn't complex enough"
 	And I should be on "/password_resets/abc123"
 
     Scenario: Reset Password (no confirmation)
