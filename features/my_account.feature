@@ -152,7 +152,7 @@ Feature: My Account
 	And I fill in "Current password" with "P@55word"
 	And I fill in "New password" with "aA1&1234"
 	And I press "Change password"
-	Then I should see "Password confirmation does not match"
+	Then I should see "Password doesn't match confirmation"
 	And I should be on the update_my_password page
 
     Scenario: Change Password (incorrect confirmation)
@@ -166,7 +166,7 @@ Feature: My Account
 	And I fill in "New password" with "aA1&1234"
 	And I fill in "New password confirmation" with "abcdefgh"
 	And I press "Change password"
-	Then I should see "Password confirmation does not match"
+	Then I should see "Password doesn't match confirmation"
 	And I should be on the update_my_password page
 
     Scenario: Change Password (incorrect current password)

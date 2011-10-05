@@ -13,20 +13,17 @@ class User < ActiveRecord::Base
   
   validates_presence_of :password, :on => :create
   validates_confirmation_of :password, :on => :create
-  validates_presence_of :password, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
-  validates_length_of :password, :minimum=>8, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
-  validate :password_different_types, :password_not_email_address, :password_not_name, :if => Proc.new { |record| record.send(sorcery_config.password_attribute_name).present? }
+  validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
+  validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
+  validates_length_of :password, :minimum=>8, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
+  validate :password_different_types, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
 
   def change_password!(new_password, new_password_confirmation=new_password)
-    # TODO check validty of password
-    if new_password.empty?
-      errors.add(:password, "can't be blank")
-    end
-    unless new_password.eql?(new_password_confirmation)
-      errors.add(:password_confirmation, 'does not match')
-    end
-    unless errors.any?
+    self.password = new_password
+    self.password_confirmation = new_password_confirmation
+
+    if valid? && errors.none?
       return super(new_password)
     else
       return false
