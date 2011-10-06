@@ -1,5 +1,3 @@
-# TODO Send email on email address change (better in model?)
-
 class MyAccountController < ApplicationController
   before_filter :require_login
   before_filter :setup_tertiary_menu
