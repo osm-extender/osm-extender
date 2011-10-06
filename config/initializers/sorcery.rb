@@ -49,7 +49,7 @@ Rails.application.config.sorcery.configure do |config|
     # user.username_attribute_name = :username                                        # change default username
                                                                                       # attribute, for example, 
                                                                                       # to use :email as the login.
-    user.username_attribute_name = :email_address
+    user.username_attribute_names = [:email_address]
                                                                                       
     # user.password_attribute_name = :password                                        # change *virtual* password
                                                                                       # attribute, the one which is used

@@ -1,3 +1,6 @@
+# TODO Send email on locking of account (override lock! method??)
+# TODO Send email on email address change
+
 class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
