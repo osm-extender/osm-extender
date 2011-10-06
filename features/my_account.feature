@@ -8,9 +8,9 @@ Feature: My Account
 
     Scenario: View Details
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
-	    | bob@example.com   | P@55word |
+	    | email_address     |
+	    | alice@example.com |
+	    | bob@example.com   |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the my account page
@@ -26,9 +26,9 @@ Feature: My Account
 
     Scenario: Edit Details
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
-	    | bob@example.com   | P@55word |
+	    | email_address     |
+	    | alice@example.com |
+	    | bob@example.com   |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
@@ -47,8 +47,8 @@ Feature: My Account
 
     Scenario: Edit Details (blank email address)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
@@ -59,8 +59,8 @@ Feature: My Account
 
     Scenario: Edit Details (bad email address)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
@@ -71,9 +71,9 @@ Feature: My Account
 
     Scenario: Edit Details (existing email address)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
-	    | bob@example.com   | Bob%^123 |
+	    | email_address     |
+	    | alice@example.com |
+	    | bob@example.com   |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
@@ -84,8 +84,8 @@ Feature: My Account
 
     Scenario: Edit details (blank name)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
@@ -97,8 +97,8 @@ Feature: My Account
     
     Scenario: Change Password
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
@@ -116,8 +116,8 @@ Feature: My Account
 
     Scenario: Change Password (too easy)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
@@ -130,8 +130,8 @@ Feature: My Account
 
     Scenario: Change Password (no confirmation)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
@@ -143,8 +143,8 @@ Feature: My Account
 
     Scenario: Change Password (incorrect confirmation)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
@@ -157,8 +157,8 @@ Feature: My Account
 
     Scenario: Change Password (incorrect current password)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
@@ -171,8 +171,8 @@ Feature: My Account
 
     Scenario: Change Password (password is email address)
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
@@ -185,8 +185,8 @@ Feature: My Account
 
     Scenario: Change Password (password contains part of name)
         Given I have the following user records
-	    | email_address     | password | name  |
-	    | alice@example.com | P@55word | Alice |
+	    | email_address     | name  |
+	    | alice@example.com | Alice |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page

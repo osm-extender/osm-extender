@@ -5,8 +5,8 @@ Feature: Sign out
 
     Scenario: Signout
         Given I have the following user records
-	    | email_address     | password |
-	    | alice@example.com | P@55word |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated account
         When I signin as "alice@example.com" with password "alice%12"
         And I go to the signout page

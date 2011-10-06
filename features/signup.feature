@@ -126,8 +126,8 @@ Feature: Sign up
     Scenario: Signup (duplicated email)
         Given I have no users
         And I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         When I go to the signup page
         And I fill in "Name" with "Somebody"

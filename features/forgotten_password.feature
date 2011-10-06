@@ -5,8 +5,8 @@ Feature: Forgotten Password
 
     Scenario: Forgotten Password
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And I go to the signin page
         When I follow "Forgotten your password?"
@@ -26,8 +26,8 @@ Feature: Forgotten Password
 
     Scenario: Forgotten Password (bad email address)
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And I go to the signin page
         When I follow "Forgotten your password?"
@@ -39,8 +39,8 @@ Feature: Forgotten Password
 
     Scenario: Reset Password (bad token)
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="123abc"
@@ -48,8 +48,8 @@ Feature: Forgotten Password
 
     Scenario: Reset Password (no password)
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
@@ -59,8 +59,8 @@ Feature: Forgotten Password
 
     Scenario: Reset Password (too easy)
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
@@ -72,8 +72,8 @@ Feature: Forgotten Password
 
     Scenario: Reset Password (no confirmation)
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
@@ -84,8 +84,8 @@ Feature: Forgotten Password
 
     Scenario: Reset Password (password is email address)
         Given I have the following user records
-            | email_address     | password |
-            | alice@example.com | P@55word |
+            | email_address     |
+            | alice@example.com |
         And "alice@example.com" is an activated account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
@@ -97,8 +97,8 @@ Feature: Forgotten Password
 
     Scenario: Reset Password (password contains part of name)
         Given I have the following user records
-            | email_address     | password | name  |
-            | alice@example.com | P@55word | Alice |
+            | email_address     | name  |
+            | alice@example.com | Alice |
         And "alice@example.com" is an activated account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
