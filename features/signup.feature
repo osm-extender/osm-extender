@@ -128,7 +128,7 @@ Feature: Sign up
         And I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "alice@example.com"

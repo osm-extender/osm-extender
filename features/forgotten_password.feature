@@ -7,7 +7,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And I go to the signin page
         When I follow "Forgotten your password?"
         And I fill in "Email address" with "alice@example.com"
@@ -28,7 +28,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And I go to the signin page
         When I follow "Forgotten your password?"
         And I fill in "Email address" with "bob@example.com"
@@ -41,7 +41,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="123abc"
 	And I should be on the root page
@@ -50,7 +50,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
         And I press "Reset password"
@@ -61,7 +61,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
         And I fill in "Password" with "a"
@@ -74,7 +74,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
         And I fill in "Password" with "P@55word"
@@ -86,7 +86,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
         And I fill in "Password" with "alice@example.com"
@@ -99,7 +99,7 @@ Feature: Forgotten Password
         Given I have the following user records
             | email_address     | name  |
             | alice@example.com | Alice |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         And "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
         And I fill in "Password" with "ali%%12HJ"

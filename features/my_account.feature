@@ -11,7 +11,7 @@ Feature: My Account
 	    | email_address     |
 	    | alice@example.com |
 	    | bob@example.com   |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the my account page
         Then I should see "alice@example.com"
@@ -29,7 +29,7 @@ Feature: My Account
 	    | email_address     |
 	    | alice@example.com |
 	    | bob@example.com   |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "alice2@example.com"
@@ -49,7 +49,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with ""
@@ -61,7 +61,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "a"
@@ -74,7 +74,7 @@ Feature: My Account
 	    | email_address     |
 	    | alice@example.com |
 	    | bob@example.com   |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "bob@example.com"
@@ -86,7 +86,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Name" with ""
@@ -99,7 +99,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -118,7 +118,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -132,7 +132,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -145,7 +145,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -159,7 +159,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "wrong password"
@@ -173,7 +173,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -187,7 +187,7 @@ Feature: My Account
         Given I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"

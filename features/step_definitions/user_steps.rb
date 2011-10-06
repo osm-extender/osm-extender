@@ -25,7 +25,7 @@ When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |email, password|
   click_button 'Sign in'
 end
 
-When /^"([^"]*)" is an activated account$/ do |email|
+When /^"([^"]*)" is an activated user account$/ do |email|
     user = User.find_by_email_address(email)
     user.activate!
 end

@@ -7,7 +7,7 @@ Feature: Sign out
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "alice%12"
         And I go to the signout page
         Then I should see "Sucessfully signed out."

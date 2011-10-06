@@ -7,7 +7,7 @@ Feature: Sign in
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "Sucessfully signed in."
 	And I should be on the my_page page
@@ -16,7 +16,7 @@ Feature: Sign in
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "ALICE@example.com" with password "P@55word"
         Then I should see "Sucessfully signed in."
 	And I should be on the my_page page
@@ -25,7 +25,7 @@ Feature: Sign in
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
 	And I am on the my_account page
         When I fill in "Email address" with "alice@example.com"
 	And I fill in "Password" with "P@55word"
@@ -37,7 +37,7 @@ Feature: Sign in
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."
 	And I should be on the sessions page
@@ -46,7 +46,7 @@ Feature: Sign in
         Given I have the following user records
 	    | email_address     |
 	    | alice@example.com |
-        And "alice@example.com" is an activated account
+        And "alice@example.com" is an activated user account
         When I signin as "wr@ng.com" with password "P@55word"
         Then I should see "Email address or password was invalid."
 	And I should be on the sessions page
