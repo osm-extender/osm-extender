@@ -9,9 +9,20 @@ Feature: Sign in
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
 	And no emails have been sent
+	And I go to the root page
+	Then I should see "Sign in"
+	And I should see "Sign up"
+	And I should not see "My account"
+	And I should not see "My page"
+	And I should not see "Sign out"
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "Sucessfully signed in."
 	And I should be on the my_page page
+	And I should see "My account"
+	And I should see "My page"
+	And I should see "Sign out"
+	And I should not see "Sign in"
+	And I should not see "Sign up"
 	And "alice@example.com" should receive no email with subject /Account Locked/
 
     Scenario: Signin (differing email case)
