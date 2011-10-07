@@ -28,6 +28,7 @@ Feature: Sign up
 
     Scenario: Signup (no name)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "Password" with "P@55word"
@@ -37,9 +38,11 @@ Feature: Sign up
         And I should see "Name can't be blank"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no password)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -48,9 +51,11 @@ Feature: Sign up
         And I should see "Password can't be blank"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password too easy)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -61,9 +66,11 @@ Feature: Sign up
         And I should see "isn't complex enough"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no password confirmation)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -73,9 +80,11 @@ Feature: Sign up
         And I should see "Password doesn't match confirmation"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password is email address)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -85,9 +94,11 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "Password is not allowed to be your email address"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password contains part of name)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -97,9 +108,11 @@ Feature: Sign up
         Then I should see "Password is not allowed to contain part of your name"
 	And I should be on the users page
         And I should have 0 users
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no email)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Password" with "aB3$hj37"
@@ -109,9 +122,11 @@ Feature: Sign up
         And I should see "Email address can't be blank"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (invalid email)
         Given I have no users
+        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "a"
@@ -122,9 +137,11 @@ Feature: Sign up
         And I should see "Email address does not look like an email address"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (duplicated email)
         Given I have no users
+        And no emails have been sent
         And I have the following user records
             | email_address     |
             | alice@example.com |
@@ -139,6 +156,7 @@ Feature: Sign up
         And I should see "Email address has already been taken"
         And I should not see "Your signup was successful"
 	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
 
     Scenario: Activate Account (bad token)

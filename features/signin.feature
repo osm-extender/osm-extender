@@ -8,9 +8,11 @@ Feature: Sign in
 	    | email_address     |
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
+	And no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "Sucessfully signed in."
 	And I should be on the my_page page
+	And "alice@example.com" should receive no email with subject /Account Locked/
 
     Scenario: Signin (differing email case)
         Given I have the following user records
