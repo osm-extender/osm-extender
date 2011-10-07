@@ -44,6 +44,14 @@ class UserMailer < ActionMailer::Base
     })
   end
 
+  def account_locked(user)
+    @user = user
+    mail ({
+      :subject => build_subject('Account Locked'),
+      :to => build_email_address
+    })
+  end
+
 
   private
   def build_subject(subject)

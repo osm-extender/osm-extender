@@ -65,6 +65,7 @@ Feature: Sign in
 	    | email_address     |
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
+	And no emails have been sent
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."
         When I signin as "alice@example.com" with password "wrong"
@@ -72,6 +73,7 @@ Feature: Sign in
         When I signin as "alice@example.com" with password "wrong"
         Then "alice@example.com" should be a locked user account
 	And I should see "The account was locked."
+	And "alice@example.com" should receive an email with subject /Account Locked/
 
     Scenario: User should be unlocked after timeout
         Given I have the following user records

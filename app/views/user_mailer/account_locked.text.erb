@@ -1,0 +1,5 @@
+<%= @user.name %> your account has been locked due to #{@user.failed_logins_count} consecutive failed logins.
+The lock will expire at #{@user.lock_expires_at.strftime('%l:%M %p on %d %b %Y').strip} UTC.
+
+Have a great day!
+<%= render 'unexpected_security' %>
