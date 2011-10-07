@@ -27,7 +27,12 @@ class User < ActiveRecord::Base
     self.password_confirmation = new_password_confirmation
 
     if valid? && errors.none?
-      return super(new_password)
+      if super(new_password)
+        UserMailer.password_changed(self).deliver
+        return true
+      else
+        return false
+      end
     else
       return false
     end

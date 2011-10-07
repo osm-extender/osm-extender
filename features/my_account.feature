@@ -108,6 +108,7 @@ Feature: My Account
 	And I press "Change password"
 	Then I should see "Sucessfully changed your password."
 	And I should be on the my_account page
+        And "alice@example.com" should receive an email with subject /Password Changed/
 
     Scenario: Change Password (not signed in)
 	When I go to the change my password page

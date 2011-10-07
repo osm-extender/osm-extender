@@ -17,4 +17,10 @@ class UserMailer < ActionMailer::Base
     @url  = "http://127.0.0.1:3000/reset_password/#{user.reset_password_token}"
     mail :subject => 'Section Management System - Password Reset', :to => user.send_to_email_address
   end
+
+  def password_changed(user)
+    @user = user
+    mail :subject => 'Section Management System - Password Changed', :to => user.send_to_email_address
+  end
+
 end
