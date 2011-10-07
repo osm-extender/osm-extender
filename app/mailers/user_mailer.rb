@@ -23,4 +23,14 @@ class UserMailer < ActionMailer::Base
     mail :subject => 'Section Management System - Password Changed', :to => user.send_to_email_address
   end
 
+  def email_address_changed(user)
+    @user = user
+    @new_email_address = user.email_address_change[1]
+puts @new_email_address
+    mail ({
+      :subject => 'Section Management System - Email Address Changed',
+      :to => "\"#{user.name}\" <#{user.email_address_change[0]}>"
+    })
+  end
+
 end

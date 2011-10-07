@@ -39,6 +39,9 @@ Feature: My Account
 	And I should see "alice2@example.com"
 	And I should see "Alice2"
 	And I should be on the my_account page
+        And "alice@example.com" should receive an email with subject /Email Address Changed/
+	When I open the email
+	Then I should see "alice2@example.com"
 
     Scenario: Edit Details (not signed in)
 	When I go to the edit my account page

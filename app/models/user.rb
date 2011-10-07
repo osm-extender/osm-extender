@@ -1,12 +1,11 @@
 # TODO Send email on locking of account (override lock! method??)
-# TODO Send email on email address change
 
 class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
   attr_accessible :name, :email_address, :password, :password_confirmation
 
-  before_save :email_is_lowercase
+  before_save :email_is_lowercase, :send_email_if_email_changed
 
   validates_presence_of :name
 
@@ -93,6 +92,12 @@ class User < ActiveRecord::Base
 
   def email_is_lowercase
     email_address.downcase!
+  end
+
+  def send_email_if_email_changed
+    if email_address_changed? && !new_record?
+      UserMailer.email_address_changed(self).deliver
+    end
   end
 
   public
