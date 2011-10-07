@@ -37,10 +37,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def send_to_email_address
-    return "\"#{self.name}\" <#{self.email_address}>"
-  end
-
   
   private
   # Use Steve Gibson's Password Haystacks logic to ensure password is sufficently secure
