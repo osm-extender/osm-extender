@@ -17,7 +17,6 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, :on => :create
   validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
-  validates_length_of :password, :minimum=>8, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
 
