@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   validates_presence_of :name
 
   validates_presence_of :email_address
-  validates_uniqueness_of :email_address
+  validates_uniqueness_of :email_address  # TODO - Make case insensitive (or convert email_address to lowercase for comparrison)
   validates_format_of :email_address, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :message => 'does not look like an email address'
   
   validates_presence_of :password, :on => :create
