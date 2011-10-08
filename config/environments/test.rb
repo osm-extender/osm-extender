@@ -41,5 +41,5 @@ SectionManagementSystem::Application.configure do
   config.assets.allow_debugging = true
 
   # Root URL of application (used in sending emails)
-  config.root_url = ''
+  config.root_url = 'http://test'
 end

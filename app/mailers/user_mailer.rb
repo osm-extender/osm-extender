@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "website@aberdeen-sas.org.uk"
+  default from: "\"Section Management System\" <section-management-system@aberdeen-sas.org.uk>"
 
   def activation_needed(user)
     @user = user
