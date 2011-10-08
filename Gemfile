@@ -4,12 +4,13 @@ gem 'rails', '3.1.0'
 
 gem 'rack', '1.3.3'
 
-gem 'sqlite3'
-
 gem 'sorcery'
 
-#gem 'composite_primary_keys'
+gem 'therubyracer'
 
+gem 'jquery-rails'
+
+#gem 'composite_primary_keys'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -19,23 +20,11 @@ group :assets do
   gem 'uglifier'
 end
 
-
-gem 'jquery-rails'
-
-# Use unicorn as the web server
-# gem 'unicorn'
-
 # Deploy with Capistrano
 # gem 'capistrano'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
-
-
-group :test do
-  # Pretty printed test output
-  gem 'turn', :require => false
-end
 
 
 group :development, :test do
@@ -45,8 +34,25 @@ group :development, :test do
   gem 'webrat'
   gem 'email_spec'
   gem 'database_cleaner'
+  gem 'sqlite3'
 end
 
-gem 'simplecov', '>=0.3.8', :require=>false, :group=>:test
 
-gem 'therubyracer'
+group :test do
+  # Test coverage reports
+  gem 'simplecov', '>=0.3.8', :require=>false
+
+  # Pretty printed test output
+  gem 'turn', :require => false
+end
+
+
+group :staging do
+  gem 'activerecord-postgresql-adapter'
+end
+
+
+group :production do
+  # Use unicorn as the web server
+  # gem 'unicorn'
+end
