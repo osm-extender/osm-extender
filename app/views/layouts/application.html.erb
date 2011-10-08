@@ -31,50 +31,50 @@
       </div><!-- banner -->
 
       <div id="secondary_menu">
-        <% if @secondary_menu_items %>
-          <% @secondary_menu_items.each do |item| %>
+        <%- if @secondary_menu_items %>
+          <%- @secondary_menu_items.each do |item| %>
             <div><%= link_to item[0], item[1] %></div>
-          <% end %>
-        <% end %>
+          <%- end %>
+        <%- end %>
       </div><!-- secondary_menu -->
 
-      <% if flash %>
+      <%- if flash %>
         <div id="notices">
-        <% if flash[:error] %>
+        <%- if flash[:error] %>
             <div id="notices_error">
               <%= flash[:error] %>
             </div><!-- notices_error -->
-          <% end %>
-        <% if flash[:warning] %>
+          <%- end %>
+        <%- if flash[:warning] %>
             <div id="notices_warning">
               <%= flash[:warning] %>
             </div><!-- notices_warning -->
-          <% end %>
-          <% if flash[:notice] %>
+          <%- end %>
+          <%- if flash[:notice] %>
             <div id="notices_notice">
               <%= flash[:notice] %>
             </div><!-- notices_notice -->
-          <% end %>
-          <% if flash[:message] %>
+          <%- end %>
+          <%- if flash[:message] %>
             <div id="notices_message">
               <%= flash[:message] %>
             </div><!-- notices_message -->
-          <% end %>
-        </div><!-- notices -->
-      <% end %>
+          <%- end %>
+        </div><!-- notices --> 
+      <%- end %>
     </div><!-- header -->
 
   
     <div id="content">
-      <% if content_for?(:title) %>
+      <%- if content_for?(:title) %>
         <h1><%= yield(:title) %></h1>
-      <% end %>
+      <%- end %>
       <div id="tertiary_menu">
-        <% if @tertiary_menu_items %>
-          <% @tertiary_menu_items.each do |item| %>
+        <%- if @tertiary_menu_items %>
+          <%- @tertiary_menu_items.each do |item| %>
             <div><%= link_to item[0], item[1] %></div>
-          <% end %>
-        <% end %>
+          <%- end %>
+        <%- end %>
       </div><!-- tertiary_menu -->
 <%= yield %>
     </div><!-- content -->
