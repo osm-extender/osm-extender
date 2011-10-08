@@ -57,4 +57,7 @@ SectionManagementSystem::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # Root URL of application (used in sending emails)
+  config.root_url = ''
 end

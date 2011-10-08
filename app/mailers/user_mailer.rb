@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
   def activation_needed(user)
     @user = user
-    @url  = "http://127.0.0.1:3000/activate_account/#{user.activation_token}"
+    @url  = build_url("/activate_account/#{user.activation_token}"
     mail ({
       :subject => build_subject('Activate Your Account'),
       :to => build_email_address
@@ -20,7 +20,7 @@ class UserMailer < ActionMailer::Base
 
   def reset_password(user)
     @user = user
-    @url  = "http://127.0.0.1:3000/reset_password/#{user.reset_password_token}"
+    @url  = build_url("/reset_password/#{user.reset_password_token}"
     mail ({
       :subject => build_subject('Password Reset'),
       :to => build_email_address
@@ -56,12 +56,16 @@ class UserMailer < ActionMailer::Base
   private
   def build_subject(subject)
     start = 'Section Management System'
-    start += ' (DEVELOPMENT)' if Rails.env.development?
+    start += " (#{Rails.env.upcase})" unless Rails.env.production?
     return "#{start} - #{subject}"
   end
 
   def build_email_address(address=@user.email_address)
     return "\"#{@user.name}\" <#{address}>"
+  end
+
+  def build_url(path)
+    return Rails.configuration.root_url.to_s + path
   end
 
 end

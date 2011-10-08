@@ -11,4 +11,7 @@ SectionManagementSystem::Application.configure do
   config.assets.debug = true
 
   config.log_level = :debug
+
+  # Root URL of application (used in sending emails)
+  config.root_url = 'http://blazing-mountain-6567.heroku.com/'
 end

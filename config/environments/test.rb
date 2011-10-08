@@ -39,4 +39,7 @@ SectionManagementSystem::Application.configure do
 
   # Allow pass debug_assets=true as a query parameter to load pages with unpackaged assets
   config.assets.allow_debugging = true
+
+  # Root URL of application (used in sending emails)
+  config.root_url = ''
 end

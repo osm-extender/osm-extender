@@ -14,5 +14,5 @@ if File.exists?(File.join(Rails.root, 'config', 'machine.yml'))
   }
 end
 
-ActionMailer::Base.default_url_options[:host] = 'localhost:3000'
+ActionMailer::Base.default_url_options[:host] = Rails.configuration.root_url
 ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
