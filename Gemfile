@@ -48,7 +48,7 @@ end
 
 
 group :staging do
-  gem 'activerecord-postgresql-adapter'
+  gem 'pg'
 end
 
 
