@@ -8,11 +8,9 @@ class User < ActiveRecord::Base
   validates_presence_of :name
 
   validates_presence_of :email_address
-  validates_uniqueness_of :email_address  # TODO - Make case insensitive (or convert email_address to lowercase for comparrison)
+  validate :email_is_unique
   validates_format_of :email_address, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :message => 'does not look like an email address'
-  
-  validates_presence_of :password, :on => :create
-  validates_confirmation_of :password, :on => :create
+
   validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
@@ -81,6 +79,14 @@ class User < ActiveRecord::Base
       end
     end
     return true
+  end
+
+  def email_is_unique
+    # Required as 'apple' and 'AppLE' are seen as different
+    user_with_email_address = User.find_by_email_address(self.email_address.downcase)
+    unless user_with_email_address.nil?  ||  user_with_email_address == self
+      errors.add(:email_address, 'has already been taken')
+    end
   end
 
   def email_is_lowercase
