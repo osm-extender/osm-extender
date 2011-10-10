@@ -3,7 +3,8 @@ class User < ActiveRecord::Base
   
   attr_accessible :name, :email_address, :password, :password_confirmation
 
-  before_save :email_is_lowercase, :send_email_on_attribute_changes
+  before_save :email_is_lowercase
+  after_save :send_email_on_attribute_changes
 
   validates_presence_of :name
 
