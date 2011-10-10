@@ -10,8 +10,12 @@ SectionManagementSystem::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  # Set log level
   config.log_level = :debug
 
   # Root URL of application (used in sending emails)
   config.root_url = 'http://blazing-mountain-6567.heroku.com'
+  
+  # Force SSL for everything
+  config.force_ssl = true
 end
