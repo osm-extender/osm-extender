@@ -7,9 +7,13 @@ Feature: Sign up
     In order to better support users
     I want to know users have a valid email address
 
-    Scenario: Signup
+
+    Background:
         Given I have no users
         And no emails have been sent
+
+
+    Scenario: Signup
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -27,8 +31,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
 
     Scenario: Signup (no name)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "Password" with "P@55word"
@@ -41,8 +43,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no password)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -54,8 +54,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password too easy)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -69,8 +67,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no password confirmation)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -83,8 +79,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password is email address)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -97,8 +91,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password contains part of name)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -111,8 +103,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no email)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Password" with "aB3$hj37"
@@ -125,8 +115,6 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (invalid email)
-        Given I have no users
-        And no emails have been sent
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "a"
@@ -140,9 +128,7 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (duplicated email)
-        Given I have no users
-        And no emails have been sent
-        And I have the following user records
+        Given I have the following user records
             | email_address     |
             | alice@example.com |
         And "alice@example.com" is an activated user account

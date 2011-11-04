@@ -5,13 +5,15 @@ Feature: My Account
     And know that no one else can edit it
     And know that no one else can view it
 
+    Background:
+        Given I have the following user records
+	    | email_address     | name  |
+	    | alice@example.com | Alice |
+	    | bob@example.com   | Bob   |
+        And "alice@example.com" is an activated user account
+
 
     Scenario: View Details
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-	    | bob@example.com   |
-        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the my account page
         Then I should see "alice@example.com"
@@ -25,12 +27,7 @@ Feature: My Account
 
 
     Scenario: Edit Details
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-	    | bob@example.com   |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "alice2@example.com"
@@ -51,11 +48,7 @@ Feature: My Account
 	And I should be on the signin page
 
     Scenario: Edit Details (blank email address)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with ""
@@ -65,11 +58,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Email Address Changed/
 
     Scenario: Edit Details (bad email address)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "a"
@@ -79,12 +68,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Email Address Changed/
 
     Scenario: Edit Details (existing email address)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-	    | bob@example.com   |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "bob@example.com"
@@ -94,11 +78,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Email Address Changed/
 
     Scenario: Edit details (blank name)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Name" with ""
@@ -109,11 +89,7 @@ Feature: My Account
 
     
     Scenario: Change Password
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -130,11 +106,7 @@ Feature: My Account
 	And I should be on the signin page
 
     Scenario: Change Password (too easy)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -146,11 +118,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (no confirmation)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -161,11 +129,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (incorrect confirmation)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -177,11 +141,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (incorrect current password)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "wrong password"
@@ -193,11 +153,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (password is email address)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -209,11 +165,7 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (password contains part of name)
-        Given I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
-        And "alice@example.com" is an activated user account
-        And no emails have been sent
+        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"

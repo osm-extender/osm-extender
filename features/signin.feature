@@ -3,13 +3,18 @@ Feature: Sign in
     In order to use the site
     I want to be able to sign in to my account
 
-    Scenario: Signin
-        Given I have the following user records
+
+    Background:
+	Given I have no users
+        And I have the following user records
 	    | email_address     |
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
-	And no emails have been sent
-	And I go to the root page
+
+
+    Scenario: Signin
+	Given no emails have been sent
+	When I go to the root page
 	Then I should see "Sign in"
 	And I should see "Sign up"
 	And I should not see "My account"
@@ -26,20 +31,12 @@ Feature: Sign in
 	And "alice@example.com" should receive no email with subject /Account Locked/
 
     Scenario: Signin (differing email case)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
         When I signin as "ALICE@example.com" with password "P@55word"
         Then I should see "Sucessfully signed in."
 	And I should be on the my_page page
 
     Scenario: Signin (with redirect)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-	And I am on the my_account page
+	Given I am on the my_account page
         When I fill in "Email address" with "alice@example.com"
 	And I fill in "Password" with "P@55word"
 	And I press "Sign in"
@@ -47,25 +44,18 @@ Feature: Sign in
 	And I should be on the my_account page
 
     Scenario: Signin (bad password)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."
 	And I should be on the sessions page
 
     Scenario: Signin (bad email address)
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
         When I signin as "wr@ng.com" with password "P@55word"
         Then I should see "Email address or password was invalid."
 	And I should be on the sessions page
 
     Scenario: Signin (not activated)
-        Given I have the following user records
+	Given I have no users
+        And I have the following user records
 	    | email_address     |
 	    | alice@example.com |
         When I signin as "alice@example.com" with password "P@55word"
@@ -74,11 +64,7 @@ Feature: Sign in
 
 
     Scenario: User should be locked after 3 bad logins
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-	And no emails have been sent
+	Given no emails have been sent
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."
         When I signin as "alice@example.com" with password "wrong"
@@ -89,11 +75,7 @@ Feature: Sign in
 	And "alice@example.com" should receive an email with subject /Account Locked/
 
     Scenario: User should be unlocked after timeout
-        Given I have the following user records
-	    | email_address     |
-	    | alice@example.com |
-        And "alice@example.com" is an activated user account
-	And "alice@example.com" has been a locked user account
+	Given "alice@example.com" has been a locked user account
         When I signin as "alice@example.com" with password "P@55word"
         Then "alice@example.com" should not be a locked user account
 	And I should see "Sucessfully signed in."

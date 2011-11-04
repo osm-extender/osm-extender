@@ -3,6 +3,7 @@ Feature: Sign out
     In order to stop other people acting as me
     I want to sign out of my account
 
+
     Scenario: Signout
         Given I have the following user records
 	    | email_address     |
