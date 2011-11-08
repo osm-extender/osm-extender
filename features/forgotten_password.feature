@@ -5,7 +5,8 @@ Feature: Forgotten Password
 
 
     Background:
-        Given I have the following user records
+	Given I have no users
+        And I have the following user records
             | email_address     | name  |
             | alice@example.com | Alice |
         And "alice@example.com" is an activated user account

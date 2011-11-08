@@ -6,7 +6,8 @@ Feature: My Account
     And know that no one else can view it
 
     Background:
-        Given I have the following user records
+	Given I have no users
+        And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
 	    | bob@example.com   | Bob   |

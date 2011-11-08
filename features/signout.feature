@@ -5,7 +5,8 @@ Feature: Sign out
 
 
     Scenario: Signout
-        Given I have the following user records
+	Given I have no users
+        And I have the following user records
 	    | email_address     |
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
