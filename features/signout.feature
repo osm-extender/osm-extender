@@ -1,3 +1,7 @@
+@signout
+@user
+@session
+
 Feature: Sign out
     As a user of the site
     In order to stop other people acting as me

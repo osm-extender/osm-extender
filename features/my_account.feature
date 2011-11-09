@@ -1,3 +1,7 @@
+@my_account
+@user
+@email
+
 Feature: My Account
     As a user of the site
     In order to manage my account

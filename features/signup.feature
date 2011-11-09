@@ -1,3 +1,7 @@
+@signup
+@user
+@email
+
 Feature: Sign up
     As a new user of the site
     In order to use the site

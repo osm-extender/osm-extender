@@ -1,3 +1,7 @@
+@signin
+@user
+@email
+
 Feature: Sign in
     As a user of the site
     In order to use the site

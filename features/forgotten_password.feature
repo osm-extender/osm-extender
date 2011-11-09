@@ -1,3 +1,7 @@
+@forgotten_password
+@user
+@email
+
 Feature: Forgotten Password
     As a user of the site
     In order to recover from forgetting my password
