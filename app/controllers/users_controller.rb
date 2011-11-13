@@ -1,6 +1,28 @@
+# TODO Add gravatar to index and edit page
+# TODO Add pagnation to index
+# TODO Add sorting/filtering to index
+
 class UsersController < ApplicationController
-  skip_before_filter :require_login, :only => [:new, :create, :activate_account]
+  before_filter :require_login, :except => [:new, :create, :activate_account]
+  load_and_authorize_resource :except => [:activate_account]
+
+  def index
+    @users = User.find(:all)
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
   
+  def update
+    user = User.find(params[:id])
+    if user.update_attributes(params[:user], :as => :admin)
+      redirect_to users_path, :notice => 'The user was updated.'
+    else
+      render :action => :edit
+    end
+  end
+
   def new
     @user = User.new
   end
@@ -22,12 +44,20 @@ class UsersController < ApplicationController
   def activate_account
     user = User.load_from_activation_token(params[:id].to_s)
 
-    if user && user.activate!
+    if user && authorize!(:activate_account, user) && user.activate!
       flash[:notice] = 'Your account was successfully activated.'
       redirect_to signin_path
     else
       flash[:error] = 'We were unable to activate your account.'
       redirect_to root_url
+    end
+  end
+
+  def reset_password
+    user = User.find(params[:id])
+    authorize! :reset_passowrd, user
+    if user.deliver_reset_password_instructions!
+      redirect_to(users_path, :notice => 'Instructions have been sent to the user.')
     end
   end
 

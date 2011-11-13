@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
   attr_accessible :name, :email_address, :password, :password_confirmation
+  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :as => :admin
 
   before_save :email_is_lowercase
   after_save :send_email_on_attribute_changes
@@ -101,7 +102,7 @@ class User < ActiveRecord::Base
 
   def send_email_on_attribute_changes
     unless new_record?
-      UserMailer.email_address_changed(self).deliver if email_address_changed?
+      UserMailer.email_address_changed(self).deliver if email_address_changed? && !email_address.blank?
       UserMailer.account_locked(self).deliver if lock_expires_at_changed? && !lock_expires_at.nil?
     end
   end

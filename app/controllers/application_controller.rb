@@ -7,4 +7,9 @@ class ApplicationController < ActionController::Base
     redirect_to signin_path
   end
 
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:error] = 'You are not authorised to do that.'
+    redirect_to root_path
+  end
+
 end

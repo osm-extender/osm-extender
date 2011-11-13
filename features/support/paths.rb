@@ -21,6 +21,12 @@ module NavigationHelpers
       "/reset_password/#{$1}"
     when /^activate_account token="([^"]*)"$/
       "/activate_account/#{$1}"
+    when /^the list of users$/
+      users_path
+    when /^edit the user "([^"]*)"$/
+      edit_user_path(User.find_by_email_address($1))
+    when /^reset the password for "([^"]*)"$/
+      reset_password_user_path(User.find_by_email_address($1))
     when /^"(.+)"$/
       $1
 

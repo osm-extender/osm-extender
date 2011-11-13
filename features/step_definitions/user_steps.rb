@@ -24,17 +24,24 @@ Given /^"([^"]*)" has been a locked user account$/ do |email|
     user.save
 end
 
+Given /^"([^"]*)" is an activated user account$/ do |email|
+    user = User.find_by_email_address(email)
+    user.activate!
+end
+
+Given /^"([^"]*)" can "([^"]*)"$/ do |email, permission|
+  user = User.find_by_email_address(email)
+  user.send('can_'+permission+'=', true)
+  user.save
+end
+
+
 
 When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |email, password|
   visit signin_url
   fill_in 'Email address', :with => email
   fill_in 'Password', :with => password
   click_button 'Sign in'
-end
-
-When /^"([^"]*)" is an activated user account$/ do |email|
-    user = User.find_by_email_address(email)
-    user.activate!
 end
 
 
@@ -50,4 +57,19 @@ end
 Then /^"([^"]*)" should not be a locked user account$/ do |email|
     user = User.find_by_email_address(email)
     user.lock_expires_at.nil?.should == true
+end
+
+Then /^user "([^"]*)" should have ([^"]*) "([^"]*)"$/ do |email, attribute, value|
+  user = User.find_by_email_address(email)
+  user.send(attribute).to_s.should == value
+end
+
+Then /^"([^"]*)" should be able to "([^"]*)"$/ do |email, permission|
+  user = User.find_by_email_address(email)
+  user.send('can_'+permission).should == true
+end
+
+Then /^"([^"]*)" should not be able to "([^"]*)"$/ do |email, permission|
+  user = User.find_by_email_address(email)
+  user.send('can_'+permission).should == false
 end

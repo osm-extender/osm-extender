@@ -18,6 +18,8 @@ SectionManagementSystem::Application.routes.draw do
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
 
   resources :users
+  post 'users/reset_password/:id' => 'users#reset_password', :as => 'reset_password_user'
+
   resources :sessions
   resources :password_resets
 

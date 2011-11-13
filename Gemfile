@@ -10,6 +10,8 @@ gem 'therubyracer'
 
 gem 'jquery-rails'
 
+gem 'cancan'
+
 #gem 'composite_primary_keys'
 
 # Gems used only for assets and not required

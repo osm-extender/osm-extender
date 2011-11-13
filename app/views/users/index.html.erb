@@ -1,0 +1,15 @@
+<% provide :title, 'Users' %>
+
+<table>
+  <tr><th>Name</th><th>Email Address</th><th>Actions</th></tr>
+  <%- @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.email_address %></td>
+      <td>
+        <%= link_to_if(can?(:edit, user), 'Edit user', edit_user_path(user))%><br/>
+        <%= link_to_if(can?(:reset_password, user), 'Reset password', reset_password_user_path(user), {:method=>:post})%>
+      </td>
+    </tr>
+  <%- end %>
+</table>

@@ -68,6 +68,10 @@ Then /^(?:I|they|"([^"]*?)") should receive an email with the following body:$/ 
   open_email(address, :with_text => expected_body)
 end
 
+Then /^there should be (an|no|\d+) emails?$/ do |amount|
+  ActionMailer::Base.deliveries.size.should == parse_email_count(amount)
+end
+
 #
 # Accessing emails
 #
