@@ -28,21 +28,19 @@ end
 
 
 group :development, :test do
+  gem 'sqlite3'
+end
+
+
+group :test do
   gem 'rspec-rails'
   gem 'factory_girl'
   gem 'cucumber-rails'
   gem 'webrat'
   gem 'email_spec'
   gem 'database_cleaner'
-  gem 'sqlite3'
-end
-
-
-group :test do
-  # Test coverage reports
+  gem 'minitest'
   gem 'simplecov', '>=0.3.8', :require=>false
-
-  # Pretty printed test output
   gem 'turn', :require => false
 end
 
