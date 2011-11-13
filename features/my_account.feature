@@ -32,7 +32,6 @@ Feature: My Account
 
 
     Scenario: Edit Details
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "alice2@example.com"
@@ -53,7 +52,6 @@ Feature: My Account
 	And I should be on the signin page
 
     Scenario: Edit Details (blank email address)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with ""
@@ -63,7 +61,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Email Address Changed/
 
     Scenario: Edit Details (bad email address)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "a"
@@ -73,7 +70,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Email Address Changed/
 
     Scenario: Edit Details (existing email address)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Email address" with "bob@example.com"
@@ -83,7 +79,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Email Address Changed/
 
     Scenario: Edit details (blank name)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the edit my account page
 	And I fill in "Name" with ""
@@ -94,7 +89,6 @@ Feature: My Account
 
     
     Scenario: Change Password
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -111,7 +105,6 @@ Feature: My Account
 	And I should be on the signin page
 
     Scenario: Change Password (too easy)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -123,7 +116,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (no confirmation)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -134,7 +126,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (incorrect confirmation)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -146,7 +137,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (incorrect current password)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "wrong password"
@@ -158,7 +148,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (password is email address)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
@@ -170,7 +159,6 @@ Feature: My Account
         And "alice@example.com" should receive no email with subject /Password Changed/
 
     Scenario: Change Password (password contains part of name)
-        Given no emails have been sent
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"

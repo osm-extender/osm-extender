@@ -17,7 +17,6 @@ Feature: Sign in
 
 
     Scenario: Signin
-	Given no emails have been sent
 	When I go to the root page
 	Then I should see "Sign in"
 	And I should see "Sign up"
@@ -68,7 +67,6 @@ Feature: Sign in
 
 
     Scenario: User should be locked after 3 bad logins
-	Given no emails have been sent
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."
         When I signin as "alice@example.com" with password "wrong"

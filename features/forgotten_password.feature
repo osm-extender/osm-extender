@@ -14,7 +14,6 @@ Feature: Forgotten Password
             | email_address     | name  |
             | alice@example.com | Alice |
         And "alice@example.com" is an activated user account
-        And no emails have been sent
 
 
     Scenario: Forgotten Password

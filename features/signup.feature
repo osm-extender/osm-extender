@@ -14,7 +14,6 @@ Feature: Sign up
 
     Background:
         Given I have no users
-        And no emails have been sent
 
 
     Scenario: Signup
