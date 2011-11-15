@@ -14,6 +14,15 @@ Given /^"([^"]*)" has password_reset_token "([^"]*)"$/ do |email, reset_token|
   user.save!
 end
 
+Given /^"([^"]*)" has activation_token "([^"]*)"$/ do |email, activation_token|
+  user = User.find_by_email_address(email)
+  user.activation_token = activation_token
+  user.activation_token_expires_at = Time.now + 10.minutes
+  user.activation_state = :pending
+  user.save!
+end
+
+
 Given /^I have no users$/ do
   User.delete_all
 end

@@ -34,6 +34,17 @@ Feature: Sign up
 	And I should be on the signin page
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
 
+    Scenario: Signup (signed in)
+        Given I have the following user records
+	    | email_address     |
+	    | alice@example.com |
+        And "alice@example.com" is an activated user account
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the signup page
+        And I should see "You are not authorised to do that."
+	And I should be on the root page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
+
     Scenario: Signup (no name)
         When I go to the signup page
         And I fill in "Email address" with "somebody@somewhere.com"
@@ -154,3 +165,16 @@ Feature: Sign up
         When I go to activate_account token="123abc"
         Then I should see "We were unable to activate your account."
 	And I should be on the root page
+
+    Scenario: Activate Account (signed in)
+        Given I have the following user records
+	    | email_address     |
+	    | alice@example.com |
+            | bob@example.com   |
+        And "alice@example.com" is an activated user account
+        And "bob@example.com" has activation_token "123abc"
+        When I signin as "alice@example.com" with password "P@55word"
+        When I go to activate_account token="123abc"
+        And I should see "You are not authorised to do that."
+	And I should be on the root page
+        And "bob@example.com" should receive no email with subject /Your Account Has Been Activated/
