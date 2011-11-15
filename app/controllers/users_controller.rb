@@ -57,7 +57,9 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     authorize! :reset_password, user
     if user.deliver_reset_password_instructions!
-      redirect_to(users_path, :notice => 'Instructions have been sent to the user.')
+      redirect_to(users_path, :notice => 'Password reset instructions have been sent to the user.')
+    else
+      redirect_to(users_path, :error => 'Password reset instructions have NOT been sent to the user.')
     end
   end
 

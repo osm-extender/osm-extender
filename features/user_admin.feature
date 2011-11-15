@@ -105,7 +105,7 @@ Feature: Account Administration
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of users
 	And I follow "Reset password" in the "Actions" column of the "chris@example.com" row
-	Then I should see "Instructions have been sent to the user."
+	Then I should see "Password reset instructions have been sent to the user."
 	And I should be on the list of users
         And "chris@example.com" should receive an email with subject /Password Reset/
 
