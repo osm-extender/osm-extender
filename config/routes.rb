@@ -14,7 +14,7 @@ SectionManagementSystem::Application.routes.draw do
   get 'my_account/edit' => 'my_account#edit', :as => 'edit_my_account'
   put 'my_account/update' => 'my_account#update', :as => 'update_my_account'
 
-  match 'activate_account/:id' => 'users#activate_account', :as => 'activate_account'
+  match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
 
   resources :users
