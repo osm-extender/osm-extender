@@ -75,6 +75,7 @@ Feature: Account Administration
 	And user "chris2@example.com" should have email_address "chris2@example.com"
 
     Scenario: Add User's Permission
+	Given "chris@example.com" can not "administer_users"
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of users
 	And I follow "Edit user" in the "Actions" column of the "chris@example.com" row
@@ -86,6 +87,7 @@ Feature: Account Administration
 	And "chris@example.com" should be able to "administer_users"
 
     Scenario: Remove User's Permission
+	Given "chris@example.com" can "administer_users"
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of users
 	When I follow "Edit user" in the "Actions" column of the "chris@example.com" row
@@ -105,13 +107,13 @@ Feature: Account Administration
 	Then I should see "Instructions have been sent to the user."
 	And I should be on the list of users
         And "chris@example.com" should receive an email with subject /Password Reset/
-@focus
+
     Scenario: Reset Password (Not authorised)
         When I signin as "chris@example.com" with password "P@55word"
         And I post to reset the password for "alice@example.com"
         Then I should see "You are not authorised to do that."
 	And I should be on the root page
-@focus
+
     Scenario: Reset Password (Not signed in)
         When I post to reset the password for "alice@example.com"
 	Then I should see "You must be signed in"

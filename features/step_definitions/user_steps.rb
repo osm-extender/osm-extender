@@ -44,6 +44,12 @@ Given /^"([^"]*)" can "([^"]*)"$/ do |email, permission|
   user.save
 end
 
+Given /^"([^"]*)" can not "([^"]*)"$/ do |email, permission|
+  user = User.find_by_email_address(email)
+  user.send('can_'+permission+'=', false)
+  user.save
+end
+
 
 
 When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |email, password|
