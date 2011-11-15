@@ -6,7 +6,7 @@
 
 <h2>Site Tasks</h2>
 <ul>
-  <%- if can? :manage, User %>
+  <%- if can? :administer, User %>
     <%= link_to 'Administer users', users_path %>
   <%- end %>
 </ul>
