@@ -11,7 +11,7 @@
           <%= link_to('Edit user', edit_user_path(user))%><br/>
         <%- end %>
         <%- if can? :reset_password, user %>
-          <%= link_to('Reset password', reset_password_user_path(user), {:method=>:post})%><br/>
+          <%= link_to('Reset password', reset_password_user_path(user))%><br/>
         <%- end %>
         <%- if can? :resend_activation, user %>
           <%= link_to('Resend activation email', resend_activation_user_path(user))%><br/>

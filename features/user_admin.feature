@@ -111,12 +111,12 @@ Feature: Account Administration
 
     Scenario: Reset Password (Not authorised)
         When I signin as "chris@example.com" with password "P@55word"
-        And I post to reset the password for "alice@example.com"
+        And I go to reset the password for "alice@example.com"
         Then I should see "You are not authorised to do that."
 	And I should be on the root page
 
     Scenario: Reset Password (Not signed in)
-        When I post to reset the password for "alice@example.com"
+        When I go to reset the password for "alice@example.com"
 	Then I should see "You must be signed in"
 	And I should be on the signin page
 
