@@ -19,6 +19,7 @@ SectionManagementSystem::Application.routes.draw do
 
   resources :users
   post 'users/reset_password/:id' => 'users#reset_password', :as => 'reset_password_user'
+  get 'users/resend_activation/:id' => 'users#resend_activation', :as => 'resend_activation_user'
 
   resources :sessions
   resources :password_resets

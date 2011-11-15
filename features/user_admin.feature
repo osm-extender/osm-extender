@@ -8,6 +8,7 @@ Feature: Account Administration
     I want to edit user permissions
     And I want to edit users
     And I want to reset a forgotten password
+    And I want to be able to resend the account activation email
 
     Background:
 	Given I have no users
@@ -116,5 +117,27 @@ Feature: Account Administration
 
     Scenario: Reset Password (Not signed in)
         When I post to reset the password for "alice@example.com"
+	Then I should see "You must be signed in"
+	And I should be on the signin page
+
+
+    Scenario: Resend Activation Email
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of users
+	Then the "Actions" column of the "chris@example.com" row should not see "Resend activation email"
+	And the "Actions" column of the "bob@example.com" row should see "Resend activation email"
+	When I follow "Resend activation email" in the "Actions" column of the "bob@example.com" row
+	Then I should see "Activation instructions have been sent to the user."
+	And I should be on the list of users
+        And "bob@example.com" should receive an email with subject /Activate Your Account/
+
+    Scenario: Resend Activation Email (Not authorised)
+        When I signin as "chris@example.com" with password "P@55word"
+        And I go to resend the activation email for "bob@example.com"
+        Then I should see "You are not authorised to do that."
+	And I should be on the root page
+
+    Scenario: Resend Activation Email (Not signed in)
+        When I go to resend the activation email for "bob@example.com"
 	Then I should see "You must be signed in"
 	And I should be on the signin page

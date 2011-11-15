@@ -27,6 +27,8 @@ module NavigationHelpers
       edit_user_path(User.find_by_email_address($1))
     when /^reset the password for "([^"]*)"$/
       reset_password_user_path(User.find_by_email_address($1))
+    when /^resend the activation email for "([^"]*)"$/
+      resend_activation_user_path(User.find_by_email_address($1))
     when /^"(.+)"$/
       $1
 

@@ -55,9 +55,19 @@ class UsersController < ApplicationController
 
   def reset_password
     user = User.find(params[:id])
-    authorize! :reset_passowrd, user
+    authorize! :reset_password, user
     if user.deliver_reset_password_instructions!
       redirect_to(users_path, :notice => 'Instructions have been sent to the user.')
+    end
+  end
+
+  def resend_activation
+    user = User.find(params[:id])
+    authorize! :resend_activation, user
+    if UserMailer.activation_needed(user).deliver
+      redirect_to(users_path, :notice => 'Activation instructions have been sent to the user.')
+    else
+      redirect_to(users_path, :error => 'Activation instructions have NOT been sent to the user.')
     end
   end
 

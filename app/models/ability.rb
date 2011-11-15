@@ -18,7 +18,10 @@ class Ability
 
       # Things user administrators can do
       if user.can_administer_users?
-        can [:read, :index, :manage, :reset_password], User
+        can [:read, :update, :reset_password], User
+        can :resend_activation, User do |user_being_acted_on|
+          user_being_acted_on && !user_being_acted_on.activation_token.blank?
+        end
       end
 
     end
