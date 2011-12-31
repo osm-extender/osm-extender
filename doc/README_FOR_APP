@@ -1,15 +1,11 @@
-Section Management System
-=========================
+OSMExtender
+===========
 
-An application written by @robertgauld for the Aberdeen Scouts Active Support Unit.
-It is designed to allow easy management of any section within Scouting in the UK, although should require only minor tweaks to allow its use in other countries.
+An application written by @robertgauld.
+It is designed to extend the capabillities of the Online Scout Manager (https://www.onlinescoutmanager.co.uk).
 
-Primerilly it was written to keep track of the things I personally hate tracking:
-* Who has earnt which badge
-* Who is due a joining in badge
-* Information for claiming Gift Aid
-* Information for census
-* How balanced my pack's programme is
+Primerilly it was written to add features that I want but which were not popular enough to make it into the OSM product:
+* How balanced my programme is
 
 
 Machine Specific Configuration
@@ -22,3 +18,8 @@ License
 =======
 I am still deciding which license to release the code under,
 until then if you wish to use this code you will need to gain my permission, which is easily done.
+
+
+Copyright
+=========
+Copyright Robert Gauld 2011. All rights reserved.

@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110916141044) do
+ActiveRecord::Schema.define(:version => 20111231163444) do
+
+  create_table "sessions", :force => true do |t|
+    t.string   "session_id", :null => false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "users", :force => true do |t|
     t.string   "email_address",                                      :null => false
@@ -27,9 +37,8 @@ ActiveRecord::Schema.define(:version => 20110916141044) do
     t.datetime "reset_password_email_sent_at"
     t.integer  "failed_logins_count",             :default => 0
     t.datetime "lock_expires_at"
-    t.boolean  "admin_system",                    :default => false
-    t.boolean  "admin_sms",                       :default => false
     t.string   "name"
+    t.boolean  "can_administer_users",            :default => false
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"

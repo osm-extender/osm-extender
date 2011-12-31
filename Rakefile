@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-SectionManagementSystem::Application.load_tasks
+OSMExtender::Application.load_tasks

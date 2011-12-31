@@ -1,4 +1,4 @@
-SectionManagementSystem::Application.routes.draw do
+OSMExtender::Application.routes.draw do
 
   get 'welcome/index'
   get 'my_page' => 'my_page#index', :as => 'my_page'

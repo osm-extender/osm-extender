@@ -1,4 +1,4 @@
-SectionManagementSystem::Application.configure do
+OSMExtender::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # Log error messages when you accidentally call methods on nil.

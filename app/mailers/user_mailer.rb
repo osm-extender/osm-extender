@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "\"Section Management System\" <section-management-system@aberdeen-sas.org.uk>"
+  default from: "\"OSMExtender\" <OSMExtender@robertgauld.co.uk>"
 
   def activation_needed(user)
     @user = user
@@ -55,7 +55,7 @@ class UserMailer < ActionMailer::Base
 
   private
   def build_subject(subject)
-    start = 'Section Management System'
+    start = 'OSMExtender'
     start += " (#{Rails.env.upcase})" unless Rails.env.production?
     return "#{start} - #{subject}"
   end
