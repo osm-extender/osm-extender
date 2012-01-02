@@ -1,3 +1,5 @@
+# TODO Fix bug - send email change email on create (check other emails also not sent)
+
 class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
@@ -30,6 +32,25 @@ class User < ActiveRecord::Base
         return false
       end
     else
+      return false
+    end
+  end
+
+
+  def connected_to_osm?
+    return (osm_userid.present? && osm_secret.present?)
+  end
+
+  def connect_to_osm(email, password)
+    api = OSM::API.new
+    result = api.authorize(email, password)
+    if !result[:error] && result[:data]['error'].nil?
+      write_attribute(:osm_userid, result[:data]['userid'])
+      write_attribute(:osm_secret, result[:data]['secret'])
+      return save
+    else
+      errors.add(:connect_to_osm, result[:data]['error']) unless result[:data]['error'].nil?
+      errors.add(:connect_to_osm, "HTTP ERROR #{result[:response].response.code}") unless result[:response].response.code.eql?('200')
       return false
     end
   end

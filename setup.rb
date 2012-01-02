@@ -39,5 +39,12 @@ system('bundle exec rake doc:app')
 
 puts '' # Spacing
 puts "Done"
+
+puts '' # Spacing
 puts "Remember to setup your database if this is your first time running this script\n"
 puts "(bundle exec rake db:setup)"
+
+puts '' # Spacing
+puts "Remember you must contact Ed at https://www.OnlineScoutManager.co.uk to get"
+puts "your own API ID and token and set the following environment variables accordingly"
+puts "osmx_osm_id and osmx_osm_token"

@@ -12,6 +12,8 @@ gem 'jquery-rails'
 
 gem 'cancan'
 
+gem 'httparty'
+
 #gem 'composite_primary_keys'
 
 # Gems used only for assets and not required
@@ -44,12 +46,13 @@ group :test do
   gem 'minitest'
   gem 'simplecov', '>=0.3.8', :require=>false
   gem 'turn', :require => false
+  gem 'fakeweb'
 end
 
 
-group :staging do
-  gem 'pg'
-end
+#group :staging do
+#  gem 'pg'
+#end
 
 
 group :production do

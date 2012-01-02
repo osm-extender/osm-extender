@@ -6,6 +6,10 @@ require 'rspec/rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+# Cause an error if any spec causes a real web request
+# This should both speed up tests and ensure that our tests cover all remote requests
+FakeWeb.allow_net_connect = false
+
 RSpec.configure do |config|
   # == Mock Framework
   #
@@ -23,4 +27,8 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+
+  config.before(:each) do
+    FakeWeb.clean_registery
+  end
 end

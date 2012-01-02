@@ -1,11 +1,17 @@
 <% provide :title, 'Users' %>
 
 <table>
-  <tr><th>Name</th><th>Email Address</th><th>Actions</th></tr>
+  <tr>
+    <th>Name</th>
+    <th>Email Address</th>
+    <th>Connected to OSM?</th>
+    <th>Actions</th>
+  </tr>
   <%- @users.each do |user| %>
     <tr>
       <td><%= user.name %></td>
       <td><%= user.email_address %></td>
+      <td><%= user.connected_to_osm? ? 'Yes' : '' %></td>
       <td>
         <%- if can? :edit, user %>
           <%= link_to('Edit user', edit_user_path(user))%><br/>

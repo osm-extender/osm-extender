@@ -36,7 +36,17 @@ class MyAccountController < ApplicationController
       flash[:error] = 'Incorrect current password.'
       render :action => :change_password
     end
+  end
 
+  def connect_to_osm
+  end
+
+  def connect_to_osm2
+    if current_user.connect_to_osm(params[:email], params[:password])
+      flash[:notice] = 'Sucessfully connected to your OSM account.'
+    else
+      render :action => :connect_to_osm
+    end
   end
   
   private
@@ -45,6 +55,7 @@ class MyAccountController < ApplicationController
       ['Edit Details', edit_my_account_path],
       ['Change Password', change_my_password_path],
     ]
+    @tertiary_menu_items.push(['Connect to OSM', connect_to_osm_path]) unless current_user.connected_to_osm?
   end
 
 end

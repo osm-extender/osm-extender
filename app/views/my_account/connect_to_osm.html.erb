@@ -1,0 +1,29 @@
+<% provide :title, "#{current_user.name}'s Account - Connect to OSM" %>
+
+<%= form_tag connect_to_osm2_path, :method => :post do %>
+  <% if current_user.errors.any? %>
+    <div id="error_messages">
+      <h2>The following errors occured:</h2>
+      <ul>
+      <% current_user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>Please enter your OSM login details below.</p>
+
+  <div class="field">
+    <%= label_tag :email %><br/>
+    <%= email_field_tag :email %>
+  </div>
+  <div class="field">
+    <%= label_tag :password %><br/>
+    <%= password_field_tag :password %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag 'Connect to OSM' %>
+  </div>
+<% end %>
