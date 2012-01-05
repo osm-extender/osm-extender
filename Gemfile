@@ -55,7 +55,7 @@ end
 #end
 
 
-group :production do
+group :staging, :production do
   # Use unicorn as the web server
-  # gem 'unicorn'
+  gem 'unicorn'
 end
