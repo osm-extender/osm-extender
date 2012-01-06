@@ -44,17 +44,42 @@ class User < ActiveRecord::Base
   def connect_to_osm(email, password)
     api = OSM::API.new
     result = api.authorize(email, password)
-    if !result[:error] && result[:data]['error'].nil?
+
+    unless result[:http_error] || result[:osm_error]
       write_attribute(:osm_userid, result[:data]['userid'])
       write_attribute(:osm_secret, result[:data]['secret'])
       return save
     else
-      errors.add(:connect_to_osm, result[:data]['error']) unless result[:data]['error'].nil?
-      errors.add(:connect_to_osm, "HTTP ERROR #{result[:response].response.code}") unless result[:response].response.code.eql?('200')
+      errors.add(:connect_to_osm, result[:data]) if result[:osm_error]
+      errors.add(:connect_to_osm, "HTTP ERROR #{result[:response].response.code}") if result[:http_error]
       return false
     end
   end
 
+
+  def osm_api
+    if connected_to_osm?
+      @osm_api ||= OSM::API.new read_attribute(:osm_userid), read_attribute(:osm_secret)
+      return @osm_api
+    else
+      return nil
+    end
+  end
+
+  def osm_roles
+    return [] unless connected_to_osm?
+    return @osm_roles unless (@osm_roles.nil? || @osm_roles = [])
+    
+    api = osm_api
+    response = api.get_roles
+    unless response[:http_error] || response[:osm_error]
+      @osm_roles = response[:data]
+    else
+      @osm_roles = []
+    end
+
+    return @osm_roles
+  end
   
   private
   # Use Steve Gibson's Password Haystacks logic to ensure password is sufficently secure

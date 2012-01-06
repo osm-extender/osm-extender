@@ -13,6 +13,7 @@
         <div id="primary_menu_nav">
           <div><%= link_to 'Home', root_url %></div>
           <div><%= link_to 'Help', root_url %></div>
+          <div><%= link_to 'Contact', root_url %></div>
         </div>
         <div id="primary_menu_user">
           <% if current_user %>
@@ -36,6 +37,14 @@
       </div><!-- banner -->
 
       <div id="secondary_menu">
+        <%- if current_user %>
+          Current section:
+          <%- current_user.osm_roles.each do |role| %>
+            <%- if role.section_id == session[:current_section_id] %>
+              <%= role.section_name %> (<%= role.group_name %>)
+            <%- end %>
+          <%- end %>
+        <%- end %>
         <%- if @secondary_menu_items %>
           <%- @secondary_menu_items.each do |item| %>
             <div><%= link_to item[0], item[1] %></div>

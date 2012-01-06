@@ -16,6 +16,7 @@ Feature: OSM
 
     Scenario: Connect to OSM Account
         Given an OSM request to "authorize" will work
+	And an OSM request to "get roles" will give 1 role
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "You need to connect your account to your OSM account."
         And I should see "You have not yet connected your account to your OSM account"
@@ -30,6 +31,7 @@ Feature: OSM
 
     Scenario: Connect to OSM Account (API Error)
         Given an OSM request to "authorize" will not work
+	And an OSM request to "get roles" will give 1 role
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the connect_to_osm page
         And I fill in "Email" with "alice@example.com"
@@ -39,3 +41,20 @@ Feature: OSM
         And I should not see "Sucessfully connected to your OSM account."
         And I should see "A simulated OSM API error occured"
         And "alice@example.com" should not be connected to OSM
+
+
+    Scenario: Select between multiple OSM accounts
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 2 roles
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should see "Current section: Section 1"
+	And I should see "Change Current Section"
+	When I follow "Section 2"
+	Then I should see "Current section: Section 2"
+
+    Scenario: Select between single OSM account
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 role
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should see "Current section: Section 1"
+	And I should not see "Change Current Section"

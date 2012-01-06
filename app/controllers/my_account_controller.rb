@@ -48,6 +48,7 @@ class MyAccountController < ApplicationController
       render :action => :connect_to_osm
     end
   end
+
   
   private
   def setup_tertiary_menu

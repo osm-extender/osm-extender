@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
   def create
     user = login(params[:email_address].downcase, params[:password])
     if user
+      session[:current_section_id] = user.osm_roles.first.section_id if user.osm_roles.size > 0
       redirect_back_or_to my_page_path, :notice => 'Sucessfully signed in.'
     else
       user = User.find_by_email_address(params[:email_address].downcase)
@@ -25,4 +26,17 @@ class SessionsController < ApplicationController
     redirect_to root_url, :notice => 'Sucessfully signed out.'
   end
 
+
+  def change_section
+    section_id = params[:section_id]
+    
+    # Check user has access to section then change current section
+    current_user.osm_roles.each do |role|
+      if section_id.eql?(role.section_id.to_s)
+        session[:current_section_id] = role.section_id
+      end
+    end
+    
+    redirect_to my_page_path
+  end
 end

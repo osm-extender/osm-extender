@@ -64,7 +64,7 @@ h1 {
 #banner {
     background-color:   #cccccc;
     text-align:         center;
-    height:             150px;
+    min-height:         150px;
 }
 #banner img {
     margin-top:         10px;
@@ -75,7 +75,7 @@ h1 {
 #secondary_menu {
     background-color:   #aaaaaa;
     padding:            10px;
-    min-height:         40px;
+    min-height:         60px;
 }
 #secondary_menu div {
     display:            inline-block;
