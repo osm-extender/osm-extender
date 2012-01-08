@@ -35,10 +35,10 @@ h1 {
 #primary_menu_user {
     float:              right;
 }
-#primary_menu div div {
+#primary_menu .menu_item {
     display:            inline-block;
 }
-#primary_menu div div a {
+#primary_menu .menu_item a {
     display:            table-cell;
     font-size:          large;
     text-align:         center;
@@ -54,7 +54,7 @@ h1 {
     text-decoration:    none;
     background:         #aaffaa;
 }
-#primary_menu div div a:hover {
+#primary_menu .menu_item a:hover {
     color:              #aaffaa;
     text-decoration:    underline;
     background:         black;
@@ -77,10 +77,10 @@ h1 {
     padding:            10px;
     min-height:         60px;
 }
-#secondary_menu div {
+#secondary_menu .menu_item {
     display:            inline-block;
 }
-#secondary_menu div a {
+#secondary_menu .menu_item a {
     display:            table-cell;
     font-size:          large;
     text-align:         center;
@@ -96,7 +96,7 @@ h1 {
     text-decoration:    none;
     background:         #aaaaff;
 }
-#secondary_menu div a:hover {
+#secondary_menu .menu_item a:hover {
     color:              #aaaaff;
     text-decoration:    underline;
     background:         black;
@@ -105,17 +105,17 @@ h1 {
 #tertiary_menu {
     text-align:         center;
 }
-#tertiary_menu div {
+#tertiary_menu .menu_item {
     display:            inline-block;
     margin-left:        10px;
     margin-right:       10px;
     margin-top:         5px;
 }
-#tertiary_menu div a {
+#tertiary_menu .menu_item a {
     color:              blue;
     text-decoration:    none;
 }
-#tertiary_menu div a:hover {
+#tertiary_menu .menu_item a:hover {
     text-decoration:    underline;
 }
 
