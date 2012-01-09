@@ -7,11 +7,14 @@ module OSM
     # If passing user details then both must be passed
     # @param userid (optional) osm userid of the user to act as
     # @param secret (optional) osm secret of the user to act as
-    def initialize(userid=nil, secret=nil)
+    # @param site (optional) wether to use OSM (:scout) or OGM (:guide), defaults to the value set for the class
+    def initialize(userid=nil, secret=nil, site=@@api_site)
       raise ArgumentError, 'You must pass a secret if you are passing a userid' if secret.nil? && !userid.nil?
       raise ArgumentError, 'You must pass a userid if you are passing a secret' if userid.nil? && !secret.nil?
+      raise ArgumentError, ':api_site does not exist in options hash or is invalid, this should be set to either :scout or :guide' if [:scout, :guide].include?(options[:api_site])
 
-      @base_url = 'https://www.onlinescoutmanager.co.uk'
+      @base_url = 'https://www.onlinescoutmanager.co.uk' if site == :scout
+      @base_url = 'https://www.onlineguidemanager.co.uk' if site == :guide
       set_user(userid, secret)
     end
 
@@ -27,12 +30,15 @@ module OSM
     # @param options - a hash containing the following keys:
     #   * :api_id - the apiid given to you for using the OSM id
     #   * :api_token - the token which goes with the above api
+    #   * :api_site - wether to use OSM (if :scout) or OGM (if :guide)
     def self.configure(options)
       raise ArgumentError, ':api_id does not exist in options hash' if options[:api_id].nil?
       raise ArgumentError, ':api_token does not exist in options hash' if options[:api_token].nil?
+      raise ArgumentError, ':api_site does not exist in options hash or is invalid, this should be set to either :scout or :guide' if [:scout, :guide].include?(options[:api_site])
 
       @@api_id = options[:api_id]
       @@api_token = options[:api_token]
+      @@api_site = options[:api_site]
     end
 
     # Get the userid and secret to be able to act as a certain user on the OSM system
