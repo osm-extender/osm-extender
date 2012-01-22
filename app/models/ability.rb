@@ -21,7 +21,6 @@ class Ability
         can [:read, :update, :reset_password, :administer], User
         can :resend_activation, User do |user_being_acted_on|
           user_being_acted_on && !user_being_acted_on.activation_token.blank?
-          # TODO Also check date (or redo date on email resend????)
         end
       end
 

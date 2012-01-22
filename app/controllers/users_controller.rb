@@ -1,7 +1,3 @@
-# TODO Add gravatar to index and edit page
-# TODO Add pagnation to index
-# TODO Add sorting/filtering to index
-
 class UsersController < ApplicationController
   before_filter :require_login, :except => [:new, :create, :activate_account]
   load_and_authorize_resource :except => [:activate_account]

@@ -1,5 +1,3 @@
-# TODO Fix bug - send email change email on create (check other emails also not sent)
-
 class User < ActiveRecord::Base
   authenticates_with_sorcery!  
   
