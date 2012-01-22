@@ -17,6 +17,9 @@ Feature: OSM
     Scenario: Connect to OSM Account
         Given an OSM request to "authorize" will work
 	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "You need to connect your account to your OSM account."
         And I should see "You have not yet connected your account to your OSM account"
@@ -25,13 +28,13 @@ Feature: OSM
         When I fill in "Email" with "alice@example.com"
         And I fill in "Password" with "password"
         And I press "Connect to OSM"
-        Then I should be on the connect_to_osm2 page
+        Then I should be on the osm_permissions page
         And I should see "Sucessfully connected to your OSM account."
+	And I should see "Please use OSM to allow us access to your data."
         And "alice@example.com" should be connected to OSM
 
     Scenario: Connect to OSM Account (API Error)
         Given an OSM request to "authorize" will not work
-	And an OSM request to "get roles" will give 1 role
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the connect_to_osm page
         And I fill in "Email" with "alice@example.com"
@@ -58,3 +61,15 @@ Feature: OSM
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should see "Current section: Section 1"
 	And I should not see "Change Current Section"
+
+
+    Scenario: View OSM Permissions
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "OSM permissions"
+        Then I should be on the osm_permissions page
+	And the "Granted" column of the "Email lists" row I should see "yes"
+	And the "Granted" column of the "Programme review" row I should see "NO"

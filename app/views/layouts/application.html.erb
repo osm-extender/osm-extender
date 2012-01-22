@@ -49,18 +49,18 @@
           <div class="menu_item"><%= link_to 'Email reminders', root_url %></div>
           <div class="menu_item"><%= link_to 'Programme review', root_url %></div>
           <div class="menu_item"><%= link_to 'Email lists', root_url %></div>
-          <div class="menu_item"><%= link_to 'OSM permissions', root_url %></div>
+          <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
         <%- end %>
         </div><!-- secondary_menu -->
 
       <%- if flash %>
         <div id="notices">
-        <%- if flash[:error] %>
+          <%- if flash[:error] %>
             <div id="notices_error">
               <%= flash[:error] %>
             </div><!-- notices_error -->
           <%- end %>
-        <%- if flash[:warning] %>
+          <%- if flash[:warning] %>
             <div id="notices_warning">
               <%= flash[:warning] %>
             </div><!-- notices_warning -->
@@ -76,11 +76,12 @@
             </div><!-- notices_message -->
           <%- end %>
         </div><!-- notices -->
-        <%- if Rails.env.staging? %>
-          <div style="background-color: #fa5ffa; color: black;">
-            <h2>This is the STAGING environment!</h2>
-            <p>Do not place live data on this server as the database may be reset at any point.</p>
-        <%- end %>
+      <% end %>
+      <%- if Rails.env.staging? %>
+        <div style="background-color: #fa5ffa; color: black;">
+          <h2>This is the STAGING environment!</h2>
+          <p>Do not place live data on this server as the database may be reset at any point.</p>
+        </div>
       <%- end %>
     </div><!-- header -->
 

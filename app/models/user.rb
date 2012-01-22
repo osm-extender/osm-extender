@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   def osm_roles
     return [] unless connected_to_osm?
     return @osm_roles unless (@osm_roles.nil? || @osm_roles = [])
-    
+
     api = osm_api
     response = api.get_roles
     unless response[:http_error] || response[:osm_error]
@@ -77,6 +77,23 @@ class User < ActiveRecord::Base
     end
 
     return @osm_roles
+  end
+
+  def osm_permissions(section_id)
+    @osm_permissions = {} if @osm_permissions.nil?
+
+    return {} unless connected_to_osm?
+    return @osm_permissions[section_id] unless @osm_permissions[section_id].nil?
+
+    api = osm_api
+    response = api.get_our_api_access(section_id)
+    unless response[:http_error] || response[:osm_error]
+      @osm_permissions[section_id] = response[:data]
+      return @osm_permissions[section_id]
+    else
+      return {}
+    end
+
   end
   
   private

@@ -43,7 +43,13 @@ class MyAccountController < ApplicationController
 
   def connect_to_osm2
     if current_user.connect_to_osm(params[:email], params[:password])
-      flash[:notice] = 'Sucessfully connected to your OSM account.'
+      # Set current section
+      current_user.osm_roles.each do |role|
+        session[:current_section_id] = role.section_id if role.default
+      end
+
+      # Send user to the OSM permissions page
+      redirect_to osm_permissions_path, notice: 'Sucessfully connected to your OSM account.<br/>Please use OSM to allow us access to your data.'.html_safe
     else
       render :action => :connect_to_osm
     end

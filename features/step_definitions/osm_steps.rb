@@ -19,12 +19,33 @@ Given /^an OSM request to "([^"]*)" will give (\d+) roles?$/ do |description, ro
   roles = roles.to_i
   body = '['
   (1..roles).each do |role|
-    body += '{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"cubs\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Subs\",\"extraid\":\"529\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"1","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
-#    body += '{"sectionConfig":{"subscription_level":3,"subscription_expires":"2013-01-05","sectionType":"cubs","columnNames":{"phone1":"Home Phone","phone2":"Parent 1 Phone","address":"Member\'s Address","phone3":"Parent 2 Phone","address2":"Address 2","phone4":"Alternate Contact Phone","subs":"Gender","email1":"Parent 1 Email","medical":"Medical / Dietary","email2":"Parent 2 Email","ethnicity":"Gift Aid","email3":"Member\'s Email","religion":"Religion","email4":"Email 4","school":"School"},"numscouts":10,"hasUsedBadgeRecords":true,"hasProgramme":true,"extraRecords":[{"name":"Subs","extraid":"529"}],"wizard":"false","fields":{"email1":true,"email2":true,"email3":true,"email4":false,"address":true,"address2":false,"phone1":true,"phone2":true,"phone3":true,"phone4":true,"school":false,"religion":true,"ethnicity":true,"medical":true,"patrol":true,"subs":true,"saved":true},"intouch":{"address":true,"address2":false,"email1":false,"email2":false,"email3":false,"email4":false,"phone1":true,"phone2":true,"phone3":true,"phone4":true,"medical":false},"mobFields":{"email1":false,"email2":false,"email3":false,"email4":false,"address":true,"address2":false,"phone1":true,"phone2":true,"phone3":true,"phone4":true,"school":false,"religion":false,"ethnicity":true,"medical":true,"patrol":true,"subs":false}},"groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"1","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
+    body += '{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"cubs\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Subs\",\"extraid\":\"529\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"' + (role == 1 ? '1' : '0') + '","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
   end
   body[-1] = ']'
   url = get_osm_url(description)
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body) unless url.nil?
+end
+
+
+Given /^an OSM request to get_api_access for section "([^"]*)" will have the permissions$/ do |section, table|
+
+  permissions = Array.new
+  table.hashes.each do |hash|
+     permissions.push [hash['permission'], hash['granted']]
+  end
+
+  body = '{"apis":[{"apiid":"' + OSM::API.api_id + '","name":"Test API","permissions":{'
+  permissions.each do |permission|
+    permission[1] = 0 if permission[1].eql?('none')
+    permission[1] = 10 if permission[1].eql?('read')
+    permission[1] = 20 if permission[1].eql?('write') || permission[1].eql?('read/write')
+    body += "\"#{permission[0]}\":\"#{permission[1]}\","
+  end
+  body[-1] = '}'
+  body += '}]}'
+
+  url = get_osm_url('get_api_access')
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body) unless url.nil?
 end
 
 
@@ -42,6 +63,7 @@ end
 def get_osm_url(description)
   return 'users.php?action=authorise' if description.eql?('authorize')
   return 'api.php?action=getUserRoles' if description.eql?('get roles')
+  return 'users.php?action=getAPIAccess' if description.eql?('get_api_access')
   return nil
 end
 

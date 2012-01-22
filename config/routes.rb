@@ -17,6 +17,8 @@ OSMExtender::Application.routes.draw do
   get 'my_account/connect_to_osm' => 'my_account#connect_to_osm', :as => 'connect_to_osm'
   post 'my_account/connect_to_osm' => 'my_account#connect_to_osm2', :as => 'connect_to_osm2'
 
+  get 'osm_permissions' => 'osm_permissions#view', :as => 'osm_permissions'
+
   match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
 

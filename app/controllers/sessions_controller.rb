@@ -6,7 +6,11 @@ class SessionsController < ApplicationController
   def create
     user = login(params[:email_address].downcase, params[:password])
     if user
-      session[:current_section_id] = user.osm_roles.first.section_id if user.osm_roles.size > 0
+      # Set current section
+      current_user.osm_roles.each do |role|
+        session[:current_section_id] = role.section_id if role.default
+      end
+      
       redirect_back_or_to my_page_path, :notice => 'Sucessfully signed in.'
     else
       user = User.find_by_email_address(params[:email_address].downcase)

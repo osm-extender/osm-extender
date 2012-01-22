@@ -1,0 +1,2 @@
+module OsmPermissionsHelper
+end

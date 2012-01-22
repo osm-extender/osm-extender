@@ -41,6 +41,12 @@ module OSM
       @@api_site = options[:api_site]
     end
 
+    # Get the API ID used in this class
+    # @returns the API ID
+    def self.api_id
+      return @@api_id
+    end
+
     # Get the userid and secret to be able to act as a certain user on the OSM system
     # @param email the login email address of the user on OSM
     # @param password the login password of the user on OSM
@@ -81,6 +87,59 @@ module OSM
         end
         response[:data] = result
       end
+
+      return response
+    end
+
+    # Get API access details for a given section
+    # @section_id the section to get details for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ApiAccess objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_api_access(section_id, data={})
+      response = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", data)
+
+      # If sucessful make result an array of ApiAccess objects
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data]['apis'].each do |item|
+          result.push OSM::ApiAccess.new(item)
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
+    # Get our API access details for a given section
+    # @section_id the section to get details for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ApiAccess objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_our_api_access(section_id, data={})
+      response = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", data)
+
+      # If sucessful make result an ApiAccess object
+      found = nil
+      unless response[:http_error] || response[:osm_error]
+        response[:data]['apis'].each do |item|
+          this_item = OSM::ApiAccess.new(item)
+          found = this_item if this_item.our_api?
+        end
+      end
+      response[:data] = found
 
       return response
     end
@@ -176,6 +235,46 @@ module OSM
 
   end
 
+
+  class ApiAccess
+
+    attr_reader :id, :name, :permissions
+
+    # Initialize a new API Access using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @id = data['apiid']
+      @name = data['name']
+      @permissions = data['permissions'].symbolize_keys
+
+      # Convert permission values to a number
+      @permissions.each_key do |key|
+        @permissions[key] = @permissions[key].to_i
+      end
+
+      # Determine if this API has read access for the provided permission
+      # @param key - the key for the permission being queried
+      # @returns - true if this API can read the passed permission, false otherwise
+      def can_read?(key)
+        return @permissions[key] == 10 || @permissions[key] == 20
+      end
+
+      # Determine if this API has write access for the provided permission
+      # @param key - the key for the permission being queried
+      # @returns - true if this API can write the passed permission, false otherwise
+      def can_write?(key)
+        return @permissions[key] == 20
+      end
+
+      # Determine if this API is the API being used to make requests
+      # @returns - true if this is the API being used, false otherwise
+      def our_api?
+        return @id == OSM::API.api_id
+      end
+
+    end
+
+  end
 
 
   private
