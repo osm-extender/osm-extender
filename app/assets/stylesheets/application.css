@@ -101,6 +101,9 @@ h1 {
     text-decoration:    underline;
     background:         black;
 }
+#current_section {
+    font-weight:        bold;
+}
 
 #tertiary_menu {
     text-align:         center;
