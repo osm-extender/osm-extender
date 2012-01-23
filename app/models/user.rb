@@ -162,9 +162,12 @@ class User < ActiveRecord::Base
   end
 
   def send_email_on_attribute_changes
-    unless new_record?
-      UserMailer.email_address_changed(self).deliver if email_address_changed? && !email_address.blank?
-      UserMailer.account_locked(self).deliver if lock_expires_at_changed? && !lock_expires_at.nil?
+    if email_address_changed?
+      UserMailer.email_address_changed(self).deliver unless email_address_change[0].blank?
+    end
+
+    if lock_expires_at_changed?
+      UserMailer.account_locked(self).deliver unless lock_expires_at.nil?
     end
   end
 

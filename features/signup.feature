@@ -28,11 +28,13 @@ Feature: Sign up
         And I should see "Your signup was successful"
 	And I should be on the root page
         And "somebody@somewhere.com" should receive an email with subject /Activate Your Account/
+	And there should be 1 email
         When I open the email with subject /Activate Your Account/
         When I click the first link in the email
         Then I should see "Your account was successfully activated."
 	And I should be on the signin page
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
+	And there should be 2 emails
 
     Scenario: Signup (signed in)
         Given I have the following user records
