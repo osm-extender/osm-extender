@@ -95,6 +95,10 @@ class User < ActiveRecord::Base
     end
 
   end
+
+  def gravatar_id
+    return Digest::MD5.hexdigest(read_attribute(:email_address).downcase)
+  end
   
   private
   # Use Steve Gibson's Password Haystacks logic to ensure password is sufficently secure
