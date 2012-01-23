@@ -49,7 +49,8 @@ class MyAccountController < ApplicationController
       end
 
       # Send user to the OSM permissions page
-      redirect_to osm_permissions_path, notice: 'Sucessfully connected to your OSM account.<br/>Please use OSM to allow us access to your data.'.html_safe
+      flash[:instruction] = 'Please use OSM to allow us access to your data, following the intructions below.'
+      redirect_to osm_permissions_path, notice: 'Sucessfully connected to your OSM account.'
     else
       render :action => :connect_to_osm
     end

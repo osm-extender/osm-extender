@@ -29,8 +29,8 @@ Feature: OSM
         And I fill in "Password" with "password"
         And I press "Connect to OSM"
         Then I should be on the osm_permissions page
-        And I should see "Sucessfully connected to your OSM account."
-	And I should see "Please use OSM to allow us access to your data."
+        And I should see "Sucessfully connected to your OSM account"
+	And I should see "Please use OSM to allow us access to your data"
         And "alice@example.com" should be connected to OSM
 
     Scenario: Connect to OSM Account (API Error)
