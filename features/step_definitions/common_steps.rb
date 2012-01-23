@@ -4,6 +4,9 @@ Given /^I have the following (.+) records?$/ do |factory, table|
   end
 end
 
+Given /^time is frozen$/ do
+  Timecop.freeze Time.now.utc
+end
 
 When /^(.*) in the "([^\"]*)" column of the "([^\"]*)" row$/ do |action, column_title, row_title|
   col_number = 0

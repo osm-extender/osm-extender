@@ -30,5 +30,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     FakeWeb.clean_registery
+    Timecop.return
   end
 end

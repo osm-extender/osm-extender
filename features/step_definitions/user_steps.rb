@@ -88,3 +88,10 @@ Then /^"([^"]*)" should not be able to "([^"]*)"$/ do |email, permission|
   user = User.find_by_email_address(email)
   user.send('can_'+permission).should == false
 end
+
+Then /^"([^"]*)" should have a new activation deadline$/ do |email|
+  user = User.find_by_email_address(email)
+  expires_at = user.send(User.sorcery_config.activation_token_expires_at_attribute_name).utc
+  should_expire_at = Time.now.utc + User.sorcery_config.activation_token_expiration_period
+  expires_at.to_i.should == should_expire_at.to_i
+end

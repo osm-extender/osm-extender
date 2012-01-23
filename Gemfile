@@ -47,6 +47,7 @@ group :test do
   gem 'simplecov', '>=0.3.8', :require=>false
   gem 'turn', :require => false
   gem 'fakeweb'
+  gem 'timecop'
 end
 
 

@@ -126,10 +126,12 @@ Feature: Account Administration
         And I go to the list of users
 	Then the "Actions" column of the "chris@example.com" row should not see "Resend activation email"
 	And the "Actions" column of the "bob@example.com" row should see "Resend activation email"
+	Given time is frozen
 	When I follow "Resend activation email" in the "Actions" column of the "bob@example.com" row
 	Then I should see "Activation instructions have been sent to the user."
 	And I should be on the list of users
         And "bob@example.com" should receive an email with subject /Activate Your Account/
+	And "bob@example.com" should have a new activation deadline
 
     Scenario: Resend Activation Email (Not authorised)
         When I signin as "chris@example.com" with password "P@55word"
