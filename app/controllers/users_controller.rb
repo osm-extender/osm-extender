@@ -30,7 +30,7 @@ class UsersController < ApplicationController
       if user
         redirect_back_or_to root_url, :notice => 'Your signup was successful, you are now signed in.'
       else
-        redirect_to root_url, :notice => 'Your signup was successful.'
+        redirect_to root_url, :notice => 'Your signup was successful, please check your email for instructions.'
       end
     else
       render :new
