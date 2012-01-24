@@ -19,6 +19,9 @@ OSMExtender::Application.routes.draw do
 
   get 'osm_permissions' => 'osm_permissions#view', :as => 'osm_permissions'
 
+  get 'email_lists/generate' => 'email_lists#generate', :as => 'generate_email_list'
+  post 'email_lists/generate' => 'email_lists#generate2', :as => 'generate_email_list2'
+
   match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
 

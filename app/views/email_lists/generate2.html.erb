@@ -1,0 +1,9 @@
+<% provide :title, "Email Lists" %>
+
+<p>Your list of email addresses appears below, if the box is empty then now email addresses could be found.</p>
+
+<div style="border-style: solid; border-color: black; border-width: 2px; width: 50%; margin-left: auto; margin-right: auto; min-height: 2em;"><pre>
+<%- @emails.each_with_index do |email, index| %>
+<%= email %><%= ', ' unless index == (@emails.size - 1) %>
+<%- end %>
+</pre></div>

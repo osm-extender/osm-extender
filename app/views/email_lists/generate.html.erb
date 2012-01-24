@@ -1,0 +1,32 @@
+<% provide :title, "Email Lists" %>
+
+<p>Select the criteria for selecting your email addresses then click the "Submit" button</p>
+
+<%= form_tag generate_email_list2_path, :method=>:post do %>
+<br/>
+
+  I would like these email addresses<br/>
+  <%- (1..4).each do |num| %>
+    <%= check_box_tag "email#{num}" %><%= @column_names["email#{num}".to_sym] %><br/>
+  <%- end %>
+
+  for members who
+  <select name="match_type">
+    <option value="yes">are</option>
+    <option value="no">are not</option>
+  </select>
+  in the
+  <select name="match_grouping">
+    <option value="">Any</option>
+    <%- @groupings.each do |grouping| %>
+      <%- if grouping.active %>
+        <option value="<%= grouping.id %>"><%= grouping.name %></option>
+      <%- end %>
+    <%- end %>
+  </select>
+  six.
+
+<br/>
+  
+  <%= submit_tag "Submit" %>
+<%- end %>

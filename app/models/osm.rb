@@ -91,6 +91,139 @@ module OSM
       return response
     end
 
+    # Get the sections (and their configuration) that the OSM user can access
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Section objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_sections(data={})
+      response = perform_query('api.php?action=getSectionConfig', data)
+
+      # If sucessful make result an array of SectionConfig objects
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data].each_key do |key|
+          result.push OSM::Section.new(key, response[:data][key]['sectionConfig'])
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
+    # Get the section (and its configuration)
+    # @param section_id the section id of the required section
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns nil if an error occured or the user does not have access to that section
+    # @returns an OSM::SectionConfig object otherwise
+    def get_section(section_id, data={})
+      sections = get_sections(data)[:data]
+      return nil unless sections.class == Array
+      
+      sections.each do |section|
+        return section if section.id == section_id
+      end
+      
+      return nil
+    end
+
+    # Get the groupings (e.g. patrols, sixes, lodges) for a given section
+    # @param section_id the section to get the programme for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Patrol objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_groupings(section_id, data={})
+      response = perform_query("users.php?action=getPatrols&sectionid=#{section_id}", data)
+
+      # If sucessful make result an array of OSM::Patrol objects
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data]['patrols'].each do |item|
+          result.push OSM::Grouping.new(item)
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
+    # Get the terms that the OSM user can access
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Term objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_terms(data={})
+      response = perform_query('api.php?action=getTerms', data)
+
+      # If sucessful make result an array of Term objects
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data].each_key do |key|
+          response[:data][key].each do |item|
+            result.push OSM::Term.new(item)
+          end
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
+    # Get member details
+    # @section_id the section to get details for
+    # @term_id (optional) the term to get details for, if it is omitted then the current term is used
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Member objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_members(section_id, term_id=nil, data={})
+      if term_id.nil?
+        # Find current term
+        terms = get_terms(data)[:data]
+        unless terms.nil?
+          terms.each do |term|
+            term_id = term.id if term.current? && (term.section_id == section_id)
+          end
+        end
+      end
+
+      response = perform_query("users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}", data)
+
+      # If sucessful make result a OSM::Member object
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data]['items'].each do |item|
+          result.push OSM::Member.new(item)
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
     # Get API access details for a given section
     # @section_id the section to get details for
     # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
@@ -172,6 +305,7 @@ module OSM
         :osm_error => result.response.body[0..8].eql?('{"error":'),
         :response => result,
       }
+
       unless to_return[:http_error]
         to_return[:data] = ActiveSupport::JSON.decode(result.response.body)
         to_return[:data] = to_return[:data]['error'] if to_return[:osm_error]
@@ -212,7 +346,7 @@ module OSM
     # @param data the hash of data for the object returned by the API
     def initialize(id, data)
       subscription_levels = [:bronze, :silver, :gold]
-      
+
       @id = id.to_i
       @subscription_level = subscription_levels[data['subscription_level'] - 1]
       @subscription_expires = Date.parse(data['subscription_expires'], 'yyyy-mm-dd')
@@ -231,6 +365,110 @@ module OSM
       @extra_records.each do |item|
         item.symbolize_keys!
       end
+    end
+
+  end
+
+
+  class Term
+
+    attr_reader :id, :section_id, :name, :start_date, :end_date
+
+    # Initialize a new Term using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @id = data['termid'].to_i
+      @section_id = data['sectionid'].to_i
+      @name = data['name']
+      @start_date = Date.parse(data['startdate'], 'yyyy-mm-dd')
+      @end_date = Date.parse(data['enddate'], 'yyyy-mm-dd')
+    end
+
+    # Determine if the term is in the future
+    # @returns true if the term starts after today
+    def future?
+      return @start_date > Date.today
+    end
+
+    # Determine if the term is in the past
+    # @returns true if the term finished before today
+    def past?
+      return @end_date < Date.today
+    end
+
+    # Determine if the term is current
+    # @returns true if the term started before today and finishes after today
+    def current?
+      return (@start_date < Date.today) && (@end_date > Date.today)
+    end
+
+    # Determine if the provided date is within the term
+    # @param date the date to test
+    # @returns true if the term started before the date and finishes after the date
+    def contains_date?(date)
+      return (@start_date < date) && (@end_date > date)
+    end
+
+  end
+
+
+  class Member
+
+    attr_reader :id, :section_id, :type, :first_name, :last_name, :email1, :email2, :email3, :email4, :phone1, :phone2, :phone3, :phone4, :address, :address2, :dob, :started, :joined_in_years, :parents, :notes, :medical, :religion, :school, :enthnicity, :subs, :grouping_id, :grouping_leader, :joined, :age, :joined_years, :patrol
+
+    # Initialize a new Member using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @id = data['scoutid']
+      @section_id = data['sectionid']
+      @type = data['type']
+      @first_name = data['firstname']
+      @last_name = data['lastname']
+      @email1 = data['email1']
+      @email2 = data['email2']
+      @email3 = data['email3']
+      @email4 = data['email4']
+      @phone1 = data['phone1']
+      @phone2 = data['phone2']
+      @phone3 = data['phone3']
+      @phone4 = data['phone4']
+      @address = data['address']
+      @address2 = data['address2']
+      @dob = Date.parse(data['dob'], 'yyyy-mm-dd')
+      @started = data['started']
+      @joined_in_years = data['joining_in_yrs']
+      @parents = data['parents']
+      @notes = data['notes']
+      @medical = data['medical']
+      @religion = data['religion']
+      @school = data['school']
+      @ethnicity = data['ethnicity']
+      @subs = data['subs']
+      @grouping_id = data['patrolid'].to_i
+      @grouping_leader = data['patrolleader'] # 0 - No, 1 = seconder, 2 = sixer
+      @joined = Date.parse(data['joined'], 'yyyy-mm-dd')
+      @age = data['age'] # 'yy / mm'
+      @joined_years = data['yrs']
+      @patrol = data['patrol']
+    end
+
+    # Get the years element of this scout's age
+    # @returns the number of years this scout has been alive
+    def age_years
+      return @age[0..1].to_i
+    end
+
+    # Get the months element of this scout's age
+    # @returns the number of months since this scout's last birthday
+    def age_months
+      return @age[-2..-1].to_i
+    end
+
+    # Get the full name
+    # @param seperator (optional) what to split the scout's first name and last name with, defaults to a space
+    # @returns this scout's full name seperate by the optional seperator
+    def name(seperator=' ')
+      return "#{@first_name}#{seperator.to_s}#{@last_name}"
     end
 
   end
@@ -272,6 +510,21 @@ module OSM
         return @id == OSM::API.api_id
       end
 
+    end
+
+  end
+
+
+  class Grouping
+
+    attr_reader :id, :name, :active
+
+    # Initialize a new Event using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @id = data['patrolid']
+      @name = data['name']
+      @active = data['active'] == 1
     end
 
   end
