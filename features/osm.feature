@@ -73,3 +73,9 @@ Feature: OSM
         Then I should be on the osm_permissions page
 	And the "Granted" column of the "Email lists" row I should see "yes"
 	And the "Granted" column of the "Programme review" row I should see "NO"
+
+
+    Scenario: View OSM Permissions (not signed in)
+        When I go to the osm permissions page
+	Then I should see "You must be signed in"
+	And I should be on the signin page
