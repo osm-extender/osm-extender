@@ -37,3 +37,23 @@ Then /^the "([^\"]*)" column of the "([^\"]*)" row (.*)$/ do |column_title, row_
     step action
   end
 end
+
+Then /^"([^"]*)" should contain "([^"]*)"$/ do |field, value|
+  field = find_field(field)
+  field_value = (field.tag_name == 'textarea') ? field.text : field.value
+  if field_value.respond_to? :should
+    field_value.should =~ /#{value}/
+  else
+    assert_match(/#{value}/, field_value)
+  end
+end
+
+Then /^"([^"]*)" should not contain "([^"]*)"$/ do |field, value|
+  field = find_field(field)
+  field_value = (field.tag_name == 'textarea') ? field.text : field.value
+  if field_value.respond_to? :should_not
+    field_value.should_not =~ /#{value}/
+  else
+    assert_no_match(/#{value}/, field_value)
+  end
+end

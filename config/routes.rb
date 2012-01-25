@@ -6,8 +6,6 @@ OSMExtender::Application.routes.draw do
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
   get 'signup' => 'users#new', :as => 'signup'
-
-  get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
   
   get 'my_account' => 'my_account#show', :as => 'my_account'
   get 'my_account/change_password' => 'my_account#change_password', :as => 'change_my_password'
@@ -30,7 +28,10 @@ OSMExtender::Application.routes.draw do
   get 'users/:id/resend_activation' => 'users#resend_activation', :as => 'resend_activation_user'
 
   resources :sessions
+  get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
+
   resources :password_resets
+  resources :contact_us, :only=>[:new, :create]
 
   root :to => 'welcome#index'
 end

@@ -1,0 +1,35 @@
+<% provide :title, "Contact Us" %>
+
+<%= form_for(@contact, :url => {:action=>:create}) do |f| %>
+  <% if @contact.errors.any? %>
+    <div id="error_messages">
+      <h2>The following errors occured:</h2>
+      <ul>
+        <% for message in @contact.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :name %><br/>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :email_address %><br/>
+    <%= f.text_field :email_address %>
+  </div>
+  <div class="field">
+    <%= f.label :message %><br/>
+    <%= f.text_area :message %>
+  </div>
+
+  <%- unless current_user %>
+  <div class="field">
+    <%= f.label :recaptcha %><br/>
+    <%= recaptcha_tags :ssl=>true %>
+  </div>  
+  <%- end %>
+
+  <div class="actions"><%= f.submit 'Send' %></div>
+<%- end %>
