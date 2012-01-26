@@ -25,14 +25,15 @@ Feature: Account Administration
 
     Scenario: View Users
         When I signin as "alice@example.com" with password "P@55word"
-        And I go to the list of users
+        And I follow "Administer users"
         Then I should see "alice@example.com"
         And I should see "bob@example.com"
         And I should see "chris@example.com"
 
     Scenario: View Users (Not authorised)
         When I signin as "chris@example.com" with password "P@55word"
-        And I go to the list of users
+	Then I should not see "Administer users"
+        When I go to the list of users
         Then I should see "You are not authorised to do that."
 	And I should be on the root page
 
