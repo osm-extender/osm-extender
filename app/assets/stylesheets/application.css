@@ -10,6 +10,12 @@
 a{color:blue;}
 a:hover{color:green;}
 
+p {
+    margin-top:         1ex;
+    margin-bottom:      1ex;
+    text-indent:        1em;
+}
+
 h1 {
     text-align:         center;
     text-decoration:    underline;
