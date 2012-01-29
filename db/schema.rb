@@ -11,7 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111231171837) do
+ActiveRecord::Schema.define(:version => 20120126074040) do
+
+  create_table "faqs", :force => true do |t|
+    t.string   "question"
+    t.text     "answer"
+    t.boolean  "active",     :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -41,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20111231171837) do
     t.boolean  "can_administer_users",                          :default => false
     t.text     "osm_userid",                      :limit => 6
     t.text     "osm_secret",                      :limit => 32
+    t.boolean  "can_administer_faqs",                           :default => false
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"

@@ -30,12 +30,21 @@ Given /^an OSM request to get sections will give (\d+) sections?$/ do |sections|
   url = 'api.php?action=getSectionConfig'
 
   sections = sections.to_i
-  body = '{'
+  data = {}
   (1..sections).each do |section|
-    body += '"' + section.to_s + '":{"sectionConfig":{"subscription_level":3,"subscription_expires":"2013-01-05","sectionType":"cubs","columnNames":{"phone1":"Phone 1","phone2":"Phone 2","address":"Address","phone3":"Phone 3","address2":"Address 2","phone4":"Phone 4","subs":"Subs","email1":"Email 1","medical":"Medical / Dietary","email2":"Email 2","ethnicity":"Ethnicity","email3":"Email 3","religion":"Religion","email4":"Email 4","school":"School"},"numscouts":10,"hasUsedBadgeRecords":true,"hasProgramme":true,"extraRecords":[{"name":"Subs","extraid":"529"}],"wizard":"false","fields":{"email1":true,"email2":true,"email3":true,"email4":false,"address":true,"address2":false,"phone1":true,"phone2":true,"phone3":true,"phone4":true,"school":false,"religion":true,"ethnicity":true,"medical":true,"patrol":true,"subs":true,"saved":true},"intouch":{"address":true,"address2":false,"email1":false,"email2":false,"email3":false,"email4":false,"phone1":true,"phone2":true,"phone3":true,"phone4":true,"medical":false},"mobFields":{"email1":false,"email2":false,"email3":false,"email4":false,"address":true,"address2":false,"phone1":true,"phone2":true,"phone3":true,"phone4":true,"school":false,"religion":false,"ethnicity":true,"medical":true,"patrol":true,"subs":false}},"groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + section.to_s + '","sectionname":"Section ' + section.to_s + '","section":"beavers","isDefault":"' + (section == 1 ? '1' : '0') + '","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
+    data[section.to_s] = {
+      "subscription_level"=>3, "subscription_expires"=>"2013-01-05", "sectionType"=>"cubs",
+      "columnNames"=>{"phone1"=>"Phone 1", "phone2"=>"Phone 2", "address"=>"Address", "phone3"=>"Phone 3", "address2"=>"Address 2", "phone4"=>"Phone 4", "subs"=>"Subs", "email1"=>"Email 1", "medical"=>"Medical / Dietary", "email2"=>"Email 2", "ethnicity"=>"Ethnicity", "email3"=>"Email 3", "religion"=>"Religion", "email4"=>"Email 4", "school"=>"School"},
+      "numscouts"=>11, "hasUsedBadgeRecords"=>true, "hasProgramme"=>true,
+      "extraRecords"=>[{"name"=>"Extra Record #{section.to_s}", "extraid"=>section.to_s}],
+      "wizard"=>"false",
+      "fields"=>{"email1"=>true, "email2"=>true, "email3"=>true, "email4"=>false, "address"=>true, "address2"=>false, "phone1"=>true, "phone2"=>true, "phone3"=>true, "phone4"=>true, "school"=>false, "religion"=>true, "ethnicity"=>true, "medical"=>true, "patrol"=>true, "subs"=>true, "saved"=>true},
+      "intouch"=>{"address"=>true, "address2"=>false, "email1"=>false, "email2"=>false, "email3"=>false, "email4"=>false, "phone1"=>true, "phone2"=>true, "phone3"=>true, "phone4"=>true, "medical"=>false},
+      "mobFields"=>{"email1"=>false, "email2"=>false, "email3"=>false, "email4"=>false, "address"=>true, "address2"=>false, "phone1"=>true, "phone2"=>true, "phone3"=>true, "phone4"=>true, "school"=>false, "religion"=>false, "ethnicity"=>true, "medical"=>true, "patrol"=>true, "subs"=>false}
+    }
   end
-  body[-1] = '}'
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
 end
 
 

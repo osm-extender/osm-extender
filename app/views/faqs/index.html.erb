@@ -1,0 +1,25 @@
+<% provide :title, "FAQs" %>
+
+<h2>Add FAQ</h2>
+<%= render 'form' %>
+
+<h2>Existing FAQs</h2>
+<table>
+  <tr>
+    <th>Question</th>
+    <th>Active</th>
+    <th>Actions</th>
+  </tr>
+
+<% @faqs.each do |faq| %>
+  <tr>
+    <td><%= faq.question %></td>
+    <td><%= faq.active ? 'Yes' : 'No' %></td>
+    <td>
+      <%= link_to '[Show]', faq %>
+      <%= link_to '[Edit]', edit_faq_path(faq) %>
+      <%= link_to '[Delete]', faq, confirm: 'Are you sure?', method: :delete %>
+    </td>
+  </tr>
+<% end %>
+</table>

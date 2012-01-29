@@ -5,4 +5,10 @@ FactoryGirl.define do
     password_confirmation { |u| u.password }
     name 'Someone'
   end
+
+  factory :faq do
+    sequence(:question) { |n| "FAQ #{n}" }
+    sequence(:answer) { |n| "This is answer #{n}." }
+    active true    
+  end
 end

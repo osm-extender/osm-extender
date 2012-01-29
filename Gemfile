@@ -7,7 +7,6 @@ gem 'rack', '1.3.3'
 gem 'sorcery'
 
 gem 'therubyracer'
-
 gem 'jquery-rails'
 
 gem 'cancan'
@@ -15,6 +14,8 @@ gem 'cancan'
 gem 'httparty'
 
 gem 'recaptcha'
+
+gem 'redcarpet'
 
 # Gems used only for assets and not required
 # in production environments by default.

@@ -16,6 +16,9 @@
 <h2>Site Tasks</h2>
 <ul>
   <%- if can? :administer, User %>
-    <%= link_to 'Administer users', users_path %>
+    <li><%= link_to 'Administer users', users_path %>
+  <%- end %>
+  <%- if can? :administer, Faq %>
+    <li><%= link_to 'Administer FAQs', faqs_path %>
   <%- end %>
 </ul>

@@ -1,0 +1,24 @@
+<script language="javascript">
+  //$(document).ready(function() {
+  //  $("#accordion").accordion({
+  //    active: false,
+  //    collapsible: true
+  //  });
+  //});
+
+  jQuery(document).ready(function(){
+          $('#accordion h3').click(function() {
+                  $(this).next().toggle('slow');
+                  return false;
+          }).next().hide();
+  });
+</script>
+
+<% provide :title, "Help" %>
+
+<div id="accordion" class="ui-accordion" style="width: 90%; margin-right: auto; margin-left:auto;">
+  <% @faqs.each do |faq| %>
+    <h3 class="ui-accordion-header"><a href="#"><%= faq.question %></a></h3>
+    <div class="ui-accordion-content"><%= markdown faq.answer %></div>
+  <% end %>
+</div>

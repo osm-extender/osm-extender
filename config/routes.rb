@@ -30,6 +30,9 @@ OSMExtender::Application.routes.draw do
   resources :sessions
   get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
 
+  resources :faqs
+  get 'help' => 'faqs#list', :as => 'list_faqs'
+
   resources :password_resets
   resources :contact_us, :only=>[:new, :create]
 

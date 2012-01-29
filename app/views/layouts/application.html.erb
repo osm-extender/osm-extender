@@ -5,6 +5,11 @@
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
 </head>
 <body>
   <div id="page">
@@ -12,7 +17,7 @@
       <div id="primary_menu">
         <div id="primary_menu_nav">
           <div class="menu_item"><%= link_to 'Home', root_url %></div>
-          <div class="menu_item"><%= link_to 'Help', root_url %></div>
+          <div class="menu_item"><%= link_to 'Help', list_faqs_path %></div>
           <div class="menu_item"><%= link_to 'Contact us', new_contact_u_path %></div>
         </div>
         <div id="primary_menu_user">

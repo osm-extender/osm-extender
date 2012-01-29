@@ -11,18 +11,17 @@ module NavigationHelpers
     when /^the home\s?page$/
       '/'
 
-    # Add more mappings here.
-    # Here is an example that pulls values out of the Regexp:
-    #
-    #   when /^(.*)'s profile page$/i
-    #     user_profile_path(User.find_by_login($1))
+    when /^the list of (.*)$/
+      self.send("#{$1.downcase}_path".to_sym)
+
+    when /^edit the FAQ "([^"]*)"$/
+      faq = Faq.find_by_question($1)
+      edit_faq_path faq
 
     when /^reset_password token="([^"]*)"$/
       "/reset_password/#{$1}"
     when /^activate_account token="([^"]*)"$/
       "/activate_account/#{$1}"
-    when /^the list of users$/
-      users_path
     when /^edit the user "([^"]*)"$/
       edit_user_path(User.find_by_email_address($1))
     when /^reset the password for "([^"]*)"$/
