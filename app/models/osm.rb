@@ -104,11 +104,11 @@ module OSM
     def get_sections(data={})
       response = perform_query('api.php?action=getSectionConfig', data)
 
-      # If sucessful make result an array of SectionConfig objects
+      # If sucessful make result an array of Section objects
       unless response[:http_error] || response[:osm_error]
         result = Array.new
         response[:data].each_key do |key|
-          result.push OSM::Section.new(key, response[:data][key]['sectionConfig'])
+          result.push OSM::Section.new(key, response[:data][key])
         end
         response[:data] = result
       end
@@ -345,6 +345,7 @@ module OSM
     # @param id the section ID used by the API to refer to this section
     # @param data the hash of data for the object returned by the API
     def initialize(id, data)
+puts data.to_s
       subscription_levels = [:bronze, :silver, :gold]
 
       @id = id.to_i
