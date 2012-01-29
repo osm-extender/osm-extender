@@ -345,7 +345,6 @@ module OSM
     # @param id the section ID used by the API to refer to this section
     # @param data the hash of data for the object returned by the API
     def initialize(id, data)
-puts data.to_s
       subscription_levels = [:bronze, :silver, :gold]
 
       @id = id.to_i
@@ -409,7 +408,6 @@ puts data.to_s
     def contains_date?(date)
       return (@start_date < date) && (@end_date > date)
     end
-
   end
 
 
