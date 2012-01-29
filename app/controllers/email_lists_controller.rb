@@ -18,7 +18,7 @@ class EmailListsController < ApplicationController
     @emails = Array.new
     members = current_user.osm_api.get_members(session[:current_section_id])[:data]
     members.each do |member|
-      if ((match_grouping == 0) && match_type)  ||  ((member.grouping_id == match_grouping) && match_type)  ||  ((member.grouping_id != match_grouping) && !match_type)
+      if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
         @emails.push member.email1 if add_email1 && !@emails.include?(member.email1) && !member.email1.blank?
         @emails.push member.email2 if add_email2 && !@emails.include?(member.email2) && !member.email2.blank?
         @emails.push member.email3 if add_email3 && !@emails.include?(member.email3) && !member.email3.blank?

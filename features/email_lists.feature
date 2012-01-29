@@ -80,3 +80,22 @@ Feature: OSM
         And I should see "b2@example.com"
         And I should see "b3@example.com"
         And I should see "b4@example.com"
+
+    Scenario: Get list of addresses (not everyone)
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the generate_email_list page
+        When I check "email1"
+        And I check "email2"
+        And I check "email3"
+        And I check "email4"
+        And I select "are not" from "match_type"
+        And I select "Any" from "match_grouping"
+        And I press "Submit"
+        Then I should not see "a1@example.com"
+        And I should not see "a2@example.com"
+        And I should not see "a3@example.com"
+        And I should not see "a4@example.com"
+        And I should not see "b1@example.com"
+        And I should not see "b2@example.com"
+        And I should not see "b3@example.com"
+        And I should not see "b4@example.com"
