@@ -4,8 +4,7 @@
   <tr>
     <th></th>
     <th>Name</th>
-    <th>Email Address</th>
-    <th>Connected to OSM?</th>
+    <th>Email address</th>
     <th>Actions</th>
   </tr>
   <%- @users.each do |user| %>
@@ -13,7 +12,6 @@
       <td><%= image_tag "http://www.gravatar.com/avatar/#{user.gravatar_id}?size=60&default=identicon".html_safe, :size=>'60x60', :alt=>"#{user.name}'s gravatar" %></td>
       <td><%= user.name %></td>
       <td><%= user.email_address %></td>
-      <td><%= user.connected_to_osm? ? 'Yes' : '' %></td>
       <td>
         <%- if can? :edit, user %>
           <%= link_to('Edit user', edit_user_path(user))%><br/>

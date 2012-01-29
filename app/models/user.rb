@@ -33,6 +33,16 @@ class User < ActiveRecord::Base
       return false
     end
   end
+  
+  
+  def locked?
+    return false if send(sorcery_config.lock_expires_at_attribute_name).nil?
+    return (send(sorcery_config.lock_expires_at_attribute_name) > Time.now)
+  end
+
+  def active?
+    send(sorcery_config.activation_state_attribute_name).eql?('active')
+  end
 
 
   def connected_to_osm?

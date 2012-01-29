@@ -21,11 +21,32 @@
     <%= f.label :email_address %><br/>
     <%= f.text_field :email_address %>
   </div>
+
+  <h2>Account State</h2>
+  <%- if @user %>
+    <div class="field">
+      Activated account?<br/>
+      <%= yes_no @user.active? %>
+    </div>
+    <div class="field">
+      Locked account?<br/>
+      <%= yes_no @user.locked?, false %>
+      <%- if @user.locked? %>(Lock expires at <%= @user.lock_expires_at %>)<% end %>
+    </div>
+    <div class="field">
+      Connected to OSM<br/>
+      <%= yes_no @user.connected_to_osm? %>
+    </div>
+  <% end %>
   
   <h2>Permissions</h2>
   <div class="field">
-    <%= f.label :can_administer_users %>
     <%= f.check_box :can_administer_users %>
+    <%= f.label :can_administer_users %>
+  </div>
+  <div class="field">
+    <%= f.check_box :can_administer_faqs %>
+    <%= f.label :can_administer_faqs %>
   </div>
   
   <div class="actions"><%= f.submit 'Update' %></div>
