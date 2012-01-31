@@ -14,7 +14,7 @@ Feature: My Account
         And I press "Send"
         Then I should be on the root page
         And I should see "Your message was sent"
-        And there should be 1 email
+        And "contactus@example.com" should have 1 email
 
     Scenario: Logged in user should see their name and email address but no captcha
         Given I have the following user records

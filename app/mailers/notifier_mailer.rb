@@ -1,5 +1,5 @@
 class NotifierMailer < ActionMailer::Base
-  default from: "\"OSMExtender\" <OSMExtender@robertgauld.co.uk>"
+  default from: Settings.read('notifier mailer - from')
 
   def contact_form_submission(contact, to)
     @contact = contact

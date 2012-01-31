@@ -20,7 +20,7 @@ class ContactUs
 
   def send_contact
     if valid?
-      return NotifierMailer.contact_form_submission(self, 'robert@robertgauld.co.uk').deliver
+      return NotifierMailer.contact_form_submission(self, Settings.read('contact us - to')).deliver
     else
       return nil
     end

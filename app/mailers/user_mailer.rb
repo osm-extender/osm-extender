@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "\"OSMExtender\" <OSMExtender@robertgauld.co.uk>"
+  default from: Settings.read('user mailer - from')
 
   def activation_needed(user)
     @user = user
