@@ -47,11 +47,11 @@ puts "(bundle exec rake db:setup)"
 puts '' # Spacing
 puts "Remember you must contact Ed at https://www.OnlineScoutManager.co.uk to get"
 puts "your own API ID and token and set the following environment variables accordingly"
-puts "osmx_osm_id"
-puts "osmx_osm_token"
+puts "osmx_osm_id  or  osm_id"
+puts "osmx_osm_token  or  osm_token"
 
 puts '' # Spacing
 puts "Remember you must goto http://recaptcha.net/whyrecaptcha.html and setup a recapctha"
 puts "public/private key pair to use and set the following environment variables accordingly"
-puts "osmx_recaptcha_public_key"
-puts "osmx_recaptcha_private_key"
+puts "osmx_recaptcha_public_key  or  recaptcha_public_key"
+puts "osmx_recaptcha_private_key  or  recaptcha_private_key"
