@@ -3,7 +3,5 @@
 <p>Your list of email addresses appears below, if the box is empty then no email addresses could be found.</p>
 
 <div style="border-style: solid; border-color: black; border-width: 2px; width: 50%; margin-left: auto; margin-right: auto; min-height: 4ex;"><pre>
-<%- @emails.each_with_index do |email, index| %>
-<%= email %><%= ', ' unless index == (@emails.size - 1) %>
-<%- end %>
+<%= @emails.join(",\n") %>
 </pre></div>
