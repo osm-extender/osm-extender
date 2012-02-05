@@ -1,7 +1,7 @@
 @email_lists
 @osm
 
-Feature: OSM
+Feature: Email Lists
     As a section leader
     In order to keep in touch with members of the section
     I want to be able to retreieve a list of email addresses
