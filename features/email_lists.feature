@@ -99,3 +99,8 @@ Feature: Email Lists
         And I should not see "b2@example.com"
         And I should not see "b3@example.com"
         And I should not see "b4@example.com"
+
+    Scenario: Get list of addresses (not signed in)
+	When I go to the generate_email_list page
+	Then I should see "You must be signed in"
+	And I should be on the signin page
