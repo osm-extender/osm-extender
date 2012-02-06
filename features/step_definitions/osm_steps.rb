@@ -123,6 +123,89 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
 end
 
+Given /^an OSM request to get programme for section (\d+) term (\d+) will have (\d+) programme items?$/ do |section, term, items|
+  url = "programme.php?action=getProgramme&sectionid=#{section}&termid=#{term}"
+  items = items.to_i
+
+  item = []
+  (1..items).each do |n|
+    item.push ({
+      'eveningid' => "#{n}",
+      'sectionid' => "#{section}",
+      'title' => "Weekly Meeting #{n}",
+      'notesforparents' => '',
+      'games' => '',
+      'prenotes' => '',
+      'postnotes' => '',
+      'leaders' => '',
+      'meetingdate' => (Date.today + n.days).strftime ,
+      'starttime' => '19:15:00',
+      'endtime' => '20:30:00',
+      'googlecalendar' => ''
+    })
+  end
+  
+  activity = {}
+  (1..items).each do |n|
+    act = []
+    (1..items).each do |m|
+      act.push ({
+        "activityid" => "#{n}#{m}",
+        "title" => "Activity #{n}#{m}",
+        "notes" => "",
+        "eveningid" => "#{n}"
+      })
+    end
+    activity["#{n}"] = act
+  end
+
+  body = {
+    'items' => item,
+    'activities' => activity
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+end
+
+Given /^an OSM request to get activity (\d+) will have tags "(.+)"$/ do |activity_id, tags|
+  url = "programme.php?action=getActivity&id=#{activity_id}"
+
+  body = {
+    'details' => {
+      'activityid' => "#{activity_id}",
+      'version' => '0',
+      'groupid' => '1',
+      'userid' => '1',
+      'title' => "Activity #{activity_id}",
+      'description' => '',
+      'resources' => '',
+      'instructions' => '',
+      'runningtime' => '',
+      'location' => 'indoors',
+      'shared' => '0',
+      'rating' => '0',
+      'facebook' => ''
+    },
+    'editable'=>false,
+    'rating'=>'0',
+    'used'=>'2',
+    'versions' => [
+      {
+        'value' => '0',
+        'userid' => '1',
+        'firstname' => 'Alice',
+        'label' => 'Current version - Alice',
+        'selected' => 'selected'
+      }
+    ],
+    'sections'=> ['beavers', 'cubs', 'scouts', 'explorers'],
+    'tags' => tags.split(', ')
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+end
+
+
 
 Then /^"([^"]*)" should be connected to OSM$/ do |email|
   user = User.find_by_email_address(email)

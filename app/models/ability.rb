@@ -7,10 +7,18 @@ class Ability
   include CanCan::Ability
   
   def initialize(user)
+    alias_action :destroy, :to=>:delete
     alias_action :create, :read, :update, :delete, :to=>:administer
 
     # Things everyone can do
     can :list, Faq
+    can :delete, ProgrammeReviewBalancedCache do |item|
+      result = false
+      user.osm_roles.each do |role|
+        result = true if (role.section_id == item.section_id)
+      end
+      result
+    end
 
     unless user
       # Things only non authenticated users can do

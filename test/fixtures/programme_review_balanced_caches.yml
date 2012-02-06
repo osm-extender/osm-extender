@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  term_id: 1
+  section_id: 1
+  zones: MyText
+  methods: MyText
+
+two:
+  term_id: 1
+  section_id: 1
+  zones: MyText
+  methods: MyText

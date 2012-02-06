@@ -187,6 +187,64 @@ module OSM
       return response
     end
 
+    # Get the programme for a given term
+    # @param sectionid the section to get the programme for
+    # @param termid the term to get the programme for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ProgrammeItem objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_programme(sectionid, termid, data={})
+      response = perform_query("programme.php?action=getProgramme&sectionid=#{sectionid}&termid=#{termid}", data)
+
+      # If sucessful make result an array of ProgrammeItem objects
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data] = {'items'=>[],'activities'=>{}} if response[:data].class == Array
+        items = response[:data]['items'] || []
+        activities = response[:data]['activities'] || []
+        items.each do |item|
+          result.push OSM::ProgrammeItem.new(item, activities[item['eveningid']])
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
+    # Get activity details
+    # @param id the activity ID
+    # @param version (optional) the version of the activity to retreive
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an OSM::Activity object
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_activity(id, version=nil, data={})
+      response = nil
+      if version.nil?
+        response = perform_query("programme.php?action=getActivity&id=#{id}", data)
+      else
+        response = perform_query("programme.php?action=getActivity&id=#{id}&version=#{version}", data)
+      end
+
+      # If sucessful make result an Activity object
+      unless response[:http_error] || response[:osm_error]
+        response[:data] = OSM::Activity.new(response[:data])
+      end
+
+      return response
+    end
+
     # Get member details
     # @section_id the section to get details for
     # @term_id (optional) the term to get details for, if it is omitted then the current term is used
@@ -339,7 +397,7 @@ module OSM
 
   class Section
 
-    attr_reader :id, :subscription_level, :subscription_expires, :section_type, :num_scouts, :has_badge_records, :has_programme, :wizard, :column_names, :fields, :intouch_fields, :mobile_fields, :extra_records
+    attr_reader :id, :subscription_level, :subscription_expires, :type, :num_scouts, :has_badge_records, :has_programme, :wizard, :column_names, :fields, :intouch_fields, :mobile_fields, :extra_records
 
     # Initialize a new SectionConfig using the hash returned by the API call
     # @param id the section ID used by the API to refer to this section
@@ -350,7 +408,7 @@ module OSM
       @id = id.to_i
       @subscription_level = subscription_levels[data['subscription_level'] - 1]
       @subscription_expires = Date.parse(data['subscription_expires'], 'yyyy-mm-dd')
-      @section_type = data['sectionType'].to_sym
+      @type = data['sectionType'].to_sym
       @num_scouts = data['numscouts']
       @has_badge_records = data['hasUsedBadgeRecords'].eql?('1') ? true : false
       @has_programme = data['hasProgramme']
@@ -372,7 +430,7 @@ module OSM
 
   class Term
 
-    attr_reader :id, :section_id, :name, :start_date, :end_date
+    attr_reader :id, :section_id, :name, :start, :end
 
     # Initialize a new Term using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
@@ -380,34 +438,128 @@ module OSM
       @id = data['termid'].to_i
       @section_id = data['sectionid'].to_i
       @name = data['name']
-      @start_date = Date.parse(data['startdate'], 'yyyy-mm-dd')
-      @end_date = Date.parse(data['enddate'], 'yyyy-mm-dd')
+      @start = Date.parse(data['startdate'], 'yyyy-mm-dd')
+      @end = Date.parse(data['enddate'], 'yyyy-mm-dd')
+    end
+
+    # Determine if the term is completly before the passed date
+    # @param date
+    # @returns true if the term is completly before the passed date
+    def before?(date)
+      return @end < date.to_date
+    end
+
+    # Determine if the term is completly after the passed date
+    # @param date
+    # @returns true if the term is completly after the passed date
+    def after?(date)
+      return @start > date.to_date
     end
 
     # Determine if the term is in the future
     # @returns true if the term starts after today
     def future?
-      return @start_date > Date.today
+      return @start > Date.today
     end
 
     # Determine if the term is in the past
     # @returns true if the term finished before today
     def past?
-      return @end_date < Date.today
+      return @end < Date.today
     end
 
     # Determine if the term is current
     # @returns true if the term started before today and finishes after today
     def current?
-      return (@start_date < Date.today) && (@end_date > Date.today)
+      return (@start < Date.today) && (@end > Date.today)
     end
 
     # Determine if the provided date is within the term
     # @param date the date to test
     # @returns true if the term started before the date and finishes after the date
     def contains_date?(date)
-      return (@start_date < date) && (@end_date > date)
+      return (@start < date) && (@end > date)
     end
+
+  end
+
+
+  class ProgrammeItem
+
+    attr_reader :evening_id, :section_id, :title, :notes_for_parents, :games, :pre_notes, :post_notes, :leaders, :meeting_date, :start, :end, :google_calendar, :activities
+
+    # Initialize a new ProgrammeItem using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    # @param activities an array of hashes to generate the list of ProgrammeActivity objects
+    def initialize(data, activities)
+      @evening_id = data['eveningid']
+      @section_id = data['sectionid']
+      @title = data['title']
+      @notes_for_parents = data['notes_for_parents']
+      @games = data['games']
+      @pre_notes = data['prenotes']
+      @post_notes = data['postnotes']
+      @leaders = data['leaders']
+      @start = DateTime.parse((data['meetingdate'] + ' ' + data['starttime']), 'yyyy-mm-dd hh:mm:ss')
+      @end = DateTime.parse((data['meetingdate'] + ' ' + data['endtime']), 'yyyy-mm-dd hh:mm:ss')
+      @google_calendar = data['googlecalendar']
+
+      @activities = Array.new
+      unless activities.nil?
+        activities.each do |item|
+          @activities.push OSM::ProgrammeActivity.new(item)
+        end
+      end
+    end
+
+  end
+
+
+  class ProgrammeActivity
+
+    attr_reader :evening_id, :activity_id, :title, :notes
+
+    # Initialize a new EveningActivity using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @evening_id = data['eveningid']
+      @activity_id = data['activityid']
+      @title = data['title']
+      @notes = data['notes']
+    end
+
+  end
+
+
+  class Activity
+
+    attr_reader :id, :version, :group_id, :user_id, :title, :description, :resources, :instructions, :running_time, :location, :shared, :rating, :editable, :deletable, :used, :versions, :sections, :tags, :files, :badges
+
+    # Initialize a new Activity using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @id = data['details']['activityid']
+      @version = data['details']['version']
+      @group_id = data['details']['groupid']
+      @user_id = data['details']['userid']
+      @title = data['details']['title']
+      @description = data['details']['description']
+      @resources = data['details']['resources']
+      @instructions = data['details']['instructions']
+      @running_time = data['details']['runningtime'].to_i
+      @location = data['details']['location']
+      @shared = data['details']['shared']
+      @rating = data['details']['rating']
+      @editable = data['editable']
+      @deletable = data['deletable']
+      @used = data['used']
+      @versions = data['versions']
+      @sections = OSM::make_array_of_symbols(data['sections'])
+      @tags = data['tags'] || []
+      @files = data['files']
+      @badges = data['badges']
+    end
+
   end
 
 
@@ -518,7 +670,7 @@ module OSM
 
     attr_reader :id, :name, :active
 
-    # Initialize a new Event using the hash returned by the API call
+    # Initialize a new Grouping using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
       @id = data['patrolid']

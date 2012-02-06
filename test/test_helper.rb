@@ -8,6 +8,10 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
+# Cause an error if any test causes a real web request
+# This should both speed up tests and ensure that our tests cover all remote requests
+FakeWeb.allow_net_connect = false
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #

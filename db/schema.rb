@@ -11,12 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120131091121) do
+ActiveRecord::Schema.define(:version => 20120206083613) do
 
   create_table "faqs", :force => true do |t|
     t.string   "question"
     t.text     "answer"
     t.boolean  "active",     :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "programme_review_balanced_caches", :force => true do |t|
+    t.integer  "term_id",       :null => false
+    t.integer  "section_id",    :null => false
+    t.text     "zone_totals"
+    t.text     "method_totals"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
