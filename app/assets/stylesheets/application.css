@@ -20,7 +20,12 @@ h1 {
     text-align:         center;
     text-decoration:    underline;
     margin-top:         1ex;
-    margin-bottom:      1ex;
+    margin-bottom:      2ex;
+}
+
+h2, h3, h4 {
+    margin-top:         3ex;
+    margin-bottom:      2ex;
 }
 
 #page {
