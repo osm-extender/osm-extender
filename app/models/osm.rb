@@ -486,7 +486,7 @@ module OSM
 
   class ProgrammeItem
 
-    attr_reader :evening_id, :section_id, :title, :notes_for_parents, :games, :pre_notes, :post_notes, :leaders, :meeting_date, :start, :end, :google_calendar, :activities
+    attr_reader :evening_id, :section_id, :title, :notes_for_parents, :games, :pre_notes, :post_notes, :leaders, :meeting_date, :start, :end, :activities
 
     # Initialize a new ProgrammeItem using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
@@ -502,7 +502,6 @@ module OSM
       @leaders = data['leaders']
       @start = DateTime.parse((data['meetingdate'] + ' ' + data['starttime']), 'yyyy-mm-dd hh:mm:ss')
       @end = DateTime.parse((data['meetingdate'] + ' ' + data['endtime']), 'yyyy-mm-dd hh:mm:ss')
-      @google_calendar = data['googlecalendar']
 
       @activities = Array.new
       unless activities.nil?
