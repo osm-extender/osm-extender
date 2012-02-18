@@ -1,0 +1,26 @@
+<% provide :title, 'Show email reminder' %>
+
+<h2>Reminder details</h2>
+<p>
+  <b>Section ID:</b>
+  <%= @email_reminder.section_id %>
+</p>
+
+<p>
+  <b>Send on:</b>
+  <%= day_name(@email_reminder.send_on) %>
+</p>
+
+<h2>Items</h2>
+<p>This reminder contains the following items.</p>
+<table>
+  <tr><th>Item</th><th>Configuration</th></tr>
+  <%- @email_reminder.items.each do |item| %>
+    <tr>
+      <td><%= item.friendly_name %></td>
+      <td><%- item.configuration.each_key do |key| %>
+        <%= item.labels[key] %>: <%= item.configuration[key] %><br/>
+      <%- end %></td>
+    </tr>
+  <%- end %>
+</table>

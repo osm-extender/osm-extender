@@ -1,0 +1,49 @@
+<% provide :title, 'Edit email reminder' %>
+
+<h2>Reminder details</h2>
+<%= render 'form' %>
+
+<h2>Items</h2>
+<p>This reminder contains the following items.</p>
+<table>
+  <tr>
+    <th>Item</th>
+    <th>Configuration</th>
+    <th>Actions</th>
+  </tr>
+
+  <%- @email_reminder.items.each do |item| %>
+    <tr>
+      <td><%= item.friendly_name %></td>
+      <td><%- item.configuration.each_key do |key| %>
+        <%= item.labels[key] %>: <%= item.configuration[key] %><br/>
+      <%- end %></td>
+      <td>
+        <%= link_to '[Edit]', edit_email_reminder_item_path(@email_reminder, item) %>
+        <%= link_to '[Destroy]', email_reminder_item_path(@email_reminder, item), confirm: 'Are you sure?', method: :delete %>
+      </td>
+    </tr>
+  <%- end %>
+</table>
+
+<br/>
+
+<p>You can add an item by using the links below.</p>
+<ul>
+
+<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday') %>
+  <li><%= link_to 'Birthdays', new_email_reminder_item_birthday_path(@email_reminder) %>
+<%- end %>
+<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent') %>
+  <li><%= link_to 'Events', new_email_reminder_item_event_path(@email_reminder) %>
+<%- end %>
+<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme') %>
+  <li><%= link_to 'Programme', new_email_reminder_item_programme_path(@email_reminder) %>
+<%- end %>
+<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen') %>
+  <li><%= link_to 'Member not seen', new_email_reminder_item_not_seen_path(@email_reminder) %>
+<%- end %>
+<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge') %>
+  <li><%= link_to 'Due badges', new_email_reminder_item_due_badge_path(@email_reminder) %>
+<%- end %>
+</ul>

@@ -22,5 +22,11 @@ SettingValue.create ([
   }, {
     :key => 'user mailer - from',
     :value => Rails.env.test? ? 'user-mailer@example.com' : prompt('What email address should user related mails be sent from?')
+  }, {
+    :key => 'reminder mailer - from',
+    :value => Rails.env.test? ? 'reminder-mailer@example.com' : prompt('What email address should reminder mails be sent from?')
+  }, {
+    :key => 'reminder mailer - send failed to',
+    :value => Rails.env.test? ? 'reminder-mailer-to@example.com' : prompt('What email address should reminder failure mails be sent to?')
   }
 ])

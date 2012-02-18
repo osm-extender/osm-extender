@@ -13,16 +13,17 @@
   <tr><th>OSM&nbsp;Permission</th><th>Site&nbsp;Action</th><th>Requires</th><th>Granted</th></tr>
   <tr><td>Scout Details</td></tr>
   <tr><td></td><td>Email lists</td><td>Read</td><td><%= yes_no @permissions.can_read?(:member) %>
-  <tr><td></td><td>Email reminders</td><td>Read</td><td><%= yes_no @permissions.can_read?(:member) %>
+  <tr><td></td><td>Email reminders (birthdays)</td><td>Read</td><td><%= yes_no @permissions.can_read?(:member) %>
   <tr><td>Badge Records</td></tr>
-  <tr><td></td><td>Email reminders</td><td>Read</td><td><%= yes_no @permissions.can_read?(:badge) %>
+  <tr><td></td><td>Email reminders (due badges)</td><td>Read</td><td><%= yes_no @permissions.can_read?(:badge) %>
 <!--  <tr><td>Administration</td></tr><!-- user -->
-<!--  <tr><td>Attendance Register</td></tr> -->
+  <tr><td>Attendance Register</td></tr>
+  <tr><td></td><td>Email reminders (not seen)</td><td>Read</td><td><%= yes_no @permissions.can_read?(:register) %>
   <tr><td>Programme</td></tr>
-  <tr><td></td><td>Email reminders</td><td>Read</td><td><%= yes_no @permissions.can_read?(:programme) %>
+  <tr><td></td><td>Email reminders (programme)</td><td>Read</td><td><%= yes_no @permissions.can_read?(:programme) %>
   <tr><td></td><td>Programme review</td><td>Read</td><td><%= yes_no @permissions.can_read?(:programme) %>
   <tr><td>Events</td></tr>
-  <tr><td></td><td>Email reminders</td><td>Read</td><td><%= yes_no @permissions.can_read?(:programme) %>
+  <tr><td></td><td>Email reminders (events)</td><td>Read</td><td><%= yes_no @permissions.can_read?(:programme) %>
 <!--  <tr><td>Flexi-Records</td></tr> -->
 <!--  <tr><td>Finances</td></tr> -->
 </table>

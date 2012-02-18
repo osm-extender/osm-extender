@@ -44,5 +44,10 @@ module OSMExtender
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Allow mailer views to access helpers in application_helpers
+    config.to_prepare do
+      ActionMailer::Base.helper "application"
+    end
   end
 end

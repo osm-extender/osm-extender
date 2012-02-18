@@ -1,0 +1,23 @@
+<%= form_for(@email_reminder_item) do |f| %>
+  <% if @email_reminder_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@email_reminder_item.errors.count, "error") %> prohibited this item from being saved:</h2>
+      <ul>
+      <% @email_reminder_item.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%- @email_reminder_item.labels.keys.sort.each do |key| %>
+  <div class="field">
+    <label for="<%= key %>"><%= @email_reminder_item.labels[key] %></label><br/>
+    <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
+  </div>
+  <%- end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

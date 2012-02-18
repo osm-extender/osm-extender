@@ -11,19 +11,38 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120206113714) do
+ActiveRecord::Schema.define(:version => 20120222171145) do
+
+  create_table "email_reminder_items", :force => true do |t|
+    t.integer  "email_reminder_id"
+    t.string   "type"
+    t.text     "configuration"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "email_reminder_items", ["email_reminder_id"], :name => "index_email_reminder_items_on_email_reminder_id"
+  add_index "email_reminder_items", ["type"], :name => "index_email_reminder_items_on_type"
+
+  create_table "email_reminders", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "section_id"
+    t.integer  "send_on"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "faqs", :force => true do |t|
     t.string   "question"
     t.text     "answer"
-    t.boolean  "active",     :default => true
+    t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "programme_review_balanced_caches", :force => true do |t|
-    t.integer  "term_id",       :null => false
-    t.integer  "section_id",    :null => false
+    t.integer  "section_id"
+    t.integer  "term_id"
     t.text     "zone_totals"
     t.text     "method_totals"
     t.datetime "created_at"
@@ -45,10 +64,8 @@ ActiveRecord::Schema.define(:version => 20120206113714) do
     t.text   "value"
   end
 
-  add_index "setting_values", ["key"], :name => "index_setting_values_on_key", :unique => true
-
   create_table "users", :force => true do |t|
-    t.string   "email_address",                                                    :null => false
+    t.string   "email_address"
     t.string   "crypted_password"
     t.string   "salt"
     t.datetime "created_at"
@@ -59,17 +76,13 @@ ActiveRecord::Schema.define(:version => 20120206113714) do
     t.string   "reset_password_token"
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
-    t.integer  "failed_logins_count",                           :default => 0
+    t.integer  "failed_logins_count"
     t.datetime "lock_expires_at"
     t.string   "name"
-    t.boolean  "can_administer_users",                          :default => false
+    t.boolean  "can_administer_users"
     t.text     "osm_userid",                      :limit => 6
     t.text     "osm_secret",                      :limit => 32
     t.boolean  "can_administer_faqs",                           :default => false
   end
-
-  add_index "users", ["activation_token"], :name => "index_users_on_activation_token"
-  add_index "users", ["email_address"], :name => "index_users_on_email_address", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token"
 
 end

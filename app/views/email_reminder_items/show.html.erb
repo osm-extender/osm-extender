@@ -1,0 +1,13 @@
+<% provide :title, "Show email reminder item (#{@email_reminder_item.friendly_name.downcase})" %>
+
+<p>
+  <b>Type:</b>
+  <%= @email_reminder_item.friendly_name %>
+</p>
+
+<%- @email_reminder_item.labels.keys.sort.each do |key| %>
+<p>
+  <b><%= @email_reminder_item.labels[key] %></b>
+  <%= @email_reminder_item.configuration[key] %>
+</p>
+<%- end %>

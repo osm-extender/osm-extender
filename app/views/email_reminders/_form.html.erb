@@ -1,0 +1,29 @@
+<%= form_for(@email_reminder) do |f| %>
+  <% if @email_reminder.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@email_reminder.errors.count, "error") %> prohibited this email_reminder from being saved:</h2>
+
+      <ul>
+      <% @email_reminder.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :send_on %><br />
+    <select id="email_reminder_send_on" name="email_reminder[send_on]">
+      <option value="0"<%- if @email_reminder.send_on == 0 %> selected<%- end %>>Sunday</option>
+      <option value="1"<%- if @email_reminder.send_on == 1 %> selected<%- end %>>Monday</option>
+      <option value="2"<%- if @email_reminder.send_on == 2 %> selected<%- end %>>Tuesday</option>
+      <option value="3"<%- if @email_reminder.send_on == 3 %> selected<%- end %>>Wednesday</option>
+      <option value="4"<%- if @email_reminder.send_on == 4 %> selected<%- end %>>Thursday</option>
+      <option value="5"<%- if @email_reminder.send_on == 5 %> selected<%- end %>>Friday</option>
+      <option value="6"<%- if @email_reminder.send_on == 6 %> selected<%- end %>>Saturday</option>
+    </select>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

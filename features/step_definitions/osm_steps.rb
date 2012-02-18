@@ -87,6 +87,120 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
 end
 
+Given /^an OSM request to get events for section (\d+) will have the events$/ do |section_id, table|
+  url = "events.php?action=getEvents&sectionid=#{section_id}"
+
+  events = Array.new
+  table.hashes.each_with_index do |hash, index|
+    event = {
+      "eventid" => index.to_s,
+      "name" => hash['name'],
+      "startdate" => hash['in how many days'].to_i.days.from_now.strftime('%Y-%m-%d'),
+      "enddate" => nil,
+      "starttime" => "00:00:00",
+      "endtime" => "00:00:00",
+      "cost" => "0.00",
+      "location" => "",
+      "notes" => "",
+      "sectionid" => section_id,
+      "googlecalendar" => nil
+    }
+    events.push event
+  end
+
+  data = {
+    "identifier" => "eventid",
+    "label" => "name",
+    "items" => events
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+end
+
+Given /^an OSM request to get the register structure for term (\d+) and section (\d+) will cover the last (\d+) weeks$/ do |term_id, section_id, weeks|
+  weeks = weeks.to_i
+  url = "users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}"
+
+  rows = []
+  range = weeks..1
+  range.each_with_index do |ago, index|
+    date = ago.weeks.ago.strftime('%Y-%m-%d')
+    row = {
+      "name" => date,
+      "field" => date,
+      "formatter" => "doneFormatter",
+      "width" => "110px",
+      "tooltip" => "Programme Item #{index}"
+    }
+    rows.push row
+  end
+  
+  data = [
+    {"rows"=>[{"name"=>"First name","field"=>"firstname","width"=>"100px"},{"name"=>"Last name","field"=>"lastname","width"=>"100px"},{"name"=>"Total","field"=>"total","width"=>"60px"}],"noscroll"=>true},
+    {"rows"=>rows}
+  ]
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+end
+
+Given /^an OSM request to get the register for term (\d+) and section (\d+) will have the following members and attendance$/ do |term_id, section_id, table|
+  url = "users.php?action=register&sectionid=#{section_id}&termid=#{term_id}"
+
+  rows = []
+  table.hashes.each_with_index do |hash, index|
+    from_weeks_ago = hash['from weeks ago'].to_i
+    to_weeks_ago = hash['to weeks ago'].to_i
+    row = {
+      'scoutid' => index.to_s,
+      'firstname' => hash['name'],
+      'lastname' => 'Smith',
+      'sectionid' => section_id,
+      'patrolid' => '1',
+      'total' => from_weeks_ago - to_weeks_ago
+    }
+    range = from_weeks_ago..to_weeks_ago
+    range.each do |ago|
+      row[ago.weeks.ago.strftime('%Y-%m-%d')] = '1'
+    end
+    rows.push row
+  end
+
+
+  
+  data = {
+    'identifier' => 'scoutid',
+    'label' => "name",
+    'items' => rows
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+end
+
+Given /^an OSM request to get due badges for section (\d+) and term (\d+) will result in the following being due their "([^"]*)" badge$/ do |section_id, term_id, badge_name, table|
+  url = "challenges.php?action=outstandingBadges&sectionid=#{section_id}&termid=#{term_id}"
+
+  badge_symbol = badge_name.downcase.gsub(/ /, '_')
+
+  members = []
+  table.hashes.each_with_index do |hash, index|
+    member = {
+      'scoutid' => index.to_s,
+      'firstname' => hash['name'],
+      'lastname' => 'Smith',
+      'completed' => hash['completed'],
+      'extra' => hash['extra'],
+    }
+    members.push member
+  end
+  
+  data = {
+    'pending' => {badge_symbol=>members},
+    'description' => {badge_symbol => {'name'=>badge_name, 'section'=>'section_type', 'type'=>'core','badge'=>badge_symbol}}
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+end
+
 Given /^an OSM request to get groupings for section (\d+) will have the groupings?$/ do |section_id, table|
   url = "users.php?action=getPatrols&sectionid=#{section_id}"
 

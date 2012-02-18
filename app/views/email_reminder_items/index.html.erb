@@ -1,0 +1,23 @@
+<% provide :title, 'List email reminder items' %>
+
+<table>
+  <tr>
+    <th>Email reminder</th>
+    <th>Type</th>
+    <th>Configuration</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @email_reminder_items.each do |email_reminder_item| %>
+  <tr>
+    <td><%= email_reminder_item.email_reminder %></td>
+    <td><%= email_reminder_item.type %></td>
+    <td><%= email_reminder_item.configuration %></td>
+    <td><%= link_to 'Show', email_reminder_item %></td>
+    <td><%= link_to 'Edit', edit_email_reminder_item_path(email_reminder_item) %></td>
+    <td><%= link_to 'Destroy', email_reminder_item, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>

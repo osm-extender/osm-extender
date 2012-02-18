@@ -11,6 +11,7 @@ module ApplicationHelper
   # Display either yes or no highlighted in gree or red
   # @param value the boolean value being represented
   # @param positive_value (optional, default true) the value to be considered positive (and displayed in green)
+  # @returns an HTML safe string
   def yes_no(value, positive_value=true)
     if positive_value == value
       return "<span style=\"color: green;\">#{value ? 'yes' : 'no'}</span>".html_safe
@@ -19,4 +20,18 @@ module ApplicationHelper
     end
   end
 
+  # Get the name of a day of the week (0-Sunday .. 6-Saturday)
+  # @param dow day of the week (0 to 6)
+  # @returns a string containing the day name
+  def day_name(dow)
+    return %w{Sunday Monday Tuesday Wednesday Thursday Friday Saturday}[dow]
+  end
+
+  # Get the date in the chosen format with the day of the month ordinalized
+  # @param date the time to display in the format
+  # @param format_string the format string to pass to the strftime methods, after replacing %d with the ordinalized day of the month
+  # @returns a string representing the date
+  def ordinalized_date(date, format_string)
+    return date.strftime(format_string.gsub(/\%d/, date.strftime('%e').to_i.ordinalize.to_s))
+  end
 end

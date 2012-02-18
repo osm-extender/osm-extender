@@ -258,16 +258,7 @@ module OSM
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Member objects
     #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
     def get_members(section_id, term_id=nil, data={})
-      if term_id.nil?
-        # Find current term
-        terms = get_terms(data)[:data]
-        unless terms.nil?
-          terms.each do |term|
-            term_id = term.id if term.current? && (term.section_id == section_id)
-          end
-        end
-      end
-
+      term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
       response = perform_query("users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}", data)
 
       # If sucessful make result a OSM::Member object
@@ -335,6 +326,108 @@ module OSM
       return response
     end
 
+    # Get events
+    # @section_id the section to get details for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Event objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_events(section_id, data={})
+      response = perform_query("events.php?action=getEvents&sectionid=#{section_id}", data)
+
+      # If sucessful make result an array of Event objects
+      unless response[:http_error] || response[:osm_error]
+        result = Array.new
+        response[:data]['items'].each do |item|
+          result.push OSM::Event.new(item)
+        end
+        response[:data] = result
+      end
+
+      return response
+    end
+
+    # Get due badges
+    # @section_id the section to get details for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) a OSM::DueBadges objects
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_due_badges(section_id, term_id=nil, data={})
+      term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
+      response = perform_query("challenges.php?action=outstandingBadges&sectionid=#{section_id}&termid=#{term_id}", data)
+
+      # If sucessful make result a OSM::DueBadges object
+      unless response[:http_error] || response[:osm_error]
+        response[:data] = OSM::DueBadges.new(response[:data])
+      end
+
+      return response
+    end
+
+    # Get register structure
+    # @section_id the section to get details for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) a hash representing the rows of the register
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_register_structure(section_id, term_id=nil, data={})
+      term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
+      response = perform_query("users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}", data)
+
+      data = response[:data]
+      data.each do |item|
+        item.symbolize_keys!
+        item[:rows].each do |row|
+          row.symbolize_keys!
+        end
+      end
+      response[:data] = data
+
+      return response
+    end
+
+    # Get register
+    # @section_id the section to get details for
+    # @param data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - true or false depending on if an HTTP error occured
+    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :response - what HTTParty returned when making the request
+    #   * :data - (only if :http_error is false and :osm_error is false) a hash representing the rows of the register
+    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    def get_register(section_id, term_id=nil, data={})
+      term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
+      response = perform_query("users.php?action=register&sectionid=#{section_id}&termid=#{term_id}", data)
+
+      data = response[:data]['items']
+      data.each do |item|
+        item.symbolize_keys!
+        item[:scoutid] = item[:scoutid].to_i
+        item[:sectionid] = item[:sectionid].to_i
+        item[:patrolid] = item[:patrolid].to_i
+      end
+      response[:data] = data
+
+      return response
+    end
 
     private
     # Make the query to the OSM API
@@ -564,7 +657,7 @@ module OSM
 
   class Member
 
-    attr_reader :id, :section_id, :type, :first_name, :last_name, :email1, :email2, :email3, :email4, :phone1, :phone2, :phone3, :phone4, :address, :address2, :dob, :started, :joined_in_years, :parents, :notes, :medical, :religion, :school, :enthnicity, :subs, :grouping_id, :grouping_leader, :joined, :age, :joined_years, :patrol
+    attr_reader :id, :section_id, :type, :first_name, :last_name, :email1, :email2, :email3, :email4, :phone1, :phone2, :phone3, :phone4, :address, :address2, :date_of_birth, :started, :joined_in_years, :parents, :notes, :medical, :religion, :school, :enthnicity, :subs, :grouping_id, :grouping_leader, :joined, :age, :joined_years, :patrol
 
     # Initialize a new Member using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
@@ -584,7 +677,7 @@ module OSM
       @phone4 = data['phone4']
       @address = data['address']
       @address2 = data['address2']
-      @dob = Date.parse(data['dob'], 'yyyy-mm-dd')
+      @date_of_birth = Date.parse(data['dob'], 'yyyy-mm-dd')
       @started = data['started']
       @joined_in_years = data['joining_in_yrs']
       @parents = data['parents']
@@ -680,11 +773,87 @@ module OSM
   end
 
 
+  class Event
+
+    attr_reader :id, :section_id, :name, :start, :end, :cost, :location, :notes
+
+    # Initialize a new Event using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @id = data['eventid']
+      @section_id = data['sectionid']
+      @name = data['name']
+      @start = data['startdate'] ? DateTime.parse((data['startdate'] + ' ' + data['starttime']), 'yyyy-mm-dd hh:mm:ss') : nil
+      @end = data['enddate'] ? DateTime.parse((data['enddate'] + ' ' + data['endtime']), 'yyyy-mm-dd hh:mm:ss') : nil
+      @cost = data['cost']
+      @location = data['location']
+      @notes = data['notes']
+    end
+
+  end
+
+
+  class DueBadges
+
+    attr_reader :descriptions, :by_member, :totals
+
+    # Initialize a new Event using the hash returned by the API call
+    # @param data the hash of data for the object returned by the API
+    def initialize(data)
+      @pending = data['pending'].symbolize_keys
+      @descriptions = data['description'].symbolize_keys
+
+      @pending.each_key do |key|
+        @pending[key].each do |item|
+          item.symbolize_keys!
+          item[:sid] = item[:sid].to_i
+          item[:completed] = item[:completed].to_i
+        end
+      end
+      @descriptions.each_key do |key|
+        @descriptions[key].symbolize_keys!
+        @descriptions[key][:section] = @descriptions[key][:section].to_sym
+        @descriptions[key][:type] = @descriptions[key][:type].to_sym
+      end
+
+
+      @by_member = {}
+      @totals = {}
+      @pending.each_key do |key|
+        @pending[key].each do |item|
+          name = "#{item[:firstname]} #{item[:lastname]}"
+          by_member[name] = [] if by_member[name].nil?
+
+          badge = {
+            :badge => key,
+            :extra_information => item[:extra]
+          }
+          by_member[name].push badge
+          @totals[key] = {} if @totals[key].nil?
+          @totals[key][item[:extra]] = @totals[key][item[:extra]].to_i + 1
+        end
+      end
+    end
+
+  end
+
+
   private
   def self.make_array_of_symbols(array)
     array.each_with_index do |item, index|
       array[index] = item.to_sym
     end
   end
+
+  def self.find_current_term_id(api, section_id, data={})
+    terms = api.get_terms(data)[:data]
+    unless terms.nil?
+      terms.each do |term|
+        return term.id if term.current? && (term.section_id == section_id)
+      end
+    end
+    return nil
+  end
+
 
 end

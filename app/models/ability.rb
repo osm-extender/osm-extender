@@ -26,6 +26,15 @@ class Ability
 
     else
       # Things only authenticated users can do
+      can :administer, EmailReminder do |reminder|
+        reminder.user == user
+      end
+      can :create, EmailReminder
+
+      can :administer, EmailReminderItem do |item|
+        can? :administer, item.email_reminder
+      end
+      can :create, EmailReminderItem
 
       # Things user administrators can do
       if user.can_administer_users?
@@ -37,7 +46,7 @@ class Ability
       
       # Things FAQ administrators can do
       if user.can_administer_faqs?
-        can [:administer], Faq
+        can :administer, Faq
       end
 
     end

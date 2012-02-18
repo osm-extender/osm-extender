@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code
   attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code, :can_administer_users, :as => :admin
 
+  has_many :email_reminders, :dependent => :destroy
+
   before_save :email_is_lowercase
   after_save :send_email_on_attribute_changes
 

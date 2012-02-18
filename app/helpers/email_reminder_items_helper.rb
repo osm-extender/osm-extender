@@ -1,0 +1,2 @@
+module EmailReminderItemsHelper
+end
