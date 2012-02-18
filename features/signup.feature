@@ -20,7 +20,6 @@ Feature: Sign up
         Given I have no users
         And no emails have been sent
 	And there is no configuration for "signup code"
-	And the configuration for "signup code" is ""
 
 
     Scenario: Signup
@@ -55,8 +54,17 @@ Feature: Sign up
 	And I fill in "Signup code" with "abc123"
         And I press "Sign up"
         Then I should have 1 user
-        And I should see "Your signup was successful"
-	And I should be on the root page
+
+    Scenario: Signup (with blank signup code)
+	Given the configuration for "signup code" is ""
+        When I go to the signup page
+	Then I should not see "Signup code"
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "Password" with "P@55word"
+        And I fill in "Password confirmation" with "P@55word"
+        And I press "Sign up"
+        Then I should have 1 user
 
 
     Scenario: Signup (signed in)
