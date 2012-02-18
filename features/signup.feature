@@ -11,15 +11,23 @@ Feature: Sign up
     In order to better support users
     I want to know users have a valid email address
 
+    As a site administrator
+    In order to control signups
+    I want to be able to insist a signup code is required
+
 
     Background:
         Given I have no users
         And no emails have been sent
+	And there is no configuration for "signup code"
+	And the configuration for "signup code" is ""
 
 
     Scenario: Signup
-        When I go to the signup page
-        And I fill in "Name" with "Somebody"
+        When I go to the root page
+	When I follow "Sign up" 
+	Then I should not see "Signup code"
+        When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "Password" with "P@55word"
         And I fill in "Password confirmation" with "P@55word"
@@ -35,6 +43,21 @@ Feature: Sign up
 	And I should be on the signin page
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
 	And there should be 2 emails
+
+    Scenario: Signup (with signup code)
+	Given the configuration for "signup code" is "abc123"
+        When I go to the signup page
+	Then I should see "Signup code"
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "Password" with "P@55word"
+        And I fill in "Password confirmation" with "P@55word"
+	And I fill in "Signup code" with "abc123"
+        And I press "Sign up"
+        Then I should have 1 user
+        And I should see "Your signup was successful"
+	And I should be on the root page
+
 
     Scenario: Signup (signed in)
         Given I have the following user records
@@ -157,6 +180,35 @@ Feature: Sign up
         And I press "Sign up"
         Then I should have 1 user
         And I should see "Email address has already been taken"
+        And I should not see "Your signup was successful"
+	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
+
+    Scenario: Signup (no signup code)
+	Given the configuration for "signup code" is "abc123"
+        When I go to the signup page
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "Password" with "P@55word"
+        And I fill in "Password confirmation" with "P@55word"
+        And I press "Sign up"
+        Then I should have 0 users
+        And I should see "Signup code can't be blank"
+        And I should not see "Your signup was successful"
+	And I should be on the users page
+        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
+
+    Scenario: Signup (bad signup code)
+	Given the configuration for "signup code" is "abc123"
+        When I go to the signup page
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "Password" with "P@55word"
+        And I fill in "Password confirmation" with "P@55word"
+	And I fill in "Signup code" with "123abc"
+        And I press "Sign up"
+        Then I should have 0 users
+        And I should see "Signup code is invalid"
         And I should not see "Your signup was successful"
 	And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
