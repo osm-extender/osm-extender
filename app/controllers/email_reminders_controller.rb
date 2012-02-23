@@ -1,5 +1,6 @@
 class EmailRemindersController < ApplicationController
   before_filter :require_login
+  before_filter :require_connected_to_osm
   before_filter :setup_tertiary_menu
   load_and_authorize_resource
 
