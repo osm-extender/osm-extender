@@ -77,7 +77,7 @@ Feature: OSM
 
     Scenario: View OSM Permissions (not connected to OSM)
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "OSM permissions"
+        And I go to the osm_permissions page
 	Then I should see "You must connect to your OSM account first"
 	And I should be on the connect_to_osm page
 
@@ -86,3 +86,30 @@ Feature: OSM
         When I go to the osm permissions page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+
+
+    Scenario: No links or message for non signed in user
+	When I go to the root page
+	Then I should not see "links to things you can do will appear here"
+	And I should not see "Email reminders"
+	And I should not see "Programme review"
+	And I should not see "Email lists"
+	And I should not see "OSM permissions"
+
+    Scenario: Message but no links for non connected user
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should see "links to things you can do will appear here"
+	And I should not see "Email reminders"
+	And I should not see "Programme review"
+	And I should not see "Email lists"
+	And I should not see "OSM permissions"
+
+    Scenario: Links for connected user
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 roles
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should not see "links to things you can do will appear here"
+	And I should see "Email reminders"
+	And I should see "Programme review"
+	And I should see "Email lists"
+	And I should see "OSM permissions"

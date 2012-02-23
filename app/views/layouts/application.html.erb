@@ -53,10 +53,16 @@
               <%- end %>
             <%- end %>
           </div>
-          <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
-          <div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div>
-          <div class="menu_item"><%= link_to 'Email lists', generate_email_list_path %></div>
-          <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
+          <%- if current_user.connected_to_osm? %>
+            <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
+            <div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div>
+            <div class="menu_item"><%= link_to 'Email lists', generate_email_list_path %></div>
+            <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
+          <%- else %>
+            <div style="margin-left: 10%; margin-right: 10%; margin-top: auto; margin-bottom: auto; text-align: center; font-weight: bold;">
+              <p>Once you have <%= link_to 'connected to OSM', connect_to_osm_path %> links to things you can do will appear here.</p>
+            </div>
+          <%- end %>
         <%- end %>
         </div><!-- secondary_menu -->
 
