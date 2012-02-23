@@ -28,5 +28,20 @@ SettingValue.create ([
   }, {
     :key => 'reminder mailer - send failed to',
     :value => Rails.env.test? ? 'reminder-mailer-to@example.com' : prompt('What email address should reminder failure mails be sent to?')
+  }, {
+    :key => 'OSM API - id',
+    :value => Rails.env.test? ? '' : prompt('What is the OSM API ID to use?')
+  }, {
+    :key => 'OSM API - token',
+    :value => Rails.env.test? ? '' : prompt('What is the OSM API token to use?')
+  }, {
+    :key => 'OSM API - name',
+    :value => Rails.env.test? ? '' : prompt('What is the name displayed on OSM\'s External Access tab for this API?')
+  }, {
+    :key => 'ReCAPTCHA - public key',
+    :value => Rails.env.test? ? '' : prompt('What is the public key to use with ReCAPTCHA?')
+  }, {
+    :key => 'ReCAPTCHA - private key',
+    :value => Rails.env.test? ? '' : prompt('What is the private key to use with ReCAPTCHA?')
   }
 ])

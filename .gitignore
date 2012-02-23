@@ -5,4 +5,5 @@ log/*.log
 tmp/
 .sass-cache/
 config/machine.yml
+config/database.yml
 doc/app

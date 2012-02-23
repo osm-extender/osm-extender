@@ -43,15 +43,4 @@ puts "Done"
 puts '' # Spacing
 puts "Remember to setup your database if this is your first time running this script\n"
 puts "(bundle exec rake db:setup)"
-
-puts '' # Spacing
-puts "Remember you must contact Ed at https://www.OnlineScoutManager.co.uk to get"
-puts "your own API ID and token and set the following environment variables accordingly"
-puts "osmx_osm_id  or  osm_id"
-puts "osmx_osm_token  or  osm_token"
-
-puts '' # Spacing
-puts "Remember you must goto http://recaptcha.net/whyrecaptcha.html and setup a recapctha"
-puts "public/private key pair to use and set the following environment variables accordingly"
-puts "osmx_recaptcha_public_key  or  recaptcha_public_key"
-puts "osmx_recaptcha_private_key  or  recaptcha_private_key"
+puts "You will need to have yor OSM API and ReCAPTCHA keys availible."
