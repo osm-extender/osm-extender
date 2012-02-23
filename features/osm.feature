@@ -65,6 +65,7 @@ Feature: OSM
 
     Scenario: View OSM Permissions
 	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 role
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |

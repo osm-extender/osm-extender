@@ -29,7 +29,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.before(:each) do
-    FakeWeb.clean_registery
+    FakeWeb.clean_registry
     Timecop.return
   end
 end
