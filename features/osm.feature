@@ -75,6 +75,12 @@ Feature: OSM
 	And the "Granted" column of the "Email lists" row I should see "yes"
 	And the "Granted" column of the "Programme review" row I should see "NO"
 
+    Scenario: View OSM Permissions (not connected to OSM)
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "OSM permissions"
+	Then I should see "You must connect to your OSM account first"
+	And I should be on the connect_to_osm page
+
 
     Scenario: View OSM Permissions (not signed in)
         When I go to the osm permissions page

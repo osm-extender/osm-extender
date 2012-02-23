@@ -44,7 +44,7 @@ class MyAccountController < ApplicationController
   def connect_to_osm2
     if current_user.connect_to_osm(params[:email], params[:password])
       # Set current section
-      current_user.osm_roles.each do |role|
+      current_user.osm_api.get_roles[:data].each do |role|
         session[:current_section_id] = role.section_id if role.default
       end
 

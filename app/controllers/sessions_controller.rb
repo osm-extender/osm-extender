@@ -7,8 +7,10 @@ class SessionsController < ApplicationController
     user = login(params[:email_address].downcase, params[:password])
     if user
       # Set current section
-      current_user.osm_roles.each do |role|
-        session[:current_section_id] = role.section_id if role.default
+      if current_user.connected_to_osm?
+        current_user.osm_api.get_roles[:data].each do |role|
+          session[:current_section_id] = role.section_id if role.default
+        end
       end
       
       redirect_back_or_to my_page_path, :notice => 'Sucessfully signed in.'
@@ -35,9 +37,11 @@ class SessionsController < ApplicationController
     section_id = params[:section_id]
     
     # Check user has access to section then change current section
-    current_user.osm_roles.each do |role|
-      if section_id.eql?(role.section_id.to_s)
-        session[:current_section_id] = role.section_id
+    if current_user.connected_to_osm?
+      current_user.osm_api.get_roles[:data].each do |role|
+        if section_id.eql?(role.section_id.to_s)
+          session[:current_section_id] = role.section_id
+        end
       end
     end
     

@@ -60,8 +60,8 @@ module OSM
     # @param email the login email address of the user on OSM
     # @param password the login password of the user on OSM
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) is a hash containing the following keys:
     #     * 'userid' - the userid to use in future requests
@@ -80,22 +80,21 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) this is an empty array
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Role objects
     def get_roles(data={})
       response = perform_query('api.php?action=getUserRoles', data)
 
-      # If sucessful make result an array of Role objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data].each do |item|
           result.push OSM::Role.new(item)
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -105,22 +104,21 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Section objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_sections(data={})
       response = perform_query('api.php?action=getSectionConfig', data)
 
-      # If sucessful make result an array of Section objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data].each_key do |key|
           result.push OSM::Section.new(key, response[:data][key])
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -149,22 +147,21 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Patrol objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_groupings(section_id, data={})
       response = perform_query("users.php?action=getPatrols&sectionid=#{section_id}", data)
 
-      # If sucessful make result an array of OSM::Patrol objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data]['patrols'].each do |item|
           result.push OSM::Grouping.new(item)
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -174,24 +171,23 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Term objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_terms(data={})
       response = perform_query('api.php?action=getTerms', data)
 
-      # If sucessful make result an array of Term objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data].each_key do |key|
           response[:data][key].each do |item|
             result.push OSM::Term.new(item)
           end
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -203,25 +199,24 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ProgrammeItem objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_programme(sectionid, termid, data={})
       response = perform_query("programme.php?action=getProgramme&sectionid=#{sectionid}&termid=#{termid}", data)
 
-      # If sucessful make result an array of ProgrammeItem objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data] = {'items'=>[],'activities'=>{}} if response[:data].class == Array
         items = response[:data]['items'] || []
         activities = response[:data]['activities'] || []
         items.each do |item|
           result.push OSM::ProgrammeItem.new(item, activities[item['eveningid']])
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -233,11 +228,11 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an OSM::Activity object
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) nil
     def get_activity(id, version=nil, data={})
       response = nil
       if version.nil?
@@ -249,6 +244,8 @@ module OSM
       # If sucessful make result an Activity object
       unless response[:http_error] || response[:osm_error]
         response[:data] = OSM::Activity.new(response[:data])
+      else
+        response[:data] = nil
       end
 
       return response
@@ -261,23 +258,22 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Member objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_members(section_id, term_id=nil, data={})
       term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
       response = perform_query("users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}", data)
 
-      # If sucessful make result a OSM::Member object
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data]['items'].each do |item|
           result.push OSM::Member.new(item)
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -288,22 +284,21 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ApiAccess objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_api_access(section_id, data={})
       response = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", data)
 
-      # If sucessful make result an array of ApiAccess objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data]['apis'].each do |item|
           result.push OSM::ApiAccess.new(item)
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -314,21 +309,16 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ApiAccess objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and :osm_error is false) an OSM::ApiAccess objects
+    #   * :data - (only if :http_error is false and osm_error is true) nil
     def get_our_api_access(section_id, data={})
-      response = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", data)
-
-      # If sucessful make result an ApiAccess object
+      response = get_api_access(section_id, data)
       found = nil
-      unless response[:http_error] || response[:osm_error]
-        response[:data]['apis'].each do |item|
-          this_item = OSM::ApiAccess.new(item)
-          found = this_item if this_item.our_api?
-        end
+      response[:data].each do |item|
+        found = item if item.our_api?
       end
       response[:data] = found
 
@@ -341,22 +331,21 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Event objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_events(section_id, data={})
       response = perform_query("events.php?action=getEvents&sectionid=#{section_id}", data)
 
-      # If sucessful make result an array of Event objects
+      result = Array.new
       unless response[:http_error] || response[:osm_error]
-        result = Array.new
         response[:data]['items'].each do |item|
           result.push OSM::Event.new(item)
         end
-        response[:data] = result
       end
+      response[:data] = result
 
       return response
     end
@@ -367,11 +356,11 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and :osm_error is false) a OSM::DueBadges objects
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and osm_error is true) nil
     def get_due_badges(section_id, term_id=nil, data={})
       term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
       response = perform_query("challenges.php?action=outstandingBadges&sectionid=#{section_id}&termid=#{term_id}", data)
@@ -379,6 +368,8 @@ module OSM
       # If sucessful make result a OSM::DueBadges object
       unless response[:http_error] || response[:osm_error]
         response[:data] = OSM::DueBadges.new(response[:data])
+      else
+        response[:data] = nil
       end
 
       return response
@@ -390,11 +381,11 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
-    #   * :data - (only if :http_error is false and :osm_error is false) a hash representing the rows of the register
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of hashes representing the rows of the register
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_register_structure(section_id, term_id=nil, data={})
       term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
       response = perform_query("users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}", data)
@@ -417,11 +408,11 @@ module OSM
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
-    #   * :data - (only if :http_error is false and :osm_error is false) a hash representing the rows of the register
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
+    #   * :data - (only if :http_error is false and :osm_error is false) an array of hashes representing the attendance of a member
+    #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_register(section_id, term_id=nil, data={})
       term_id = OSM.find_current_term_id(self, section_id, data) if term_id.nil?
       response = perform_query("users.php?action=register&sectionid=#{section_id}&termid=#{term_id}", data)
@@ -443,11 +434,10 @@ module OSM
     # @param url the script on the remote server to invoke
     # @param data (optional) a hash containing the values to be sent to the server
     # @returns a hash with the following keys:
-    #   * :http_error - true or false depending on if an HTTP error occured
-    #   * :osm_error - true or false depending on if an OSM error occured
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request
     #   * :data - (only if :http_error is false and osm_error is false) the parsed JSON returned by OSM
-    #   * :data - (only if :http_error is false and osm_error is true) this is a string containing the error message from OSM
     def perform_query(url, data={})
       data['apiid'] = @@api_id
       data['token'] = @@api_token
@@ -461,14 +451,17 @@ module OSM
 
       result = HTTParty.post("#{@base_url}/#{url}", {:body => data})
       to_return = {
-        :http_error => !result.response.code.eql?('200'),
+        :http_error => !result.response.code.eql?('200') ? result.response.code : false,
         :osm_error => result.response.body[0..8].eql?('{"error":'),
         :response => result,
       }
 
       unless to_return[:http_error]
-        to_return[:data] = ActiveSupport::JSON.decode(result.response.body)
-        to_return[:data] = to_return[:data]['error'] if to_return[:osm_error]
+        unless to_return[:osm_error]
+          to_return[:data] = ActiveSupport::JSON.decode(result.response.body)
+        else
+          to_return[:osm_error] = ActiveSupport::JSON.decode(result.response.body)['error']
+        end
       end
       return to_return
     end

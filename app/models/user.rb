@@ -64,8 +64,8 @@ class User < ActiveRecord::Base
       write_attribute(:osm_secret, result[:data]['secret'])
       return save
     else
-      errors.add(:connect_to_osm, result[:data]) if result[:osm_error]
-      errors.add(:connect_to_osm, "HTTP ERROR #{result[:response].response.code}") if result[:http_error]
+      errors.add(:connect_to_osm, result[:osm_error]) if result[:osm_error]
+      errors.add(:connect_to_osm, "HTTP ERROR #{result[:http_error]}") if result[:http_error]
       return false
     end
   end
@@ -78,38 +78,6 @@ class User < ActiveRecord::Base
     else
       return nil
     end
-  end
-
-  def osm_roles
-    return [] unless connected_to_osm?
-    return @osm_roles unless (@osm_roles.nil? || @osm_roles = [])
-
-    api = osm_api
-    response = api.get_roles
-    unless response[:http_error] || response[:osm_error]
-      @osm_roles = response[:data]
-    else
-      @osm_roles = []
-    end
-
-    return @osm_roles
-  end
-
-  def osm_permissions(section_id)
-    @osm_permissions = {} if @osm_permissions.nil?
-
-    return {} unless connected_to_osm?
-    return @osm_permissions[section_id] unless @osm_permissions[section_id].nil?
-
-    api = osm_api
-    response = api.get_our_api_access(section_id)
-    unless response[:http_error] || response[:osm_error]
-      @osm_permissions[section_id] = response[:data]
-      return @osm_permissions[section_id]
-    else
-      return {}
-    end
-
   end
 
   def gravatar_id
