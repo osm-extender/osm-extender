@@ -30,14 +30,17 @@ module OSM
     # @param options - a hash containing the following keys:
     #   * :api_id - the apiid given to you for using the OSM id
     #   * :api_token - the token which goes with the above api
+    #   * :api_name - the name displayed in the External Access tab of OSM
     #   * :api_site - wether to use OSM (if :scout) or OGM (if :guide)
     def self.configure(options)
       raise ArgumentError, ':api_id does not exist in options hash' if options[:api_id].nil?
       raise ArgumentError, ':api_token does not exist in options hash' if options[:api_token].nil?
+      raise ArgumentError, ':api_name does not exist in options hash' if options[:api_name].nil?
       raise ArgumentError, ':api_site does not exist in options hash or is invalid, this should be set to either :scout or :guide' unless [:scout, :guide].include?(options[:api_site])
 
       @@api_id = options[:api_id]
       @@api_token = options[:api_token]
+      @@api_name = options[:api_name]
       @@api_site = options[:api_site]
     end
 
@@ -45,6 +48,12 @@ module OSM
     # @returns the API ID
     def self.api_id
       return @@api_id
+    end
+
+    # Get the API name displayed in the External Access tab of OSM
+    # @returns the API ID
+    def self.api_name
+      return @@api_name
     end
 
     # Get the userid and secret to be able to act as a certain user on the OSM system
