@@ -22,7 +22,7 @@ The following <%= (@data[:EmailReminderItemDueBadge].by_member.size > 1) ? 'memb
 
 --
 <%- end %>
-<%- if @data[:EmailReminderItemEvent] && (@data[:EmailReminderItemProgramme].size > 0) %>
+<%- if @data[:EmailReminderItemEvent] && (@data[:EmailReminderItemEvent].size > 0) %>
 Events
 ------
 The following events are happening in the next <%= pluralize(@configuration[:EmailReminderItemEvent][:the_next_n_months], 'month') %>:
