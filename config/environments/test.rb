@@ -42,4 +42,8 @@ OSMExtender::Application.configure do
 
   # Root URL of application (used in sending emails)
   config.root_url = 'http://test'
+
+  # Which sort of cache to use
+  config.cache_store = :null_store  # Turn off caching
+
 end

@@ -30,4 +30,14 @@ OSMExtender::Application.configure do
 
   # Root URL of application (used in sending emails)
   config.root_url = 'http://127.0.0.1:3000'
+
+  # Which sort of cache to use
+  config.cache_store = :memory_store, {
+    :size => 8 * (1024 * 1024), #MiB
+    :compress => true,
+    :compress_threshold => 1 * (1024 * 1024), #MiB
+    :expires_in => 30.minutes,
+    :race_condition_ttl => 2.minutes
+  }
+
 end
