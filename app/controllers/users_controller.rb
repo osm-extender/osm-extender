@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource :except => [:activate_account]
 
   def index
-    @users = User.find(:all)
+    @users = User.all
   end
 
   def edit
