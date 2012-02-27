@@ -1,11 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
 one:
-  user: 
-  osm_section_id: 1
-  send_on: 1
-
-two:
-  user: 
-  osm_section_id: 1
+  user_id: 1 
+  section_id: 1
   send_on: 1

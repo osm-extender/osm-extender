@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
 one:
-  key: MyString
-  value: MyText
-
-two:
-  key: MyString
-  value: MyText
+  key: MyKey
+  value: MyValue

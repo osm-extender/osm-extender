@@ -3,11 +3,7 @@
 one:
   term_id: 1
   section_id: 1
-  zones: MyText
-  methods: MyText
-
-two:
-  term_id: 1
-  section_id: 1
-  zones: MyText
-  methods: MyText
+  zone_totals: MyText
+  method_totals: MyText
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

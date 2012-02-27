@@ -1,18 +1,6 @@
 OSMExtender
 ===========
 
-An application written by @robertgauld.
-It is designed to extend the capabillities of the Online Scout Manager (https://www.onlinescoutmanager.co.uk).
-
-Primerilly it was written to add features that I want but which were not popular enough to make it into the OSM product:
-* How balanced my programme is
-
-
-Machine Specific Configuration
-==============================
-This system requires some setting up specific to the machine you are running it on.
-This configuration is stored in the config/machine.yml file, this is created by the setup script.
-
 
 License
 =======

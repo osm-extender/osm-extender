@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'yaml'
 require File.join(Rails.root, 'lib', 'development_mail_interceptor')
 
 
@@ -16,11 +15,11 @@ end
 
 # Test the DevelopmentMailIntercepter, it should:
 # * Prepend the addresses the mail was sent to to the subject
-# * Replace the to address with 'robert@robertgauld.co.uk'
+# * Replace the to address with the configured send to address.
 class DevelopmentMailInterceptorTest < ActiveSupport::TestCase
 
   test "makes required changes" do
-    expected_to = YAML.load(IO.read(File.join(Rails.root, 'config', 'machine.yml')))['development_mail_interceptor_send_to']
+    expected_to = Settings.read('Mail Server - Development recipient')
     to = ['to_address@example.com']
     expected_to_in_subject = '"to_address@example.com"'
     subject = 'This is the subject'

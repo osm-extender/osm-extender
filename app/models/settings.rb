@@ -8,6 +8,7 @@ class Settings
   end
 
   def self.read(key)
+    self.setup if defined?(@@values).nil?
     @@values[key]
   end
 

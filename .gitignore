@@ -4,7 +4,6 @@ db/*.sqlite3-journal
 log/*.log
 tmp/
 .sass-cache/
-config/machine.yml
 config/database.yml
 config/environments/*_custom.rb
 doc/app
