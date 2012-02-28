@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
-one:
-  user_id: 1 
-  section_id: 1
-  send_on: 1
+#one:
+#  user_id: 1 
+#  section_id: 1
+#  send_on: 1

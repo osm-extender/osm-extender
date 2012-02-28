@@ -1,11 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
-one:
-  email_reminder: 
-  type: 
-  configuration: MyText
-
-two:
-  email_reminder: 
-  type: 
-  configuration: MyText
+#one:
+#  email_reminder: 
+#  type: 
+#  configuration: MyText
