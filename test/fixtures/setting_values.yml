@@ -1,5 +1,69 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
-one:
-  key: MyKey
-  value: MyValue
+contact_to:
+  key: contact us - to
+  value: contactus@example.com
+
+notifier_from:
+  key: notifier mailer - from
+  value: notifier-mailer@example.com
+
+user_from:
+  key: user mailer - from
+  value: user-mailer@example.com
+
+signup_code:
+  key: signup code
+  value: 
+
+reminder_from:
+  key: reminder mailer - from
+  value: reminder-mailer@example.com
+
+reminder_failure_to:
+  key: reminder mailer - send failed to
+  value: reminder-mailer-failed@example.com
+
+osm_id:
+  key: OSM API - id
+  value: 12
+
+osm_token:
+  key: OSM API - token
+  value: 1234567890
+
+osm_name:
+  key: OSM API - name
+  value: Robert Gauld's API
+
+recaptcha_public:
+  key: ReCAPTCHA - public key
+  value: 11223344556677889900
+
+recaptcha_private:
+  key: ReCAPTCHA - private key
+  value: 00998877665544332211
+
+mail_server_address:
+  key: Mail Server - Address
+  value: smtp.example.com
+
+mail_server_port:
+  key: Mail Server - Port
+  value: 25
+
+mail_server_domain:
+  key: Mail Server - Domain
+  value:  
+
+mail_server_username:
+  key: Mail Server - Username
+  value: sender@example.com
+
+mail_server_password:
+  key: Mail Server - Password
+  value: abcd1234
+
+mail_dev_recipient:
+  key: Mail Server - Development recipient
+  value: developer@example.com
