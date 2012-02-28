@@ -1,5 +1,5 @@
-if SettingValue.table_exists? && !Settings.read('OSM API - id').nil?
-  ActionDispatch::Callbacks.to_prepare do
+ActionDispatch::Callbacks.to_prepare do
+  if SettingValue.table_exists? && !Settings.read('OSM API - id').nil?
     OSM::API.configure(
       :api_id     => Settings.read('OSM API - id'),
       :api_token  => Settings.read('OSM API - token'),
