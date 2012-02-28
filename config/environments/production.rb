@@ -59,7 +59,7 @@ OSMExtender::Application.configure do
   config.active_support.deprecation = :notify
 
   # Root URL of application (used in sending emails)
-  config.root_url = ''  # You should override this in staging_custom.rb
+  config.root_url = ''  # You should override this in production_custom.rb
 
   # Which sort of cache to use
   config.cache_store = :memory_store, {
