@@ -1,25 +1,22 @@
 source 'http://rubygems.org'
 
 gem 'rails'
-
-#gem 'rack', '1.3.3'
-
 gem 'activesupport', '>= 3.2'
-
 gem 'actionmailer'
 
+# Authentication / Authorisation
 gem 'sorcery'
+gem 'cancan'
 
+# Javascript
 gem 'therubyracer'
 gem 'jquery-rails'
 
-gem 'cancan'
-
-gem 'httparty'
-
+# Misc
+gem 'httparty'    # Used by OSM::API to make requests
 gem 'recaptcha'
+gem 'redcarpet'   # used to format FAQ Answers
 
-gem 'redcarpet'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -29,15 +26,15 @@ group :assets do
   gem 'uglifier'
 end
 
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
 
 group :development, :test do
-  gem 'sqlite3'
+  gem 'sqlite3'   # Use the SQLite database
+end
+
+
+group :staging, :production do
+  gem 'mysql'     # Use a mysql database
+  gem 'unicorn'   # Use unicorn as the web server
 end
 
 
@@ -56,12 +53,9 @@ group :test do
 end
 
 
-#group :staging do
-#  gem 'pg'
-#end
+# Deploy with Capistrano
+# gem 'capistrano'
 
+# To use debugger
+# gem 'ruby-debug19', :require => 'ruby-debug'
 
-group :staging, :production do
-  # Use unicorn as the web server
-  gem 'unicorn'
-end
