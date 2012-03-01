@@ -13,6 +13,9 @@ OSMExtender::Application.configure do
   # Set log level
   config.log_level = :debug
 
+  # Print deprecation notices to the Rails logger
+  config.active_support.deprecation = :log
+
   # Root URL of application (used in sending emails)
   config.root_url = ''  # You should override this in staging_custom.rb
 
