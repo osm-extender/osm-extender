@@ -58,6 +58,9 @@ unless Rails.env.test?
     }, {
       :key => 'Mail Server - Password',
       :value => prompt('What is your password on the SMTP server')
+    }, {
+      :key => 'signup code',
+      :value => prompt('What signup code would you like to require users to use (if blank then no code will be asked for)')
     }
   ])
 end
