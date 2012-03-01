@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
 
     haystack_size = alphabet_size * (alphabet_size+1)**(pass.length-1)
 
-    if haystack_size < 6 * (10**15)
+    if haystack_size < minimum_haystack
       if alphabet_size < 40
         errors.add(:password, "isn't complex enough, try adding more types of character (upper case, lower case, numeric and symbol)")
       end
