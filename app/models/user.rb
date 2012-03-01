@@ -87,12 +87,12 @@ class User < ActiveRecord::Base
   private
   # Use Steve Gibson's Password Haystacks logic to ensure password is sufficently secure
   # https://www.grc.com/haystack.htm
-  # As of 5th October 2011, a haystack of 6 x 10^15 gives:
-  # * Online attack: 2 thousand centuries
-  # * Offline fast: 18 hours
-  # * Massive array: 1 minute
+  # Assume the following guesses per second:
+  #  * Online attack - one thousand (10**3)
+  #  * Offline attack - one hundred billion (10**11)
+  #  * Cracking array - one hundred trillion (10**14)
   def password_complexity
-    minimum_haystack = 6 * (10**18)
+    minimum_haystack = (10**14) # Withstand for 1 second of a massive cracking array
     pass = send(sorcery_config.password_attribute_name)
 
     alphabet_size = 0
