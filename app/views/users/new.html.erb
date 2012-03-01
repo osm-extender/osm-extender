@@ -31,7 +31,7 @@
   <%- unless SettingValue.find_by_key('signup code').nil? || SettingValue.find_by_key('signup code').value.blank? %>
     <div class="field">
       <%= f.label :signup_code %><br/>
-      <%= f.password_field :signup_code %>
+      <%= f.text_field :signup_code %>
     </div>
   <%- end %>
   <div class="actions"><%= f.submit 'Sign up' %></div>
