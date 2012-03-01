@@ -1,5 +1,5 @@
 def prompt(question)
-  STDOUT.puts "\t#{question}?"
+  STDOUT.puts "#{question}?"
   STDOUT.print "> "
   STDIN.gets.strip
 end
