@@ -35,6 +35,7 @@ end
 group :staging, :production do
   gem 'mysql'     # Use a mysql database
   gem 'unicorn'   # Use unicorn as the web server
+  gem 'memcache-client'
 end
 
 
