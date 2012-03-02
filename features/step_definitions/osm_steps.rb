@@ -79,7 +79,7 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
 
   body = '{"identifier":"scoutid","items":['
   members.each do |member|
-    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"A\",\"lastname\":\"Member\",\"email1\":\"#{member[0]}\",\"email2\":\"#{member[1]}\",\"email3\":\"#{member[2]}\",\"email4\":\"#{member[3]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"2000-01-01\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[4]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
+    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"A\",\"lastname\":\"Member\",\"email1\":\"#{member[0]}\",\"email2\":\"#{member[1]}\",\"email3\":\"#{member[2]}\",\"email4\":\"#{member[3]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{9.years.ago.strftime("%y-%m-%d")}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[4]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
   end
   body[-1] = ']'
   body += '}'
