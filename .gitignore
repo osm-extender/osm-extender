@@ -6,4 +6,5 @@ tmp/
 .sass-cache/
 config/database.yml
 config/environments/*_custom.rb
+config/unicorn.conf
 doc/app
