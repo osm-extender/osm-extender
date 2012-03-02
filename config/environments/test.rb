@@ -47,3 +47,6 @@ OSMExtender::Application.configure do
   config.cache_store = :null_store  # Turn off caching
 
 end
+
+# Load custom configuration
+require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))

@@ -35,3 +35,6 @@ OSMExtender::Application.configure do
   }
 
 end
+
+# Load custom configuration
+require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
