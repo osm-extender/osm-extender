@@ -5,7 +5,7 @@ OSMExtender::Application.routes.draw do
 
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
-  get 'signup' => 'users#new', :as => 'signup'
+  get 'signup(/:signup_code)' => 'users#new', :as => 'signup'
   
   get 'my_account' => 'my_account#show', :as => 'my_account'
   get 'my_account/change_password' => 'my_account#change_password', :as => 'change_my_password'

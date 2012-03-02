@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new(:signup_code => params[:signup_code])
   end
   
   def create
