@@ -20,7 +20,7 @@ Rails.application.config.sorcery.configure do |config|
 
   # -- session timeout --                                             
   # config.session_timeout = 3600                                     # how long in seconds to keep the session alive.
-  config.session_timeout = (Rails.env.development?) ? 30.minutes : 1.day
+  config.session_timeout = (Rails.env.development?) ? 1.day : 30.minutes
   # config.session_timeout_from_last_action = false                   # use the last action as the beginning of 
                                                                       # session timeout.
   config.session_timeout_from_last_action = true
