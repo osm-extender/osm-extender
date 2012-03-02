@@ -4,7 +4,7 @@ class NotifierMailer < ActionMailer::Base
   def contact_form_submission(contact, to)
     @contact = contact
     mail ({
-      :subject => build_subject("Contact Form Submission from \"#{@contact.name}\" <#{@contact.email_address}>),
+      :subject => build_subject("Contact Form Submission from \"#{@contact.name}\" <#{@contact.email_address}>"),
       :to => to
     })
   end
