@@ -1,9 +1,9 @@
 /*
- * This is a manifest file that'll automatically include all the stylesheets available in this directory
- * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
- * the top of the compiled file, but it's generally better to create a new file per style scope.
+ * This manifest file will include application wide style sheets
+ * Stylesheets (or manifests) for specific controllers should be
+ * called <controller>.css.scss, for example projects.css.scss.
  *= require_self
- *= require_tree . 
+ *= require scaffolds
 */
 
 *{margin:0px;}
