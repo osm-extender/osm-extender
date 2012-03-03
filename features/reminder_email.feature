@@ -32,6 +32,17 @@ Feature: Reminder Email
         And I should see "Tuesday"
         And "alice@example.com" should have 1 email reminder
 
+    Scenario: Should see only own reminders
+        Given I have the following user records
+	    | email_address     | name  |
+	    | bob@example.com   | Bob   |
+        And "bob@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a reminder email for section 1 on "Monday"
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+	Then I should see "Monday"
+	And I should not see "Tuesday"
+
     Scenario: Add birthday item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
         When I signin as "alice@example.com" with password "P@55word"
