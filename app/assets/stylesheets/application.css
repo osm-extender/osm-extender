@@ -51,10 +51,22 @@ table, th, td {
 th {
     background-color:   green;
     color:              white;
+    font-size:          120%;
 }
 
 th, td {
     padding:            2px 8px 2px 8px;
+}
+
+th.empty, td.empty {
+    border-width:       0px;
+    border-right:       inherit;
+}
+
+th.title, td.title {
+    border-width:       0px;
+    text-decoration:    underline;
+    font-size:          140%;
 }
 
 #page {
