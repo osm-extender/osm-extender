@@ -7,7 +7,7 @@ class EmailRemindersController < ApplicationController
   # GET /email_reminders
   # GET /email_reminders.json
   def index
-    @email_reminders = EmailReminder.where(['section_id = ?', session[:current_section_id]])
+    @email_reminders = current_user.email_reminders.where(['section_id = ?', session[:current_section_id]])
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @email_reminders }

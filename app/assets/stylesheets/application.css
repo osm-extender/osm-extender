@@ -1,14 +1,24 @@
 /*
- * This is a manifest file that'll automatically include all the stylesheets available in this directory
- * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
- * the top of the compiled file, but it's generally better to create a new file per style scope.
+ * This manifest file will include application wide style sheets
+ * Stylesheets (or manifests) for specific controllers should be
+ * called <controller>.css(.scss), for example projects.css.
  *= require_self
- *= require_tree . 
+ *= require scaffolds
 */
 
 *{margin:0px;}
-a{color:blue;}
-a:hover{color:green;}
+
+body {
+    margin-bottom:      3ex;
+}
+
+a{
+    color:              blue;
+}
+
+a:hover{
+    color:              green;
+}
 
 p {
     margin-top:         1ex;
@@ -26,6 +36,37 @@ h1 {
 h2, h3, h4 {
     margin-top:         3ex;
     margin-bottom:      2ex;
+}
+
+table {
+    border-collapse:    collapse;
+    margin-left:        auto;
+    margin-right:       auto;
+}
+
+table, th, td {
+    border:             2px solid green;
+}
+
+th {
+    background-color:   green;
+    color:              white;
+    font-size:          120%;
+}
+
+th, td {
+    padding:            2px 8px 2px 8px;
+}
+
+th.empty, td.empty {
+    border-width:       0px;
+    border-right:       inherit;
+}
+
+th.title, td.title {
+    border-width:       0px;
+    text-decoration:    underline;
+    font-size:          140%;
 }
 
 #page {

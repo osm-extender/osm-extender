@@ -1,20 +1,5 @@
-<script language="javascript">
-  //$(document).ready(function() {
-  //  $("#accordion").accordion({
-  //    active: false,
-  //    collapsible: true
-  //  });
-  //});
-
-  jQuery(document).ready(function(){
-          $('#accordion h3').click(function() {
-                  $(this).next().toggle('slow');
-                  return false;
-          }).next().hide();
-  });
-</script>
-
 <% provide :title, "Help" %>
+<% provide :use_jquery_ui, true %>
 
 <div id="accordion" class="ui-accordion" style="width: 90%; margin-right: auto; margin-left:auto;">
   <% @faqs.each do |faq| %>
