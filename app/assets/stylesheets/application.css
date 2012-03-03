@@ -7,8 +7,18 @@
 */
 
 *{margin:0px;}
-a{color:blue;}
-a:hover{color:green;}
+
+body {
+    margin-bottom:      3ex;
+}
+
+a{
+    color:              blue;
+}
+
+a:hover{
+    color:              green;
+}
 
 p {
     margin-top:         1ex;
