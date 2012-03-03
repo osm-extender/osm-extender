@@ -28,6 +28,25 @@ h2, h3, h4 {
     margin-bottom:      2ex;
 }
 
+table {
+    border-collapse:    collapse;
+    margin-left:        auto;
+    margin-right:       auto;
+}
+
+table, th, td {
+    border:             2px solid green;
+}
+
+th {
+    background-color:   green;
+    color:              white;
+}
+
+th, td {
+    padding:            2px 8px 2px 8px;
+}
+
 #page {
     margin-top:         10px;
     margin-left:        15px;
