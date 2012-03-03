@@ -15,6 +15,8 @@ class FaqsController < ApplicationController
   def list
     @faqs = Faq.where("active = #{ActiveRecord::Base.connection.quoted_true}")
 
+    @use_jquery = true
+
     respond_to do |format|
       format.html # list.html.erb
       format.json { render json: @faqs }

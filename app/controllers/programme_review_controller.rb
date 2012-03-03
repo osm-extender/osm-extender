@@ -12,6 +12,9 @@ class ProgrammeReviewController < ApplicationController
     (current_user.osm_api.get_terms[:data] || []).each do |term|
       @terms[term.id] = term if (term.section_id == section.id)
     end
+
+    @use_jquery = true
+    @use_charts = true
   end
 
   def balanced_data

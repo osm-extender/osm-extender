@@ -1,7 +1,7 @@
 /*
  * This manifest file will include application wide style sheets
  * Stylesheets (or manifests) for specific controllers should be
- * called <controller>.css.scss, for example projects.css.scss.
+ * called <controller>.css(.scss), for example projects.css.
  *= require_self
  *= require scaffolds
 */
