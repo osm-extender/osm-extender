@@ -4,4 +4,5 @@ rvm:
 branches:
   only:
     - master
+    - staging
 script: rake ci:travis
