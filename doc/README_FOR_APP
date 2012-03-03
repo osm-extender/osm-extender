@@ -1,15 +1,13 @@
-Build State
-===========
+=Build State
 Master {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=master" />}[http://travis-ci.org/robertgauld/OSMExtender]
 
 Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=staging" />}[http://travis-ci.org/robertgauld/OSMExtender]
 
-License
-=======
+
+=License
 I am still deciding which license to release the code under,
 until then if you wish to use this code you will need to gain my permission, which is easily done.
 
 
-Copyright
-=========
+=Copyright
 Copyright Robert Gauld 2011. All rights reserved.
