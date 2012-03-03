@@ -1,4 +1,8 @@
-{<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png" />}[http://travis-ci.org/robertgauld/OSMExtender]
+Build State
+===========
+Master {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=master" />}[http://travis-ci.org/robertgauld/OSMExtender]
+
+Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=staging" />}[http://travis-ci.org/robertgauld/OSMExtender]
 
 License
 =======
