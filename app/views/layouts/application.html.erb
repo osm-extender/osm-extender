@@ -2,11 +2,13 @@
 <html>
 <head>
   <title><%= content_for?(:title) ? 'OSMExtender - '+yield(:title) : 'OSMExtender' %></title>
-  <%= stylesheet_link_tag "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" if @use_jquery %>
+  <%= stylesheet_link_tag "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" if content_for?(:use_jquery_ui) %>
   <%= stylesheet_link_tag "application" %>
   <%= stylesheet_link_tag params[:controller] if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
 
-  <%= javascript_include_tag "https://www.google.com/jsapi" if @use_charts %>
+  <%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js" if content_for?(:use_jquery) || content_for?(:use_jquery_ui) %>
+  <%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" if content_for?(:use_jquery_ui) %>
+  <%= javascript_include_tag "https://www.google.com/jsapi" if content_for?(:use_charts) %>
   <%= javascript_include_tag "application" %>
   <%= javascript_include_tag params[:controller] if OSMExtender::Application.assets.find_asset("#{params[:controller]}.js") %>
 
