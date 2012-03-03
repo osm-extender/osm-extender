@@ -124,7 +124,7 @@ class User < ActiveRecord::Base
   end
 
   def password_not_name
-    block_size = 2
+    block_size = 3
     name = self.name.downcase
     pass = send(sorcery_config.password_attribute_name).downcase
     for i in 0..(name.length - block_size)
