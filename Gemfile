@@ -13,9 +13,10 @@ gem 'therubyracer'
 #gem 'jquery-rails'
 
 # Misc
-gem 'httparty'    # Used by OSM::API to make requests
+gem 'httparty'      # Used by OSM::API to make requests
 gem 'recaptcha'
-gem 'redcarpet'   # used to format FAQ Answers
+gem 'redcarpet'     # used to format FAQ Answers
+gem 'will_paginate'
 
 
 # Gems used only for assets and not required

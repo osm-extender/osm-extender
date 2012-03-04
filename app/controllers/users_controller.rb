@@ -7,8 +7,8 @@ class UsersController < ApplicationController
     @users = User.
               search(:name, params[:search_name]).
               search(:email_address, params[:search_email]).
-              order(sort_column + " " + sort_direction)
-#Product.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
+              order(sort_column + " " + sort_direction).
+              paginate(:per_page => 10, :page => params[:page])
   end
 
   def edit
