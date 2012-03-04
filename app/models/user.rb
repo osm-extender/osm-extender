@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
 
   def osm_api
     if connected_to_osm?
-      @osm_api ||= OSM::API.new read_attribute(:osm_userid), read_attribute(:osm_secret)
+      @osm_api ||= OSM::API.new(read_attribute(:osm_userid), read_attribute(:osm_secret))
       return @osm_api
     else
       return nil
@@ -82,6 +82,17 @@ class User < ActiveRecord::Base
 
   def gravatar_id
     return Digest::MD5.hexdigest(read_attribute(:email_address).downcase)
+  end
+
+  def self.search(column, text)
+    allowed_columns = [:name, :email_address]
+
+    if !text.blank? && allowed_columns.include?(column)
+      text.downcase! if [:email_address].include?(column)
+      where(["#{column.to_s} LIKE ?", "%#{text}%"])
+    else
+      scoped
+    end
   end
   
   private
