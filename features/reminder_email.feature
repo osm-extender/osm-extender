@@ -30,6 +30,7 @@ Feature: Reminder Email
         Then I should see "successfully created"
         And I should see "now add some items to your reminder"
         And I should see "Tuesday"
+	And I should see "This email reminder has no items yet"
         And "alice@example.com" should have 1 email reminder
 
     Scenario: Should see only own reminders
@@ -42,6 +43,12 @@ Feature: Reminder Email
         And I go to the list of email_reminders
 	Then I should see "Monday"
 	And I should not see "Tuesday"
+
+    Scenario: Message and no table when no reminders
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+	Then I should see "You do not currently have any email reminders"
+	And I should not see "Send on"
 
     Scenario: Add birthday item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
