@@ -1,0 +1,32 @@
+<table>
+  <tr>
+    <th><%= sortable_link 'id', 'ID' %></th>
+    <th></th>
+    <th><%= sortable_link 'name' %></th>
+    <th><%= sortable_link 'email_address' %></th>
+    <th>Actions</th>
+  </tr>
+  <%- @users.each do |user| %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= image_tag "https://secure.gravatar.com/avatar/#{user.gravatar_id}?size=60&default=identicon".html_safe, :size=>'60x60', :alt=>"#{user.name}'s gravatar" %></td>
+      <td><%= user.name %></td>
+      <td><%= user.email_address %></td>
+      <td>
+        <%- if can? :edit, user %>
+          <%= link_to('Edit user', edit_user_path(user))%><br/>
+        <%- end %>
+        <%- if can? :reset_password, user %>
+          <%= link_to('Reset password', reset_password_user_path(user))%><br/>
+        <%- end %>
+        <%- if can? :resend_activation, user %>
+          <%= link_to('Resend activation email', resend_activation_user_path(user))%><br/>
+        <%- end %>
+      </td>
+    </tr>
+  <%- end %>
+</table>
+
+<br/>
+
+<%= will_paginate @products %>

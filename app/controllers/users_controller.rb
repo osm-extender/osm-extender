@@ -1,9 +1,14 @@
 class UsersController < ApplicationController
   before_filter :require_login, :except => [:new, :create, :activate_account]
   load_and_authorize_resource :except => [:activate_account]
+  helper_method :sort_column, :sort_direction
 
   def index
-    @users = User.all
+    @users = User.
+              search(:name, params[:search_name]).
+              search(:email_address, params[:search_email]).
+              order(sort_column + " " + sort_direction).
+              paginate(:per_page => 10, :page => params[:page])
   end
 
   def edit
@@ -71,6 +76,16 @@ class UsersController < ApplicationController
     else
       redirect_to(users_path, :error => 'Activation instructions have NOT been sent to the user.')
     end
+  end
+
+
+  private  
+  def sort_column
+    %w{id name email_address}.include?(params[:sort_column]) ? params[:sort_column] : "id"
+  end
+  
+  def sort_direction
+    %w{asc desc}.include?(params[:sort_direction]) ? params[:sort_direction] : "asc"
   end
 
 end

@@ -1,28 +1,24 @@
 <% provide :title, 'Users' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th>Name</th>
-    <th>Email address</th>
-    <th>Actions</th>
-  </tr>
-  <%- @users.each do |user| %>
+<%= form_tag users_path, :method => 'get', :id => "users" do %>
+
+  <%= hidden_field_tag :sort_column, params[:sort_column] %>
+  <%= hidden_field_tag :sort_direction, params[:sort_direction] %>
+
+  <table>
+    <tr><th colspan="2">Filter by</th></tr>
     <tr>
-      <td><%= image_tag "https://secure.gravatar.com/avatar/#{user.gravatar_id}?size=60&default=identicon".html_safe, :size=>'60x60', :alt=>"#{user.name}'s gravatar" %></td>
-      <td><%= user.name %></td>
-      <td><%= user.email_address %></td>
-      <td>
-        <%- if can? :edit, user %>
-          <%= link_to('Edit user', edit_user_path(user))%><br/>
-        <%- end %>
-        <%- if can? :reset_password, user %>
-          <%= link_to('Reset password', reset_password_user_path(user))%><br/>
-        <%- end %>
-        <%- if can? :resend_activation, user %>
-          <%= link_to('Resend activation email', resend_activation_user_path(user))%><br/>
-        <%- end %>
-      </td>
+      <td style="text-align: right;">Name</td>
+      <td><input id="search_name" name="search_name" size="25" type="text" value="<%= params[:search_name] %>" onkeyup="filter_table(this);"/></td>
     </tr>
-  <%- end %>
-</table>
+    <tr>
+      <td style="text-align: right;">Email</td>
+      <td><input id="search_email" name="search_email" size="25" type="text" value="<%= params[:search_email] %>" onkeyup="filter_table(this);"/></td>
+    </tr>
+  </table>
+
+  <br/>
+
+  <div id="users_table"><%= render 'users' %></div>
+
+<% end %>

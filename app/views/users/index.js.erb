@@ -1,0 +1,4 @@
+$("#users_table").html("<%= escape_javascript(render("users")) %>");
+
+$("#sort_column")[0].value = "<%= params[:sort_column] %>";
+$("#sort_direction")[0].value = "<%= params[:sort_direction] %>";
