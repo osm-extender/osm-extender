@@ -82,6 +82,12 @@ table th a.sortable {
     text-decoration:    overline;
 }
 
+
+div.pagination {
+    text-align:         center;
+}
+
+
 #page {
     margin-top:         10px;
     margin-left:        15px;
