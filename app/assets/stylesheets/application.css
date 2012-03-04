@@ -12,11 +12,11 @@ body {
     margin-bottom:      3ex;
 }
 
-a{
+a {
     color:              blue;
 }
 
-a:hover{
+a:hover {
     color:              green;
 }
 
@@ -63,10 +63,23 @@ th.empty, td.empty {
     border-right:       inherit;
 }
 
-th.title, td.title {
-    border-width:       0px;
-    text-decoration:    underline;
-    font-size:          140%;
+table th .sortable_current {
+  padding-right:        12px;
+  background-repeat:    no-repeat;
+  background-position:  right center;
+}
+
+table th .sortable_asc {
+  background-image:     url(/assets/up_arrow.gif);
+}
+
+table th .sortable_desc {
+  background-image:     url(/assets/down_arrow.gif);
+}
+
+table th a.sortable {
+    color:              white;
+    text-decoration:    overline;
 }
 
 #page {
