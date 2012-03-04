@@ -64,7 +64,7 @@ th.empty, td.empty {
 }
 
 table th .sortable_current {
-  padding-right:        12px;
+  padding-right:        24px;
   background-repeat:    no-repeat;
   background-position:  right center;
 }
@@ -79,7 +79,6 @@ table th .sortable_desc {
 
 table th a.sortable {
     color:              white;
-    text-decoration:    overline;
 }
 
 
