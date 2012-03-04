@@ -10,7 +10,7 @@ gem 'cancan'
 
 # Javascript
 gem 'therubyracer'
-#gem 'jquery-rails'
+gem 'jquery-rails'
 
 # Misc
 gem 'httparty'      # Used by OSM::API to make requests
