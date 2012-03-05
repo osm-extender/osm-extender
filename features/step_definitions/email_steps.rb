@@ -208,3 +208,10 @@ end
 Then /^save and open all raw emails$/ do
   EmailSpec::EmailViewer::save_and_open_all_raw_emails
 end
+
+
+
+
+Then /^debug email$/ do
+  puts ActionMailer::Base.deliveries.join("\n")
+end

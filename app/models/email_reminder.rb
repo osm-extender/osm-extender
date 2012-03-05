@@ -12,18 +12,27 @@ class EmailReminder < ActiveRecord::Base
 
 
   def send_email
-    begin
-      data = {}
-      configuration = {}
-      items.each do |item|
-        key = item.type.to_sym
-        data[key] = item.get_data
-        configuration[key] = item.configuration
+    if user.connected_to_osm?
+      user.osm_api.get_roles[:data].each do |role|
+        if role.section_id == section_id  # We now know that the user can access this section
+
+          section_name = "#{role.section_name} (#{role.group_name})"
+          begin
+            data = {}
+            configuration = {}
+            items.each do |item|
+              key = item.type.to_sym
+              data[key] = item.get_data
+              configuration[key] = item.configuration
+            end
+            ReminderMailer.reminder_email(user, section_name, data, configuration).deliver
+          rescue Exception => exception
+            ReminderMailer.failed(self, section_name).deliver
+            NotifierMailer.reminder_failed(self, exception).deliver
+          end
+
+        end
       end
-      ReminderMailer.reminder_email(user, data, configuration).deliver
-    rescue Exception => exception
-      ReminderMailer.failed(self).deliver
-      NotifierMailer.reminder_failed(self, exception).deliver
     end
   end
 

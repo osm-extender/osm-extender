@@ -213,10 +213,11 @@ Feature: Reminder Email
 	    | Bob   | 5         |       |
 
         When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
-        Then "alice@example.com" should receive 1 email with subject "Reminder Email"
+	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
 
-        When "alice@example.com" opens the email with subject "Reminder Email"
-        Then I should see "Birthdays" in the email body
+        When "alice@example.com" opens the email with subject "Reminder Email for Section 1 (1st Somewhere)"
+        Then I should see "This is your reminder email for Section 1 (1st Somewhere)" in the email body
+	And I should see "Birthdays" in the email body
         And I should see "Due Badges" in the email body
         And I should see "Events" in the email body
         And I should see "Programme" in the email body
@@ -227,11 +228,11 @@ Feature: Reminder Email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
         And "alice@example.com" has a birthday item in her "Tuesday" email reminder for section 1
         When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
-        Then "alice@example.com" should receive 1 email with subject "Reminder Email Failed"
+        Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere) Failed"
         And "reminder-mailer-failed@example.com" should receive 1 email with subject "Reminder Email Failed"
 
-        When "alice@example.com" opens the email with subject "Reminder Email Failed"
-        Then I should see "your reminder email has failed" in the email body
+        When "alice@example.com" opens the email with subject "Reminder Email for Section 1 (1st Somewhere) Failed"
+        Then I should see "your reminder email for Section 1 (1st Somewhere) has failed" in the email body
 
         When "reminder-mailer-failed@example.com" opens the email with subject "Reminder Email Failed"
         Then I should see "A reminder email failed" in the email body
