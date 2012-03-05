@@ -1,19 +1,24 @@
 <% provide :title, 'Email reminders' %>
 
-<table>
-  <tr>
-    <th>Send on</th>
-    <th>Actions</th>
-  </tr>
 
-<% @email_reminders.each do |email_reminder| %>
-  <tr>
-    <td><%= day_name(email_reminder.send_on) %></td>
-    <td>
-      <%= link_to '[Show]', email_reminder %>
-      <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
-      <%= link_to '[Destroy]', email_reminder, confirm: 'Are you sure?', method: :delete %>
-    </td>
-  </tr>
-<% end %>
-</table>
+<%- unless @email_reminders.empty? %>
+  <table>
+    <tr>
+      <th>Send on</th>
+      <th>Actions</th>
+    </tr>
+  
+  <% @email_reminders.each do |email_reminder| %>
+    <tr>
+      <td><%= day_name(email_reminder.send_on) %></td>
+      <td>
+        <%= link_to '[Show]', email_reminder %>
+        <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
+        <%= link_to '[Destroy]', email_reminder, confirm: 'Are you sure?', method: :delete %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<%- else %>
+  <p>You do not currently have any email reminders setup, <%= link_to 'create one', new_email_reminder_path %>.</p>
+<%- end %>

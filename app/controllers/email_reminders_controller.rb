@@ -19,6 +19,7 @@ class EmailRemindersController < ApplicationController
   def show
     @email_reminder = EmailReminder.find(params[:id])
     @tertiary_menu_items.push(['Edit this reminder', edit_email_reminder_path(@email_reminder)])
+    @tertiary_menu_items.push(['Preview this reminder', '#preview'])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -91,12 +92,35 @@ class EmailRemindersController < ApplicationController
   end
 
 
+  def preview
+    email_reminder = EmailReminder.find(params[:id])
+    format = ['text'].include?(params[:format]) ? params[:format] : 'text'
+    @section_name = get_section_name(email_reminder.section_id)
+    @data = email_reminder.get_data
+    render "reminder_mailer/reminder_email", :formats => [format]
+  end
+
+
   private
   def setup_tertiary_menu
     @tertiary_menu_items = [
       ['List of reminders', email_reminders_path],
       ['New reminder', new_email_reminder_path],
     ]
+  end
+
+  # Get the name for a given section
+  # @param section_id the section ID of the section to get the name for
+  # @returns a string containing the section name (will be empty if no section was found or the user can not access that section)
+  def get_section_name(section_id)
+    if current_user.connected_to_osm?
+      current_user.osm_api.get_roles[:data].each do |role|
+        if role.section_id == session[:current_section_id]
+          return "#{role.section_name} (#{role.group_name})"
+        end
+      end
+    end
+    return ''
   end
 
 end

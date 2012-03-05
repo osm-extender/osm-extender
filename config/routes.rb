@@ -40,6 +40,7 @@ OSMExtender::Application.routes.draw do
 
   resources :password_resets
   resources :contact_us, :only=>[:new, :create]
+
   resources :email_reminders do
     resources :email_reminder_items, :as => 'items'
     resources :email_reminder_item_birthdays, :as => 'item_birthdays'
@@ -48,6 +49,7 @@ OSMExtender::Application.routes.draw do
     resources :email_reminder_item_not_seens, :as => 'item_not_seens'
     resources :email_reminder_item_programmes, :as => 'item_programmes'
   end
+  get 'email_reminders/:id/preview(.:format)' => 'email_reminders#preview', :as => 'preview_email_reminder'
 
   root :to => 'welcome#index'
 end

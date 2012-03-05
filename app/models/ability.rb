@@ -28,7 +28,7 @@ class Ability
 
     else
       # Things only authenticated users can do
-      can :administer, EmailReminder do |reminder|
+      can [:administer, :preview], EmailReminder do |reminder|
         reminder.user == user
       end
       can :create, EmailReminder
