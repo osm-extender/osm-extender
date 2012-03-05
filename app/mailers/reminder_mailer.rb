@@ -1,10 +1,10 @@
 class ReminderMailer < ActionMailer::Base
   default from: Settings.read('reminder mailer - from')
 
-  def reminder_email(user, section_name, data, configuration)
+  def reminder_email(user, section_name, data)
     @section_name = section_name
     @data = data
-    @configuration = configuration
+
     mail ({
       :subject => build_subject("Reminder Email for #{@section_name}"),
       :to => "\"#{user.name}\" <#{user.email_address}>",

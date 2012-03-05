@@ -28,3 +28,54 @@
 <%- else %>
   <p>This email reminder has no items yet.</p>
 <%- end %>
+
+
+<h2>Preview</h2>
+<!--<div id="tabs">
+  <ul>
+    <li><a id="preview-instructions" href="#tabs_content">Instructions</a></li>
+    <li><a id="preview-html" href="<%= preview_email_reminder_path(@email_reminder, 'html') %>">HTML</a></li>
+    <li><a id="preview-text" href="<%= preview_email_reminder_path(@email_reminder, 'text') %>">Plain Text</a></li>
+  </ul>
+  <div id="preview">
+    <p>You can preview what your email will look like, please select the version you wish to preview using the tabs.</p>
+    <p>The first time you preview the email it will take a while to load as the data is pulled from OSM, after that the email should load faster due to the cachine which is done.</p>
+  </div>
+</div>
+-->
+<div style="max-width: 600px; border: 1px solid black; text-align: center;">
+  <a id="preview-html" href="<%= preview_email_reminder_path(@email_reminder, 'html') %>">[HTML]</a>
+  <a id="preview-text" href="<%= preview_email_reminder_path(@email_reminder, 'text') %>">[Plain text]</a>
+  <div id="preview" style="width:95%, margin-right: auto; margin-left: auto; border: 1px solid black; text-align: left;">
+    <p>You can preview what your email will look like, please select the version you wish to preview using the links just above this box.</p>
+    <p>The first time you preview the email it will take a while to load as the data is pulled from OSM, after that the email should load faster due to the cachine which is done.</p>
+  </div>
+</div>
+
+
+<script>
+            function loadTab(format) {
+                $("#preview").empty().append('<P>Loading, please wait.</p>');
+                $.ajax({
+                    url: $("#preview-"+format).attr('href'),
+                    cache: false,
+                    success: function(message) {
+                        if (format == 'text') {
+                          message = "<pre style=\"white-space: pre-wrap; background: white;\">\n" + message + "\n</pre>"
+                        }
+                        $("#preview").empty().append(message);
+                    }
+                });
+            }
+            
+            $(document).ready(function() {
+                $("#preview-html").click(function() {
+                    loadTab('html');
+                    return false;
+                });
+                $("#preview-text").click(function() {
+                    loadTab('text');
+                    return false;
+                });
+            });
+</script>

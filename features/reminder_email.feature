@@ -179,13 +179,46 @@ Feature: Reminder Email
         And I should see "Due badges"
 
 
+    Scenario: Preview the email (plain text)
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	And an OSM request to get terms for section 1 will have the term
+	    | term_id | name   |
+	    | 1       | Term 1 |
+	And an OSM request to get members for section 1 in term 1 will have the members
+	    | email1         | email2         | email3         | email4         | grouping_id |
+	    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
+	    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           |
+	And an OSM request to get events for section 1 will have the events
+	    | name    | in how many days |
+	    | Event 1 | 7                |
+	    | Event 2 | 300              |
+	And an OSM request to get programme for section 1 term 1 will have 2 programme items
+	And an OSM request to get activity 11 will have tags "global"
+	And an OSM request to get activity 12 will have tags "outdoors"
+	And an OSM request to get activity 21 will have tags "belief, values"
+	And an OSM request to get activity 22 will have tags "global, outdoors"
+	And an OSM request to get the register structure for term 1 and section 1 will cover the last 4 weeks
+	And an OSM request to get the register for term 1 and section 1 will have the following members and attendance
+	    | name  | from weeks ago | to weeks ago |
+	    | Alice | 4              | 1            |
+	    | Bob   | 4              | 3            |
+	And an OSM request to get due badges for section 1 and term 1 will result in the following being due their "Test" badge
+	    | name  | completed | extra |
+	    | Alice | 4         | info  |
+	    | Bob   | 5         |       |
+
+        When I signin as "alice@example.com" with password "P@55word"
+	And I preview the "Tuesday" email reminder for section 1
+        Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
+	And I should see "Birthdays"
+        And I should see "Due Badges"
+        And I should see "Events"
+        And I should see "Programme"
+        And I should see "Members Not Seen"
+
+
     Scenario: Send the email
-        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
-        And "alice@example.com" has a birthday item in her "Tuesday" email reminder for section 1
-        And "alice@example.com" has an event item in her "Tuesday" email reminder for section 1
-        And "alice@example.com" has a programme item in her "Tuesday" email reminder for section 1
-        And "alice@example.com" has a not seen item in her "Tuesday" email reminder for section 1
-        And "alice@example.com" has a due badge item in her "Tuesday" email reminder for section 1
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |
@@ -225,8 +258,7 @@ Feature: Reminder Email
 
 
     Scenario: Sending the email fails
-        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
-        And "alice@example.com" has a birthday item in her "Tuesday" email reminder for section 1
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
         When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
         Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere) Failed"
         And "reminder-mailer-failed@example.com" should receive 1 email with subject "Reminder Email Failed"

@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+#source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 gem 'rails'
 gem 'activesupport', '>= 3.2'
@@ -11,6 +12,7 @@ gem 'cancan'
 # Javascript
 gem 'therubyracer'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 # Misc
 gem 'httparty'      # Used by OSM::API to make requests
