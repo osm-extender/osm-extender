@@ -18,12 +18,14 @@ The following <%= (@data[:EmailReminderItemDueBadge].by_member.size > 1) ? 'memb
 <%- badge_totals = @data[:EmailReminderItemDueBadge].totals %>
 <%- badges = @data[:EmailReminderItemDueBadge].descriptions %>
 <%- badges_due.each_key do |member| %>
-  * <%= member %>:<%- badges_due[member].each do |due_badge| %>
+  * <%= member %>:
+<%- badges_due[member].each do |due_badge| %>
     * <%= badges[due_badge[:badge]][:name] %><%- unless due_badge[:extra_information].blank? %> (<%= due_badge[:extra_information] %>)<%- end %>
-    <%- end %>
+<%- end %>
 <%- end %>
 
-You need to have the following badges:<%- badge_totals.each_key do |badge| %>
+You need to have the following badges:
+<%- badge_totals.each_key do |badge| %>
 <%- badge_totals[badge].each_key do |badge_extra| %>
   * <%= badges[badge][:name] %><%- unless badge_extra.blank? %> (<%= badge_extra %>)<%- end %> x <%= badge_totals[badge][badge_extra] %>
 <%- end %>
@@ -47,9 +49,9 @@ Programme
 The programme for the following <%= pluralize(@configuration[:EmailReminderItemProgramme][:the_next_n_weeks], 'week') %> is:
 <%- @data[:EmailReminderItemProgramme].each do |programme| %>
   * <%= programme[:title] %><%- if programme[:start] %> on <%= ordinalized_date(programme[:start], "%a %d of %b %Y at %H:%M") %><%- end %>
-  <%- programme[:activities].each do |activity| %>
+<%- programme[:activities].each do |activity| %>
     * <%= activity %>
-  <%- end %>
+<%- end %>
 <%- end %>
 
 --
