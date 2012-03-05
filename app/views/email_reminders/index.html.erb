@@ -1,7 +1,7 @@
 <% provide :title, 'Email reminders' %>
 
 
-<%- if @email_reminders.size > 0 %>
+<%- unless @email_reminders.empty? %>
   <table>
     <tr>
       <th>Send on</th>

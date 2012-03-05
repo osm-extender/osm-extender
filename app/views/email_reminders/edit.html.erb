@@ -4,7 +4,7 @@
 <%= render 'form' %>
 
 <h2>Items</h2>
-<%- if @email_reminder.items.size > 0 %>
+<%- unless @email_reminder.items.empty? %>
   <p>This reminder contains the following items.</p>
   <table>
     <tr>
