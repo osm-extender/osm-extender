@@ -9,6 +9,14 @@ class NotifierMailer < ActionMailer::Base
     })
   end
 
+  def reminder_failed(email_reminder, exception)
+    @email_reminder = email_reminder
+    @exception = exception
+    mail ({
+      :subject => build_subject('Reminder Email Failed'),
+      :to => Settings.read('reminder mailer - send failed to'),
+    })
+  end
 
   private
   def build_subject(subject)

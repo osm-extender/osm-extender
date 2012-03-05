@@ -22,8 +22,8 @@ class EmailReminder < ActiveRecord::Base
       end
       ReminderMailer.reminder_email(user, data, configuration).deliver
     rescue Exception => exception
-      ReminderMailer.failed_user(self).deliver
-      ReminderMailer.failed_admin(self, exception).deliver
+      ReminderMailer.failed(self).deliver
+      NotifierMailer.reminder_failed(self, exception).deliver
     end
   end
 

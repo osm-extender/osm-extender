@@ -10,20 +10,11 @@ class ReminderMailer < ActionMailer::Base
     })
   end
 
-  def failed_user(email_reminder)
+  def failed(email_reminder)
     @email_reminder = email_reminder
     mail ({
       :subject => build_subject('Reminder Email Failed'),
       :to => "\"#{@email_reminder.user.name}\" <#{@email_reminder.user.email_address}>",
-    })
-  end
-
-  def failed_admin(email_reminder, exception)
-    @email_reminder = email_reminder
-    @exception = exception
-    mail ({
-      :subject => build_subject('Reminder Email Failed'),
-      :to => Settings.read('reminder mailer - send failed to'),
     })
   end
 
