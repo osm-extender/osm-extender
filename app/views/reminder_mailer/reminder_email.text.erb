@@ -15,11 +15,18 @@ Due Badges
 ----------
 The following <%= (@data[:EmailReminderItemDueBadge].by_member.size > 1) ? 'members are' : 'member is' %> due badges:
 <%- badges_due = @data[:EmailReminderItemDueBadge].by_member %>
+<%- badge_totals = @data[:EmailReminderItemDueBadge].totals %>
 <%- badges = @data[:EmailReminderItemDueBadge].descriptions %>
 <%- badges_due.each_key do |member| %>
   * <%= member %>:<%- badges_due[member].each do |due_badge| %>
     * <%= badges[due_badge[:badge]][:name] %><%- unless due_badge[:extra_information].blank? %> (<%= due_badge[:extra_information] %>)<%- end %>
     <%- end %>
+<%- end %>
+
+You need to have the following badges:<%- badge_totals.each_key do |badge| %>
+<%- badge_totals[badge].each_key do |badge_extra| %>
+  * <%= badges[badge][:name] %><%- unless badge_extra.blank? %> (<%= badge_extra %>)<%- end %> x <%= badge_totals[badge][badge_extra] %>
+<%- end %>
 <%- end %>
 
 --
