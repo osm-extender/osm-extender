@@ -46,7 +46,7 @@ class EmailRemindersController < ApplicationController
   # POST /email_reminders
   # POST /email_reminders.json
   def create
-    @email_reminder = EmailReminder.new(params[:email_reminder].merge({:user=>current_user, :section_id=>session[:current_section_id]}))
+    @email_reminder = current_user.email_reminders.new(params[:email_reminder].merge({:section_id=>session[:current_section_id]}))
 
     respond_to do |format|
       if @email_reminder.save
