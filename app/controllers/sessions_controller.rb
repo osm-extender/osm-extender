@@ -6,6 +6,17 @@ class SessionsController < ApplicationController
   def create
     user = login(params[:email_address].downcase, params[:password])
     if user
+      # prevent session fixation attack
+      old_session = {}
+      keys_to_preserve = [:user_id, :return_to_url, :last_action_time, :login_time]
+      keys_to_preserve.each do |key|
+        old_session[key] = session[key] unless session[key].nil?
+      end
+      reset_session
+      old_session.each_key do |key|
+        session[key] = old_session[key]
+      end
+
       # Set current section
       if current_user.connected_to_osm?
         current_user.osm_api.get_roles[:data].each do |role|
@@ -29,6 +40,7 @@ class SessionsController < ApplicationController
   
   def destroy
     logout
+    reset_session
     redirect_to root_url, :notice => 'Sucessfully signed out.'
   end
 
