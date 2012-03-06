@@ -1,5 +1,4 @@
 class MyPageController < ApplicationController
-  before_filter :require_login
 
   def index
     if current_user.connected_to_osm?

@@ -1,5 +1,4 @@
 class MyAccountController < ApplicationController
-  before_filter :require_login
   before_filter :setup_tertiary_menu
 
   def show

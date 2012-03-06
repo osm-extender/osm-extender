@@ -1,5 +1,5 @@
 class FaqsController < ApplicationController
-  before_filter :require_login, :except => [:list]
+  skip_before_filter :require_login, :only => [:list]
   load_and_authorize_resource
 
   def index
