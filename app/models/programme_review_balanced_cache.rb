@@ -10,6 +10,10 @@ class ProgrammeReviewBalancedCache < ActiveRecord::Base
   validates_presence_of :method_totals
 
   def self.delete_old(older_than=1.year.ago)
-    self.destroy_all(['updated_at <= ?', older_than])
+    if older_than.is_a?(String)
+      older_than = older_than.split.inject { |count, unit| count.to_i.send(unit) }
+    end
+    destroy_all ['updated_at <= ?', older_than]
   end
+
 end
