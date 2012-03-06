@@ -20,7 +20,10 @@ class SessionsController < ApplicationController
       # Set current section
       if current_user.connected_to_osm?
         current_user.osm_api.get_roles[:data].each do |role|
-          session[:current_section_id] = role.section_id if role.default
+          if role.default
+            session[:current_section_id] = role.section_id
+            session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
+          end
         end
       end
       
@@ -53,6 +56,7 @@ class SessionsController < ApplicationController
       current_user.osm_api.get_roles[:data].each do |role|
         if section_id.eql?(role.section_id.to_s)
           session[:current_section_id] = role.section_id
+          session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
         end
       end
     end

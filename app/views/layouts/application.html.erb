@@ -52,12 +52,7 @@
         <%- if current_user %>
           <div id="current_section">
             <%- if current_user.connected_to_osm? %>
-              Current section:
-              <%- current_user.osm_api.get_roles[:data].each do |role| %>
-                <%- if role.section_id == session[:current_section_id] %>
-                  <%= role.section_name %> (<%= role.group_name %>)
-                <%- end %>
-              <%- end %>
+              Current section: <%= session[:current_section_name] %>
             <%- end %>
           </div>
           <%- if current_user.connected_to_osm? %>
