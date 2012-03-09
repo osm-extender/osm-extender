@@ -21,7 +21,7 @@ class EmailReminder < ActiveRecord::Base
             ReminderMailer.reminder_email(user, section_name, get_data).deliver
           rescue Exception => exception
             ReminderMailer.failed(self, section_name).deliver
-            NotifierMailer.reminder_failed(self, exception).deliver
+            NotifierMailer.reminder_failed(self, exception).deliver unless Settings.read('reminder mailer - send failed to').blank?
           end
 
         end
