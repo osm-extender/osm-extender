@@ -3,6 +3,14 @@ class ApplicationController < ActionController::Base
   before_filter :require_login
 
 
+  unless Rails.configuration.consider_all_requests_local
+    rescue_from Exception, :with => :render_error
+    rescue_from ActiveRecord::RecordNotFound, :with => :render_not_found
+    rescue_from ActionController::RoutingError, :with => :render_not_found
+    rescue_from AbstractController::ActionNotFound, :with => :render_not_found
+  end
+
+
   private
   def not_authenticated
     flash[:error] = 'You must be signed in to access this resource.'
@@ -24,6 +32,35 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'You are not authorised to do that.'
     redirect_to current_user ? my_page_path : signin_path
+  end
+
+
+  def render_not_found(exception)
+    render :template => "error/404", :status => 404
+  end
+
+  def render_error(exception)
+    log_error(exception)
+#    render :file => File.join(Rails.root, 'public', '500'), :layout => false, :status => 500
+    render :template => "error/500", :status => 500
+  end
+
+  def log_error(exception)
+    logger.error(
+      "\n\n#{exception.class} (#{exception.message}):\n    " +
+      clean_backtrace(exception).join("\n    ") +
+      "\n\n"
+    )
+  end
+
+  def clean_backtrace(exception)
+    if backtrace = exception.backtrace
+      if defined?(RAILS_ROOT)
+        backtrace.map { |line| line.sub RAILS_ROOT, '' }
+      else
+        backtrace
+      end
+    end
   end
 
 end
