@@ -1,5 +1,6 @@
 class NotifierMailer < ActionMailer::Base
   default from: Settings.read('notifier mailer - from')
+  helper_method :inspect_object
 
   def contact_form_submission(contact, to)
     @contact = contact
@@ -18,11 +19,33 @@ class NotifierMailer < ActionMailer::Base
     })
   end
 
+  def exception(exception, environment)
+    require 'pp'
+    @exception = exception
+    @environment = environment
+    @request = ActionDispatch::Request.new(environment)
+    mail ({
+      :subject => build_subject('An Exception Occured'),
+      :to => Settings.read('notifier mailer - send exception to'),
+    })
+  end
+
   private
   def build_subject(subject)
     start = 'OSMExtender'
     start += " (#{Rails.env.upcase})" unless Rails.env.production?
     return "#{start} - #{subject}"
+  end
+
+  def inspect_object(object)
+    case object
+    when Hash, Array
+      object.inspect
+    when ActionController::Base
+      "#{object.controller_name}##{object.action_name}"
+    else
+      object.to_s
+    end
   end
 
 end

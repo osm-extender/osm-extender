@@ -41,16 +41,20 @@ class ApplicationController < ActionController::Base
 
   def render_error(exception)
     log_error(exception)
-#    render :file => File.join(Rails.root, 'public', '500'), :layout => false, :status => 500
+    email_error(exception)
     render :template => "error/500", :status => 500
   end
 
   def log_error(exception)
     logger.error(
       "\n\n#{exception.class} (#{exception.message}):\n    " +
-      clean_backtrace(exception).join("\n    ") +
+      Rails.backtrace_cleaner.send(:filter, exception.backtrace).join("\n    ") +
       "\n\n"
     )
+  end
+
+  def email_error(exception)
+    NotifierMailer.exception(exception, env).deliver unless Settings.read('notifier mailer - send exception to').blank?
   end
 
   def clean_backtrace(exception)
