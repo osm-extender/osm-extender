@@ -35,7 +35,7 @@ Feature: Account Administration
 	Then I should not see "Administer users"
         When I go to the list of users
         Then I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
 
     Scenario: View Users (Not signed in)
 	When I go to the list of users
@@ -47,7 +47,7 @@ Feature: Account Administration
         When I signin as "chris@example.com" with password "P@55word"
         And I go to edit the user "alice@example.com"
         Then I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
 
     Scenario: Edit User (Not signed in)
         When I go to edit the user "alice@example.com"
@@ -114,7 +114,7 @@ Feature: Account Administration
         When I signin as "chris@example.com" with password "P@55word"
         And I go to reset the password for "alice@example.com"
         Then I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
 
     Scenario: Reset Password (Not signed in)
         When I go to reset the password for "alice@example.com"
@@ -138,7 +138,7 @@ Feature: Account Administration
         When I signin as "chris@example.com" with password "P@55word"
         And I go to resend the activation email for "bob@example.com"
         Then I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
 
     Scenario: Resend Activation Email (Not signed in)
         When I go to resend the activation email for "bob@example.com"
