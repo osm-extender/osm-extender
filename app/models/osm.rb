@@ -697,11 +697,11 @@ module OSM
       @has_badge_records = data['hasUsedBadgeRecords'].eql?('1') ? true : false
       @has_programme = data['hasProgramme']
       @wizard = (data['wizard'] || '').downcase.eql?('true') ? true : false
-      @column_names = data['columnNames'].symbolize_keys
-      @fields = data['fields'].symbolize_keys
-      @intouch_fields = data['intouch'].symbolize_keys
-      @mobile_fields = data['mobFields'].symbolize_keys
-      @extra_records = data['extraRecords']
+      @column_names = (data['columnNames'] || {}).symbolize_keys
+      @fields = (data['fields'] || {}).symbolize_keys
+      @intouch_fields = (data['intouch'] || {}).symbolize_keys
+      @mobile_fields = (data['mobFields'] || {}).symbolize_keys
+      @extra_records = data['extraRecords'] || []
 
       # Symbolise the keys in each hash of the extra_records array
       @extra_records.each do |item|
