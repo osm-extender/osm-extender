@@ -696,7 +696,7 @@ module OSM
       @num_scouts = data['numscouts']
       @has_badge_records = data['hasUsedBadgeRecords'].eql?('1') ? true : false
       @has_programme = data['hasProgramme']
-      @wizard = data['wizard'].downcase.eql?('true') ? true : false
+      @wizard = (data['wizard'] || '').downcase.eql?('true') ? true : false
       @column_names = data['columnNames'].symbolize_keys
       @fields = data['fields'].symbolize_keys
       @intouch_fields = data['intouch'].symbolize_keys
