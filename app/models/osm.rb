@@ -673,7 +673,7 @@ module OSM
       @section_name = data['sectionname']
       @section_type = data['section'].to_sym
       @default = data['isDefault'].eql?('1') ? true : false
-      @permissions = data['permissions'].symbolize_keys
+      @permissions = (data['permissions'] || {}).symbolize_keys
     end
 
   end
@@ -691,7 +691,7 @@ module OSM
 
       @id = id.to_i
       @subscription_level = subscription_levels[data['subscription_level'] - 1]
-      @subscription_expires = Date.parse(data['subscription_expires'], 'yyyy-mm-dd')
+      @subscription_expires = data['subscription_expires'] ? Date.parse(data['subscription_expires'], 'yyyy-mm-dd') : nil
       @type = data['sectionType'].to_sym
       @num_scouts = data['numscouts']
       @has_badge_records = data['hasUsedBadgeRecords'].eql?('1') ? true : false
@@ -784,8 +784,8 @@ module OSM
       @pre_notes = data['prenotes']
       @post_notes = data['postnotes']
       @leaders = data['leaders']
-      @start = DateTime.parse((data['meetingdate'] + ' ' + data['starttime']), 'yyyy-mm-dd hh:mm:ss')
-      @end = DateTime.parse((data['meetingdate'] + ' ' + data['endtime']), 'yyyy-mm-dd hh:mm:ss')
+      @start = OSM::make_datetime(data['meetingdate'], data['starttime'])
+      @end = OSM::make_datetime(data['meetingdate'], data['endtime'])
 
       @activities = Array.new
       unless activities.nil?
@@ -837,7 +837,7 @@ module OSM
       @deletable = data['deletable']
       @used = data['used']
       @versions = data['versions']
-      @sections = OSM::make_array_of_symbols(data['sections'])
+      @sections = OSM::make_array_of_symbols(data['sections'] || [])
       @tags = data['tags'] || []
       @files = data['files']
       @badges = data['badges']
@@ -917,7 +917,7 @@ module OSM
     def initialize(data)
       @id = data['apiid']
       @name = data['name']
-      @permissions = data['permissions'].symbolize_keys
+      @permissions = (data['permissions'] || {}).symbolize_keys
 
       # Convert permission values to a number
       @permissions.each_key do |key|
@@ -958,7 +958,7 @@ module OSM
     def initialize(data)
       @id = data['patrolid']
       @name = data['name']
-      @active = data['active'] == 1
+      @active = (data['active'] == 1)
     end
 
   end
@@ -974,8 +974,8 @@ module OSM
       @id = data['eventid']
       @section_id = data['sectionid']
       @name = data['name']
-      @start = data['startdate'] ? DateTime.parse((data['startdate'] + ' ' + data['starttime']), 'yyyy-mm-dd hh:mm:ss') : nil
-      @end = data['enddate'] ? DateTime.parse((data['enddate'] + ' ' + data['endtime']), 'yyyy-mm-dd hh:mm:ss') : nil
+      @start = OSM::make_datetime(data['startdate'], data['starttime'])
+      @end = OSM::make_datetime(data['enddate'], data['endtime'])
       @cost = data['cost']
       @location = data['location']
       @notes = data['notes']
@@ -991,8 +991,8 @@ module OSM
     # Initialize a new Event using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @pending = data['pending'].symbolize_keys
-      @descriptions = data['description'].symbolize_keys
+      @pending = (data['pending'] || {}).symbolize_keys
+      @descriptions = (data['description'] || {}).symbolize_keys
 
       @pending.each_key do |key|
         @pending[key].each do |item|
@@ -1044,6 +1044,16 @@ module OSM
       end
     end
     return nil
+  end
+
+  def self.make_datetime(date, time)
+    if (date && time)
+      return DateTime.parse((date + ' ' + time), 'yyyy-mm-dd hh:mm:ss')
+    elsif date
+      return DateTime.parse(date, 'yyyy-mm-dd')
+    else
+      return nil
+    end
   end
 
 
