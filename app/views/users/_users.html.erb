@@ -5,6 +5,8 @@
     <th><%= sortable_link 'name' %></th>
     <th><%= sortable_link 'email_address' %></th>
     <th>Actions</th>
+    <th>Connected<br/>to OSM?</th>
+    <th>Email<br/>reminders</th>
   </tr>
   <%- @users.each do |user| %>
     <tr>
@@ -23,6 +25,8 @@
           <%= link_to('Resend activation email', resend_activation_user_path(user))%><br/>
         <%- end %>
       </td>
+      <td><%= yes_no user.connected_to_osm? %></td>
+      <td><%= user.email_reminders.count %></td>
     </tr>
   <%- end %>
 </table>
