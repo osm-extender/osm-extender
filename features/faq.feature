@@ -62,7 +62,7 @@ Feature: FAQ Administration
         When I signin as "bob@example.com" with password "P@55word"
         When I go to edit the FAQ "FAQ 1"
         Then I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
 
     Scenario: Edit FAQ (not signed in)
         When I go to edit the FAQ "FAQ 1"
@@ -84,7 +84,7 @@ Feature: FAQ Administration
         When I signin as "bob@example.com" with password "P@55word"
         And I go to the new faq page
         Then I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
 
     Scenario: Create FAQ (not signed in)
         When I go to the new faq page

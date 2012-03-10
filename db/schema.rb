@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120222171145) do
+ActiveRecord::Schema.define(:version => 20120309224045) do
 
   create_table "email_reminder_items", :force => true do |t|
     t.integer  "email_reminder_id"

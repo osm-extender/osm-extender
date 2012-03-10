@@ -1,5 +1,4 @@
 class EmailRemindersController < ApplicationController
-  before_filter :require_login
   before_filter :require_connected_to_osm
   before_filter :setup_tertiary_menu
   load_and_authorize_resource
@@ -46,7 +45,7 @@ class EmailRemindersController < ApplicationController
   # POST /email_reminders
   # POST /email_reminders.json
   def create
-    @email_reminder = EmailReminder.new(params[:email_reminder].merge({:user=>current_user, :section_id=>session[:current_section_id]}))
+    @email_reminder = current_user.email_reminders.new(params[:email_reminder].merge({:section_id=>session[:current_section_id]}))
 
     respond_to do |format|
       if @email_reminder.save

@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  skip_before_filter :require_login
 
   def new
   end
@@ -6,10 +7,24 @@ class SessionsController < ApplicationController
   def create
     user = login(params[:email_address].downcase, params[:password])
     if user
+      # prevent session fixation attack
+      old_session = {}
+      keys_to_preserve = [:user_id, :return_to_url, :last_action_time, :login_time]
+      keys_to_preserve.each do |key|
+        old_session[key] = session[key] unless session[key].nil?
+      end
+      reset_session
+      old_session.each_key do |key|
+        session[key] = old_session[key]
+      end
+
       # Set current section
       if current_user.connected_to_osm?
         current_user.osm_api.get_roles[:data].each do |role|
-          session[:current_section_id] = role.section_id if role.default
+          if role.default
+            session[:current_section_id] = role.section_id
+            session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
+          end
         end
       end
       
@@ -29,6 +44,7 @@ class SessionsController < ApplicationController
   
   def destroy
     logout
+    reset_session
     redirect_to root_url, :notice => 'Sucessfully signed out.'
   end
 
@@ -41,6 +57,7 @@ class SessionsController < ApplicationController
       current_user.osm_api.get_roles[:data].each do |role|
         if section_id.eql?(role.section_id.to_s)
           session[:current_section_id] = role.section_id
+          session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
         end
       end
     end

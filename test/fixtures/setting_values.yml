@@ -21,7 +21,7 @@ reminder_from:
   value: reminder-mailer@example.com
 
 reminder_failure_to:
-  key: reminder mailer - send failed to
+  key: notifier mailer - send failed reminder to
   value: reminder-mailer-failed@example.com
 
 osm_id:

@@ -1,9 +1,8 @@
 class EmailListsController < ApplicationController
-  before_filter :require_login
   before_filter :require_connected_to_osm
 
   def generate
-    @section = current_user.osm_api.get_section session[:current_section_id]
+    @section = current_user.osm_api.get_section(session[:current_section_id])
     @column_names = @section.column_names
     @groupings = current_user.osm_api.get_groupings(@section.id)[:data]
   end

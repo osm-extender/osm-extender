@@ -75,7 +75,7 @@ Feature: Sign up
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the signup page
         And I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no name)
@@ -238,5 +238,5 @@ Feature: Sign up
         When I signin as "alice@example.com" with password "P@55word"
         When I go to activate_account token="123abc"
         And I should see "You are not authorised to do that."
-	And I should be on the root page
+	And I should be on the my_page page
         And "bob@example.com" should receive no email with subject /Your Account Has Been Activated/

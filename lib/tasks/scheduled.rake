@@ -1,10 +1,17 @@
 namespace :scheduled  do
 
+  desc "Delete old sessions"
+  task :delete_old_sessions => :environment do
+    $PROGRAM_NAME = "OSMX #{Rails.env} - Delete old sessions"
+    deleted = Session.delete_old_sessions.size
+    puts "#{deleted} entries deleted."
+  end
+
   desc "Stop the balanced programme cache table getting too big"
   task :clean_balanced_programme_cache => :environment do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Balanced Programme Cache"
-    deleted = ProgrammeReviewBalancedCache.delete_old
-    puts "#{deleted.size} entries deleted."
+    deleted = ProgrammeReviewBalancedCache.delete_old.size
+    puts "#{deleted} entries deleted."
   end
 
   desc "Send the reminder emails"

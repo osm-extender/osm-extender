@@ -1,0 +1,25 @@
+The message was: <%= @exception.message %>
+
+
+The request was:
+  * URL        : <%= raw @request.url %>
+  * IP address : <%= raw @request.remote_ip %>
+  * Parameters : <%= raw @request.filtered_parameters.inspect %>
+  * Rails root : <%= raw Rails.root %>
+
+
+The session was:
+<%= raw PP.pp(@request.session, "") %>
+
+
+The environment was:
+<%- filtered_env = @request.filtered_env %>
+<%- max = filtered_env.keys.max { |a, b| a.length <=> b.length } %>
+<%- filtered_env.keys.sort.each do |key| %>
+  * <%= raw("%-*s: %s" % [max.length, key, inspect_object(filtered_env[key])]) %>
+<%- end %>
+  * Process: <%= raw $$ %>
+
+
+The backtrace was:
+<%= raw Rails.backtrace_cleaner.send(:filter, @exception.backtrace).join("\n    ") %>

@@ -238,3 +238,23 @@ div.pagination {
     margin-left:        auto;
     margin-right:       auto;
 }
+
+
+div.dialog {
+    background-color:   #fff;
+    color:              #666;
+    font-size:          155%;
+    text-align:         center;
+    font-family:        arial, sans-serif;
+    width:              26em;
+    padding:            0 4em;
+    margin:             2em auto 0 auto;
+    border:             1px solid #ccc;
+    border-right-color: #999;
+    border-bottom-color:#999;
+}
+div.dialog h1 {
+    font-size:          120%;
+    color:              #f00;
+    line-height:        1.5em;
+}
