@@ -17,8 +17,9 @@ gem 'jquery-ui-rails'
 # Misc
 gem 'httparty'      # Used by OSM::API to make requests
 gem 'recaptcha'
-gem 'redcarpet'     # used to format FAQ Answers
+gem 'redcarpet'     # Used to format FAQ Answers
 gem 'will_paginate'
+gem 'premailer-rails3'  # Used to easily generate HTML emails (also does plain text counterpart)
 
 
 # Gems used only for assets and not required

@@ -1,5 +1,6 @@
 class NotifierMailer < ActionMailer::Base
   default from: Settings.read('notifier mailer - from')
+  layout 'mail'
   helper_method :inspect_object
 
   def contact_form_submission(contact, to)

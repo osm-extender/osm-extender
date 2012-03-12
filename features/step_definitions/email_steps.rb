@@ -187,6 +187,10 @@ When /^(?:I|they) click the first link in the email$/ do
   click_first_link_in_email
 end
 
+When /^(?:I|they) click the \/([^\/]*)\/ link in the email$/ do |regex|
+  click_email_link_matching(Regexp.new(regex))
+end
+
 #
 # Debugging
 # These only work with Rails and OSx ATM since EmailViewer uses RAILS_ROOT and OSx's 'open' command.
@@ -207,11 +211,4 @@ end
 
 Then /^save and open all raw emails$/ do
   EmailSpec::EmailViewer::save_and_open_all_raw_emails
-end
-
-
-
-
-Then /^debug email$/ do
-  puts ActionMailer::Base.deliveries.join("\n")
 end

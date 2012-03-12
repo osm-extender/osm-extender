@@ -50,6 +50,9 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.2.0)
+    css_parser (1.2.6)
+      addressable
+      rdoc
     cucumber (1.1.9)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.2)
@@ -79,6 +82,7 @@ GEM
     gherkin (2.9.0)
       json (>= 1.4.6)
     hike (1.2.1)
+    htmlentities (4.3.1)
     httparty (0.8.1)
       multi_json
       multi_xml
@@ -115,6 +119,12 @@ GEM
       faraday (~> 0.7)
       multi_json (~> 1.0)
     polyglot (0.3.3)
+    premailer (1.7.3)
+      css_parser (>= 1.1.9)
+      htmlentities (>= 4.0.0)
+    premailer-rails3 (1.1.0)
+      premailer (~> 1.7)
+      rails (~> 3)
     rack (1.4.1)
     rack-cache (1.1)
       rack (>= 0.4)
@@ -229,6 +239,7 @@ DEPENDENCIES
   memcache-client
   minitest
   mysql
+  premailer-rails3
   rails
   recaptcha
   redcarpet

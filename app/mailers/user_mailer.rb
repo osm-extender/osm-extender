@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: Settings.read('user mailer - from')
+  layout 'mail'
 
   def activation_needed(user)
     @user = user

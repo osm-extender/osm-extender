@@ -1,5 +1,6 @@
 class ReminderMailer < ActionMailer::Base
   default from: Settings.read('reminder mailer - from')
+  layout 'mail'
 
   def reminder_email(user, section_name, data)
     @section_name = section_name

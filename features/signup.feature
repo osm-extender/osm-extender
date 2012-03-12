@@ -37,7 +37,7 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive an email with subject /Activate Your Account/
 	And there should be 1 email
         When I open the email with subject /Activate Your Account/
-        When I click the first link in the email
+        When I click the /activate_account/ link in the email
         Then I should see "Your account was successfully activated."
 	And I should be on the signin page
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/

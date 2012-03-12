@@ -93,10 +93,9 @@ class EmailRemindersController < ApplicationController
 
   def preview
     email_reminder = EmailReminder.find(params[:id])
-    format = ['text'].include?(params[:format]) ? params[:format] : 'text'
     @section_name = get_section_name(email_reminder.section_id)
     @data = email_reminder.get_data
-    render "reminder_mailer/reminder_email", :formats => [format]
+    render "reminder_mailer/reminder_email", :layout => 'mail'
   end
 
 

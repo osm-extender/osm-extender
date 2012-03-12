@@ -532,7 +532,7 @@ module OSM
           end
         end
         self.user_can_access :register, section_id, api_data
-        Rails.cache.write("OSMAPI-register_structure-#{section_id}-#{term_id}", api_data, :expires_in => @@default_cache_ttl/2)
+        Rails.cache.write("OSMAPI-register_structure-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl/2)
         response[:data] = data
       else
         response[:data] = []
