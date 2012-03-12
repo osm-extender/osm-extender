@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default from: Settings.read('user mailer - from')
+  layout 'mail'
 
   def activation_needed(user)
     @user = user
@@ -24,23 +25,6 @@ class UserMailer < ActionMailer::Base
     mail ({
       :subject => build_subject('Password Reset'),
       :to => build_email_address
-    })
-  end
-
-  def password_changed(user)
-    @user = user
-    mail ({
-      :subject => build_subject('Password Changed'),
-      :to => build_email_address
-    })
-  end
-
-  def email_address_changed(user)
-    @user = user
-    @new_email_address = user.email_address_change[1]
-    mail ({
-      :subject => build_subject('Email Address Changed'),
-      :to => build_email_address(user.email_address_change[0])
     })
   end
 

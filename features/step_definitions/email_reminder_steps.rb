@@ -52,7 +52,7 @@ When /^"([^"]*)"'s reminder email for section (\d*) on "([^"]*)" is sent$/ do |e
   end
 end
 
-When /^I preview the "([^"]*)" email reminder for section (\d*)$/ do |day, section_id|
+When /^I preview the ([^"]*) email reminder for section (\d*) as ([^"]*)$/ do |day, section_id, format|
   day = {
     'Sunday' => 0,
     'Monday' => 1,
@@ -64,7 +64,7 @@ When /^I preview the "([^"]*)" email reminder for section (\d*)$/ do |day, secti
   }[day]
   section_id = section_id.to_i
   er = EmailReminder.find_by_section_id_and_send_on(section_id, day)
-  visit preview_email_reminder_path(er.id, 'text')
+  visit preview_email_reminder_path(er.id, format)
 end
 
 

@@ -1,10 +1,8 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
-  attr_accessor :signup_code
-
-  attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code
-  attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code, :can_administer_users, :as => :admin
+  attr_accessible :name, :email_address, :password, :password_confirmation
+  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
 
@@ -21,23 +19,14 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
-  validates_presence_of :signup_code, :on => :create, :unless => "SettingValue.find_by_key('signup code').nil? || SettingValue.find_by_key('signup code').value.blank?"
-  validate :signup_code_correct, :on => :create, :unless => "SettingValue.find_by_key('signup code').nil? || SettingValue.find_by_key('signup code').value.blank?"
-
   def change_password!(new_password, new_password_confirmation=new_password)
     self.password = new_password
     self.password_confirmation = new_password_confirmation
 
-    if valid? && errors.none?
-      if super(new_password)
-        UserMailer.password_changed(self).deliver
-        return true
-      else
-        return false
-      end
-    else
-      return false
+    if valid? && errors.none? && super(new_password)
+      return true
     end
+    return false
   end
   
   
@@ -156,22 +145,11 @@ class User < ActiveRecord::Base
     end
   end
 
-  def signup_code_correct
-    code = SettingValue.find_by_key('signup code')
-    unless code.nil? || self.signup_code.blank?
-      errors.add(:signup_code, 'is invalid') unless code.value.eql?(self.signup_code)
-    end
-  end
-
   def email_is_lowercase
     email_address.downcase!
   end
 
   def send_email_on_attribute_changes
-    if email_address_changed?
-      UserMailer.email_address_changed(self).deliver unless email_address_change[0].blank?
-    end
-
     if lock_expires_at_changed?
       UserMailer.account_locked(self).deliver unless lock_expires_at.nil?
     end

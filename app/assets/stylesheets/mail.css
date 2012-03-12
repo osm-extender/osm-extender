@@ -1,0 +1,25 @@
+table#layout {
+  border-width:       0px;
+  margin:             0px;
+  padding:            0px;
+  border-collapse:    collapse;
+  width:              100%;
+}
+
+td#banner_top, td#banner_bottom {
+  background-color:   #aaaaaa;
+  height:             30px;
+}
+
+td#banner {
+  background-color:   #cccccc;
+  text-align:         center;
+  height:             95px;
+  vertical-align:     middle;
+}
+
+hr {
+  margin-left:        auto;
+  margin-right:       auto;
+  width:              50%;
+}

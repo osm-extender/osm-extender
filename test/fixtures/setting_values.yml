@@ -63,7 +63,3 @@ mail_server_username:
 mail_server_password:
   key: Mail Server - Password
   value: abcd1234
-
-mail_dev_recipient:
-  key: Mail Server - Development recipient
-  value: developer@example.com

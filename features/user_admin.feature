@@ -73,7 +73,6 @@ Feature: Account Administration
 	And I press "Update"
 	Then I should see "The user was updated."
 	And I should be on the list of users
-        And "chris@example.com" should receive an email with subject /Email Address Changed/
 	And user "chris2@example.com" should have email_address "chris2@example.com"
 
     Scenario: Add User's Permission
@@ -85,7 +84,6 @@ Feature: Account Administration
 	And I press "Update"
 	Then I should see "The user was updated."
 	And I should be on the list of users
-	And there should be no emails
 	And "chris@example.com" should be able to "administer_users"
 
     Scenario: Remove User's Permission
@@ -97,7 +95,6 @@ Feature: Account Administration
 	And I press "Update"
 	Then I should see "The user was updated."
 	And I should be on the list of users
-	And there should be no emails
 	And "chris@example.com" should not be able to "administer_users"
 
 

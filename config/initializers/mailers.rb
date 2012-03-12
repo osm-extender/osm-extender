@@ -1,5 +1,3 @@
-require File.join(Rails.root, 'lib', 'development_mail_interceptor')
-
 ActionDispatch::Callbacks.to_prepare do
   if SettingValue.table_exists?
     ActionMailer::Base.smtp_settings = {
@@ -12,7 +10,7 @@ ActionDispatch::Callbacks.to_prepare do
       :enable_starttls_auto => true
     }
   end
-end
 
-ActionMailer::Base.default_url_options[:host] = Rails.configuration.root_url
-ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor) if Rails.env.development?
+  ActionMailer::Base.default_url_options[:host] = Rails.configuration.root_url
+
+end

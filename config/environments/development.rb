@@ -43,6 +43,9 @@ OSMExtender::Application.configure do
     :race_condition_ttl => 2.minutes
   }
 
+  # Don't deliver emails, open them in a new window instead
+  config.action_mailer.delivery_method = :letter_opener
+
 end
 
 # Load custom configuration

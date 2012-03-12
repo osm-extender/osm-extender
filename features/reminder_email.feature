@@ -179,7 +179,7 @@ Feature: Reminder Email
         And I should see "Due badges"
 
 
-    Scenario: Preview the email (plain text)
+    Scenario: Preview the email (HTML)
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
@@ -208,7 +208,7 @@ Feature: Reminder Email
 	    | Bob   | 5         |       |
 
         When I signin as "alice@example.com" with password "P@55word"
-	And I preview the "Tuesday" email reminder for section 1
+	And I preview the Tuesday email reminder for section 1 as html
         Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
 	And I should see "Birthdays"
         And I should see "Due Badges"

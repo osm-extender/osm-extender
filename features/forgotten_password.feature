@@ -25,13 +25,12 @@ Feature: Forgotten Password
 	And I should be on the root page
         And "alice@example.com" should receive an email with subject /Password Reset/
         When I open the email with subject /Password Reset/
-        And I click the first link in the email
+        When I click the /reset_password/ link in the email
         When I fill in "Password" with "P@55word"
         And I fill in "Password confirmation" with "P@55word"
         And I press "Reset password"
         Then I should see "Password sucessfully changed."
 	And I should be on the root page
-        And "alice@example.com" should receive an email with subject /Password Changed/
 
 
     Scenario: Forgotten Password (bad email address)
