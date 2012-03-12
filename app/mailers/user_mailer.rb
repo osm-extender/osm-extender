@@ -27,23 +27,6 @@ class UserMailer < ActionMailer::Base
     })
   end
 
-  def password_changed(user)
-    @user = user
-    mail ({
-      :subject => build_subject('Password Changed'),
-      :to => build_email_address
-    })
-  end
-
-  def email_address_changed(user)
-    @user = user
-    @new_email_address = user.email_address_change[1]
-    mail ({
-      :subject => build_subject('Email Address Changed'),
-      :to => build_email_address(user.email_address_change[0])
-    })
-  end
-
   def account_locked(user)
     @user = user
     mail ({

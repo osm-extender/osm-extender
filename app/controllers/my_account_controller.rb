@@ -10,7 +10,15 @@ class MyAccountController < ApplicationController
 
   def update
     @user = current_user
-    
+
+    unless @user.email_address.downcase == params[:email_address].downcase
+      # Email address is being changed
+      unless User.authenticate(@user.email_address, params[:current_password]) == @user
+        flash[:error] = 'Incorrect current password.'
+        render :action => :edit and return
+      end
+    end
+
     if @user.update_attributes(params)
       redirect_to my_account_path, notice: 'Sucessfully updated your details.'
     else

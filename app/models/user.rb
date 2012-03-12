@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   attr_accessor :signup_code
 
   attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code
-  attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code, :can_administer_users, :as => :admin
+  attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code, :can_administer_users, :can_administer_faqs, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
 
@@ -28,16 +28,10 @@ class User < ActiveRecord::Base
     self.password = new_password
     self.password_confirmation = new_password_confirmation
 
-    if valid? && errors.none?
-      if super(new_password)
-        UserMailer.password_changed(self).deliver
-        return true
-      else
-        return false
-      end
-    else
-      return false
+    if valid? && errors.none? && super(new_password)
+      return true
     end
+    return false
   end
   
   
@@ -168,10 +162,6 @@ class User < ActiveRecord::Base
   end
 
   def send_email_on_attribute_changes
-    if email_address_changed?
-      UserMailer.email_address_changed(self).deliver unless email_address_change[0].blank?
-    end
-
     if lock_expires_at_changed?
       UserMailer.account_locked(self).deliver unless lock_expires_at.nil?
     end

@@ -31,7 +31,6 @@ Feature: Forgotten Password
         And I press "Reset password"
         Then I should see "Password sucessfully changed."
 	And I should be on the root page
-        And "alice@example.com" should receive an email with subject /Password Changed/
 
 
     Scenario: Forgotten Password (bad email address)
