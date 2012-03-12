@@ -93,6 +93,10 @@ GEM
     json (1.6.5)
     json_pure (1.6.5)
     kgio (2.7.2)
+    launchy (2.0.5)
+      addressable (~> 2.2.6)
+    letter_opener (0.0.2)
+      launchy
     libv8 (3.3.10.4)
     mail (2.4.1)
       i18n (>= 0.4.0)
@@ -221,6 +225,7 @@ DEPENDENCIES
   httparty
   jquery-rails
   jquery-ui-rails
+  letter_opener
   memcache-client
   minitest
   mysql

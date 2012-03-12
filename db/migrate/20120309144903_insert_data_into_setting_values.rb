@@ -80,6 +80,10 @@ class InsertDataIntoSettingValues < ActiveRecord::Migration
     SettingValue.find_by_key('Mail Server - Username').delete
     SettingValue.find_by_key('Mail Server - Password').delete
     SettingValue.find_by_key('signup code').delete
+
+    if Rails.env.development?
+      SettingValue.find_by_key('Mail Server - Development recipient').delete
+    end
   end
 
 

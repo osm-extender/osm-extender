@@ -29,6 +29,9 @@ group :assets do
   gem 'uglifier'
 end
 
+group :development do
+  gem 'letter_opener' # Don't deliver emails, open them in a new browser window instead
+end
 
 group :development, :test do
   gem 'sqlite3'   # Use the SQLite database
