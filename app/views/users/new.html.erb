@@ -28,10 +28,10 @@
     <%= f.label :password_confirmation %><br/>
     <%= f.password_field :password_confirmation %>
   </div>
-  <%- unless SettingValue.find_by_key('signup code').nil? || SettingValue.find_by_key('signup code').value.blank? %>
+  <%- unless Settings.read('signup code').blank? %>
     <div class="field">
-      <%= f.label :signup_code %><br/>
-      <%= f.text_field :signup_code %>
+      <%= label_tag :signup_code %><br/>
+      <%= text_field_tag :signup_code, @signup_code %>
     </div>
   <%- end %>
   <div class="actions"><%= f.submit 'Sign up' %></div>

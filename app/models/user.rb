@@ -1,10 +1,8 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
-  attr_accessor :signup_code
-
-  attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code
-  attr_accessible :name, :email_address, :password, :password_confirmation, :signup_code, :can_administer_users, :can_administer_faqs, :as => :admin
+  attr_accessible :name, :email_address, :password, :password_confirmation
+  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
 
@@ -20,9 +18,6 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
-
-  validates_presence_of :signup_code, :on => :create, :unless => "SettingValue.find_by_key('signup code').nil? || SettingValue.find_by_key('signup code').value.blank?"
-  validate :signup_code_correct, :on => :create, :unless => "SettingValue.find_by_key('signup code').nil? || SettingValue.find_by_key('signup code').value.blank?"
 
   def change_password!(new_password, new_password_confirmation=new_password)
     self.password = new_password
@@ -147,13 +142,6 @@ class User < ActiveRecord::Base
     user_with_email_address = User.find_by_email_address(self.email_address.downcase)
     unless user_with_email_address.nil?  ||  user_with_email_address == self
       errors.add(:email_address, 'has already been taken')
-    end
-  end
-
-  def signup_code_correct
-    code = SettingValue.find_by_key('signup code')
-    unless code.nil? || self.signup_code.blank?
-      errors.add(:signup_code, 'is invalid') unless code.value.eql?(self.signup_code)
     end
   end
 
