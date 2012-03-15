@@ -106,10 +106,19 @@ Feature: OSM
 
     Scenario: Links for connected user
 	Given "alice@example.com" is connected to OSM
-	And an OSM request to "get roles" will give 1 roles
+	And an OSM request to "get roles" will give 1 role
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "links to things you can do will appear here"
 	And I should see "Email reminders"
 	And I should see "Programme review"
 	And I should see "Email lists"
 	And I should see "OSM permissions"
+
+
+    Scenario: Fix for section with no type
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to get roles will have a section with no type
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should not see "something went wrong"
+	And I should see "Section 1 (1st Somewhere)"
+
