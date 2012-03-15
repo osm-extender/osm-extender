@@ -704,7 +704,15 @@ module OSM
       @extra_records = data['extraRecords'] || []
 
       # Symbolise the keys in each hash of the extra_records array
-      item.symbolize_keys!
+      @extra_records.each do |item|
+        # Expect item to be: {:name=>String, :extraid=>FixNum}
+        # Sometimes get item as: [String, {"name"=>String, "extraid"=>FixNum}]
+        if item.is_a?(Array)
+          item = item[1].symbolize_keys
+        else
+          item.symbolize_keys!
+        end
+      end
     end
 
   end

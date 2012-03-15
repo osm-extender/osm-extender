@@ -122,3 +122,9 @@ Feature: OSM
 	Then I should not see "something went wrong"
 	And I should see "Section 1 (1st Somewhere)"
 
+    Scenario: Fix for strange extra records
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to get roles will have strange extra records
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should not see "something went wrong"
+	And I should see "Section 1 (1st Somewhere)"
