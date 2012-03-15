@@ -210,19 +210,19 @@ class ProgrammeReview
   end
 
   def similar?(a, b)
-    if a.class == Array
+    if a.is_a? Array
       a.each do |item|
         return true if similar?(item, b)
       end
     end
 
-    if b.class == Array
+    if b.is_a? Array
       b.each do |item|
         return true if similar?(a, item)
       end
     end
 
-    if a.class == String  &&  b.class == String
+    if a.is_a?(String)  &&  b.is_a?(String)
       a = a.downcase.gsub(/[^a-z0-9]/, '')
       b = b.downcase.gsub(/[^a-z0-9]/, '')
       return a.eql?(b)

@@ -169,7 +169,7 @@ module OSM
       end
 
       sections = get_sections(api_data)[:data]
-      return nil unless sections.class == Array
+      return nil unless sections.is_a? Array
 
       sections.each do |section|
         return section if section.id == section_id
@@ -278,8 +278,8 @@ module OSM
 
       result = Array.new
       unless response[:http_error] || response[:osm_error]
-        response[:data] = {'items'=>[],'activities'=>{}} if response[:data].class == Array
-        self.user_can_access(:programme, section_id, api_data) unless response[:data].class == Array
+        response[:data] = {'items'=>[],'activities'=>{}} if response[:data].is_a? Array
+        self.user_can_access(:programme, section_id, api_data) unless response[:data].is_a? Array
         items = response[:data]['items'] || []
         activities = response[:data]['activities'] || {}
 
