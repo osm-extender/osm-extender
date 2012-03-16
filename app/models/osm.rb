@@ -692,7 +692,7 @@ module OSM
       @id = id.to_i
       @subscription_level = subscription_levels[data['subscription_level'] - 1]
       @subscription_expires = data['subscription_expires'] ? Date.parse(data['subscription_expires'], 'yyyy-mm-dd') : nil
-      @type = data['sectionType'].to_sym
+      @type = !data['sectionType'].nil? ? data['sectionType'].to_sym : :unknown
       @num_scouts = data['numscouts']
       @has_badge_records = data['hasUsedBadgeRecords'].eql?('1') ? true : false
       @has_programme = data['hasProgramme']
@@ -705,7 +705,13 @@ module OSM
 
       # Symbolise the keys in each hash of the extra_records array
       @extra_records.each do |item|
-        item.symbolize_keys!
+        # Expect item to be: {:name=>String, :extraid=>FixNum}
+        # Sometimes get item as: [String, {"name"=>String, "extraid"=>FixNum}]
+        if item.is_a?(Array)
+          item = item[1].symbolize_keys
+        else
+          item.symbolize_keys!
+        end
       end
     end
 
