@@ -219,6 +219,7 @@ Feature: Reminder Email
 
     Scenario: Send the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	And an OSM request to get sections will give 1 section
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |

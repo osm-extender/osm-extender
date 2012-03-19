@@ -177,7 +177,7 @@ Given /^an OSM request to get the register for term (\d+) and section (\d+) will
 end
 
 Given /^an OSM request to get due badges for section (\d+) and term (\d+) will result in the following being due their "([^"]*)" badge$/ do |section_id, term_id, badge_name, table|
-  url = "challenges.php?action=outstandingBadges&sectionid=#{section_id}&termid=#{term_id}"
+  url = "challenges.php?action=outstandingBadges&section=cubs&sectionid=#{section_id}&termid=#{term_id}"
 
   badge_symbol = badge_name.downcase.gsub(/ /, '_')
 

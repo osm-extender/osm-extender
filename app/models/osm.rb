@@ -477,21 +477,22 @@ module OSM
     def get_due_badges(section_id, term_id=nil, api_data={})
       term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
 
-      if Rails.cache.exist?("OSMAPI-due_badges-#{section_id}") && self.user_can_access?(:badge, section_id, api_data)
+      if Rails.cache.exist?("OSMAPI-due_badges-#{section_id}-#{term_id}") && self.user_can_access?(:badge, section_id, api_data)
         return {
-          :data => Rails.cache.read("OSMAPI-due_badges-#{section_id}"),
+          :data => Rails.cache.read("OSMAPI-due_badges-#{section_id}-#{term_id}"),
           :http_error => false,
           :osm_error => false
         }
       end
 
-      response = perform_query("challenges.php?action=outstandingBadges&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      section_type = get_section(section_id, api_data).type.to_s
+      response = perform_query("challenges.php?action=outstandingBadges&section=#{section_type}&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
       # If sucessful make result a OSM::DueBadges object
       unless response[:http_error] || response[:osm_error]
         response[:data] = OSM::DueBadges.new(response[:data])
         self.user_can_access :badge, section_id, api_data
-        Rails.cache.write("OSMAPI-due_badges-#{section_id}", response[:data], :expires_in => @@default_cache_ttl*2)
+        Rails.cache.write("OSMAPI-due_badges-#{section_id}-#{term_id}", response[:data], :expires_in => @@default_cache_ttl*2)
       else
         response[:data] = nil
       end
