@@ -675,6 +675,25 @@ module OSM
       @section_type = data['section'].to_sym
       @default = data['isDefault'].eql?('1') ? true : false
       @permissions = (data['permissions'] || {}).symbolize_keys
+
+      # Convert permission values to a number
+      @permissions.each_key do |key|
+        @permissions[key] = @permissions[key].to_i
+      end
+    end
+
+    # Determine if this role has read access for the provided permission
+    # @param key - the key for the permission being queried
+    # @returns - true if this role can read the passed permission, false otherwise
+    def can_read?(key)
+      return [10, 20, 100].include?(@permissions[key])
+    end
+
+    # Determine if this role has write access for the provided permission
+    # @param key - the key for the permission being queried
+    # @returns - true if this role can write the passed permission, false otherwise
+    def can_write?(key)
+      return [20, 100].include?(@permissions[key])
     end
 
   end
@@ -935,14 +954,14 @@ module OSM
       # @param key - the key for the permission being queried
       # @returns - true if this API can read the passed permission, false otherwise
       def can_read?(key)
-        return @permissions[key] == 10 || @permissions[key] == 20
+        return [20, 10].include?(@permissions[key])
       end
 
       # Determine if this API has write access for the provided permission
       # @param key - the key for the permission being queried
       # @returns - true if this API can write the passed permission, false otherwise
       def can_write?(key)
-        return @permissions[key] == 20
+        return [20].include?(@permissions[key])
       end
 
       # Determine if this API is the API being used to make requests
