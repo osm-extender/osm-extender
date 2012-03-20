@@ -6,7 +6,7 @@ class EmailRemindersController < ApplicationController
   # GET /email_reminders
   # GET /email_reminders.json
   def index
-    @email_reminders = current_user.email_reminders.where(['section_id = ?', session[:current_section_id]])
+    @email_reminders = current_user.email_reminders.where(['section_id = ?', current_section.id])
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @email_reminders }
@@ -45,7 +45,7 @@ class EmailRemindersController < ApplicationController
   # POST /email_reminders
   # POST /email_reminders.json
   def create
-    @email_reminder = current_user.email_reminders.new(params[:email_reminder].merge({:section_id=>session[:current_section_id]}))
+    @email_reminder = current_user.email_reminders.new(params[:email_reminder].merge({:section_id=>current_section.id}))
 
     respond_to do |format|
       if @email_reminder.save
@@ -93,7 +93,7 @@ class EmailRemindersController < ApplicationController
 
   def preview
     email_reminder = EmailReminder.find(params[:id])
-    @section_name = get_section_name(email_reminder.section_id)
+    @section_name = section_name
     @data = email_reminder.get_data
     render "reminder_mailer/reminder_email", :layout => 'mail'
   end
@@ -105,20 +105,6 @@ class EmailRemindersController < ApplicationController
       ['List of reminders', email_reminders_path],
       ['New reminder', new_email_reminder_path],
     ]
-  end
-
-  # Get the name for a given section
-  # @param section_id the section ID of the section to get the name for
-  # @returns a string containing the section name (will be empty if no section was found or the user can not access that section)
-  def get_section_name(section_id)
-    if current_user.connected_to_osm?
-      current_user.osm_api.get_roles[:data].each do |role|
-        if role.section_id == session[:current_section_id]
-          return "#{role.section_name} (#{role.group_name})"
-        end
-      end
-    end
-    return ''
   end
 
 end

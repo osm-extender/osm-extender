@@ -15,10 +15,7 @@ class StaticController < ApplicationController
   end
 
   def osm_permissions
-    @osmx_permissions = current_user.osm_api.get_our_api_access(session[:current_section_id])[:data]
-    current_user.osm_api.get_roles[:data].each do |role|
-      @osm_role = role if (role.section_id == session[:current_section_id])
-    end
+    @osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id)[:data]
   end
 
 end

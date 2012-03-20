@@ -52,8 +52,7 @@ class MyAccountController < ApplicationController
     if current_user.connect_to_osm(params[:email], params[:password])
       # Set current section
       current_user.osm_api.get_roles[:data].each do |role|
-        session[:current_section_id] = role.section_id if role.default
-        session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
+        session[:current_role] = role
       end
 
       # Send user to the OSM permissions page
