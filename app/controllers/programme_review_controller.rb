@@ -15,7 +15,6 @@ class ProgrammeReviewController < ApplicationController
 
   def balanced_data
     pr = ProgrammeReview.new(current_user, current_section.id)
-
     render :json => pr.balanced
   end
 

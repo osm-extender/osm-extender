@@ -1,3 +1,7 @@
+$(function() {
+    $("#tabs").tabs();
+});
+
 google.load("visualization", "1", {packages:["corechart"]});
 
 google.setOnLoadCallback(function () {
@@ -14,10 +18,10 @@ function drawCharts() {
     async: false,
     success: function(data, status, jqXHR) {
       updateStatus('Processing data.');
-      var zones_chart = new google.visualization.LineChart(document.getElementById('zones_chart'));
-      var methods_chart = new google.visualization.LineChart(document.getElementById('methods_chart'));
+      var number_zones_chart = new google.visualization.LineChart(document.getElementById('number_zones_chart'));
+      var number_methods_chart = new google.visualization.LineChart(document.getElementById('number_methods_chart'));
 
-      var zones_options = {
+      var number_zones_options = {
         focusTarget: 'category',
         hAxis: {
           format: 'MMM y',
@@ -27,10 +31,11 @@ function drawCharts() {
           gridlines: {
             count: ((data['statistics']['zones']['max_value'] + 1) / 2) + 1,
           }
-        }
+        },
+        width: 750, height: 350
       };
 
-      var methods_options = {
+      var number_methods_options = {
         focusTarget: 'category',
         hAxis: {
           format: 'MMM y',
@@ -40,14 +45,15 @@ function drawCharts() {
           gridlines: {
             count: ((data['statistics']['methods']['max_value'] + 1) / 2) + 1,
           }
-        }
+        },
+        width: 750, height: 350
       };
 
-      drawChart(data, zones_options, zones_chart, 'zone');
-      drawChart(data, methods_options, methods_chart, 'method');
+      drawChart(data, number_zones_options, number_zones_chart, 'zone');
+      drawChart(data, number_methods_options, number_methods_chart, 'method');
 
-      writeScore(data, document.getElementById('zones_score'), 'zone');
-      writeScore(data, document.getElementById('methods_score'), 'method');
+      writeScore(data, document.getElementById('number_zones_score'), 'zone');
+      writeScore(data, document.getElementById('number_methods_score'), 'method');
 
       updateStatus('');
     }
