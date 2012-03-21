@@ -51,15 +51,20 @@
       <div id="secondary_menu">
         <%- if current_user %>
           <div id="current_section">
-            <%- if current_user.connected_to_osm? && session[:current_section_id] %>
-              Current section: <%= session[:current_section_name] %>
+            <%- if current_user.connected_to_osm? && current_role %>
+              Current section: <%= section_name %>
             <%- end %>
           </div>
-          <%- if current_user.connected_to_osm? && session[:current_section_id] %>
+          <%- if current_user.connected_to_osm? && current_role %>
             <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
-            <div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div>
-            <div class="menu_item"><%= link_to 'Email lists', generate_email_list_path %></div>
+            <%- if has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
+            <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Email lists', generate_email_list_path %></div><%- end %>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
+            <%- unless has_osm_permission?(:read, [:member, :programme]) %>
+              <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
+                <p>Some items have hidden from this menu becuase of how your <%= link_to 'OSM Permissions', osm_permissions_path %> are set.</p>
+              </div>
+            <%- end %>
           <%- else %>
             <div style="margin-left: 10%; margin-right: 10%; margin-top: auto; margin-bottom: auto; text-align: center; font-weight: bold;">
               <p>Once you have <%= link_to 'connected to OSM', connect_to_osm_path %> links to things you can do will appear here.</p>

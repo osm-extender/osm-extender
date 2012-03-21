@@ -1,61 +1,84 @@
 <% provide :title, "Balanced Programme" %>
 <% provide :use_charts, true %>
 
-<p>This page uses the tags attached to the activities in you programme in order to give you an idea of how balanced your programme is. You should bear in mind that the results are only as good as the tagging of the activities. The tags which the code pays attention to are shown below each graph and may be entered in any case and with or without the spaces.</p>
 
 <div id="status_message" style="width: 50%; margin-left: auto; margin-right: auto; background-color: #caf18e; text-align: center; font-weight: bold;">
   Loading page.
 </div>
 
-<h2>Programme zones</h2>
-<div id="zones_chart" style="width: 850px; height: 350px;">
-  <div style="width: inherit; height: inherit; display: table-cell; vertical-align: middle; text-align: center;">
-    Your graph will appear here soon.
-  </div>
-</div>
-<div id="zones_info">
-  <div style="width: 70%; display: inline-block;">
-    <p>The following tags are used in evaluating your programme:</p>
+
+<div id="tabs">
+  <ul>
+      <li><a href="#tabs-information">Information</a></li>
+      <li><a href="#tabs-number">By Number</a></li>
+      <li><a href="#tabs-time">By Time</a></li>
+  </ul>
+  
+  <div id="tabs-information">
+    <p>In order to analyse your programme we use the tags attached to each of your activities. The following tables show how these tags are turned into the methods and zones which your programme meets. You should bear in mind that the results are only as good as the tagging of the activities. The tags may be entered in any case and with or without the spaces.</p>
+    <p>Remember the aim is that the programme will be balanced over a period of time, for this reason we consider activities that have been done from a few years ago upto a few years into the future, how many years depends on your section (it is the time an average youth member will be in your section). We also calculate a score for how balanced your programme is (for the statistically inclined this is based on the stanadard deviation) - if you're a Cub leader and manage to get 100% I want to know / steal your programme :-).</p>
+
+    <h2>Programme Zones</h2>
     <table>
       <tr><th>Zone</th><th>Tags</th></tr>
       <%- @zones.each do |zone| %>
         <tr><td><%= zone[0] %></td><td><%= zone.join(', ') %></td></tr>
       <%- end %>
     </table>
-  </div>
-  <div id="zones_score" style="width: 25%; display: inline-block;">
-    <p>Your score will appear here soon.</p>
-  </div>
-</div>
 
-<h2>Programme methods</h2>
-<div id="methods_chart" style="width: 850px; height: 350px;">
-  <div style="width: inherit; height: inherit; display: table-cell; vertical-align: middle; text-align: center;">
-    Your graph will appear here soon.
-  </div>
-</div>
-<div id="methods_info">
-  <div style="width: 70%; display: inline-block;">
-    <p>The following tags are used in evaluating your programme:</p>
+    <h2>Programme Methods</h2>
     <table>
       <tr><th>Method</th><th>Tags</th></tr>
       <%- @methods.each do |method| %>
         <tr><td><%= method[0] %></td><td><%= method.join(', ') %></td></tr>
       <%- end %>
     </table>
+
+    <%- unless @cached_terms.empty? %>
+      <h2>Caching</h2>
+      <p>In order to speed up the generation of these graphs the data from some of your terms was retreieved from a cache, it the activities used within these terms (or the programme for the term) has changed since they were generated then they will be out of date. If this is the case you may delete the cached data using the links in the table below.</p>
+      <table>
+        <tr><th>Term</th><th>Created at</th><th>Actions</th></tr>
+        <%- @cached_terms.each do |term| %>
+          <tr><td><%= @terms[term.term_id].name %></td><td><%= term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(term.created_at) %> ago)</td><td><%= link_to '[Delete]', term, confirm: 'Are you sure?', method: :delete %></td></tr>
+        <%- end %>
+      </table>
+    <%- end %>
   </div>
-  <div id="methods_score" style="width: 25%; display: inline-block;">
-    <p>Your score will appear here soon.</p>
+
+
+  <div id="tabs-number">
+    <h2>Programme zones</h2>
+    <div>
+      <div id="number_zones_score" style="width: 250px; float: left;">
+        <p>Your score will appear here soon.</p>
+      </div>
+      <div id="number_zones_chart" style="width: 750px; height: 350px; float: right;">
+        <div style="width: inherit; height: inherit; display: table-cell; vertical-align: middle; text-align: center;">
+          Your graph will appear here soon.
+        </div>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+
+    <h2>Programme methods</h2>
+    <div>
+      <div id="number_methods_score" style="width: 250px; float: left;">
+        <p>Your score will appear here soon.</p>
+      </div>
+      <div id="number_methods_chart" style="width: 750px; height: 350px; float: right;">
+        <div style="width: inherit; height: inherit; display: table-cell; vertical-align: middle; text-align: center;">
+          Your graph will appear here soon.
+        </div>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+
+
+  <div id="tabs-time" style="min-height: 100px;">
+    <div style="margin-top: auto; margin-bottom: auto; text-align: center;">
+      <p>Coming soon !</p>
+    </div>
   </div>
 </div>
-
-<%- unless @cached_terms.empty? %>
-  <h2>Caching</h2>
-  <p>In order to speed up the generation of these graphs the data from some of your terms was retreieved from a cache, it the activities used within these terms (or the programme for the term) has changed since they were generated then they will be out of date. If this is the case you may delete the cached data using the links in the table below.</p>
-  <table>
-    <tr><th>Term</th><th>Created at</th><th>Actions</th></tr>
-    <%- @cached_terms.each do |term| %>
-      <tr><td><%= @terms[term.term_id].name %></td><td><%= term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(term.created_at) %> ago)</td><td><%= link_to '[Delete]', term, confirm: 'Are you sure?', method: :delete %></td></tr>
-    <%- end %>
-  </table>
-<%- end %>

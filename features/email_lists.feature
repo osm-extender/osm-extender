@@ -26,6 +26,9 @@ Feature: Email Lists
 	    | 2           | B    |
 	And an OSM request to "get roles" will give 1 role
 	And an OSM request to get sections will give 1 section
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
 
     Scenario: Get list of addresses (are in a six)
         When I signin as "alice@example.com" with password "P@55word"
@@ -104,3 +107,12 @@ Feature: Email Lists
 	When I go to the generate_email_list page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+
+    Scenario: Get list of addresses (incorrect OSM permission)
+	Given an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | none    |
+        When I signin as "alice@example.com" with password "P@55word"
+	And I go to the generate_email_list page
+	Then I should see "You do not have the correct OSM permissions"
+	And I should be on the osm_permissions page

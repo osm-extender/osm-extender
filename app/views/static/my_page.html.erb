@@ -8,7 +8,7 @@
   <h2>Change Current Section</h2>
   <ul>
   <%- @roles.each do |role| %>
-    <li><%= link_to "#{role.section_name} (#{role.group_name})", "#{change_section_path}?section_id=#{role.section_id}" %></li>
+    <li><%= link_to section_name(role), "#{change_section_path}?section_id=#{role.section_id}" %></li>
   <%- end %>
   </ul>
 <%- end %>

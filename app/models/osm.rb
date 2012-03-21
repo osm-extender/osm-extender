@@ -20,7 +20,7 @@ module OSM
       raise ArgumentError, 'site is invalid, if passed it should be either :scout or :guide' unless [:scout, :guide].include?(site)
 
       @base_url = 'https://www.onlinescoutmanager.co.uk' if site == :scout
-      @base_url = 'https://www.onlineguidemanager.co.uk' if site == :guide
+      @base_url = 'http://www.onlineguidemanager.co.uk' if site == :guide
       set_user(userid, secret)
     end
 
@@ -477,21 +477,22 @@ module OSM
     def get_due_badges(section_id, term_id=nil, api_data={})
       term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
 
-      if Rails.cache.exist?("OSMAPI-due_badges-#{section_id}") && self.user_can_access?(:badge, section_id, api_data)
+      if Rails.cache.exist?("OSMAPI-due_badges-#{section_id}-#{term_id}") && self.user_can_access?(:badge, section_id, api_data)
         return {
-          :data => Rails.cache.read("OSMAPI-due_badges-#{section_id}"),
+          :data => Rails.cache.read("OSMAPI-due_badges-#{section_id}-#{term_id}"),
           :http_error => false,
           :osm_error => false
         }
       end
 
-      response = perform_query("challenges.php?action=outstandingBadges&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      section_type = get_section(section_id, api_data).type.to_s
+      response = perform_query("challenges.php?action=outstandingBadges&section=#{section_type}&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
       # If sucessful make result a OSM::DueBadges object
       unless response[:http_error] || response[:osm_error]
         response[:data] = OSM::DueBadges.new(response[:data])
         self.user_can_access :badge, section_id, api_data
-        Rails.cache.write("OSMAPI-due_badges-#{section_id}", response[:data], :expires_in => @@default_cache_ttl*2)
+        Rails.cache.write("OSMAPI-due_badges-#{section_id}-#{term_id}", response[:data], :expires_in => @@default_cache_ttl*2)
       else
         response[:data] = nil
       end
@@ -674,6 +675,25 @@ module OSM
       @section_type = data['section'].to_sym
       @default = data['isDefault'].eql?('1') ? true : false
       @permissions = (data['permissions'] || {}).symbolize_keys
+
+      # Convert permission values to a number
+      @permissions.each_key do |key|
+        @permissions[key] = @permissions[key].to_i
+      end
+    end
+
+    # Determine if this role has read access for the provided permission
+    # @param key - the key for the permission being queried
+    # @returns - true if this role can read the passed permission, false otherwise
+    def can_read?(key)
+      return [10, 20, 100].include?(@permissions[key])
+    end
+
+    # Determine if this role has write access for the provided permission
+    # @param key - the key for the permission being queried
+    # @returns - true if this role can write the passed permission, false otherwise
+    def can_write?(key)
+      return [20, 100].include?(@permissions[key])
     end
 
   end
@@ -934,14 +954,14 @@ module OSM
       # @param key - the key for the permission being queried
       # @returns - true if this API can read the passed permission, false otherwise
       def can_read?(key)
-        return @permissions[key] == 10 || @permissions[key] == 20
+        return [20, 10].include?(@permissions[key])
       end
 
       # Determine if this API has write access for the provided permission
       # @param key - the key for the permission being queried
       # @returns - true if this API can write the passed permission, false otherwise
       def can_write?(key)
-        return @permissions[key] == 20
+        return [20].include?(@permissions[key])
       end
 
       # Determine if this API is the API being used to make requests

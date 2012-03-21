@@ -22,8 +22,8 @@ class SessionsController < ApplicationController
       if current_user.connected_to_osm?
         current_user.osm_api.get_roles[:data].each do |role|
           if role.default
-            session[:current_section_id] = role.section_id
-            session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
+            session[:current_role] = role
+            break
           end
         end
       end
@@ -50,14 +50,14 @@ class SessionsController < ApplicationController
 
 
   def change_section
-    section_id = params[:section_id]
-    
+    section_id = params[:section_id].to_i
+
     # Check user has access to section then change current section
     if current_user.connected_to_osm?
       current_user.osm_api.get_roles[:data].each do |role|
-        if section_id.eql?(role.section_id.to_s)
-          session[:current_section_id] = role.section_id
-          session[:current_section_name] = "#{role.section_name} (#{role.group_name})"
+        if section_id == role.section_id
+          session[:current_role] = role
+          break
         end
       end
     end

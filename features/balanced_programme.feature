@@ -23,6 +23,9 @@ Feature: Balanced Programme
 	And an OSM request to get activity 12 will have tags "outdoors"
 	And an OSM request to get activity 21 will have tags "belief, values"
 	And an OSM request to get activity 22 will have tags "global, outdoors"
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | programme  | read    |
 
     Scenario: Get balanced programme
         When I signin as "alice@example.com" with password "P@55word"
@@ -44,3 +47,22 @@ Feature: Balanced Programme
 	When I go to the programme_review_balanced_data page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+
+
+    Scenario: Get balanced programme (incorrect OSM permission)
+	Given an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | programme  | none    |
+        When I signin as "alice@example.com" with password "P@55word"
+	And I go to the programme_review_balanced page
+	Then I should see "You do not have the correct OSM permissions"
+	And I should be on the osm_permissions page
+
+    Scenario: Get balanced programme data (incorrect OSM permission)
+	Given an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | programme  | none    |
+        When I signin as "alice@example.com" with password "P@55word"
+	And I go to the programme_review_balanced_data page
+	Then I should see "You do not have the correct OSM permissions"
+	And I should be on the osm_permissions page

@@ -49,6 +49,12 @@ Feature: OSM
     Scenario: Select between multiple OSM accounts
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 2 roles
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+	And an OSM request to get_api_access for section "2" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should see "Current section: Section 1"
 	And I should see "Change Current Section"
@@ -58,6 +64,9 @@ Feature: OSM
     Scenario: Select between single OSM account
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should see "Current section: Section 1"
 	And I should not see "Change Current Section"
@@ -107,6 +116,10 @@ Feature: OSM
     Scenario: Links for connected user
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+	    | programme  | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "links to things you can do will appear here"
 	And I should see "Email reminders"
@@ -114,10 +127,26 @@ Feature: OSM
 	And I should see "Email lists"
 	And I should see "OSM permissions"
 
+    Scenario: Message and selected links for connected user without permissions
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | none    |
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should see "Some items have hidden from this menu"
+	And I should see "Email reminders"
+	And I should not see "Programme review"
+	And I should not see "Email lists"
+	And I should see "OSM permissions"
+
 
     Scenario: Fix for section with no type
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to get roles will have a section with no type
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "something went wrong"
 	And I should see "Section 1 (1st Somewhere)"
@@ -125,6 +154,9 @@ Feature: OSM
     Scenario: Fix for strange extra records
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to get roles will have strange extra records
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "something went wrong"
 	And I should see "Section 1 (1st Somewhere)"

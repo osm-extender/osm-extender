@@ -18,6 +18,12 @@ Feature: Reminder Email
         And "alice@example.com" is an activated user account
 	And "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+	    | programme  | read    |
+	    | register   | read    |
+	    | badge      | read    |
 	And no emails have been sent
 
 
@@ -106,6 +112,23 @@ Feature: Reminder Email
         Then I should see "Item was successfully added"
         And I should see "Due badges"
 
+    Scenario: Message and no list when no more items to add to reminder
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "Birthdays"
+        And I press "Create Email reminder item birthday"
+        And I follow "Events"
+        And I press "Create Email reminder item event"
+        And I follow "Programme"
+        And I press "Create Email reminder item programme"
+        And I follow "Member not seen"
+        And I press "Create Email reminder item not seen"
+        And I follow "Due badges"
+        And I press "Create Email reminder item due badge"
+	Then I should see "There are no more items you can add"
+	And I should not see "You can add an item"
 
     Scenario: Edit reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -181,6 +204,7 @@ Feature: Reminder Email
 
     Scenario: Preview the email (HTML)
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	And an OSM request to get sections will give 1 section
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |
@@ -219,6 +243,7 @@ Feature: Reminder Email
 
     Scenario: Send the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	And an OSM request to get sections will give 1 section
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |

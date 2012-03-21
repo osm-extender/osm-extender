@@ -1,7 +1,8 @@
 OSMExtender::Application.routes.draw do
 
-  get 'welcome/index'
-  get 'my_page' => 'my_page#index', :as => 'my_page'
+  get 'index' => 'static#welcome', :as => 'welcome_page'
+  get 'my_page' => 'static#my_page', :as => 'my_page'
+  get 'osm_permissions' => 'static#osm_permissions', :as => 'osm_permissions'
 
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
@@ -14,8 +15,6 @@ OSMExtender::Application.routes.draw do
   put 'my_account/update' => 'my_account#update', :as => 'update_my_account'
   get 'my_account/connect_to_osm' => 'my_account#connect_to_osm', :as => 'connect_to_osm'
   post 'my_account/connect_to_osm' => 'my_account#connect_to_osm2', :as => 'connect_to_osm2'
-
-  get 'osm_permissions' => 'osm_permissions#view', :as => 'osm_permissions'
 
   get 'email_lists/generate' => 'email_lists#generate', :as => 'generate_email_list'
   post 'email_lists/generate' => 'email_lists#generate2', :as => 'generate_email_list2'
@@ -51,5 +50,5 @@ OSMExtender::Application.routes.draw do
   end
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
 
-  root :to => 'welcome#index'
+  root :to => 'static#welcome'
 end
