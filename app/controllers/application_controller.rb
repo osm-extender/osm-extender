@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :section_name, :current_role, :current_section
+  helper_method :section_name, :current_role, :current_section, :has_osm_permission?
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -27,6 +27,36 @@ class ApplicationController < ActionController::Base
       flash[:instruction] = 'You must connect to your OSM account first.'
       redirect_to connect_to_osm_path
     end
+  end
+
+
+  # Ensure the user has a given OSM permission
+  # if not redirect them to the osm permissions page and set an instruction flash
+  # @param permission_to the action which is being checked (:read or :write)
+  # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
+  def require_osm_permission(permission_to, permission_on)
+    unless has_osm_permission?(permission_to, permission_on)
+      # Send user to the osm permissions page
+      flash[:error] = 'You do not have the correct OSM permissions to do that.'
+      redirect_to osm_permissions_path
+    end
+  end
+
+  # Check if the user has a given OSM permission
+  # if not redirect them to the osm permissions page and set an instruction flash
+  # @param permission_to the action which is being checked (:read or :write)
+  # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
+  def has_osm_permission?(permission_to, permission_on)
+    permission_on = [permission_on] unless permission_on.is_a?(Array)
+
+    permission_on.each do |on|
+      osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id)[:data]
+      osmx_can = osmx_permissions.send("can_#{permission_to.to_s}?", on)
+      user_can = current_role.send("can_#{permission_to.to_s}?", on)
+      return false unless (osmx_can && user_can)
+    end
+
+    return true
   end
 
 

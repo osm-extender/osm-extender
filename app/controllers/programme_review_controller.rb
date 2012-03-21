@@ -1,5 +1,6 @@
 class ProgrammeReviewController < ApplicationController
   before_filter :require_connected_to_osm
+  before_filter { require_osm_permission :read, :programme }
 
   def balanced
     @methods = ProgrammeReview.methods[current_section.type]

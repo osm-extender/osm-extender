@@ -20,7 +20,7 @@
           <%= item.labels[key] %>: <%= item.configuration[key] %><br/>
         <%- end %></td>
         <td>
-          <%= link_to '[Edit]', edit_email_reminder_item_path(@email_reminder, item) %>
+          <%= link_to '[Edit]', self.send("edit_#{item.class.to_s.gsub!(/(.)([A-Z])/,'\1_\2').downcase!}_path", @email_reminder, item) %>
           <%= link_to '[Destroy]', email_reminder_item_path(@email_reminder, item), confirm: 'Are you sure?', method: :delete %>
         </td>
       </tr>
@@ -32,22 +32,17 @@
 
 <br/>
 
-<p>You can add an item by using the links below.</p>
-<ul>
-
-<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday') %>
-  <li><%= link_to 'Birthdays', new_email_reminder_item_birthday_path(@email_reminder) %>
+<%- if @available_items.size > 0 %>
+  <p>You can add an item by using the links below.</p>
+  <ul>
+    <%- @available_items.each do |item| %>
+      <%- if item[:as_link] %>
+        <li><%= link_to item[:name], self.send("new_email_reminder_item_#{item[:type]}_path", @email_reminder) %>
+      <%- else %>
+        <li><%= item[:name] %> - You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to this item
+      <%- end %>
+    <%- end %>
+  </ul>
+<%- else %>
+  <p>There are no more items you can add.</p>
 <%- end %>
-<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent') %>
-  <li><%= link_to 'Events', new_email_reminder_item_event_path(@email_reminder) %>
-<%- end %>
-<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme') %>
-  <li><%= link_to 'Programme', new_email_reminder_item_programme_path(@email_reminder) %>
-<%- end %>
-<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen') %>
-  <li><%= link_to 'Member not seen', new_email_reminder_item_not_seen_path(@email_reminder) %>
-<%- end %>
-<%- unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge') %>
-  <li><%= link_to 'Due badges', new_email_reminder_item_due_badge_path(@email_reminder) %>
-<%- end %>
-</ul>

@@ -40,6 +40,7 @@ class EmailRemindersController < ApplicationController
   # GET /email_reminders/1/edit
   def edit
     @email_reminder = EmailReminder.find(params[:id])
+    @available_items = get_available_items
   end
 
   # POST /email_reminders
@@ -52,6 +53,7 @@ class EmailRemindersController < ApplicationController
         format.html {
           flash[:instruction] = 'You must now add some items to your reminder.'
           flash[:notice] = 'Email reminder was successfully created.'
+          @available_items = get_available_items
           render action: 'edit'
         }
         format.json { render json: @email_reminder, status: :created, location: @email_reminder }
@@ -105,6 +107,26 @@ class EmailRemindersController < ApplicationController
       ['List of reminders', email_reminders_path],
       ['New reminder', new_email_reminder_path],
     ]
+  end
+
+  def get_available_items
+    items = []
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday')
+      items.push ({:name => 'Birthdays', :type => 'birthday', :as_link => has_osm_permission?(:read, :member)})
+    end
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent')
+      items.push ({:name => 'Events', :type => 'event', :as_link => has_osm_permission?(:read, :programme)})
+    end
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme')
+      items.push ({:name => 'Programme', :type => 'programme', :as_link => has_osm_permission?(:read, :programme)})
+    end
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen')
+      items.push ({:name => 'Member not seen', :type => 'not_seen', :as_link => has_osm_permission?(:read, :register)})
+    end
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
+      items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
+    end
+    return items
   end
 
 end

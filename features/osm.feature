@@ -127,6 +127,19 @@ Feature: OSM
 	And I should see "Email lists"
 	And I should see "OSM permissions"
 
+    Scenario: Message and selected links for connected user without permissions
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | none    |
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should see "Some items have hidden from this menu"
+	And I should see "Email reminders"
+	And I should not see "Programme review"
+	And I should not see "Email lists"
+	And I should see "OSM permissions"
+
 
     Scenario: Fix for section with no type
 	Given "alice@example.com" is connected to OSM
