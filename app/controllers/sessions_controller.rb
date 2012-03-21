@@ -23,6 +23,7 @@ class SessionsController < ApplicationController
         current_user.osm_api.get_roles[:data].each do |role|
           if role.default
             session[:current_role] = role
+            break
           end
         end
       end
@@ -56,6 +57,7 @@ class SessionsController < ApplicationController
       current_user.osm_api.get_roles[:data].each do |role|
         if section_id == role.section_id
           session[:current_role] = role
+          break
         end
       end
     end
