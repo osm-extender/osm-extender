@@ -20,7 +20,7 @@ module OSM
       raise ArgumentError, 'site is invalid, if passed it should be either :scout or :guide' unless [:scout, :guide].include?(site)
 
       @base_url = 'https://www.onlinescoutmanager.co.uk' if site == :scout
-      @base_url = 'https://www.onlineguidemanager.co.uk' if site == :guide
+      @base_url = 'http://www.onlineguidemanager.co.uk' if site == :guide
       set_user(userid, secret)
     end
 
