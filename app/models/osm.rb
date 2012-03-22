@@ -378,17 +378,28 @@ module OSM
     end
 
     # Get API access details for a given section
-    # @section_id the section to get details for
-    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
-    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
-    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @param section_id the section to get details for
+    # @param options (optional) a hash which may contain the following keys:
+    #   * :no_cache - if true then the data will be retreived from OSM not the cache
+    #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #     * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
     #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
     #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ApiAccess objects
     #   * :data - (only if :http_error is false and osm_error is true) an empty array
-    def get_api_access(section_id, api_data={})
+    def get_api_access(section_id, options={})
+      api_data = options[:api_data] || {}
+      if !options[:no_cache] && Rails.cache.exist?("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}")
+        return {
+          :data => Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}"),
+          :http_error => false,
+          :osm_error => false
+        }
+      end
+
       response = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", api_data)
 
       result = Array.new
@@ -399,6 +410,7 @@ module OSM
           self.user_can_access(:programme, section_id, api_data) if this_item.can_read?(:programme)
           self.user_can_access(:member, section_id, api_data) if this_item.can_read?(:member)
           self.user_can_access(:badge, section_id, api_data) if this_item.can_read?(:badge)
+          Rails.cache.write("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{this_item.id}", this_item, :expires_in => @@default_cache_ttl*2)
         end
       end
       response[:data] = result
@@ -407,18 +419,29 @@ module OSM
     end
 
     # Get our API access details for a given section
-    # @section_id the section to get details for
-    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
-    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
-    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @param section_id the section to get details for
+    # @param options (optional) a hash which may contain the following keys:
+    #   * :no_cache - if true then the data will be retreived from OSM not the cache
+    #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #     * 'secret' (optional) the OSM secret belonging to the above user
     # @returns a hash containing the following keys:
     #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
     #   * :osm_error - false if no error occured, otherwise a string containing the error message
     #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
     #   * :data - (only if :http_error is false and :osm_error is false) an OSM::ApiAccess objects
     #   * :data - (only if :http_error is false and osm_error is true) nil
-    def get_our_api_access(section_id, api_data={})
-      response = get_api_access(section_id, api_data)
+    def get_our_api_access(section_id, options={})
+      api_data = options[:api_data] || {}
+      if !options[:no_cache] && Rails.cache.exist?("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}")
+        return {
+          :data => Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}"),
+          :http_error => false,
+          :osm_error => false
+        }
+      end
+
+      response = get_api_access(section_id, options)
       found = nil
       response[:data].each do |item|
         found = item if item.our_api?
@@ -603,6 +626,11 @@ module OSM
           api_data['secret'] = @secret
         end
       end
+
+if Rails.env.development?
+  puts "Making OSM API request to #{url}"
+  puts api_data.to_s
+end
 
       result = HTTParty.post("#{@base_url}/#{url}", {:body => api_data})
       to_return = {

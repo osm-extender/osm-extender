@@ -15,7 +15,7 @@ class StaticController < ApplicationController
   end
 
   def osm_permissions
-    @osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id)[:data]
+    @osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id, {:no_cache => true})[:data]
   end
 
 end
