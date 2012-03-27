@@ -809,14 +809,14 @@ end
     # Determine if the term is current
     # @returns true if the term started before today and finishes after today
     def current?
-      return (@start < Date.today) && (@end > Date.today)
+      return (@start <= Date.today) && (@end >= Date.today)
     end
 
     # Determine if the provided date is within the term
     # @param date the date to test
     # @returns true if the term started before the date and finishes after the date
     def contains_date?(date)
-      return (@start < date) && (@end > date)
+      return (@start <= date) && (@end >= date)
     end
 
   end
@@ -1093,7 +1093,7 @@ end
   def self.find_current_term_id(api, section_id, data={})
     terms = api.get_terms(data)[:data]
     unless terms.nil?
-      terms.each do |term|
+      terms.each do |term|puts term
         return term.id if term.current? && (term.section_id == section_id)
       end
     end
