@@ -5,10 +5,11 @@ class Settings
     SettingValue.all.each do |value|
       @@values[value.key] = value.value
     end
+    @@last_read = Time.now
   end
 
   def self.read(key)
-    self.setup if defined?(@@values).nil?
+    self.setup  if defined?(@@values).nil? || self.too_old?
     @@values[key]
   end
 
@@ -21,4 +22,10 @@ class Settings
     cv.save
   end
 
+
+  private
+  def self.too_old?
+    maximum_age = (@@values['maximum settings age'] || '15 minutes')
+    @@last_read < maximum_age.split.inject { |count, unit| count.to_i.send(unit).ago }
+  end
 end

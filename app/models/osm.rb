@@ -1092,7 +1092,7 @@ end
   def self.find_current_term_id(api, section_id, data={})
     terms = api.get_terms(data)[:data]
     unless terms.nil?
-      terms.each do |term|puts term
+      terms.each do |term|
         return term.id if term.current? && (term.section_id == section_id)
       end
     end
