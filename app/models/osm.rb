@@ -266,9 +266,9 @@ module OSM
     #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ProgrammeItem objects
     #   * :data - (only if :http_error is false and osm_error is true) an empty array
     def get_programme(section_id, term_id, api_data={})
-      if Rails.cache.exist?("OSMAPI-programme-#{section_id}") && self.user_can_access?(:programme, section_id, api_data)
+      if Rails.cache.exist?("OSMAPI-programme-#{section_id}-#{term_id}") && self.user_can_access?(:programme, section_id, api_data)
         return {
-          :data => Rails.cache.read("OSMAPI-programme-#{section_id}"),
+          :data => Rails.cache.read("OSMAPI-programme-#{section_id}-#{term_id}"),
           :http_error => false,
           :osm_error => false
         }
@@ -293,7 +293,7 @@ module OSM
       end
       response[:data] = result
 
-      Rails.cache.write("OSMAPI-programme-#{section_id}", result, :expires_in => @@default_cache_ttl)
+      Rails.cache.write("OSMAPI-programme-#{section_id}-#{term_id}", result, :expires_in => @@default_cache_ttl)
       return response
     end
 
@@ -977,27 +977,26 @@ end
       @permissions.each_key do |key|
         @permissions[key] = @permissions[key].to_i
       end
+    end
 
-      # Determine if this API has read access for the provided permission
-      # @param key - the key for the permission being queried
-      # @returns - true if this API can read the passed permission, false otherwise
-      def can_read?(key)
-        return [20, 10].include?(@permissions[key])
-      end
+    # Determine if this API has read access for the provided permission
+    # @param key - the key for the permission being queried
+    # @returns - true if this API can read the passed permission, false otherwise
+    def can_read?(key)
+      return [20, 10].include?(@permissions[key])
+    end
 
-      # Determine if this API has write access for the provided permission
-      # @param key - the key for the permission being queried
-      # @returns - true if this API can write the passed permission, false otherwise
-      def can_write?(key)
-        return [20].include?(@permissions[key])
-      end
+    # Determine if this API has write access for the provided permission
+    # @param key - the key for the permission being queried
+    # @returns - true if this API can write the passed permission, false otherwise
+    def can_write?(key)
+      return [20].include?(@permissions[key])
+    end
 
-      # Determine if this API is the API being used to make requests
-      # @returns - true if this is the API being used, false otherwise
-      def our_api?
-        return @id == OSM::API.api_id
-      end
-
+    # Determine if this API is the API being used to make requests
+    # @returns - true if this is the API being used, false otherwise
+    def our_api?
+      return @id == OSM::API.api_id
     end
 
   end

@@ -18,18 +18,18 @@ function drawCharts() {
     async: false,
     success: function(data, status, jqXHR) {
       updateStatus('Processing data.');
+
       var number_zones_chart = new google.visualization.LineChart(document.getElementById('number_zones_chart'));
       var number_methods_chart = new google.visualization.LineChart(document.getElementById('number_methods_chart'));
+      var time_zones_chart = new google.visualization.LineChart(document.getElementById('time_zones_chart'));
+      var time_methods_chart = new google.visualization.LineChart(document.getElementById('time_methods_chart'));
 
       var number_zones_options = {
         focusTarget: 'category',
-        hAxis: {
-          format: 'MMM y',
-        },
         vAxis: {
-          maxValue: data['statistics']['zones']['max_value'],
+          maxValue: data['statistics']['zones']['number']['max_value'],
           gridlines: {
-            count: ((data['statistics']['zones']['max_value'] + 1) / 2) + 1,
+            count: ((data['statistics']['zones']['number']['max_value'] + 1) / 2) + 1,
           }
         },
         width: 750, height: 350
@@ -37,23 +37,54 @@ function drawCharts() {
 
       var number_methods_options = {
         focusTarget: 'category',
-        hAxis: {
-          format: 'MMM y',
-        },
         vAxis: {
-          maxValue: data['statistics']['methods']['max_value'],
+          maxValue: data['statistics']['methods']['number']['max_value'],
           gridlines: {
-            count: ((data['statistics']['methods']['max_value'] + 1) / 2) + 1,
+            count: ((data['statistics']['methods']['number']['max_value'] + 1) / 2) + 1,
           }
         },
         width: 750, height: 350
       };
 
-      drawChart(data, number_zones_options, number_zones_chart, 'zone');
-      drawChart(data, number_methods_options, number_methods_chart, 'method');
+      var time_zones_options = {
+        focusTarget: 'category',
+        vAxis: {
+          title: 'Minutes',
+          maxValue: (Math.floor(data['statistics']['zones']['time']['max_value'] / 60) + 1) * 60,
+          gridlines: {
+            count: (Math.floor(data['statistics']['zones']['time']['max_value'] / 60) + 2),
+          }
+        },
+        width: 750, height: 350
+      };
 
-      writeScore(data, document.getElementById('number_zones_score'), 'zone');
-      writeScore(data, document.getElementById('number_methods_score'), 'method');
+      var time_methods_options = {
+        focusTarget: 'category',
+        vAxis: {
+          title: 'Minutes',
+          maxValue: (Math.floor(data['statistics']['methods']['time']['max_value'] / 60) + 1) * 60,
+          gridlines: {
+            count: (Math.floor(data['statistics']['methods']['time']['max_value'] / 60) + 2),
+          }
+        },
+        width: 750, height: 350
+      };
+
+      drawChart(data['zones']['number'], data['zone_labels'], number_zones_options, number_zones_chart, 'zone', 'number');
+      drawChart(data['methods']['number'], data['method_labels'], number_methods_options, number_methods_chart, 'method', 'number');
+
+      updateStatus('Processing score data for zones (by number).');
+      writeScore(data['statistics']['zones']['number'], data['zone_labels'], 'Zone', document.getElementById('number_zones_score'));
+      updateStatus('Processing score data for methods (by number).');
+      writeScore(data['statistics']['methods']['number'], data['method_labels'], 'Method', document.getElementById('number_methods_score'));
+
+      drawChart(data['zones']['time'], data['zone_labels'], time_zones_options, time_zones_chart, 'zone', 'time');
+      drawChart(data['methods']['time'], data['method_labels'], time_methods_options, time_methods_chart, 'zone', 'time');
+
+      updateStatus('Processing score data for zones (by time).');
+      writeScore(data['statistics']['zones']['time'], data['zone_labels'], 'Zone', document.getElementById('time_zones_score'));
+      updateStatus('Processing score data for methods (by time).');
+      writeScore(data['statistics']['methods']['time'], data['method_labels'], 'Method', document.getElementById('time_methods_score'));
 
       updateStatus('');
     }
@@ -61,46 +92,64 @@ function drawCharts() {
 }
 
 
-function drawChart(data, options, chart, type) {
-  updateStatus('Processing chart data for' + type + 's.');
+function drawChart(data, labels, options, chart, z_or_m, n_or_t) {
+  updateStatus('Processing chart data for ' + z_or_m + 's (by ' + n_or_t + ').');
 
-  type_key = type+'s';
-  labels_key = type+'_labels';
   data_table = new google.visualization.DataTable();
-
-  data_table.addColumn('date', 'Month');
-  for(label in data[labels_key]) {
-    data_table.addColumn('number', data[labels_key][label][0]);
+  data_table.addColumn({
+    type: 'date',
+    label: 'Month',
+    pattern: 'MMM yyyy'
+  });
+  for(label in labels) {
+    data_table.addColumn({
+      type: 'number',
+      label: labels[label][0]
+    });
   }
 
-  for(date_key in data[type_key]) {
+  for(date_key in data) {
     row = new Array();
     date_key_split = date_key.split('_');
     row[0] = new Date(parseInt(date_key_split[0]), parseInt(date_key_split[1], 10)-1, 15);
-    for(label in data[labels_key]) {
-      label_key = data[labels_key][label][0];
-      row.push(data[type_key][date_key][label_key]);
+    for(label in labels) {
+      row.push(data[date_key][labels[label][0]]);
     }
-    data_table.addRows([row]);
+    index = data_table.addRow(row);
+    if (index != null) {
+      data_table.setFormattedValue(index, 0, $.datepicker.formatDate('MM yy', row[0]));
+      if (n_or_t == 'time') {
+        for (label in labels) {
+          var column = parseInt(label) + 1;
+          var minutes = data_table.getValue(index, column);
+          var hours = Math.floor(minutes / 60);
+          minutes = minutes % 60;
+          var formatted = '';
+          if (hours > 0) {
+            formatted = hours + ' hours  ';
+          }
+          formatted = formatted + minutes + ' minutes';
+          data_table.setFormattedValue(index, column, formatted);
+        }
+      }
+    }
   }
 
   chart.draw(data_table, options);
 }
 
 
-function writeScore(data, div, type){
-  updateStatus('Processing score data for ' + type + 's.');
-
-  sd = data['statistics'][type+'s']['standard_deviation'];
-  mv = data['statistics'][type+'s']['max_value'];
+function writeScore(data, labels, type_heading, div){
+  sd = data['standard_deviation'];
+  mv = data['max_value'];
   score = Math.round(((mv - sd) / mv) * 100);
   score = 'Your score is ' + score + '%.';
 
   table =  "<table>";
-  table +=   "<tr><th>" + capitaliseFirstLetter(type) + "</th><th>Total</th></tr>";
-  for(label in data[type+'_labels']) {
-    label_key = data[type+'_labels'][label][0];
-    table += "<tr><td>" + label_key + "</td><td>" + data['statistics'][type+'s']['totals'][label_key] + "</td></tr>";
+  table +=   "<tr><th>" + type_heading + "</th><th>Total</th></tr>";
+  for(label in labels) {
+    label_key = labels[label][0];
+    table += "<tr><td>" + label_key + "</td><td>" + data['totals'][label_key] + "</td></tr>";
   }
   table += "</table>";
 
@@ -110,9 +159,4 @@ function writeScore(data, div, type){
 
 function updateStatus(message) {
   $("#status_message").html(message);
-}
-
-
-function capitaliseFirstLetter(string) {
-  return string[0].toUpperCase() + string.slice(1);
 }

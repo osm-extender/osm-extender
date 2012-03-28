@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120312113350) do
+ActiveRecord::Schema.define(:version => 20120328123533) do
 
   create_table "email_reminder_items", :force => true do |t|
     t.integer  "email_reminder_id"
@@ -43,10 +43,10 @@ ActiveRecord::Schema.define(:version => 20120312113350) do
   create_table "programme_review_balanced_caches", :force => true do |t|
     t.integer  "section_id"
     t.integer  "term_id"
-    t.text     "zone_totals"
-    t.text     "method_totals"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "last_used_at"
+    t.text     "data"
   end
 
   create_table "sessions", :force => true do |t|
