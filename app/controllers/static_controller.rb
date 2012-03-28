@@ -10,15 +10,14 @@ class StaticController < ApplicationController
   def my_page
     if current_user.connected_to_osm?
       @roles = current_user.osm_api.get_roles[:data]
-
-      @tasks = []
-      @tasks.push({:name=>'Administer users', :path=>users_path}) if can?(:administer, User)
-      @tasks.push({:name=>'Administer FAQs', :path=>faqs_path}) if can?(:administer, Faq)
-
     else
-      flash[:instruction] = "You need to connect your account to your OSM account. #{self.class.helpers.link_to 'Connect now.', connect_to_osm_path}".html_safe
       @roles = []
+      flash[:instruction] = "You need to connect your account to your OSM account. #{self.class.helpers.link_to 'Connect now.', connect_to_osm_path}".html_safe
     end
+
+    @tasks = []
+    @tasks.push({:name=>'Administer users', :path=>users_path}) if can?(:administer, User)
+    @tasks.push({:name=>'Administer FAQs', :path=>faqs_path}) if can?(:administer, Faq)
   end
 
 
