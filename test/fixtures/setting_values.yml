@@ -63,3 +63,7 @@ mail_server_username:
 mail_server_password:
   key: Mail Server - Password
   value: abcd1234
+
+maximum_settings_age:
+  key: maximum settings age
+  value: 1 second

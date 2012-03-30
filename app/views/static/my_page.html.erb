@@ -4,6 +4,7 @@
   <p>You have not yet connected your account to your OSM account - <%= link_to 'Connect now', connect_to_osm_path %></p>
 <%- end %>
 
+
 <%- if @roles.size > 1 %>
   <h2>Change Current Section</h2>
   <ul>
@@ -13,12 +14,13 @@
   </ul>
 <%- end %>
 
+
+<%- if @tasks.size > 0 %>
 <h2>Site Tasks</h2>
 <ul>
-  <%- if can? :administer, User %>
-    <li><%= link_to 'Administer users', users_path %>
-  <%- end %>
-  <%- if can? :administer, Faq %>
-    <li><%= link_to 'Administer FAQs', faqs_path %>
+  <%- @tasks.each do |role| %>
+    <li><%= link_to role[:name], role[:path] %></li>
   <%- end %>
 </ul>
+<%- end %>
+  
