@@ -4,7 +4,7 @@
 <h1>Birthdays</h1>
 The following <%= (@data[:data][:EmailReminderItemBirthday].size > 1) ? 'members have birthdays' : 'member has a birthday' %> between <%= ordinalized_date(@data[:config][:EmailReminderItemBirthday][:the_last_n_months].months.ago, "%d %b %Y") %> and <%= ordinalized_date(@data[:config][:EmailReminderItemBirthday][:the_next_n_months].months.from_now, "%d %b %Y") %>:
 <ul><%- @data[:data][:EmailReminderItemBirthday].each do |birthday| %>
-  <li><%= birthday[:name] %> turns <%= birthday[:age_on_birthday] %> on <%= ordinalized_date(birthday[:birthday], "%a the %d of %b %Y") %></li>
+  <li><%= birthday[:name] %> <%= (birthday[:birthday] < Date.today) ? 'turned' : 'turns' %> <%= birthday[:age_on_birthday] %> on <%= ordinalized_date(birthday[:birthday], "%a the %d of %b %Y") %></li>
 <%- end %></ul>
 
 <hr/>
