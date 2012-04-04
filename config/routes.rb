@@ -16,8 +16,9 @@ OSMExtender::Application.routes.draw do
   get 'my_account/connect_to_osm' => 'my_account#connect_to_osm', :as => 'connect_to_osm'
   post 'my_account/connect_to_osm' => 'my_account#connect_to_osm2', :as => 'connect_to_osm2'
 
-  get 'email_lists/generate' => 'email_lists#generate', :as => 'generate_email_list'
-  post 'email_lists/generate' => 'email_lists#generate2', :as => 'generate_email_list2'
+  post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
+  get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'
+  resources :email_lists
 
   match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'

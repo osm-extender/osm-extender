@@ -6,7 +6,7 @@ class EmailReminder < ActiveRecord::Base
   
   validates_presence_of :section_id
   validates_numericality_of :section_id, :only_integer=>true, :greater_than=>0
-  
+
   validates_presence_of :send_on
   validates_inclusion_of :send_on, :in => 0..6
 

@@ -1,0 +1,21 @@
+<% provide :title, "Email Lists" %>
+
+<h2>List of Addresses</h2>
+<%= render 'list' %>
+
+
+<h2>Save List</h2>
+<%= form_for(@email_list) do |f| %>
+  <%- [:email1, :email2, :email3, :email4, :match_type, :match_grouping].each do |key| %>
+    <%= f.hidden_field key %>
+  <%- end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Save this list' %>
+  </div>
+<% end %>

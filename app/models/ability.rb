@@ -38,6 +38,11 @@ class Ability
       end
       can :create, EmailReminderItem
 
+      can [:administer, :get_addresses], EmailList do |list|
+        list.user == user
+      end
+      can [:create, :preview], EmailList
+
       # Things user administrators can do
       if user.can_administer_users?
         can [:read, :update, :reset_password, :administer], User
