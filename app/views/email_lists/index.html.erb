@@ -1,6 +1,6 @@
 <% provide :title, 'Email Lists' %>
 
-<%- if @email_lists.size > 0 %>
+<%- unless @email_lists.empty? %>
   <h2>Saved Lists</h2>
   <table>
     <tr>
