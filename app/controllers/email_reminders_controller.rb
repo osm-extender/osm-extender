@@ -126,6 +126,9 @@ class EmailRemindersController < ApplicationController
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
       items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
     end
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotepad')
+      items.push ({:name => 'Section notepad', :type => 'notepad', :as_link => true})
+    end
     return items
   end
 

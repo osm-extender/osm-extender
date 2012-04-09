@@ -110,7 +110,15 @@ Feature: Reminder Email
         And I follow "Due badges"
         And I press "Create Email reminder item due badge"
         Then I should see "Item was successfully added"
-        And I should see "Due badges"
+
+    Scenario: Add notepad item to reminder email
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "Section notepad"
+        And I press "Create Email reminder item notepad"
+        Then I should see "Item was successfully added"
 
     Scenario: Message and no list when no more items to add to reminder
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -127,6 +135,8 @@ Feature: Reminder Email
         And I press "Create Email reminder item not seen"
         And I follow "Due badges"
         And I press "Create Email reminder item due badge"
+        And I follow "Section notepad"
+        And I press "Create Email reminder item notepad"
 	Then I should see "There are no more items you can add"
 	And I should not see "You can add an item"
 
@@ -190,17 +200,6 @@ Feature: Reminder Email
         Then I should see "Item was successfully updated"
         And I should see "For how many weeks?: 1" in the "Configuration" column of the "Members not seen" row
 
-    Scenario: Edit due badge item in reminder email
-        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
-        And "alice@example.com" has a due badge item in her "Tuesday" email reminder for section 1
-        When I signin as "alice@example.com" with password "P@55word"
-        And I go to the list of email_reminders
-        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
-        And I follow "[Edit]" in the "Actions" column of the "Due badges" row
-        And I press "Update Email reminder item due badge"
-        Then I should see "Item was successfully updated"
-        And I should see "Due badges"
-
 
     Scenario: Preview the email (HTML)
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
@@ -230,10 +229,12 @@ Feature: Reminder Email
 	    | name  | completed | extra |
 	    | Alice | 4         | info  |
 	    | Bob   | 5         |       |
+	And an OSM request to get the notepad for section 1 will give "This is a test notepad message."
 
         When I signin as "alice@example.com" with password "P@55word"
 	And I preview the Tuesday email reminder for section 1 as html
         Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
+	And I should see "Section Notepad"
 	And I should see "Birthdays"
         And I should see "Due Badges"
         And I should see "Events"
@@ -269,12 +270,14 @@ Feature: Reminder Email
 	    | name  | completed | extra |
 	    | Alice | 4         | info  |
 	    | Bob   | 5         |       |
+	And an OSM request to get the notepad for section 1 will give "This is a test notepad message."
 
         When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
 	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
 
         When "alice@example.com" opens the email with subject "Reminder Email for Section 1 (1st Somewhere)"
         Then I should see "This is your reminder email for Section 1 (1st Somewhere)" in the email body
+	And I should see "Section Notepad" in the email body
 	And I should see "Birthdays" in the email body
         And I should see "Due Badges" in the email body
         And I should see "Events" in the email body

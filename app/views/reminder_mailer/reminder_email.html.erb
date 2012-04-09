@@ -1,6 +1,12 @@
 <p>This is your reminder email for <%= @section_name %>.</p>
 
-<%- if @data[:data][:EmailReminderItemBirthday] && (@data[:data][:EmailReminderItemBirthday].size > 0) %>
+<%- if @data[:data][:EmailReminderItemNotepad] && !@data[:data][:EmailReminderItemNotepad].blank? %>
+<h1>Section Notepad</h1>
+<%= @data[:data][:EmailReminderItemNotepad] %>
+
+<hr/>
+<%- end %>
+<%- if @data[:data][:EmailReminderItemBirthday] && !@data[:data][:EmailReminderItemBirthday].empty? %>
 <h1>Birthdays</h1>
 The following <%= (@data[:data][:EmailReminderItemBirthday].size > 1) ? 'members have birthdays' : 'member has a birthday' %> between <%= ordinalized_date(@data[:config][:EmailReminderItemBirthday][:the_last_n_months].months.ago, "%d %b %Y") %> and <%= ordinalized_date(@data[:config][:EmailReminderItemBirthday][:the_next_n_months].months.from_now, "%d %b %Y") %>:
 <ul><%- @data[:data][:EmailReminderItemBirthday].each do |birthday| %>
@@ -9,7 +15,7 @@ The following <%= (@data[:data][:EmailReminderItemBirthday].size > 1) ? 'members
 
 <hr/>
 <%- end %>
-<%- if @data[:data][:EmailReminderItemDueBadge] && (@data[:data][:EmailReminderItemDueBadge].by_member.size > 0) %>
+<%- if @data[:data][:EmailReminderItemDueBadge] && !@data[:data][:EmailReminderItemDueBadge].by_member.empty? %>
 <h1>Due Badges</h1>
 <h2>The following <%= (@data[:data][:EmailReminderItemDueBadge].by_member.size > 1) ? 'members are' : 'member is' %> due badges</h2>
 <%- badges_due = @data[:data][:EmailReminderItemDueBadge].by_member %>
@@ -31,7 +37,7 @@ The following <%= (@data[:data][:EmailReminderItemBirthday].size > 1) ? 'members
 
 <hr/>
 <%- end %>
-<%- if @data[:data][:EmailReminderItemEvent] && (@data[:data][:EmailReminderItemEvent].size > 0) %>
+<%- if @data[:data][:EmailReminderItemEvent] && !@data[:data][:EmailReminderItemEvent].empty? %>
 <h1>Events</h1>
 The following events are happening in the next <%= pluralize(@data[:config][:EmailReminderItemEvent][:the_next_n_months], 'month') %>:
 <ul><%- @data[:data][:EmailReminderItemEvent].each do |event| %>
@@ -40,7 +46,7 @@ The following events are happening in the next <%= pluralize(@data[:config][:Ema
 
 <hr/>
 <%- end %>
-<%- if @data[:data][:EmailReminderItemProgramme] && (@data[:data][:EmailReminderItemProgramme].size > 0) %>
+<%- if @data[:data][:EmailReminderItemProgramme] && !@data[:data][:EmailReminderItemProgramme].empty? %>
 <h1>Programme</h1>
 The programme for the following <%= pluralize(@data[:config][:EmailReminderItemProgramme][:the_next_n_weeks], 'week') %> is:
 <ul><%- @data[:data][:EmailReminderItemProgramme].each do |programme| %>
@@ -52,7 +58,7 @@ The programme for the following <%= pluralize(@data[:config][:EmailReminderItemP
 
 <hr/>
 <%- end %>
-<%- if @data[:data][:EmailReminderItemNotSeen] && (@data[:data][:EmailReminderItemNotSeen].size > 0) %>
+<%- if @data[:data][:EmailReminderItemNotSeen] && !@data[:data][:EmailReminderItemNotSeen].empty? %>
 <h1>Members Not Seen</h1>
 The following <%= (@data[:data][:EmailReminderItemNotSeen].size > 1) ? 'members have' : 'member has' %> not been seen for at least the last <%= pluralize(@data[:config][:EmailReminderItemNotSeen][:the_last_n_weeks], 'week') %>:
 <ul><%- @data[:data][:EmailReminderItemNotSeen].each do |member| %>
