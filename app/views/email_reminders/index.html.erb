@@ -14,6 +14,8 @@
       <td>
         <%= link_to '[Show]', email_reminder %>
         <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
+        <%= link_to '[Preview]', preview_email_reminder_path(email_reminder) %>
+        <%= link_to '[Send]', send_email_reminder_path(email_reminder) %>
         <%= link_to '[Destroy]', email_reminder, confirm: 'Are you sure?', method: :delete %>
       </td>
     </tr>

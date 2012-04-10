@@ -232,7 +232,8 @@ Feature: Reminder Email
 	And an OSM request to get the notepad for section 1 will give "This is a test notepad message."
 
         When I signin as "alice@example.com" with password "P@55word"
-	And I preview the Tuesday email reminder for section 1 as html
+        And I go to the list of email_reminders
+        And I follow "[Preview]" in the "Actions" column of the "Tuesday" row
         Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
 	And I should see "Section Notepad"
 	And I should see "Birthdays"
@@ -272,7 +273,9 @@ Feature: Reminder Email
 	    | Bob   | 5         |       |
 	And an OSM request to get the notepad for section 1 will give "This is a test notepad message."
 
-        When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Send]" in the "Actions" column of the "Tuesday" row
 	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
 
         When "alice@example.com" opens the email with subject "Reminder Email for Section 1 (1st Somewhere)"

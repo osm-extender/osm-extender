@@ -53,21 +53,6 @@ When /^"([^"]*)"'s reminder email for section (\d*) on "([^"]*)" is sent$/ do |e
   end
 end
 
-When /^I preview the ([^"]*) email reminder for section (\d*) as ([^"]*)$/ do |day, section_id, format|
-  day = {
-    'Sunday' => 0,
-    'Monday' => 1,
-    'Tuesday' => 2,
-    'Wednesday' => 3,
-    'Thursday' => 4,
-    'Friday' => 5,
-    'Saturday' => 6,
-  }[day]
-  section_id = section_id.to_i
-  er = EmailReminder.find_by_section_id_and_send_on(section_id, day)
-  visit preview_email_reminder_path(er.id, format)
-end
-
 
 Then /^"([^"]*)" should have (\d+) email reminder$/ do |email_address, count|
   user = User.find_by_email_address(email_address)

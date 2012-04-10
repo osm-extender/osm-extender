@@ -100,6 +100,22 @@ class EmailRemindersController < ApplicationController
     render "reminder_mailer/reminder_email", :layout => 'mail'
   end
 
+  def send_email
+    email_reminder = EmailReminder.find(params[:id])
+    unless email_reminder.nil?
+      email_reminder.send_email
+      respond_to do |format|
+        format.html { redirect_to email_reminders_url, notice: 'Email reminder was successfully sent.' }
+        format.json { head :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to email_reminders_url, error: 'Email reminder could not be sent.' }
+        format.json { head :error }
+      end
+    end
+  end
+
 
   private
   def setup_tertiary_menu
