@@ -18,6 +18,7 @@ class StaticController < ApplicationController
     @tasks = []
     @tasks.push({:name=>'Administer users', :path=>users_path}) if can?(:administer, User)
     @tasks.push({:name=>'Administer FAQs', :path=>faqs_path}) if can?(:administer, Faq)
+    @tasks.push({:name=>'Administer settings', :path=>edit_settings_path}) if can?(:update, Settings)
   end
 
 

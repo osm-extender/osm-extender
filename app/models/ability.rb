@@ -50,10 +50,14 @@ class Ability
           user_being_acted_on && !user_being_acted_on.activation_token.blank?
         end
       end
-      
       # Things FAQ administrators can do
       if user.can_administer_faqs?
         can :administer, Faq
+      end
+
+      # Things Settings administrators can do
+      if user.can_administer_settings?
+        can :update, Settings
       end
 
     end

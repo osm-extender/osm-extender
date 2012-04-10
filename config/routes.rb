@@ -53,5 +53,8 @@ OSMExtender::Application.routes.draw do
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
   get 'email_reminders/:id/send_email' => 'email_reminders#send_email', :as => 'send_email_reminder'
 
+  get 'settings' => 'settings#edit', :as => 'edit_settings'
+  put 'settings' => 'settings#update', :as => 'update_settings'
+
   root :to => 'static#welcome'
 end
