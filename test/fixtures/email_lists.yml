@@ -1,0 +1,12 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+#one:
+#  user: 
+#  section_id: 1
+#  name: MyString
+#  email1: false
+#  email2: false
+#  email3: false
+#  email4: false
+#  match_type: false
+#  match_grouping: 1

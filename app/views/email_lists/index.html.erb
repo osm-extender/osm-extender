@@ -1,0 +1,29 @@
+<% provide :title, 'Email Lists' %>
+
+<%- unless @email_lists.empty? %>
+  <h2>Saved Lists</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  
+  <% @email_lists.each do |email_list| %>
+    <tr>
+      <td><%= email_list.name %></td>
+      <td>
+        <%= link_to '[Get addresses]', email_list_addresses_path(email_list) %>
+        <%= link_to '[Edit]', edit_email_list_path(email_list) %>
+        <%= link_to '[Destroy]', email_list, confirm: 'Are you sure?', method: :delete %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<%- end %>
+
+
+<h2>Get Addresses</h2>
+<%= form_for @email_list, :method=>:post, :url=>preview_email_list_path do |f| %>
+  <%= render 'form_criteria', :f => f %>
+  <%= f.submit 'Get addresses' %>
+<%- end %>

@@ -28,13 +28,3 @@
 <%- else %>
   <p>This email reminder has no items yet.</p>
 <%- end %>
-
-
-<h2>Preview</h2>
-<div style="max-width: 650px; border: 1px solid black; text-align: center;">
-  <a id="preview-html" href="<%= preview_email_reminder_path(@email_reminder) %>">[Load Preview]</a>
-  <div id="preview" style="width:95%; margin-right: auto; margin-left: auto; border: 1px solid black; text-align: left;">
-    <p>You can preview what your email will look like, use the link just above this box to load or reload the preview.</p>
-    <p>The first time you preview the email it will take a while to load as the data is pulled from OSM, after that the email should load faster due to the cachine which is done.</p>
-  </div>
-</div>

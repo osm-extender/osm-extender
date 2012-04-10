@@ -11,7 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120328162929) do
+ActiveRecord::Schema.define(:version => 20120410122949) do
+
+  create_table "email_lists", :force => true do |t|
+    t.text     "name"
+    t.integer  "user_id"
+    t.integer  "section_id"
+    t.boolean  "email1"
+    t.boolean  "email2"
+    t.boolean  "email3"
+    t.boolean  "email4"
+    t.boolean  "match_type"
+    t.integer  "match_grouping"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "email_reminder_items", :force => true do |t|
     t.integer  "email_reminder_id"
@@ -60,8 +74,9 @@ ActiveRecord::Schema.define(:version => 20120328162929) do
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "setting_values", :force => true do |t|
-    t.string "key"
-    t.text   "value"
+    t.text "key",         :limit => 255, :null => false
+    t.text "value"
+    t.text "description",                :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -83,6 +98,7 @@ ActiveRecord::Schema.define(:version => 20120328162929) do
     t.text     "osm_userid",                      :limit => 6
     t.text     "osm_secret",                      :limit => 32
     t.boolean  "can_administer_faqs",                           :default => false
+    t.boolean  "can_administer_settings",                       :default => false
   end
 
 end

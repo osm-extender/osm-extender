@@ -113,11 +113,65 @@ module OSM
           Rails.cache.write("OSMAPI-section-#{role.section.id}", role.section, :expires_in => @@default_cache_ttl*2)
           self.user_can_access :section, role.section.id, api_data
         end
+        Rails.cache.write("OSMAPI-roles-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
       end
-      Rails.cache.write("OSMAPI-roles-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
       response[:data] = result
 
       return response
+    end
+
+    # Get the user's notepads
+    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
+    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
+    #   * :data - (only if :http_error is false and osm_error is true) this is an empty array
+    #   * :data - (only if :http_error is false and :osm_error is false) an hash (keys are section IDs, values are a string)
+    def get_notepads(api_data={})
+      if Rails.cache.exist?("OSMAPI-notepads-#{api_data[:userid] || @userid}")
+        return {
+          :data => Rails.cache.read("OSMAPI-notepads-#{api_data[:userid] || @userid}"),
+          :http_error => false,
+          :osm_error => false
+        }
+      end
+
+      response = perform_query('api.php?action=getNotepads', api_data)
+
+      unless response[:http_error] || response[:osm_error]
+        data = response[:data]
+        data.each_key do |key|
+          Rails.cache.write("OSMAPI-notepad-#{key}", data[key], :expires_in => @@default_cache_ttl*2)
+        end
+        Rails.cache.write("OSMAPI-notepads-#{api_data[:userid] || @userid}", data, :expires_in => @@default_cache_ttl*2)
+      end
+
+      return response
+    end
+
+    # Get the notepad for a specified section
+    # @param section_id the section id of the required section
+    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns nil if an error occured or the user does not have access to that section
+    # @returns a string otherwise
+    def get_notepad(section_id, api_data={})
+      if Rails.cache.exist?("OSMAPI-notepad-#{section_id}") && self.user_can_access?(:section, section_id, api_data)
+        return Rails.cache.read("OSMAPI-notepad-#{section_id}")
+      end
+
+      notepads = get_notepads(api_data)[:data]
+      return nil unless notepads.is_a? Hash
+
+      notepads.each_key do |key|
+        return notepads[key] if key.to_i == section_id
+      end
+
+      return nil
     end
 
     # Get the sections (and their configuration) that the OSM user can access

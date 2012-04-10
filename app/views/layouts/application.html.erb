@@ -58,7 +58,7 @@
           <%- if current_user.connected_to_osm? && current_role %>
             <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
             <%- if has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
-            <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Email lists', generate_email_list_path %></div><%- end %>
+            <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div><%- end %>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
             <%- unless has_osm_permission?(:read, [:member, :programme]) %>
               <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
@@ -71,7 +71,13 @@
             </div>
           <%- end %>
         <%- end %>
-        </div><!-- secondary_menu -->
+      </div><!-- secondary_menu -->
+
+      <%- unless Rails.env.production? %>
+        <div style="background-color: <%= {'development'=>'#ff0000', 'staging'=>'#ffff00'}[Rails.env] || '#fa5ffa' %>; color: black; text-align: center; font-size: 200%; height: 1em;">
+          <b>This is the <%= Rails.env.upcase %> environment!</b>
+        </div>
+      <%- end %>
 
       <%- if flash %>
         <div id="notices">
@@ -97,13 +103,6 @@
           <%- end %>
         </div><!-- notices -->
       <% end %>
-
-      <%- if Rails.env.staging? %>
-        <div style="background-color: #fa5ffa; color: black;">
-          <h2>This is the STAGING environment!</h2>
-          <p>Do not place live data on this server as the database may be reset at any point.</p>
-        </div>
-      <%- end %>
     </div><!-- header -->
 
     <div id="tertiary_menu">

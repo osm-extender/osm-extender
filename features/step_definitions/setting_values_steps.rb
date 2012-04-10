@@ -7,6 +7,7 @@ end
 Given /^the configuration for "([^"]*)" is "([^"]*)"$/ do |key, value|
   val = SettingValue.find_or_create_by_key(key)
   val.value = value
-  val.save
+  val.description = 'Something' if val.description.nil? || val.description.empty?
+  val.save!
   Settings.setup
 end

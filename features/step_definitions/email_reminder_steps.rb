@@ -20,6 +20,7 @@ Given /^"([^"]*)" has an? (.*) item in (?:her|his|their) "(.*)" email reminder f
     'programme' => EmailReminderItemProgramme,
     'not seen' => EmailReminderItemNotSeen,
     'due badge' => EmailReminderItemDueBadge,
+    'notepad' => EmailReminderItemNotepad,
   }
   user = User.find_by_email_address(email_address)
   er = nil
@@ -38,7 +39,7 @@ Given /^"([^"]*)" has a reminder email for section (\d*) on "([^"]*)" with all i
   step "\"#{email_address}\" has a programme item in her \"#{day}\" email reminder for section #{section_id}"
   step "\"#{email_address}\" has a not seen item in her \"#{day}\" email reminder for section #{section_id}"
   step "\"#{email_address}\" has a due badge item in her \"#{day}\" email reminder for section #{section_id}"
-step "\"#{email_address}\" should have 1 email reminder"
+  step "\"#{email_address}\" has a notepad item in her \"#{day}\" email reminder for section #{section_id}"
 end
 
 
@@ -50,21 +51,6 @@ When /^"([^"]*)"'s reminder email for section (\d*) on "([^"]*)" is sent$/ do |e
       reminder.send_email
     end
   end
-end
-
-When /^I preview the ([^"]*) email reminder for section (\d*) as ([^"]*)$/ do |day, section_id, format|
-  day = {
-    'Sunday' => 0,
-    'Monday' => 1,
-    'Tuesday' => 2,
-    'Wednesday' => 3,
-    'Thursday' => 4,
-    'Friday' => 5,
-    'Saturday' => 6,
-  }[day]
-  section_id = section_id.to_i
-  er = EmailReminder.find_by_section_id_and_send_on(section_id, day)
-  visit preview_email_reminder_path(er.id, format)
 end
 
 

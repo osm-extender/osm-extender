@@ -1,0 +1,45 @@
+<% provide :title, "Email List - #{@email_list.name}" %>
+
+
+<p>
+  <b>Section:</b>
+  <%= @email_list.section_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @email_list.name %>
+</p>
+
+<p>
+  <b>Email1:</b>
+  <%= @email_list.email1 %>
+</p>
+
+<p>
+  <b>Email2:</b>
+  <%= @email_list.email2 %>
+</p>
+
+<p>
+  <b>Email3:</b>
+  <%= @email_list.email3 %>
+</p>
+
+<p>
+  <b>Email4:</b>
+  <%= @email_list.email4 %>
+</p>
+
+<p>
+  <b>Match type:</b>
+  <%= @email_list.match_type %>
+</p>
+
+<p>
+  <b>Match grouping:</b>
+  <%= @email_list.match_grouping %>
+</p>
+
+
+<%= link_to 'Edit', edit_email_list_path(@email_list) %> |

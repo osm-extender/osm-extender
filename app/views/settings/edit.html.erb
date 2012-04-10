@@ -1,0 +1,28 @@
+<% provide :title, "Edit Settings" %>
+
+<%= form_tag update_settings_path, :method=>'put' do %>
+  <table>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+
+    <%- @setting_values.each do |setting_value| %>
+      <%= fields_for 'setting_value[]', setting_value do |f| %>
+        <tr>
+          <td><%= f.label :value, setting_value.key %></td>
+          <td>
+            <%= f.text_field :value, :size=>40 %><br/>
+            <%= setting_value.description %>
+          </td>
+          <%- if setting_value.errors.any? %>
+            <td><%= setting_value.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <%- end %></td>
+          <%- end %>
+        </tr>
+      <%- end %>
+    <%- end %>
+  </table>
+  <%= submit_tag "Save changes" %>
+<%- end %>

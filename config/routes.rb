@@ -16,8 +16,9 @@ OSMExtender::Application.routes.draw do
   get 'my_account/connect_to_osm' => 'my_account#connect_to_osm', :as => 'connect_to_osm'
   post 'my_account/connect_to_osm' => 'my_account#connect_to_osm2', :as => 'connect_to_osm2'
 
-  get 'email_lists/generate' => 'email_lists#generate', :as => 'generate_email_list'
-  post 'email_lists/generate' => 'email_lists#generate2', :as => 'generate_email_list2'
+  post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
+  get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'
+  resources :email_lists
 
   match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
   match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
@@ -47,8 +48,13 @@ OSMExtender::Application.routes.draw do
     resources :email_reminder_item_events, :as => 'item_events'
     resources :email_reminder_item_not_seens, :as => 'item_not_seens'
     resources :email_reminder_item_programmes, :as => 'item_programmes'
+    resources :email_reminder_item_notepads, :as => 'item_notepads'
   end
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
+  get 'email_reminders/:id/send_email' => 'email_reminders#send_email', :as => 'send_email_reminder'
+
+  get 'settings' => 'settings#edit', :as => 'edit_settings'
+  put 'settings' => 'settings#update', :as => 'update_settings'
 
   root :to => 'static#welcome'
 end

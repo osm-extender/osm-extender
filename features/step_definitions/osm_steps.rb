@@ -319,6 +319,9 @@ Given /^an OSM request to get activity (\d+) will have tags "(.+)"$/ do |activit
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
 end
 
+Given /^an OSM request to get the notepad for section (\d+) will give "(.+)"$/ do |section_id, notepad|
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => notepad}.to_json)
+end
 
 
 Then /^"([^"]*)" should be connected to OSM$/ do |email|

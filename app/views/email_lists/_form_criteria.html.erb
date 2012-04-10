@@ -1,0 +1,12 @@
+  I would like these email addresses<br/>
+  <%- [:email1, :email2, :email3, :email4].each do |emailN| %>
+    <%= f.check_box emailN, {}, true, false %><%= f.label emailN, current_section.column_names[emailN] %><br/>
+  <%- end %>
+
+  For members who
+  <%= f.select :match_type, {'are'=>true, 'are not'=>false} %>
+  in the
+  <%= f.select :match_grouping, {'Any'=>'0'}.merge(@groupings) %>
+  <%= get_grouping_name(current_section.type) %>.
+
+  <br/>
