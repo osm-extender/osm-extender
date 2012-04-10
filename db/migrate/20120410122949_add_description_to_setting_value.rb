@@ -33,7 +33,7 @@ class AddDescriptionToSettingValue < ActiveRecord::Migration
     end
 
     change_column :setting_values, :description, :text, :null=>false
-    change_column :setting_values, :key, :text, :null=>false
+    change_column :setting_values, :key, :string, :null=>false
   end
 
   def self.down
