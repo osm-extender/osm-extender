@@ -71,7 +71,13 @@
             </div>
           <%- end %>
         <%- end %>
-        </div><!-- secondary_menu -->
+      </div><!-- secondary_menu -->
+
+      <%- unless Rails.env.production? %>
+        <div style="background-color: <%= {'development'=>'#ff0000', 'staging'=>'#ffff00'}[Rails.env] || '#fa5ffa' %>; color: black; text-align: center; font-size: 200%; height: 1em;">
+          <b>This is the <%= Rails.env.upcase %> environment!</b>
+        </div>
+      <%- end %>
 
       <%- if flash %>
         <div id="notices">
@@ -97,13 +103,6 @@
           <%- end %>
         </div><!-- notices -->
       <% end %>
-
-      <%- if Rails.env.staging? %>
-        <div style="background-color: #fa5ffa; color: black;">
-          <h2>This is the STAGING environment!</h2>
-          <p>Do not place live data on this server as the database may be reset at any point.</p>
-        </div>
-      <%- end %>
     </div><!-- header -->
 
     <div id="tertiary_menu">
