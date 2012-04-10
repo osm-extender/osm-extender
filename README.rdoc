@@ -18,10 +18,11 @@ Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?bran
  - What events are coming up
  - What's the programme for the next few weeks
  - Who's got a birthday around now
+ - The contents of your section's notepad
 
 
 [Email lists]
- Easily create a list of any selection of your email addresses for each member who  matches a criteria (e.g. Parent 1 Email and Parent 2 email for all members not in the leader's six), I intend to make these searches savable and you should be able to simply copy-paste the list into your email client or mailing list manager.
+ Easily create a list of any selection of your email addresses for each member who  matches a criteria (e.g. Parent 1 Email and Parent 2 email for all members not in the leader's six). The lists are savable and you should be able to simply copy-paste the list into your email client or mailing list manager.
 
 
 [Programme review]
