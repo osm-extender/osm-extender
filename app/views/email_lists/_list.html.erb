@@ -1,5 +1,19 @@
-<p>Your list of email addresses appears below, if the box is empty then no email addresses could be found.</p>
-
-<div style="border-style: solid; border-color: black; border-width: 2px; width: 50%; margin-left: auto; margin-right: auto; min-height: 4ex;"><pre>
-<%= @emails.join(",\n") %>
+<h2>List of Addresses</h2>
+<%- unless @lists[:emails].empty? %>
+  <p>Your list of email addresses appears below.</p>
+<div style="border-style: solid; border-color: black; border-width: 2px; width: 50%; margin-left: auto; margin-right: auto;"><pre>
+<%= @lists[:emails].join(",\n") %>
 </pre></div>
+<%- else %>
+  <p>No email addresses could be retrieved, either no members matched the selection criteria or those who did didn't have any of the selected email addresses.</p>
+<%- end %>
+
+<%- unless @lists[:no_emails].empty? %>
+  <h2>No Emails For</h2>
+  <p>The following members matched the selection criteria but had no email addresses to put in the list:</p>
+  <ul>
+    <%- @lists[:no_emails].each do |member| %>
+      <li><%= member.name %></li>
+    <%- end %>
+  </ul>
+<%- end %>

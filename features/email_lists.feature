@@ -18,9 +18,10 @@ Feature: Email Lists
 	    | term_id | name   |
 	    | 1       | Term 1 |
 	And an OSM request to get members for section 1 in term 1 will have the members
-	    | email1         | email2         | email3         | email4         | grouping_id |
-	    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
-	    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           |
+	    | first_name | last_name | email1         | email2         | email3         | email4         | grouping_id |
+	    | A          | Member    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
+	    | B          | Member    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           |
+	    | C          | Member    |                |                |                |                | 1           |
 	And an OSM request to get groupings for section 1 will have the groupings
 	    | grouping_id | name |
 	    | 1           | A    |
@@ -48,6 +49,9 @@ Feature: Email Lists
         And I should not see "b2@example.com"
         And I should not see "b3@example.com"
         And I should not see "b4@example.com"
+	And I should not see "A Member"
+	And I should not see "B Member"
+	And I should see "C Member"
 
     Scenario: Get list of addresses (are not in a six)
         When I signin as "alice@example.com" with password "P@55word"
@@ -65,6 +69,9 @@ Feature: Email Lists
         And I should not see "b2@example.com"
         And I should see "b3@example.com"
         And I should see "b4@example.com"
+	And I should not see "A Member"
+	And I should not see "B Member"
+	And I should not see "C Member"
 
     Scenario: Get list of addresses (everyone)
         When I signin as "alice@example.com" with password "P@55word"
@@ -84,6 +91,9 @@ Feature: Email Lists
         And I should see "b2@example.com"
         And I should see "b3@example.com"
         And I should see "b4@example.com"
+	And I should not see "A Member"
+	And I should not see "B Member"
+	And I should see "C Member"
 
     Scenario: Get list of addresses (not everyone)
         When I signin as "alice@example.com" with password "P@55word"
@@ -103,6 +113,9 @@ Feature: Email Lists
         And I should not see "b2@example.com"
         And I should not see "b3@example.com"
         And I should not see "b4@example.com"
+	And I should not see "A Member"
+	And I should not see "B Member"
+	And I should not see "C Member"
 
     Scenario: Get list of addresses (not signed in)
 	When I go to the email_lists page

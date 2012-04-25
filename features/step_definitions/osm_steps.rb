@@ -69,17 +69,25 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body) unless url.nil?
 end
 
-Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members$/ do |section_id, term_id, table|
+Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members?$/ do |section_id, term_id, table|
   url = "users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}"
 
   members = Array.new
   table.hashes.each do |hash|
-     members.push [hash['email1'], hash['email2'], hash['email3'], hash['email4'], hash['grouping_id']]
+     members.push ({
+      :first_name => hash['first_name'] || 'A',
+      :last_name => hash['last_name'] || 'Member',
+      :email1 => hash['email1'],
+      :email2 => hash['email2'],
+      :email3 => hash['email3'],
+      :email4 => hash['email4'],
+      :grouping_id => hash['grouping_id']
+     })
   end
 
   body = '{"identifier":"scoutid","items":['
   members.each do |member|
-    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"A\",\"lastname\":\"Member\",\"email1\":\"#{member[0]}\",\"email2\":\"#{member[1]}\",\"email3\":\"#{member[2]}\",\"email4\":\"#{member[3]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{9.years.ago.strftime("%y-%m-%d")}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[4]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
+    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"#{member[:first_name]}\",\"lastname\":\"#{member[:last_name]}\",\"email1\":\"#{member[:email1]}\",\"email2\":\"#{member[:email2]}\",\"email3\":\"#{member[:email3]}\",\"email4\":\"#{member[:email4]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{9.years.ago.strftime("%y-%m-%d")}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[:grouping_id]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
   end
   body[-1] = ']'
   body += '}'

@@ -93,13 +93,14 @@ class EmailListsController < ApplicationController
 
   def preview
     @params = params
+    @groupings = get_groupings
     @email_list = current_user.email_lists.new(clean_params(params[:email_list]).merge({:section_id=>current_section.id}))
-    @emails = @email_list.get_list
+    @lists = @email_list.get_list
   end
 
   def get_addresses
     @email_list = current_user.email_lists.find(params[:id])
-    @emails = @email_list.get_list
+    @lists = @email_list.get_list
   end
 
   private
