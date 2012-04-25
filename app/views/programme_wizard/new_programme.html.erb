@@ -1,0 +1,58 @@
+<% provide :title, "Programme Wizard" %>
+
+<p>Please ensure you have created a term in OSM to cover the dates of your programme, otherwise you won't be able to access it.</p>
+
+<%= form_for(@programme, :url => {:action=>:create_programme}) do |f| %>
+  <% if @programme.errors.any? %>
+    <div id="error_messages">
+      <h2>The following errors occured:</h2>
+      <ul>
+        <% for message in @programme.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div id="programme">
+    <h2>Programme Options</h2>
+    <p>Use the following fields to enter the date of your first and last meeting as well as how many days should separate each meeting.</p>
+    <div class="field">
+      <%= f.label :programme_start %><br/>
+      <%= f.text_field :programme_start, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+    </div>
+    <div class="field">
+      <%= f.label :programme_end %><br/>
+      <%= f.text_field :programme_end, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+    </div>
+    <div class="field">
+      <%= f.label :programme_interval %><br/>
+      <%= f.number_field :programme_interval, :in=>1..28, :width => 10 %> days
+    </div>
+  </div>
+
+
+  <div id="evening">
+    <h2>Evening Options</h2>
+    <p>Use the following fields to enter the data which will be used to setup each meeting.</p>
+    <div class="field">
+      <%= f.label :evening_start %><br/>
+      <%= f.text_field :evening_start, :placeholder=>'hh:mm' %>
+    </div>
+    <div class="field">
+      <%= f.label :evening_end %><br/>
+      <%= f.text_field :evening_end, :placeholder=>'hh:mm' %>
+    </div>
+    <div class="field">
+      <%= f.label :evening_title %><br/>
+      <%= f.text_field :evening_title %>
+    </div>
+  </div>
+
+
+  <div class="actions">
+    <p>This may take some time - please be patient.</p>
+    <%= f.submit 'Create programme' %>
+  </div>
+<%- end %>

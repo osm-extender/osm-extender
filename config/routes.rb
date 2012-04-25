@@ -56,5 +56,8 @@ OSMExtender::Application.routes.draw do
   get 'settings' => 'settings#edit', :as => 'edit_settings'
   put 'settings' => 'settings#update', :as => 'update_settings'
 
+  get 'create_programme/new' => 'programme_wizard#new_programme', :as => 'new_create_programme'
+  post 'create_programme/new' => 'programme_wizard#create_programme'
+
   root :to => 'static#welcome'
 end

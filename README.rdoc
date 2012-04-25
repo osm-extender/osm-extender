@@ -29,5 +29,8 @@ Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?bran
  Pulls in your activities, looks at the tags and shows you how well you're balancing your programme using a graph, table of totals and a score. It takes the duration your section has a member (e.g. 2 and a half years for Cubs) and goes upto that far back and upto that far into the future.
 
 
+[Programme wizard]
+ Allows you to easily add a number of meetings to your programme, you specify the start date, end date, interval between meetings, start time, end time and meeting title, OSMX does the rest.
+
 == Setting up \OSM Extender
 Please follow the information in the {project's wiki}[https://github.com/robertgauld/OSMExtender/wiki/Running-the-system].

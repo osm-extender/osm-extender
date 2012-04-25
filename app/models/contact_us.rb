@@ -29,4 +29,5 @@ class ContactUs
   def persisted?
     false
   end
+
 end

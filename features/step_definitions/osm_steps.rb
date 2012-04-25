@@ -224,12 +224,17 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
 
   terms = Array.new
   table.hashes.each do |hash|
-     terms.push [hash['term_id'], hash['name']]
+     terms.push ({
+      :id => hash['term_id'],
+      :name => hash['name'],
+      :start => hash['start'] || 1.month.ago.to_date.to_s('yyyy-mm-dd'),
+      :end => hash['end'] || 1.month.from_now.to_date.to_s('yyyy-mm-dd'),
+    })
   end
 
   body = '{"' + section_id + '":['
   terms.each do |term|
-    body += "{\"termid\":\"#{term[0]}\",\"name\":\"#{term[1]}\",\"sectionid\":\"#{section_id}\",\"startdate\":\"#{1.month.ago.to_date.to_s('yyyy-mm-dd')}\",\"enddate\":\"#{1.month.from_now.to_date.to_s('yyyy-mm-dd')}\"},"
+    body += "{\"termid\":\"#{term[:id]}\",\"name\":\"#{term[:name]}\",\"sectionid\":\"#{section_id}\",\"startdate\":\"#{term[:start]}\",\"enddate\":\"#{term[:end]}\"},"
   end
   body[-1] = ']'
   body += '}'
@@ -323,6 +328,54 @@ Given /^an OSM request to get the notepad for section (\d+) will give "(.+)"$/ d
   FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => notepad}.to_json)
 end
 
+Given /^an OSM request to add activity to programme will work$/ do
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=addActivityToProgramme', :body => '{"result":0}')
+end
+
+Given /^an OSM request to update evening will work$/ do
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=editEvening', :body => '{"result":0,"err":""}')
+end
+
+Given /^an OSM request to get programme for section (\d+) term (\d+) will have the evenings?$/ do |section, term, table|
+  evenings = Array.new
+  table.hashes.each do |hash|
+     evenings.push ({
+      :id => hash['evening_id'],
+      :date => hash['meeting_date'],
+    })
+  end
+
+  url = "programme.php?action=getProgramme&sectionid=#{section}&termid=#{term}"
+  items = Array.new
+  evenings.each do |n|
+    items.push ({
+      'eveningid' => "#{n[:id]}",
+      'sectionid' => "#{section}",
+      'title' => "Unnamed meeting",
+      'notesforparents' => '',
+      'games' => '',
+      'prenotes' => '',
+      'postnotes' => '',
+      'leaders' => '',
+      'meetingdate' => n[:date],
+      'starttime' => nil,
+      'endtime' => nil,
+      'googlecalendar' => '',
+    })
+  end
+
+  activities = {}
+  items.each do |n|
+    activities["#{n}"] = []
+  end
+  
+  body = {
+    'items' => items,
+    'activities' => activities
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+end
 
 Then /^"([^"]*)" should be connected to OSM$/ do |email|
   user = User.find_by_email_address(email)

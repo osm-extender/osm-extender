@@ -307,6 +307,28 @@ module OSM
       return response
     end
 
+    # Get a term
+    # @param term_id the id of the required term
+    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns nil if an error occured or the user does not have access to that term
+    # @returns an OSM::Term object otherwise
+    def get_term(term_id, api_data={})
+      if Rails.cache.exist?("OSMAPI-term-#{term_id}") && self.user_can_access?(:term, term_id, api_data)
+        return Rails.cache.read("OSMAPI-term-#{term_id}")
+      end
+
+      terms = get_terms(api_data)[:data]
+      return nil unless terms.is_a? Array
+
+      termss.each do |term|
+        return term if term.id == term_id
+      end
+
+      return nil
+    end
+
     # Get the programme for a given term
     # @param sectionid the section to get the programme for
     # @param termid the term to get the programme for
@@ -661,6 +683,72 @@ module OSM
       return response
     end
 
+    # Create an evening in OSM
+    # @param section_id the id of the section to add the term to
+    # @param meeting_date the date of the meeting
+    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
+    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
+    def create_evening(section_id, meeting_date, api_data={})
+      section_id = section_id.to_i
+      evening_api_data = {
+        'meetingdate' => meeting_date.strftime('%Y-%m-%d'),
+        'sectionid' => section_id,
+        'activityid' => -1
+      }
+
+      response = perform_query("programme.php?action=addActivityToProgramme", api_data.merge(evening_api_data))
+
+      # The cached programmes for the section will be out of date - remove them
+      unless response[:http_error] || response[:osm_error]
+        get_terms(api_data)[:data].each do |term|
+          Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == section_id
+        end
+      end
+
+      return response
+    end
+
+    # Update an evening in OSM
+    # @param programme_item is the OSM::ProgrammeItem object to update
+    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
+    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
+    #   * 'secret' (optional) the OSM secret belonging to the above user
+    # @returns a hash containing the following keys:
+    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
+    #   * :osm_error - false if no error occured, otherwise a string containing the error message
+    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
+    def update_evening(programme_item, api_data={})
+      response = perform_query("programme.php?action=editEvening", api_data.merge({
+        'eveningid' => programme_item.evening_id,
+        'sectionid' => programme_item.section_id,
+        'meetingdate' => programme_item.meeting_date.strftime('%Y-%m-%d'),
+        'starttime' => programme_item.start_time,
+        'endtime' => programme_item.end_time,
+        'title' => programme_item.title,
+        'notesforparents' => programme_item.notes_for_parents,
+        'prenotes' => programme_item.pre_notes,
+        'postnotes' => programme_item.post_notes,
+        'games' => programme_item.games,
+        'leaders' => programme_item.leaders,
+        'activity' => programme_item.activities_for_saving,
+        'googlecalendar' => programme_item.google_calendar || '',
+      }))
+
+      # The cached programmes for the section will be out of date - remove them
+      unless response[:http_error] || response[:osm_error]
+        get_terms(api_data)[:data].each do |term|
+          Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == programme_item.section_id
+        end
+      end
+
+      return response
+    end
+
     private
     # Make the query to the OSM API
     # @param url the script on the remote server to invoke
@@ -674,32 +762,54 @@ module OSM
       api_data['apiid'] = @@api_id
       api_data['token'] = @@api_token
 
-      if (api_data['userid'].nil? || api_data['secret'].nil?)
-        unless (@userid.nil? || @secret.nil?)
+      if api_data['userid'].nil? && api_data['secret'].nil?
+        unless @userid.nil? || @secret.nil?
           api_data['userid'] = @userid
           api_data['secret'] = @secret
         end
       end
 
-if Rails.env.development?
-  puts "Making OSM API request to #{url}"
-  puts api_data.to_s
-end
+      if Rails.env.development?
+        puts "Making OSM API request to #{url}"
+        puts api_data.to_s
+      end
 
       result = HTTParty.post("#{@base_url}/#{url}", {:body => api_data})
       to_return = {
         :http_error => !result.response.code.eql?('200') ? result.response.code : false,
-        :osm_error => result.response.body[0..8].eql?('{"error":'),
         :response => result,
       }
 
+      if Rails.env.development?
+        puts "Result from OSM request to #{url}"
+        puts result.response.body
+      end
+
       unless to_return[:http_error]
-        unless to_return[:osm_error]
-          to_return[:data] = ActiveSupport::JSON.decode(result.response.body)
+        if looks_like_json?(result.response.body)
+          decoded = ActiveSupport::JSON.decode(result.response.body)
+          osm_error = get_osm_error(decoded)
+          unless osm_error
+            to_return[:data] = decoded
+          else
+            to_return[:osm_error] = osm_error
+          end
         else
-          to_return[:osm_error] = ActiveSupport::JSON.decode(result.response.body)['error']
+          to_return[:osm_error] = result.response.body
         end
       end
+      return to_return
+    end
+
+    def looks_like_json?(text)
+      (['[', '{'].include?(text[0]))
+    end
+
+    def get_osm_error(data)
+      return false unless data.is_a?(Hash)
+      to_return = data['error'] || data['err'] || false
+      to_return = false if to_return.blank?
+      puts "OSM API ERROR: #{to_return}" if Rails.env.development? && to_return
       return to_return
     end
 
@@ -873,12 +983,17 @@ end
       return (@start <= date) && (@end >= date)
     end
 
+    def <=>(another_term)
+      self.start <=> another_term.start
+    end
+
   end
 
 
   class ProgrammeItem
 
-    attr_reader :evening_id, :section_id, :title, :notes_for_parents, :games, :pre_notes, :post_notes, :leaders, :meeting_date, :start, :end, :activities
+    attr_accessor :evening_id, :section_id, :title, :notes_for_parents, :games, :pre_notes, :post_notes, :leaders, :meeting_date, :activities, :google_calendar
+    attr_reader :start_time, :end_time
 
     # Initialize a new ProgrammeItem using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
@@ -886,14 +1001,16 @@ end
     def initialize(data, activities)
       @evening_id = data['eveningid']
       @section_id = data['sectionid']
-      @title = data['title']
-      @notes_for_parents = data['notes_for_parents']
-      @games = data['games']
-      @pre_notes = data['prenotes']
-      @post_notes = data['postnotes']
-      @leaders = data['leaders']
-      @start = OSM::make_datetime(data['meetingdate'], data['starttime'])
-      @end = OSM::make_datetime(data['meetingdate'], data['endtime'])
+      @title = data['title'] || 'Unnamed meeting'
+      @notes_for_parents = data['notesforparents'] || ''
+      @games = data['games'] || ''
+      @pre_notes = data['prenotes'] || ''
+      @post_notes = data['postnotes'] || ''
+      @leaders = data['leaders'] || ''
+      @start_time = data['starttime'].nil? ? nil : data['starttime'][0..4]
+      @end_time = data['endtime'].nil? ? nil : data['endtime'][0..4]
+      @meeting_date = Date.parse(data['meetingdate'], 'yyyy-mm-dd')
+      @google_calendar = data['googlecalendar']
 
       @activities = Array.new
       unless activities.nil?
@@ -901,6 +1018,29 @@ end
           @activities.push OSM::ProgrammeActivity.new(item)
         end
       end
+    end
+
+    # Custom setters for times
+    [:start, :end].each do |attribute|
+      define_method "#{attribute}_time=" do |value|
+        unless value.nil?
+          value = value.strftime('%H:%M') unless value.is_a?(String)
+          raise ArgumentError, 'invalid time' unless /\A(?:[0-1][0-9]|2[0-3]):[0-5][0-9]\Z/.match(value)
+        end
+        instance_variable_set("@#{attribute}_time", value)
+      end
+    end
+
+    def activities_for_saving
+      to_save = Array.new
+      @activities.each do |activity|
+        this_activity = {
+          'activityid' => activity.activity_id,
+          'notes' => activity.notes,
+        }
+        to_save.push this_activity
+      end
+      return to_save.to_json
     end
 
   end
