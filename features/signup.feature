@@ -181,7 +181,6 @@ Feature: Sign up
         Given I have the following user records
             | email_address     |
             | alice@example.com |
-        And "alice@example.com" is an activated user account
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "alice@example.com"
@@ -192,7 +191,20 @@ Feature: Sign up
         And I should see "Email address has already been taken"
         And I should not see "Your signup was successful"
 	And I should be on the users page
-        And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
+
+    Scenario: Signup (duplicated email, differing case)
+        Given I have the following user records
+            | email_address     |
+            | alice@example.com |
+        When I go to the signup page
+        And I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "ALICE@example.com"
+        And I fill in "Password" with "aB3$hj37"
+        And I fill in "Password confirmation" with "aB3$hj37"
+        And I press "Sign up"
+        Then I should have 1 user
+        And I should see "Email address has already been taken"
+        And I should not see "Your signup was successful"
 
     Scenario: Signup (no signup code)
 	Given the configuration for "signup code" is "abc123"
