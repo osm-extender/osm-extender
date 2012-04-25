@@ -102,6 +102,7 @@ Feature: OSM
 	Then I should not see "links to things you can do will appear here"
 	And I should not see "Email reminders"
 	And I should not see "Programme review"
+	And I should not see "Programme wizard"
 	And I should not see "Email lists"
 	And I should not see "OSM permissions"
 
@@ -110,6 +111,7 @@ Feature: OSM
 	Then I should see "links to things you can do will appear here"
 	And I should not see "Email reminders"
 	And I should not see "Programme review"
+	And I should not see "Programme wizard"
 	And I should not see "Email lists"
 	And I should not see "OSM permissions"
 
@@ -119,11 +121,12 @@ Feature: OSM
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
-	    | programme  | read    |
+	    | programme  | write   |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "links to things you can do will appear here"
 	And I should see "Email reminders"
 	And I should see "Programme review"
+	And I should see "Programme wizard"
 	And I should see "Email lists"
 	And I should see "OSM permissions"
 
@@ -137,8 +140,25 @@ Feature: OSM
 	Then I should see "Some items have hidden from this menu"
 	And I should see "Email reminders"
 	And I should not see "Programme review"
+	And I should not see "Programme wizard"
 	And I should not see "Email lists"
 	And I should see "OSM permissions"
+
+
+    Scenario: No message and selected links for non youth section
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 adult role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+	    | programme  | write   |
+        When I signin as "alice@example.com" with password "P@55word"
+	Then I should not see "Some items have hidden from this menu"
+	And I should see "Email reminders"
+	And I should see "Email lists"
+	And I should see "OSM permissions"
+	And I should not see "Programme review"
+	And I should not see "Programme wizard"
 
 
     Scenario: Fix for section with no type

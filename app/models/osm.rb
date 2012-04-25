@@ -927,6 +927,17 @@ module OSM
       end
     end
 
+    def youth_section?
+      [:beavers, :cubs, :scouts, :explorers].include?(@type)
+    end
+
+    # Custom section type checkers
+    [:beavers, :cubs, :scouts, :explorers, :adult, :waiting].each do |attribute|
+      define_method "#{attribute}_section=" do
+        @type == attribute
+      end
+    end
+
   end
 
 

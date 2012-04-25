@@ -60,6 +60,16 @@ class ApplicationController < ActionController::Base
   end
 
 
+  # Ensure the current section is a youth section
+  # if not redirect them to the relevant page and set an instruction flash
+  def require_youth_section
+    unless current_section.youth_section?
+      flash[:error] = 'The current section must be a youth section to do that.'
+      redirect_back_or_to root_path
+    end
+  end
+
+
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'You are not authorised to do that.'
     redirect_to current_user ? my_page_path : signin_path

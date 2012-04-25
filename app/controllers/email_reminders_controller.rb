@@ -131,16 +131,24 @@ class EmailRemindersController < ApplicationController
       items.push ({:name => 'Birthdays', :type => 'birthday', :as_link => has_osm_permission?(:read, :member)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent')
-      items.push ({:name => 'Events', :type => 'event', :as_link => has_osm_permission?(:read, :programme)})
+      if current_section.youth_section?
+        items.push ({:name => 'Events', :type => 'event', :as_link => has_osm_permission?(:read, :programme)})
+      end
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme')
-      items.push ({:name => 'Programme', :type => 'programme', :as_link => has_osm_permission?(:read, :programme)})
+      if current_section.youth_section?
+        items.push ({:name => 'Programme', :type => 'programme', :as_link => has_osm_permission?(:read, :programme)})
+      end
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen')
-      items.push ({:name => 'Member not seen', :type => 'not_seen', :as_link => has_osm_permission?(:read, :register)})
+      if current_section.youth_section?
+        items.push ({:name => 'Member not seen', :type => 'not_seen', :as_link => has_osm_permission?(:read, :register)})
+      end
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
-      items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
+      if current_section.youth_section?
+        items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
+      end
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotepad')
       items.push ({:name => 'Section notepad', :type => 'notepad', :as_link => true})
