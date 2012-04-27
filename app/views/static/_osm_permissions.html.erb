@@ -1,0 +1,35 @@
+  <table>
+    <tr><th>OSM&nbsp;Permission</th><th>Site&nbsp;Action</th><th>Requires</th><th>Granted<br/>(to OSMX)</th><th>Granted<br/>(to your OSM user)</th></tr>
+
+    <tr><td class="title">Scout Details</td><td class="empty" colspan="4"></td></tr>
+    <tr><td class="empty"></td><td>Email lists</td><td>Read</td><td><%= yes_no api_perms.can_read?(:member) %></td><td><%= yes_no role.can_read?(:member) %></td></tr>
+    <tr><td class="empty"></td><td>Email reminders (birthdays)</td><td>Read</td><td><%= yes_no api_perms.can_read?(:member) %></td><td><%= yes_no role.can_read?(:member) %></td></tr>
+
+    <%- if role.section.youth_section? %>
+    <tr><td class="title">Badge Records</td><td class="empty" colspan="4"></td></tr>
+    <tr><td class="empty"></td><td>Email reminders (due badges)</td><td>Read</td><td><%= yes_no api_perms.can_read?(:badge) %></td><td><%= yes_no role.can_read?(:badge) %></td></tr>
+    <%- end %>
+
+<!--    <tr><td class="title">Administration</td><td class="empty" colspan="4"></td></tr> --> <!-- :user -->
+
+    <%- if role.section.youth_section? %>
+    <tr><td class="title">Attendance Register</td><td class="empty" colspan="4"></td></tr>
+    <tr><td class="empty"></td><td>Email reminders (not seen)</td><td>Read</td><td><%= yes_no api_perms.can_read?(:register) %><td><%= yes_no role.can_read?(:register) %></td></td></tr>
+    <%- end %>
+
+    <%- if role.section.youth_section? %>
+    <tr><td class="title">Programme</td><td class="empty" colspan="4"></td></tr>
+    <tr><td class="empty"></td><td>Email reminders (programme)</td><td>Read</td><td><%= yes_no api_perms.can_read?(:programme) %></td><td><%= yes_no role.can_read?(:programme) %></td></tr>
+    <tr><td class="empty"></td><td>Programme review</td><td>Read</td><td><%= yes_no api_perms.can_read?(:programme) %></td><td><%= yes_no role.can_read?(:programme) %></td></tr>
+    <tr><td class="empty"></td><td>Programme wizard</td><td>Read and Write</td><td><%= yes_no api_perms.can_write?(:programme) %></td><td><%= yes_no role.can_write?(:programme) %></td></tr>
+    <%- end %>
+
+    <%- if role.section.youth_section? %>
+    <tr><td class="title">Events</td><td class="empty" colspan="4"></td></tr>
+    <tr><td class="empty"></td><td>Email reminders (events)</td><td>Read</td><td><%= yes_no api_perms.can_read?(:events) %></td><td><%= yes_no role.can_read?(:events) %></td></tr>
+    <%- end %>
+
+  <!--  <tr><td class="title">Flexi-Records</td><td class="empty" colspan="4"></td></tr> -->
+
+  <!--  <tr><td class="title">Finances</td><td class="empty" colspan="4"></td></tr> -->
+  </table>

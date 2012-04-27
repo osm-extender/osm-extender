@@ -174,42 +174,6 @@ module OSM
       return nil
     end
 
-    # Get the sections (and their configuration) that the OSM user can access
-    # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
-    #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
-    #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Section objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
-    def get_sections(api_data={})
-      if Rails.cache.exist?("OSMAPI-sections-#{api_data[:userid] || @userid}")
-        return {
-          :data => Rails.cache.read("OSMAPI-sections-#{api_data[:userid] || @userid}"),
-          :http_error => false,
-          :osm_error => false
-        }
-      end
-
-      response = perform_query('api.php?action=getSectionConfig', api_data)
-
-      result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data].each_key do |key|
-          section = OSM::Section.new(key, response[:data][key])
-          result.push section
-          Rails.cache.write("OSMAPI-section-#{key}", section, :expires_in => @@default_cache_ttl*2)
-          self.user_can_access :section, key, api_data
-        end
-      end
-      Rails.cache.write("OSMAPI-sections-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
-      response[:data] = result
-
-      return response
-    end
-
     # Get the section (and its configuration)
     # @param section_id the section id of the required section
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
@@ -222,11 +186,11 @@ module OSM
         return Rails.cache.read("OSMAPI-section-#{section_id}")
       end
 
-      sections = get_sections(api_data)[:data]
-      return nil unless sections.is_a? Array
+      roles = get_roles(api_data)[:data]
+      return nil unless roles.is_a? Array
 
-      sections.each do |section|
-        return section if section.id == section_id
+      roles.each do |role|
+        return role.section if role.section.id == section_id
       end
 
       return nil
@@ -853,18 +817,15 @@ module OSM
 
   class Role
 
-    attr_reader :section, :group_name, :group_id, :group_normalized, :section_id, :section_name, :section_type, :default, :permissions
+    attr_reader :section, :group_name, :group_id, :group_normalized, :default, :permissions
 
     # Initialize a new UserRole using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @section = OSM::Section.new(data['sectionid'], ActiveSupport::JSON.decode(data['sectionConfig']))
+      @section = OSM::Section.new(data['sectionid'], data['sectionname'], ActiveSupport::JSON.decode(data['sectionConfig']), self)
       @group_name = data['groupname']
       @group_id = data['groupid'].to_i
       @group_normalized = data['groupNormalised'].to_i
-      @section_id = data['sectionid'].to_i
-      @section_name = data['sectionname']
-      @section_type = data['section'].to_sym
       @default = data['isDefault'].eql?('1') ? true : false
       @permissions = (data['permissions'] || {}).symbolize_keys
 
@@ -888,20 +849,48 @@ module OSM
       return [20, 100].include?(@permissions[key])
     end
 
+    # Get section's full name in a consistent format
+    # @returns a string e.g. "Scouts (1st Somewhere)"
+    def long_name
+      @group_name.blank? ? @section.name : "#{@section.name} (#{@group_name})"
+    end
+
+    # Get section's full name in a consistent format
+    # @returns a string e.g. "1st Somewhere Beavers"
+    def full_name
+      @group_name.blank? ? @section.name : "#{@group_name} #{@section.name}"
+    end
+
+    def <=>(another_role)
+      compare_group_name = self.group_name <=> another_role.group_name
+      return compare_group_name unless compare_group_name == 0
+
+      return 0 if self.section.type == another_role.section.type
+      [:beavers, :cubs, :scouts, :explorers, :waiting, :adult].each do |type|
+        return -1 if self.section.type == type
+        return 1 if another_role.section.type == type
+      end
+    end
+
+    def ==(another_role)
+      self.section.id == another_role.section.id
+    end
+
   end
 
 
   class Section
 
-    attr_reader :id, :subscription_level, :subscription_expires, :type, :num_scouts, :has_badge_records, :has_programme, :wizard, :column_names, :fields, :intouch_fields, :mobile_fields, :extra_records
+    attr_reader :id, :name, :subscription_level, :subscription_expires, :type, :num_scouts, :has_badge_records, :has_programme, :wizard, :column_names, :fields, :intouch_fields, :mobile_fields, :extra_records, :role
 
     # Initialize a new SectionConfig using the hash returned by the API call
     # @param id the section ID used by the API to refer to this section
     # @param data the hash of data for the object returned by the API
-    def initialize(id, data)
+    def initialize(id, name, data, role)
       subscription_levels = [:bronze, :silver, :gold]
 
       @id = id.to_i
+      @name = name
       @subscription_level = subscription_levels[data['subscription_level'] - 1]
       @subscription_expires = data['subscription_expires'] ? Date.parse(data['subscription_expires'], 'yyyy-mm-dd') : nil
       @type = !data['sectionType'].nil? ? data['sectionType'].to_sym : :unknown
@@ -914,6 +903,7 @@ module OSM
       @intouch_fields = (data['intouch'] || {}).symbolize_keys
       @mobile_fields = (data['mobFields'] || {}).symbolize_keys
       @extra_records = data['extraRecords'] || []
+      @role = role
 
       # Symbolise the keys in each hash of the extra_records array
       @extra_records.each do |item|
@@ -936,6 +926,14 @@ module OSM
       define_method "#{attribute}_section=" do
         @type == attribute
       end
+    end
+
+    def <=>(another_section)
+      self.role <=> another_section.role
+    end
+
+    def ==(another_section)
+      self.id == another_section.id
     end
 
   end

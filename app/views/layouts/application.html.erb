@@ -52,7 +52,7 @@
         <%- if current_user %>
           <div id="current_section">
             <%- if current_user.connected_to_osm? && current_role %>
-              Current section: <%= section_name %>
+              Current section: <%= current_role.long_name %>
             <%- end %>
           </div>
           <%- if current_user.connected_to_osm? && current_role %>

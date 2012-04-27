@@ -23,7 +23,13 @@ class StaticController < ApplicationController
 
 
   def osm_permissions
-    @osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id, {:no_cache => true})[:data]
+    @osmx_permissions = Hash.new
+    @other_roles = Array.new
+    current_user.osm_api.get_roles[:data].each do |role|
+      @other_roles.push role unless role == current_role
+      @osmx_permissions[role.section.id] = current_user.osm_api.get_our_api_access(role.section.id, {:no_cache => true})[:data]
+    end
+    @other_roles.sort!
   end
 
 end

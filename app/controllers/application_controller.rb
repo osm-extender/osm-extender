@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :section_name, :current_role, :current_section, :has_osm_permission?
+  helper_method :current_role, :current_section, :has_osm_permission?
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -108,13 +108,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Get section name in a consistent format
-  # @param role (optional) an OSM::Role object to get the name for, defaults to the current role for the session
-  # @returns a string
-  def section_name(role=session[:current_role])
-    return '' unless role.is_a?(OSM::Role)
-    "#{role.section_name} (#{role.group_name})"
-  end
   def current_role
     session[:current_role]
   end

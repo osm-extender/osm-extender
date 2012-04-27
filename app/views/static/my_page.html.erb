@@ -8,8 +8,8 @@
 <%- if @roles.size > 1 %>
   <h2>Change Current Section</h2>
   <ul>
-  <%- @roles.each do |role| %>
-    <li><%= link_to section_name(role), "#{change_section_path}?section_id=#{role.section_id}" %></li>
+  <%- @roles.sort.each do |role| %>
+    <li><%= link_to role.long_name, "#{change_section_path}?section_id=#{role.section.id}" %></li>
   <%- end %>
   </ul>
 <%- end %>
