@@ -1,7 +1,7 @@
   <table>
     <tr><th>OSM&nbsp;Permission</th><th>Site&nbsp;Action</th><th>Requires</th><th>Granted<br/>(to OSMX)</th><th>Granted<br/>(to your OSM user)</th></tr>
 
-    <tr><td class="title">Scout Details</td><td class="empty" colspan="4"></td></tr>
+    <tr><td class="title"><%= role.section.youth_section? ? 'Scout Details' : 'Contact Details' %></td><td class="empty" colspan="4"></td></tr>
     <tr><td class="empty"></td><td>Email lists</td><td>Read</td><td><%= yes_no api_perms.can_read?(:member) %></td><td><%= yes_no role.can_read?(:member) %></td></tr>
     <tr><td class="empty"></td><td>Email reminders (birthdays)</td><td>Read</td><td><%= yes_no api_perms.can_read?(:member) %></td><td><%= yes_no role.can_read?(:member) %></td></tr>
 
