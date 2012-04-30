@@ -32,11 +32,21 @@ class EmailReminder < ActiveRecord::Base
   end
 
   def get_data
+    build_data :get_data
+  end
+
+  def get_fake_data
+    build_data :get_fake_data
+  end
+
+
+  private
+  def build_data(data_method)
     data = {}
     config = {}
     items.each do |item|
       key = item.type.to_sym
-      data[key] = item.get_data
+      data[key] = item.send(data_method)
       config[key] = item.configuration
     end
     return {:data=>data, :config=>config}

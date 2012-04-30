@@ -29,10 +29,32 @@ class EmailReminderItemProgramme < EmailReminderItem
       end
     end
 
-    data.sort! do |a, b|
-      a[:start] <=> b[:start]
+    return data.sort do |a, b|
+      a[:date] <=> b[:date]
     end
-    return data
+  end
+
+
+  def get_fake_data
+    data = []
+    dates = (Date.today.to_date..configuration[:the_next_n_weeks].weeks.from_now.to_date).step(7)
+    dates.each_with_index do |date, index|
+      item = {
+        :start_time => '20:00',
+        :end_time => '22:00',
+        :date => date,
+        :title => "Week #{index + 1}",
+        :activities => [],
+      }
+      (1 + rand(3)).times do |activity|
+        item[:activities].push Faker::Lorem.words(1 + rand(3)).join(' ')
+      end
+      data.push item
+    end
+
+    return data.sort do |a, b|
+      a[:date] <=> b[:date]
+    end
   end
 
 

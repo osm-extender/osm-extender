@@ -96,7 +96,7 @@ class EmailRemindersController < ApplicationController
   def preview
     email_reminder = EmailReminder.find(params[:id])
     @role = current_role
-    @data = email_reminder.get_data
+    @data = email_reminder.get_fake_data
     render "reminder_mailer/reminder_email", :layout => 'mail'
   end
 

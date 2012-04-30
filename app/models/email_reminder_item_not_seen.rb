@@ -1,7 +1,6 @@
 class EmailReminderItemNotSeen < EmailReminderItem
 
   def get_data
-    data = []
     earliest = configuration[:the_last_n_weeks].weeks.ago.to_date
 
     api = user.osm_api
@@ -20,6 +19,17 @@ class EmailReminderItemNotSeen < EmailReminderItem
     return not_seen
   end
 
+  def get_fake_data
+    data = []
+
+    (1 + rand(3)).times do
+      data.push ({
+        :firstname => Faker::Name.first_name,
+        :lastname => Faker::Name.last_name,
+      })
+    end
+    return data
+  end
 
   def labels
     {
