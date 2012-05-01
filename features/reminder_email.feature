@@ -64,7 +64,7 @@ Feature: Reminder Email
         And I follow "Birthdays"
         And I fill in "How many months into the past?" with "3"
         And I fill in "How many months into the future?" with "4"
-        And I press "Create Email reminder item birthday"
+        And I press "Create birthdays item"
         Then I should see "Item was successfully added"
         And I should see "How many months into the past?: 3" in the "Configuration" column of the "Birthdays" row
         And I should see "How many months into the future?: 4" in the "Configuration" column of the "Birthdays" row
@@ -76,7 +76,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "Events"
         And I fill in "How many months into the future?" with "6"
-        And I press "Create Email reminder item event"
+        And I press "Create events item"
         Then I should see "Item was successfully added"
         And I should see "How many months into the future?: 6" in the "Configuration" column of the "Events" row
 
@@ -87,7 +87,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "Programme"
         And I fill in "How many weeks into the future?" with "8"
-        And I press "Create Email reminder item programme"
+        And I press "Create programme item"
         Then I should see "Item was successfully added"
         And I should see "How many weeks into the future?: 8" in the "Configuration" column of the "Programme" row
 
@@ -98,7 +98,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "Member not seen"
         And I fill in "For how many weeks?" with "1"
-        And I press "Create Email reminder item not seen"
+        And I press "Create members not seen item"
         Then I should see "Item was successfully added"
         And I should see "For how many weeks?: 1" in the "Configuration" column of the "Members not seen" row
 
@@ -108,7 +108,7 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "Due badges"
-        And I press "Create Email reminder item due badge"
+        And I press "Create due badges item"
         Then I should see "Item was successfully added"
 
     Scenario: Add notepad item to reminder email
@@ -117,26 +117,14 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "Section notepad"
-        And I press "Create Email reminder item notepad"
+        And I press "Create notepad item"
         Then I should see "Item was successfully added"
 
     Scenario: Message and no list when no more items to add to reminder
-        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
-        And I follow "Birthdays"
-        And I press "Create Email reminder item birthday"
-        And I follow "Events"
-        And I press "Create Email reminder item event"
-        And I follow "Programme"
-        And I press "Create Email reminder item programme"
-        And I follow "Member not seen"
-        And I press "Create Email reminder item not seen"
-        And I follow "Due badges"
-        And I press "Create Email reminder item due badge"
-        And I follow "Section notepad"
-        And I press "Create Email reminder item notepad"
 	Then I should see "There are no more items you can add"
 	And I should not see "You can add an item"
 
@@ -159,7 +147,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Birthdays" row
         And I fill in "How many months into the past?" with "3"
         And I fill in "How many months into the future?" with "4"
-        And I press "Update Email reminder item birthday"
+        And I press "Update birthdays item"
         Then I should see "Item was successfully updated"
         And I should see "How many months into the past?: 3" in the "Configuration" column of the "Birthdays" row
         And I should see "How many months into the future?: 4" in the "Configuration" column of the "Birthdays" row
@@ -172,7 +160,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Events" row
         And I fill in "How many months into the future?" with "6"
-        And I press "Update Email reminder item event"
+        And I press "Update events item"
         Then I should see "Item was successfully updated"
         And I should see "How many months into the future?: 6" in the "Configuration" column of the "Events" row
 
@@ -184,7 +172,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Programme" row
         And I fill in "How many weeks into the future?" with "8"
-        And I press "Update Email reminder item programme"
+        And I press "Update programme item"
         Then I should see "Item was successfully updated"
         And I should see "How many weeks into the future?: 8" in the "Configuration" column of the "Programme" row
 
@@ -196,7 +184,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Members not seen" row
         And I fill in "For how many weeks?" with "1"
-        And I press "Update Email reminder item not seen"
+        And I press "Update members not seen item"
         Then I should see "Item was successfully updated"
         And I should see "For how many weeks?: 1" in the "Configuration" column of the "Members not seen" row
 

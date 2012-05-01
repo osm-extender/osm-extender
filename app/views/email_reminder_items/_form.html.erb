@@ -18,6 +18,6 @@
   <%- end %>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit "#{@email_reminder_item.persisted? ? 'Update' : 'Create'} #{@email_reminder_item.friendly_name.downcase} item" %>
   </div>
 <% end %>
