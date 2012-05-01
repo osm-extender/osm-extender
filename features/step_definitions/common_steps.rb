@@ -8,6 +8,7 @@ Given /^time is frozen$/ do
   Timecop.freeze Time.now.utc
 end
 
+
 When /^(.*) in the "([^\"]*)" column of the "([^\"]*)" row$/ do |action, column_title, row_title|
   col_number = 0
   all(:xpath, "//*[(th|td)/descendant-or-self::*[contains(text(), '#{column_title}')]]/th").each do |element|

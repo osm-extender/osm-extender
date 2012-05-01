@@ -18,10 +18,28 @@ class EmailReminderItemBirthday < EmailReminderItem
       end
     end
 
-    data.sort! do |a, b|
+    return data.sort do |a, b|
       a[:birthday] <=> b[:birthday]
     end
-    return data
+  end
+
+
+  def get_fake_data
+    data = []
+    earliest_date = -(Date.today - configuration[:the_last_n_months].months.ago.to_date).to_i
+    date_range = (configuration[:the_next_n_months] + configuration[:the_last_n_months]).months  /  1.day
+
+    (1 + rand(4)).times do
+      data.push ({
+        :name => "#{Faker::Name.first_name} #{Faker::Name.last_name}",
+        :birthday => (earliest_date + rand(date_range)).days.from_now.to_date,
+        :age_on_birthday => (6 + rand(12))
+      })
+    end
+
+    return data.sort do |a, b|
+      a[:birthday] <=> b[:birthday]
+    end
   end
 
 

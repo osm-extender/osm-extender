@@ -13,17 +13,14 @@ class EmailReminder < ActiveRecord::Base
 
   def send_email
     if user.connected_to_osm?
-      user.osm_api.get_roles[:data].each do |role|
-        if role.section_id == section_id
-          # We now know that the user can access this section
-          section_name = "#{role.section_name} (#{role.group_name})"
-          begin
-            ReminderMailer.reminder_email(user, section_name, get_data).deliver
-          rescue Exception => exception
-            ReminderMailer.failed(self, section_name).deliver
-            NotifierMailer.reminder_failed(self, exception).deliver unless Settings.read('notifier mailer - send failed reminder to').blank?
-          end
-
+      section = user.osm_api.get_section(section_id)
+      unless section.nil?
+        # We now know that the user can access this section
+        begin
+          ReminderMailer.reminder_email(user, section.role, get_data).deliver
+        rescue Exception => exception
+          ReminderMailer.failed(self, section.role).deliver
+          NotifierMailer.reminder_failed(self, exception).deliver unless Settings.read('notifier mailer - send failed reminder to').blank?
         end
       end
     end
@@ -35,11 +32,21 @@ class EmailReminder < ActiveRecord::Base
   end
 
   def get_data
+    build_data :get_data
+  end
+
+  def get_fake_data
+    build_data :get_fake_data
+  end
+
+
+  private
+  def build_data(data_method)
     data = {}
     config = {}
     items.each do |item|
       key = item.type.to_sym
-      data[key] = item.get_data
+      data[key] = item.send(data_method)
       config[key] = item.configuration
     end
     return {:data=>data, :config=>config}

@@ -1,5 +1,5 @@
 $(function() {
-    $("#tabs").tabs();
+  $("#tabs").tabs();
 });
 
 google.load("visualization", "1", {packages:["corechart"]});

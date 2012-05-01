@@ -18,15 +18,19 @@ Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?bran
  - What events are coming up
  - What's the programme for the next few weeks
  - Who's got a birthday around now
+ - The contents of your section's notepad
 
 
 [Email lists]
- Easily create a list of any selection of your email addresses for each member who  matches a criteria (e.g. Parent 1 Email and Parent 2 email for all members not in the leader's six), I intend to make these searches savable and you should be able to simply copy-paste the list into your email client or mailing list manager.
+ Easily create a list of any selection of your email addresses for each member who  matches a criteria (e.g. Parent 1 Email and Parent 2 email for all members not in the leader's six). The lists are savable and you should be able to simply copy-paste the list into your email client or mailing list manager.
 
 
 [Programme review]
  Pulls in your activities, looks at the tags and shows you how well you're balancing your programme using a graph, table of totals and a score. It takes the duration your section has a member (e.g. 2 and a half years for Cubs) and goes upto that far back and upto that far into the future.
 
+
+[Programme wizard]
+ Allows you to easily add a number of meetings to your programme, you specify the start date, end date, interval between meetings, start time, end time and meeting title, OSMX does the rest.
 
 == Setting up \OSM Extender
 Please follow the information in the {project's wiki}[https://github.com/robertgauld/OSMExtender/wiki/Running-the-system].

@@ -1,8 +1,20 @@
 <% provide :title, "Email Lists" %>
 
-<h2>List of Addresses</h2>
 <%= render 'list' %>
 
+<h2>List Options</h2>
+You asked for these email addresses<ul>
+<%- [:email1, :email2, :email3, :email4].each do |emailN| %>
+  <% if @email_list.send(emailN) %><li><%= current_section.column_names[emailN] %></li><% end %>
+<%- end %>
+</ul>
+For members who
+<%= @email_list.match_type ? 'are' : 'are not' %>
+in the
+<%- @groupings.merge({'Any'=>0}).each_key do |key| %>
+  <%= key.downcase if @groupings[key].to_i == @email_list.match_grouping %>
+<%- end %>
+<%= get_grouping_name(current_section.type) %>.
 
 <h2>Save List</h2>
 <%= form_for(@email_list) do |f| %>

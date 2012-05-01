@@ -1,4 +1,4 @@
-<p>This is your reminder email for <%= @section_name %>.</p>
+<p>This is your reminder email for <%= @role.long_name %>.</p>
 
 <%- if @data[:data][:EmailReminderItemNotepad] && !@data[:data][:EmailReminderItemNotepad].blank? %>
 <h1>Section Notepad</h1>
@@ -50,7 +50,7 @@ The following events are happening in the next <%= pluralize(@data[:config][:Ema
 <h1>Programme</h1>
 The programme for the following <%= pluralize(@data[:config][:EmailReminderItemProgramme][:the_next_n_weeks], 'week') %> is:
 <ul><%- @data[:data][:EmailReminderItemProgramme].each do |programme| %>
-  <li><%= programme[:title] %><%- if programme[:start] %> on <%= ordinalized_date(programme[:start], "%a %d of %b %Y at %H:%M") %><%- end %>
+  <li><%= programme[:title] %><%- if programme[:date] %> on <%= ordinalized_date(programme[:date], "%a %d of %b") %><%- end %><%- if programme[:start_time] %> at <%= programme[:start_time] %><%- end %><%- if programme[:end_time] %> until <%= programme[:end_time] %><%- end %>
 <ul><%- programme[:activities].each do |activity| %>
     <li><%= activity %></li>
 <%- end %></ul></li>

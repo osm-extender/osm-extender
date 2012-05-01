@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :section_name, :current_role, :current_section, :has_osm_permission?
+  helper_method :current_role, :current_section, :has_osm_permission?
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -60,6 +60,16 @@ class ApplicationController < ActionController::Base
   end
 
 
+  # Ensure the current section is a youth section
+  # if not redirect them to the relevant page and set an instruction flash
+  def require_youth_section
+    unless current_section.youth_section?
+      flash[:error] = 'The current section must be a youth section to do that.'
+      redirect_back_or_to root_path
+    end
+  end
+
+
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'You are not authorised to do that.'
     redirect_to current_user ? my_page_path : signin_path
@@ -98,13 +108,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Get section name in a consistent format
-  # @param role (optional) an OSM::Role object to get the name for, defaults to the current role for the session
-  # @returns a string
-  def section_name(role=session[:current_role])
-    return '' unless role.is_a?(OSM::Role)
-    "#{role.section_name} (#{role.group_name})"
-  end
   def current_role
     session[:current_role]
   end

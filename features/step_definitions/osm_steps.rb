@@ -15,15 +15,18 @@ Given /^"([^"]*)" is connected to OSM$/ do |email|
   user.save!
 end
 
-Given /^an OSM request to "([^"]*)" will give (\d+) roles?$/ do |description, roles|
+Given /^an OSM request to "get roles" will give (\d+) (?:(beaver|cub|scout|explorer|adult|waiting) )?roles?$/ do |roles, type|
+  type ||= 'cub'
+  type = "#{type}s" unless type.eql?('waiting')
   roles = roles.to_i
+
   body = '['
   (1..roles).each do |role|
-    body += '{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"cubs\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Subs\",\"extraid\":\"529\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"' + (role == 1 ? '1' : '0') + '","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
+    body += '{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"' + type + '\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Subs\",\"extraid\":\"529\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"' + (role == 1 ? '1' : '0') + '","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
   end
   body[-1] = ']'
-  url = get_osm_url(description)
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body) unless url.nil?
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getUserRoles", :body => body)
 end
 
 Given /^an OSM request to get sections will give (\d+) sections?$/ do |sections|
@@ -69,17 +72,25 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body) unless url.nil?
 end
 
-Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members$/ do |section_id, term_id, table|
+Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members?$/ do |section_id, term_id, table|
   url = "users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}"
 
   members = Array.new
   table.hashes.each do |hash|
-     members.push [hash['email1'], hash['email2'], hash['email3'], hash['email4'], hash['grouping_id']]
+     members.push ({
+      :first_name => hash['first_name'] || 'A',
+      :last_name => hash['last_name'] || 'Member',
+      :email1 => hash['email1'],
+      :email2 => hash['email2'],
+      :email3 => hash['email3'],
+      :email4 => hash['email4'],
+      :grouping_id => hash['grouping_id']
+     })
   end
 
   body = '{"identifier":"scoutid","items":['
   members.each do |member|
-    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"A\",\"lastname\":\"Member\",\"email1\":\"#{member[0]}\",\"email2\":\"#{member[1]}\",\"email3\":\"#{member[2]}\",\"email4\":\"#{member[3]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{9.years.ago.strftime("%y-%m-%d")}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[4]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
+    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"#{member[:first_name]}\",\"lastname\":\"#{member[:last_name]}\",\"email1\":\"#{member[:email1]}\",\"email2\":\"#{member[:email2]}\",\"email3\":\"#{member[:email3]}\",\"email4\":\"#{member[:email4]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{9.years.ago.strftime("%y-%m-%d")}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[:grouping_id]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
   end
   body[-1] = ']'
   body += '}'
@@ -224,12 +235,17 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
 
   terms = Array.new
   table.hashes.each do |hash|
-     terms.push [hash['term_id'], hash['name']]
+     terms.push ({
+      :id => hash['term_id'],
+      :name => hash['name'],
+      :start => hash['start'] || 1.month.ago.to_date.to_s('yyyy-mm-dd'),
+      :end => hash['end'] || 1.month.from_now.to_date.to_s('yyyy-mm-dd'),
+    })
   end
 
   body = '{"' + section_id + '":['
   terms.each do |term|
-    body += "{\"termid\":\"#{term[0]}\",\"name\":\"#{term[1]}\",\"sectionid\":\"#{section_id}\",\"startdate\":\"#{1.month.ago.to_date.to_s('yyyy-mm-dd')}\",\"enddate\":\"#{1.month.from_now.to_date.to_s('yyyy-mm-dd')}\"},"
+    body += "{\"termid\":\"#{term[:id]}\",\"name\":\"#{term[:name]}\",\"sectionid\":\"#{section_id}\",\"startdate\":\"#{term[:start]}\",\"enddate\":\"#{term[:end]}\"},"
   end
   body[-1] = ']'
   body += '}'
@@ -323,6 +339,54 @@ Given /^an OSM request to get the notepad for section (\d+) will give "(.+)"$/ d
   FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => notepad}.to_json)
 end
 
+Given /^an OSM request to add activity to programme will work$/ do
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=addActivityToProgramme', :body => '{"result":0}')
+end
+
+Given /^an OSM request to update evening will work$/ do
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=editEvening', :body => '{"result":0,"err":""}')
+end
+
+Given /^an OSM request to get programme for section (\d+) term (\d+) will have the evenings?$/ do |section, term, table|
+  evenings = Array.new
+  table.hashes.each do |hash|
+     evenings.push ({
+      :id => hash['evening_id'],
+      :date => hash['meeting_date'],
+    })
+  end
+
+  url = "programme.php?action=getProgramme&sectionid=#{section}&termid=#{term}"
+  items = Array.new
+  evenings.each do |n|
+    items.push ({
+      'eveningid' => "#{n[:id]}",
+      'sectionid' => "#{section}",
+      'title' => "Unnamed meeting",
+      'notesforparents' => '',
+      'games' => '',
+      'prenotes' => '',
+      'postnotes' => '',
+      'leaders' => '',
+      'meetingdate' => n[:date],
+      'starttime' => nil,
+      'endtime' => nil,
+      'googlecalendar' => '',
+    })
+  end
+
+  activities = {}
+  items.each do |n|
+    activities["#{n}"] = []
+  end
+  
+  body = {
+    'items' => items,
+    'activities' => activities
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+end
 
 Then /^"([^"]*)" should be connected to OSM$/ do |email|
   user = User.find_by_email_address(email)

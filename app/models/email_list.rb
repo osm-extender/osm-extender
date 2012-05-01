@@ -20,16 +20,28 @@ class EmailList < ActiveRecord::Base
 
   def get_list
     @emails = Array.new
+    @no_emails = Array.new
+
     members = user.osm_api.get_members(section_id)[:data]
     members.each do |member|
       if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
+        added_address_for_member = false
         [:email1, :email2, :email3, :email4].each do |emailN|
           email = member.send(emailN)
-          @emails.push email if self.send(emailN) && !email.blank? && !@emails.include?(email)
+          if self.send(emailN) && !email.blank? && !@emails.include?(email)
+          #  collecting this email?  not blank     havn't already collected
+            @emails.push email
+            added_address_for_member = true
+          end
         end
+        @no_emails.push member unless added_address_for_member
       end
     end
-    return @emails
+
+    return {
+      :emails => @emails,
+      :no_emails => @no_emails
+    }
   end
 
 

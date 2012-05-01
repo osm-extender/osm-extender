@@ -2,21 +2,21 @@ class ReminderMailer < ActionMailer::Base
   default from: Settings.read('reminder mailer - from')
   layout 'mail'
 
-  def reminder_email(user, section_name, data)
-    @section_name = section_name
+  def reminder_email(user, role, data)
     @data = data
+    @role = role
 
     mail ({
-      :subject => build_subject("Reminder Email for #{@section_name}"),
+      :subject => build_subject("Reminder Email for #{@role.long_name}"),
       :to => "\"#{user.name}\" <#{user.email_address}>",
     })
   end
 
-  def failed(email_reminder, section_name)
+  def failed(email_reminder, role)
     @email_reminder = email_reminder
-    @section_name = section_name
+    @role = role
     mail ({
-      :subject => build_subject("Reminder Email for #{@section_name} Failed"),
+      :subject => build_subject("Reminder Email for #{@role.long_name} Failed"),
       :to => "\"#{@email_reminder.user.name}\" <#{@email_reminder.user.email_address}>",
     })
   end

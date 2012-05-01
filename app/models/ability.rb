@@ -16,7 +16,7 @@ class Ability
       result = false
       if user.connected_to_osm?
         user.osm_api.get_roles[:data].each do |role|
-          result = true if (role.section_id == item.section_id)
+          result = true if (role.section.id == item.section_id)
         end
       end
       result
