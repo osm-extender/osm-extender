@@ -2,7 +2,7 @@
 
 <%- if @data[:data][:EmailReminderItemNotepad] && !@data[:data][:EmailReminderItemNotepad].blank? %>
 <h1>Section Notepad</h1>
-<%= @data[:data][:EmailReminderItemNotepad] %>
+<%= RedcarpetCompat.new(@data[:data][:EmailReminderItemNotepad], :hard_wrap, :autolink, :no_intraemphasis).to_html.html_safe %>
 
 <hr/>
 <%- end %>
