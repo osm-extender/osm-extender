@@ -98,6 +98,8 @@ div.pagination {
     background-color:   #aaaaaa;
     padding:            10px;
     min-height:         60px;
+    border-top-right-radius: 20px;
+    border-top-left-radius:  20px;
 }
 #primary_menu_nav {
     float:              left;
@@ -146,6 +148,8 @@ div.pagination {
     background-color:   #aaaaaa;
     padding:            10px;
     min-height:         60px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius:  20px;
 }
 #secondary_menu .menu_item {
     display:            inline-block;
