@@ -1,6 +1,6 @@
 <% provide :title, "Contact Us" %>
 
-<%= form_for(@contact, :url => {:action=>:create}) do |f| %>
+<%= form_for @contact, {:url => {:action=>:create}, :validate=>true} do |f| %>
   <% if @contact.errors.any? %>
     <div id="error_messages">
       <h2>The following errors occured:</h2>

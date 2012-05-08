@@ -1,4 +1,4 @@
-<%= form_for(@email_list) do |f| %>
+<%= form_for @email_list, :validate=>true do |f| %>
   <% if @email_list.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@email_list.errors.count, "error") %> prohibited this email_list from being saved:</h2>

@@ -1,4 +1,4 @@
-<%= form_for(@email_reminder_item) do |f| %>
+<%= form_for @email_reminder_item, :validate=>true do |f| %>
   <% if @email_reminder_item.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@email_reminder_item.errors.count, "error") %> prohibited this item from being saved:</h2>

@@ -13,6 +13,7 @@ gem 'cancan'
 gem 'therubyracer'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'client_side_validations'
 
 # Misc
 gem 'httparty'      # Used by OSM::API to make requests

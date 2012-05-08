@@ -7,14 +7,13 @@ class User < ActiveRecord::Base
   has_many :email_reminders, :dependent => :destroy
   has_many :email_lists, :dependent => :destroy
 
-  before_save :email_is_lowercase
   after_save :send_email_on_attribute_changes
 
   validates_presence_of :name
 
   validates_presence_of :email_address
-  validate :email_is_unique
-  validates_format_of :email_address, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :message => 'does not look like an email address'
+  validates_uniqueness_of :email_address, :case_sensitive => false
+  validates :email_address, :email_format => true
 
   validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
@@ -136,18 +135,6 @@ class User < ActiveRecord::Base
       end
     end
     return true
-  end
-
-  def email_is_unique
-    # Required as 'apple' and 'AppLE' are seen as different
-    user_with_email_address = User.find_by_email_address(self.email_address.downcase)
-    unless user_with_email_address.nil?  ||  user_with_email_address == self
-      errors.add(:email_address, 'has already been taken')
-    end
-  end
-
-  def email_is_lowercase
-    email_address.downcase!
   end
 
   def send_email_on_attribute_changes

@@ -2,4 +2,8 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  errors:
+    messages:
+      email_format: 'does not look like an email address'
+      time24h_format: 'does not look like a time in 24 hour format'
+      date_format: 'does not look like a date in yyyy-mm-dd format'

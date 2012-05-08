@@ -7,6 +7,7 @@ $(function() {
     constrainInput: true,
     dateFormat: 'yy-mm-dd',
     changeMonth: true,
-    changeYear: true
+    changeYear: true,
+    onClose: function(dateText, inst) { $(inst.input).change().focusout(); }
   });
 });

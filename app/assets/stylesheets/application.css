@@ -240,6 +240,17 @@ div.pagination {
 }
 
 
+.field_with_errors {
+    display:            inline !important;
+    background-color:   white !important;
+}
+
+.field_with_errors .message {
+    display:            block !important;
+    color:              red;
+}
+
+
 div.dialog {
     background-color:   #fff;
     color:              #666;

@@ -1,4 +1,4 @@
-<%= form_for(@faq) do |f| %>
+<%= form_for @faq, :validate=>true do |f| %>
   <% if @faq.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@faq.errors.count, "error") %> prohibited this faq from being saved:</h2>
