@@ -8,7 +8,14 @@ class ProgrammeCreate
   attr_reader :programme_start, :programme_end, :evening_start, :evening_end
 
   validates_presence_of :user, :section, :programme_start, :programme_interval, :programme_end, :evening_start, :evening_end, :evening_title
+
   validates_numericality_of :programme_interval, :only_integer=>true, :greater_than=>0
+
+  validates :evening_start, :time_24h_format => true
+  validates :evening_end, :time_24h_format => true
+
+  validates :programme_start, :date_format => true
+  validates :programme_end, :date_format => true
 
   validate :dates_in_right_order, :if=>Proc.new { |record| (record.programme_start && record.programme_end) }
   validate :times_in_right_order, :if=>Proc.new { |record| (record.evening_start && record.evening_end) }

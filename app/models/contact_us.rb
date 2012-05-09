@@ -8,8 +8,10 @@ class ContactUs
   attr_reader :to
 
   validates_presence_of :name
+
   validates_presence_of :email_address
-  validates_format_of :email_address, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :message => 'does not look like an email address'
+  validates :email_address, :email_format => true
+
   validates_presence_of :message
 
   def initialize(attributes = {})

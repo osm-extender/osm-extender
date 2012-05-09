@@ -2,7 +2,7 @@
 
 <p>Please ensure you have created a term in OSM to cover the dates of your programme, otherwise you won't be able to access it.</p>
 
-<%= form_for(@programme, :url => {:action=>:create_programme}) do |f| %>
+<%= form_for@programme, {:url => {:action=>:create_programme}, :validate=>true} do |f| %>
   <% if @programme.errors.any? %>
     <div id="error_messages">
       <h2>The following errors occured:</h2>
