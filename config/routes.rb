@@ -59,5 +59,8 @@ OSMExtender::Application.routes.draw do
   get 'create_programme' => 'programme_wizard#new_programme', :as => 'new_create_programme'
   post 'create_programme' => 'programme_wizard#create_programme'
 
+  get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
+  get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
+
   root :to => 'static#welcome'
 end

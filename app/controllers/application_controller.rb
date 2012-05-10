@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   private
   def not_authenticated
     flash[:error] = 'You must be signed in to access this resource.'
-    redirect_to signin_path
+    redirect_to(signin_path) and return false
   end
 
 
@@ -25,8 +25,9 @@ class ApplicationController < ActionController::Base
     unless current_user.connected_to_osm?
       # Send user to the connect to OSM page
       flash[:instruction] = 'You must connect to your OSM account first.'
-      redirect_to connect_to_osm_path
+      redirect_to(current_user ? connect_to_osm_path : signin_path) and return false
     end
+    return true
   end
 
 
@@ -38,8 +39,9 @@ class ApplicationController < ActionController::Base
     unless has_osm_permission?(permission_to, permission_on)
       # Send user to the osm permissions page
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
-      redirect_to osm_permissions_path
+      redirect_back_or_to(current_user ? osm_permissions_path : signin_path) and return false
     end
+    return true
   end
 
   # Check if the user has a given OSM permission
@@ -59,20 +61,32 @@ class ApplicationController < ActionController::Base
     return true
   end
 
+  # Ensure the user has a given OSMX permission
+  # if not redirect them to the osm permissions page and set an instruction flash
+  # @param permission_to the action which is being checked (:administer_users or :administer_faqs)
+  def require_osmx_permission(permission_to)
+    unless current_user && current_user.send("can_#{permission_to}?")
+      # Send user to the osm permissions page
+      flash[:error] = 'You are not allowed to do that.'
+      redirect_back_or_to(current_user ? my_page_path : signin_path) and return false
+    end
+    return true
+  end
 
   # Ensure the current section is a youth section
   # if not redirect them to the relevant page and set an instruction flash
   def require_youth_section
     unless current_section.youth_section?
       flash[:error] = 'The current section must be a youth section to do that.'
-      redirect_back_or_to root_path
+      redirect_back_or_to(current_user ? my_page_path : signin_path) and return false
     end
+    return true
   end
 
 
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'You are not authorised to do that.'
-    redirect_to current_user ? my_page_path : signin_path
+    redirect_to(current_user ? my_page_path : signin_path)
   end
 
 
