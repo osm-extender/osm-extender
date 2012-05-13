@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   private
   def not_authenticated
     flash[:error] = 'You must be signed in to access this resource.'
-    redirect_to(signin_path) and return false
+    redirect_to signin_path
   end
 
 
@@ -25,9 +25,8 @@ class ApplicationController < ActionController::Base
     unless current_user.connected_to_osm?
       # Send user to the connect to OSM page
       flash[:instruction] = 'You must connect to your OSM account first.'
-      redirect_to(current_user ? connect_to_osm_path : signin_path) and return false
+      redirect_to(current_user ? connect_to_osm_path : signin_path)
     end
-    return true
   end
 
 
@@ -39,9 +38,8 @@ class ApplicationController < ActionController::Base
     unless has_osm_permission?(permission_to, permission_on)
       # Send user to the osm permissions page
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
-      redirect_back_or_to(current_user ? osm_permissions_path : signin_path) and return false
+      redirect_back_or_to(current_user ? osm_permissions_path : signin_path)
     end
-    return true
   end
 
   # Check if the user has a given OSM permission
@@ -68,9 +66,8 @@ class ApplicationController < ActionController::Base
     unless current_user && current_user.send("can_#{permission_to}?")
       # Send user to the osm permissions page
       flash[:error] = 'You are not allowed to do that.'
-      redirect_back_or_to(current_user ? my_page_path : signin_path) and return false
+      redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
-    return true
   end
 
   # Ensure the current section is a youth section
@@ -78,9 +75,8 @@ class ApplicationController < ActionController::Base
   def require_youth_section
     unless current_section.youth_section?
       flash[:error] = 'The current section must be a youth section to do that.'
-      redirect_back_or_to(current_user ? my_page_path : signin_path) and return false
+      redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
-    return true
   end
 
 

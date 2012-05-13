@@ -1,8 +1,7 @@
 class StatisticsController < ApplicationController
+  before_filter { require_osmx_permission :view_statistics }
 
   def users
-    return unless require_osmx_permission(:administer_users)
-
     respond_to do |format|
       format.html # users.html.erb
       format.json { render json: users_data }
@@ -10,8 +9,6 @@ class StatisticsController < ApplicationController
   end
 
   def email_reminders
-    return unless require_osmx_permission(:administer_users)
-
     @number_day = Array.new(7, 0)
     (0..6).each do |day|
       @number_day[day] += EmailReminder.where(['send_on = ?', day]).count

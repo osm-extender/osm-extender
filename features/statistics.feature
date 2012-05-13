@@ -12,7 +12,7 @@ Feature: Statistics
 	    | bob@example.com   | Bob   |
         And "alice@example.com" is an activated user account
         And "bob@example.com" is an activated user account
-        And "alice@example.com" can "administer_users"
+        And "alice@example.com" can "view_statistics"
 
 
     Scenario: Get user statistics
