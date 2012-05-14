@@ -1247,6 +1247,8 @@ module OSM
     # Initialize a new Event using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
+      data = {} unless data.is_a?(Hash)
+
       @pending = (data['pending'] || {}).symbolize_keys
       @descriptions = (data['description'] || {}).symbolize_keys
 
