@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120424225007) do
+ActiveRecord::Schema.define(:version => 20120513190401) do
 
   create_table "email_lists", :force => true do |t|
     t.text     "name"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(:version => 20120424225007) do
     t.text     "osm_secret",                      :limit => 32
     t.boolean  "can_administer_faqs",                           :default => false
     t.boolean  "can_administer_settings",                       :default => false
+    t.boolean  "can_view_statistics",                           :default => false
   end
 
 end
