@@ -32,49 +32,41 @@ class StatisticsController < ApplicationController
 
   private
   def users_data
-    users = Array.new
     cumulative_total = 0
-    largest = 0
     earliest = User.minimum(:created_at).to_date
-    ((earliest - 1)..Date.today).each do |date|
-      new = User.where(['created_at >= ? AND created_at < ?', date, date+1]).count
-      cumulative_total += new
-      largest = cumulative_total if cumulative_total > largest
+    users = [{:date => (earliest - 1), :total => 0}]
+    (earliest..Date.today).each do |date|
+      cache = StatisticsCache.create_or_retrieve_for_date(date)
       users.push ({
         :date => date,
-        :total => cumulative_total,
-        :new => new
+        :total => cache.users,
       })
     end
 
     return {
       :users => {
         :data => users,
-        :max_value => largest
+        :max_value => StatisticsCache.maximum(:users)
       }
     }
   end
 
   def email_reminders_data
-    number = Array.new
     cumulative_total = 0
-    largest = 0
     earliest = User.minimum(:created_at).to_date
+    number = [{:date => (earliest - 1), :total => 0}]
     (earliest..Date.today).each do |date|
-      new = EmailReminder.where(['created_at >= ? AND created_at < ?', date, date+1]).count
-      cumulative_total += new
-      largest = cumulative_total if cumulative_total > largest
+      cache = StatisticsCache.create_or_retrieve_for_date(date)
       number.push ({
         :date => date,
-        :total => cumulative_total,
-        :new => new
+        :total => cache.users,
       })
     end
 
     return {
       :reminders => {
         :data => number,
-        :max_value => largest
+        :max_value => StatisticsCache.maximum(:email_reminders)
       }
     }
   end
