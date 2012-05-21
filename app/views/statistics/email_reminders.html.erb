@@ -3,7 +3,7 @@
 
 <h2>Number</h2>
 <div style="width: 750px; height: 350px; display: table-cell;">
-  <div id="reminders_chart">
+  <div id="number_chart">
     <div style="width: inherit; height: inherit;">
       Your graph will appear here soon.
     </div>
@@ -12,30 +12,20 @@
 
 
 <h2>By Day</h2>
-<table>
-  <tr>
-    <th>Day</th>
-    <th>Total</th>
-  </tr>
-  <%- @number_day.each_with_index do |count, day| %>
-    <tr>
-      <td><%= day_name(day) %></td>
-      <td><%= count %></td>
-    </tr>
-  <%- end %>
-</table>
+<div style="width: 750px; height: 350px; display: table-cell;">
+  <div id="day_chart">
+    <div style="width: inherit; height: inherit;">
+      Your graph will appear here soon.
+    </div>
+  </div>
+</div>
 
 
 <h2>Items Used</h2>
-<table>
-  <tr>
-    <th>Item</th>
-    <th>Total</th>
-  </tr>
-  <%- @items.each do |item| %>
-    <tr>
-      <td><%= item[:name] %></td>
-      <td><%= item[:count] %></td>
-    </tr>
-  <%- end %>
-</table>
+<div style="width: 750px; height: 350px; display: table-cell;">
+  <div id="item_chart">
+    <div style="width: inherit; height: inherit;">
+      Your graph will appear here soon.
+    </div>
+  </div>
+</div>

@@ -9,20 +9,6 @@ class StatisticsController < ApplicationController
   end
 
   def email_reminders
-    @number_day = Array.new(7, 0)
-    (0..6).each do |day|
-      @number_day[day] += EmailReminder.where(['send_on = ?', day]).count
-    end
-
-    @items = Array.new
-    from_db = EmailReminderItem.group(:type).count
-    from_db.each_key do |key|
-      @items.push ({
-        :name => Kernel.const_get(key).new.friendly_name,
-        :count => from_db[key]
-      })
-    end
-
     respond_to do |format|
       format.html # email_reminders.html.erb
       format.json { render json: email_reminders_data }
@@ -52,6 +38,7 @@ class StatisticsController < ApplicationController
 
   def email_reminders_data
     earliest = User.minimum(:created_at).to_date
+
     number = [{:date => (earliest - 1), :total => 0}]
     (earliest..Date.today).each do |date|
       cache = StatisticsCache.create_or_retrieve_for_date(date)
@@ -61,10 +48,33 @@ class StatisticsController < ApplicationController
       })
     end
 
+    todays_data = StatisticsCache.create_or_retrieve_for_date(Date.today)
+
+    by_day = todays_data.email_reminders_by_day
+    by_day_max = 0
+    by_day.each do |count|
+      by_day_max = count if count > by_day_max
+    end
+
+    items = Hash.new
+    items_max = 0
+    todays_data.email_reminders_by_type.each do |key, value|
+      items_max = value if value > items_max
+      items[Kernel.const_get(key).new.friendly_name] = value
+    end
+
     return {
-      :reminders => {
+      :number => {
         :data => number,
         :max_value => StatisticsCache.maximum(:email_reminders)
+      },
+      :day => {
+        :data => by_day,
+        :max_value => by_day_max
+      },
+      :item => {
+        :data => items,
+        :max_value => items_max
       }
     }
   end
