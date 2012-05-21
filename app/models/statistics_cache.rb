@@ -8,10 +8,10 @@ class StatisticsCache < ActiveRecord::Base
   validates_uniqueness_of :date
 
   validates_presence_of :email_reminders
-  validates_numericality_of :email_reminders, :only_integer=>true, :greater_than=>0
+  validates_numericality_of :email_reminders, :only_integer=>true, :greater_than_or_equal_to=>0
 
   validates_presence_of :users
-  validates_numericality_of :users, :only_integer=>true, :greater_than=>0
+  validates_numericality_of :users, :only_integer=>true, :greater_than_or_equal_to=>0
 
 
 
