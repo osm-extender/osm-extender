@@ -32,7 +32,6 @@ class StatisticsController < ApplicationController
 
   private
   def users_data
-    cumulative_total = 0
     earliest = User.minimum(:created_at).to_date
     users = [{:date => (earliest - 1), :total => 0}]
     (earliest..Date.today).each do |date|
@@ -52,7 +51,6 @@ class StatisticsController < ApplicationController
   end
 
   def email_reminders_data
-    cumulative_total = 0
     earliest = User.minimum(:created_at).to_date
     number = [{:date => (earliest - 1), :total => 0}]
     (earliest..Date.today).each do |date|

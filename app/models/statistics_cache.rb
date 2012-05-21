@@ -38,7 +38,7 @@ class StatisticsCache < ActiveRecord::Base
 
     data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', date + 1]).group(:type).count
 
-    create(data)
+    return (date < Date.today) ? create(data) : new(data) # Create (and save) only if date is in the past
   end
 
 end
