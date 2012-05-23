@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120516115439) do
+ActiveRecord::Schema.define(:version => 20120523143413) do
 
   create_table "email_lists", :force => true do |t|
     t.text     "name"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20120516115439) do
     t.text "description",                :null => false
   end
 
-  create_table "statistics_caches", :force => true do |t|
+  create_table "statistics", :force => true do |t|
     t.date     "date",                    :null => false
     t.integer  "users"
     t.integer  "email_reminders"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(:version => 20120516115439) do
     t.datetime "updated_at",              :null => false
   end
 
-  add_index "statistics_caches", ["date"], :name => "index_statistics_caches_on_date", :unique => true
+  add_index "statistics", ["date"], :name => "index_statistics_caches_on_date", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "email_address"

@@ -22,10 +22,10 @@ class StatisticsController < ApplicationController
     users_max = 0
     users = [{:date => (earliest - 1), :total => 0}]
     (earliest..Date.today).each do |date|
-      cache = StatisticsCache.create_or_retrieve_for_date(date)
+      cache = Statistics.create_or_retrieve_for_date(date)
       users.push ({
         :date => date,
-        :total => cache.users,
+        :total => cache.users
       })
       users_max = cache.users if cache.users > users_max
     end
@@ -42,15 +42,15 @@ class StatisticsController < ApplicationController
     number_max = 0
     number = [{:date => (earliest - 1), :total => 0}]
     (earliest..Date.today).each do |date|
-      cache = StatisticsCache.create_or_retrieve_for_date(date)
+      cache = Statistics.create_or_retrieve_for_date(date)
       number.push ({
         :date => date,
-        :total => cache.email_reminders,
+        :total => cache.email_reminders
       })
       number_max = cache.email_reminders if cache.email_reminders > number_max
     end
 
-    todays_data = StatisticsCache.create_or_retrieve_for_date(Date.today)
+    todays_data = Statistics.create_or_retrieve_for_date(Date.today)
 
     by_day = todays_data.email_reminders_by_day
     by_day_max = 0
