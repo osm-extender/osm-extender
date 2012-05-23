@@ -15,17 +15,17 @@ function drawCharts() {
       var users_options = {
         focusTarget: 'category',
         vAxis: {
-          maxValue: data['users']['max_value'],
           minValue: 0,
           gridlines: {
-            count: ((data['users']['max_value'] + 1) / 2) + 1,
+            count: graphGridLines(data['max_value'], 5)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
+      users_options.vAxis.maxValue = graphAxisMaxValue(data['max_value'], users_options.vAxis.gridlines.count);
 
-      drawChart(data['users']['data'], users_options, users_chart);
+      drawChart(data['data'], users_options, users_chart);
     }
   })
 }

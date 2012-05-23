@@ -15,7 +15,8 @@ class ProgrammeReviewController < ApplicationController
   end
 
   def balanced_data
-    render :json => ProgrammeReview.new(current_user, current_section).balanced
+    data = ProgrammeReview.new(current_user, current_section).balanced
+    render :json => data
   end
 
 end
