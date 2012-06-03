@@ -1,7 +1,7 @@
 class EmailReminderItemDueBadge < EmailReminderItem
 
   def get_data
-    return user.osm_api.get_due_badges(section_id)[:data]
+    return user.osm_api.get_due_badges(section_id)
   end
 
 

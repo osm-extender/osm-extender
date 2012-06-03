@@ -7,10 +7,10 @@ class EmailReminderItemProgramme < EmailReminderItem
     earliest = Date.today.to_date
     latest = configuration[:the_next_n_weeks].weeks.from_now.to_date
 
-    terms = user.osm_api.get_terms[:data]
+    terms = user.osm_api.get_terms
     terms.each do |term|
       if (term.section_id == section_id) && !term.before?(earliest) && !term.after?(latest)
-        programme = user.osm_api.get_programme(section_id, term.id)[:data]
+        programme = user.osm_api.get_programme(section_id, term.id)
         programme.each do |programme_item|
           if (programme_item.meeting_date > earliest) && (programme_item.meeting_date < latest)
             item = {

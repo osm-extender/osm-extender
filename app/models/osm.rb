@@ -1,5 +1,7 @@
 module OSM
 
+  class Error < Exception; end
+  class ConnectionError < Error; end
 
   class API
 
@@ -68,14 +70,9 @@ module OSM
     # Get the userid and secret to be able to act as a certain user on the OSM system
     # @param email the login email address of the user on OSM
     # @param password the login password of the user on OSM
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, nil if the data was retrieved from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) is a hash containing the following keys:
-    #     * 'userid' - the userid to use in future requests
-    #     * 'secret' - the secret to use in future requests
-    #   * :data - (only if :http_error is false and :osm_error is true) a string containing the error message from OSM
+    # @returns hash containing the following keys:
+    #   * 'userid' - the userid to use in future requests
+    #   * 'secret' - the secret to use in future requests
     def authorize(email, password)
       api_data = {
         'email' => email,
@@ -88,68 +85,44 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and osm_error is true) this is an empty array
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Role objects
+    # @returns an array of OSM::Role objects
     def get_roles(api_data={})
       if Rails.cache.exist?("OSMAPI-roles-#{api_data[:userid] || @userid}")
-        return {
-          :data => Rails.cache.read("OSMAPI-roles-#{api_data[:userid] || @userid}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-roles-#{api_data[:userid] || @userid}")
       end
 
-      response = perform_query('api.php?action=getUserRoles', api_data)
+      data = perform_query('api.php?action=getUserRoles', api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data].each do |item|
-          role = OSM::Role.new(item)
-          result.push role
-          Rails.cache.write("OSMAPI-section-#{role.section.id}", role.section, :expires_in => @@default_cache_ttl*2)
-          self.user_can_access :section, role.section.id, api_data
-        end
-        Rails.cache.write("OSMAPI-roles-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
+      data.each do |item|
+        role = OSM::Role.new(item)
+        result.push role
+        Rails.cache.write("OSMAPI-section-#{role.section.id}", role.section, :expires_in => @@default_cache_ttl*2)
+        self.user_can_access :section, role.section.id, api_data
       end
-      response[:data] = result
+      Rails.cache.write("OSMAPI-roles-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
 
-      return response
+      return result
     end
 
     # Get the user's notepads
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and osm_error is true) this is an empty array
-    #   * :data - (only if :http_error is false and :osm_error is false) an hash (keys are section IDs, values are a string)
+    # @returns a hash (keys are section IDs, values are a string)
     def get_notepads(api_data={})
       if Rails.cache.exist?("OSMAPI-notepads-#{api_data[:userid] || @userid}")
-        return {
-          :data => Rails.cache.read("OSMAPI-notepads-#{api_data[:userid] || @userid}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-notepads-#{api_data[:userid] || @userid}")
       end
 
-      response = perform_query('api.php?action=getNotepads', api_data)
+      data = perform_query('api.php?action=getNotepads', api_data)
 
-      unless response[:http_error] || response[:osm_error]
-        data = response[:data]
-        data.each_key do |key|
-          Rails.cache.write("OSMAPI-notepad-#{key}", data[key], :expires_in => @@default_cache_ttl*2)
-        end
-        Rails.cache.write("OSMAPI-notepads-#{api_data[:userid] || @userid}", data, :expires_in => @@default_cache_ttl*2)
+      data.each_key do |key|
+        Rails.cache.write("OSMAPI-notepad-#{key}", data[key], :expires_in => @@default_cache_ttl*2)
       end
 
-      return response
+      Rails.cache.write("OSMAPI-notepads-#{api_data[:userid] || @userid}", data, :expires_in => @@default_cache_ttl*2)
+      return data
     end
 
     # Get the notepad for a specified section
@@ -164,7 +137,7 @@ module OSM
         return Rails.cache.read("OSMAPI-notepad-#{section_id}")
       end
 
-      notepads = get_notepads(api_data)[:data]
+      notepads = get_notepads(api_data)
       return nil unless notepads.is_a? Hash
 
       notepads.each_key do |key|
@@ -186,7 +159,7 @@ module OSM
         return Rails.cache.read("OSMAPI-section-#{section_id}")
       end
 
-      roles = get_roles(api_data)[:data]
+      roles = get_roles(api_data)
       return nil unless roles.is_a? Array
 
       roles.each do |role|
@@ -201,74 +174,50 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Patrol objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of OSM::Patrol objects
     def get_groupings(section_id, api_data={})
       if Rails.cache.exist?("OSMAPI-groupings-#{section_id}") && self.user_can_access?(:section, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-groupings-#{section_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-groupings-#{section_id}")
       end
 
-      response = perform_query("users.php?action=getPatrols&sectionid=#{section_id}", api_data)
+      data = perform_query("users.php?action=getPatrols&sectionid=#{section_id}", api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data]['patrols'].each do |item|
-          grouping = OSM::Grouping.new(item)
-          result.push grouping
-          Rails.cache.write("OSMAPI-grouping-#{grouping.id}", grouping, :expires_in => @@default_cache_ttl*2)
-          self.user_can_access :grouping, grouping.id, api_data
-        end
-        Rails.cache.write("OSMAPI-groupings-#{section_id}", result, :expires_in => @@default_cache_ttl*2)
+      data['patrols'].each do |item|
+        grouping = OSM::Grouping.new(item)
+        result.push grouping
+        Rails.cache.write("OSMAPI-grouping-#{grouping.id}", grouping, :expires_in => @@default_cache_ttl*2)
+        self.user_can_access :grouping, grouping.id, api_data
       end
-      response[:data] = result
+      Rails.cache.write("OSMAPI-groupings-#{section_id}", result, :expires_in => @@default_cache_ttl*2)
 
-      return response
+      return result
     end
 
     # Get the terms that the OSM user can access
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Term objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns  an array of OSM::Term objects
     def get_terms(api_data={})
       if Rails.cache.exist?("OSMAPI-terms-#{api_data[:userid] || @userid}")
-        return {
-          :data => Rails.cache.read("OSMAPI-terms-#{api_data[:userid] || @userid}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-terms-#{api_data[:userid] || @userid}")
       end
 
-      response = perform_query('api.php?action=getTerms', api_data)
+      data = perform_query('api.php?action=getTerms', api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data].each_key do |key|
-          response[:data][key].each do |item|
-            term = OSM::Term.new(item)
-            result.push term
-            Rails.cache.write("OSMAPI-term-#{term.id}", term, :expires_in => @@default_cache_ttl*2)
-            self.user_can_access :term, term.id, api_data
-          end
+      data.each_key do |key|
+        data[key].each do |item|
+          term = OSM::Term.new(item)
+          result.push term
+          Rails.cache.write("OSMAPI-term-#{term.id}", term, :expires_in => @@default_cache_ttl*2)
+          self.user_can_access :term, term.id, api_data
         end
-        Rails.cache.write("OSMAPI-terms-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
       end
-      response[:data] = result
 
-      return response
+      Rails.cache.write("OSMAPI-terms-#{api_data[:userid] || @userid}", result, :expires_in => @@default_cache_ttl*2)
+      return result
     end
 
     # Get a term
@@ -283,10 +232,10 @@ module OSM
         return Rails.cache.read("OSMAPI-term-#{term_id}")
       end
 
-      terms = get_terms(api_data)[:data]
+      terms = get_terms(api_data)
       return nil unless terms.is_a? Array
 
-      termss.each do |term|
+      terms.each do |term|
         return term if term.id == term_id
       end
 
@@ -299,42 +248,30 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ProgrammeItem objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of OSM::ProgrammeItem objects
     def get_programme(section_id, term_id, api_data={})
       if Rails.cache.exist?("OSMAPI-programme-#{section_id}-#{term_id}") && self.user_can_access?(:programme, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-programme-#{section_id}-#{term_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-programme-#{section_id}-#{term_id}")
       end
 
-      response = perform_query("programme.php?action=getProgramme&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      data = perform_query("programme.php?action=getProgramme&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data] = {'items'=>[],'activities'=>{}} if response[:data].is_a? Array
-        self.user_can_access(:programme, section_id, api_data) unless response[:data].is_a? Array
-        items = response[:data]['items'] || []
-        activities = response[:data]['activities'] || {}
+      data = {'items'=>[],'activities'=>{}} if data.is_a? Array
+      self.user_can_access(:programme, section_id, api_data) unless data.is_a? Array
+      items = data['items'] || []
+      activities = data['activities'] || {}
 
-        items.each do |item|
-          programme_item = OSM::ProgrammeItem.new(item, activities[item['eveningid']])
-          result.push programme_item
-          programme_item.activities.each do |activity|
-            self.user_can_access :activity, activity.activity_id, api_data
-          end
+      items.each do |item|
+        programme_item = OSM::ProgrammeItem.new(item, activities[item['eveningid']])
+        result.push programme_item
+        programme_item.activities.each do |activity|
+          self.user_can_access :activity, activity.activity_id, api_data
         end
       end
-      response[:data] = result
 
       Rails.cache.write("OSMAPI-programme-#{section_id}-#{term_id}", result, :expires_in => @@default_cache_ttl)
-      return response
+      return result
     end
 
     # Get activity details
@@ -343,40 +280,25 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an OSM::Activity object
-    #   * :data - (only if :http_error is false and osm_error is true) nil
+    # @returns an OSM::Activity object
     def get_activity(activity_id, version=nil, api_data={})
       if Rails.cache.exist?("OSMAPI-activity-#{activity_id}-#{version}") && self.user_can_access?(:activity, activity_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-activity-#{activity_id}-#{version}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-activity-#{activity_id}-#{version}")
       end
 
-      response = nil
+      data = nil
       if version.nil?
-        response = perform_query("programme.php?action=getActivity&id=#{activity_id}", api_data)
+        data = perform_query("programme.php?action=getActivity&id=#{activity_id}", api_data)
       else
-        response = perform_query("programme.php?action=getActivity&id=#{activity_id}&version=#{version}", api_data)
+        data = perform_query("programme.php?action=getActivity&id=#{activity_id}&version=#{version}", api_data)
       end
 
-      # If sucessful make result an Activity object
-      unless response[:http_error] || response[:osm_error]
-        activity = OSM::Activity.new(response[:data])
-        Rails.cache.write("OSMAPI-activity-#{activity_id}-#{nil}", activity, :expires_in => @@default_cache_ttl*2) if version.nil?
-        Rails.cache.write("OSMAPI-activity-#{activity_id}-#{activity.version}", activity, :expires_in => @@default_cache_ttl/2)
-        self.user_can_access :activity, activity.id, api_data
-        response[:data] = activity
-      else
-        response[:data] = nil
-      end
+      activity = OSM::Activity.new(data)
+      Rails.cache.write("OSMAPI-activity-#{activity_id}-#{nil}", activity, :expires_in => @@default_cache_ttl*2) if version.nil?
+      Rails.cache.write("OSMAPI-activity-#{activity_id}-#{activity.version}", activity, :expires_in => @@default_cache_ttl/2)
+      self.user_can_access :activity, activity.id, api_data
 
-      return response
+      return activity
     end
 
     # Get member details
@@ -385,36 +307,24 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Member objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of OSM::Member objects
     def get_members(section_id, term_id=nil, api_data={})
       term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if Rails.cache.exist?("OSMAPI-members-#{section_id}-#{term_id}") && self.user_can_access?(:member, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-members-#{section_id}-#{term_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-members-#{section_id}-#{term_id}")
       end
 
-      response = perform_query("users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      data = perform_query("users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data]['items'].each do |item|
-          result.push OSM::Member.new(item)
-        end
-        self.user_can_access :member, section_id, api_data
-        Rails.cache.write("OSMAPI-members-#{section_id}-#{term_id}", result, :expires_in => @@default_cache_ttl)
+      data['items'].each do |item|
+        result.push OSM::Member.new(item)
       end
-      response[:data] = result
+      self.user_can_access :member, section_id, api_data
+      Rails.cache.write("OSMAPI-members-#{section_id}-#{term_id}", result, :expires_in => @@default_cache_ttl)
 
-      return response
+      return result
     end
 
     # Get API access details for a given section
@@ -424,38 +334,26 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::ApiAccess objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of OSM::ApiAccess objects
     def get_api_access(section_id, options={})
       api_data = options[:api_data] || {}
       if !options[:no_cache] && Rails.cache.exist?("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}")
-        return {
-          :data => Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}")
       end
 
-      response = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", api_data)
+      data = perform_query("users.php?action=getAPIAccess&sectionid=#{section_id}", api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data]['apis'].each do |item|
-          this_item = OSM::ApiAccess.new(item)
-          result.push this_item
-          self.user_can_access(:programme, section_id, api_data) if this_item.can_read?(:programme)
-          self.user_can_access(:member, section_id, api_data) if this_item.can_read?(:member)
-          self.user_can_access(:badge, section_id, api_data) if this_item.can_read?(:badge)
-          Rails.cache.write("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{this_item.id}", this_item, :expires_in => @@default_cache_ttl*2)
-        end
+      data['apis'].each do |item|
+        this_item = OSM::ApiAccess.new(item)
+        result.push this_item
+        self.user_can_access(:programme, section_id, api_data) if this_item.can_read?(:programme)
+        self.user_can_access(:member, section_id, api_data) if this_item.can_read?(:member)
+        self.user_can_access(:badge, section_id, api_data) if this_item.can_read?(:badge)
+        Rails.cache.write("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{this_item.id}", this_item, :expires_in => @@default_cache_ttl*2)
       end
-      response[:data] = result
 
-      return response
+      return result
     end
 
     # Get our API access details for a given section
@@ -465,30 +363,20 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an OSM::ApiAccess objects
-    #   * :data - (only if :http_error is false and osm_error is true) nil
+    # @returns an OSM::ApiAccess objects
     def get_our_api_access(section_id, options={})
       api_data = options[:api_data] || {}
       if !options[:no_cache] && Rails.cache.exist?("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}")
-        return {
-          :data => Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}")
       end
 
-      response = get_api_access(section_id, options)
+      data = get_api_access(section_id, options)
       found = nil
-      response[:data].each do |item|
+      data.each do |item|
         found = item if item.our_api?
       end
-      response[:data] = found
 
-      return response
+      return found
     end
 
     # Get events
@@ -496,34 +384,22 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of OSM::Event objects
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of OSM::Event objects
     def get_events(section_id, api_data={})
       if Rails.cache.exist?("OSMAPI-events-#{section_id}") && self.user_can_access?(:programme, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-events-#{section_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-events-#{section_id}")
       end
 
-      response = perform_query("events.php?action=getEvents&sectionid=#{section_id}", api_data)
+      data = perform_query("events.php?action=getEvents&sectionid=#{section_id}", api_data)
 
       result = Array.new
-      unless response[:http_error] || response[:osm_error]
-        response[:data]['items'].each do |item|
-          result.push OSM::Event.new(item)
-        end
-        self.user_can_access :programme, section_id, api_data
-        Rails.cache.write("OSMAPI-events-#{section_id}", result, :expires_in => @@default_cache_ttl)
+      data['items'].each do |item|
+        result.push OSM::Event.new(item)
       end
-      response[:data] = result
+      self.user_can_access :programme, section_id, api_data
+      Rails.cache.write("OSMAPI-events-#{section_id}", result, :expires_in => @@default_cache_ttl)
 
-      return response
+      return result
     end
 
     # Get due badges
@@ -531,36 +407,22 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) a OSM::DueBadges objects
-    #   * :data - (only if :http_error is false and osm_error is true) nil
+    # @returns an OSM::DueBadges object
     def get_due_badges(section_id, term_id=nil, api_data={})
       term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if Rails.cache.exist?("OSMAPI-due_badges-#{section_id}-#{term_id}") && self.user_can_access?(:badge, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-due_badges-#{section_id}-#{term_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-due_badges-#{section_id}-#{term_id}")
       end
 
       section_type = get_section(section_id, api_data).type.to_s
-      response = perform_query("challenges.php?action=outstandingBadges&section=#{section_type}&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      data = perform_query("challenges.php?action=outstandingBadges&section=#{section_type}&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
-      # If sucessful make result a OSM::DueBadges object
-      unless response[:http_error] || response[:osm_error]
-        response[:data] = OSM::DueBadges.new(response[:data])
-        self.user_can_access :badge, section_id, api_data
-        Rails.cache.write("OSMAPI-due_badges-#{section_id}-#{term_id}", response[:data], :expires_in => @@default_cache_ttl*2)
-      else
-        response[:data] = nil
-      end
+      data = OSM::DueBadges.new(data)
+      self.user_can_access :badge, section_id, api_data
+      Rails.cache.write("OSMAPI-due_badges-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl*2)
 
-      return response
+      return data
     end
 
     # Get register structure
@@ -568,41 +430,26 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of hashes representing the rows of the register
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of hashes representing the rows of the register
     def get_register_structure(section_id, term_id=nil, api_data={})
       term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if Rails.cache.exist?("OSMAPI-register_structure-#{section_id}-#{term_id}") && self.user_can_access?(:register, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-register_structure-#{section_id}-#{term_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-register_structure-#{section_id}-#{term_id}")
       end
 
-      response = perform_query("users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      data = perform_query("users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
-      unless response[:http_error] || response[:osm_error]
-        data = response[:data]
-        data.each do |item|
-          item.symbolize_keys!
-          item[:rows].each do |row|
-            row.symbolize_keys!
-          end
+      data.each do |item|
+        item.symbolize_keys!
+        item[:rows].each do |row|
+          row.symbolize_keys!
         end
-        self.user_can_access :register, section_id, api_data
-        Rails.cache.write("OSMAPI-register_structure-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl/2)
-        response[:data] = data
-      else
-        response[:data] = []
       end
+      self.user_can_access :register, section_id, api_data
+      Rails.cache.write("OSMAPI-register_structure-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl/2)
 
-      return response
+      return data
     end
 
     # Get register
@@ -610,41 +457,26 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
-    #   * :data - (only if :http_error is false and :osm_error is false) an array of hashes representing the attendance of a member
-    #   * :data - (only if :http_error is false and osm_error is true) an empty array
+    # @returns an array of hashes representing the attendance of each member
     def get_register(section_id, term_id=nil, api_data={})
       term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if Rails.cache.exist?("OSMAPI-register-#{section_id}-#{term_id}") && self.user_can_access?(:register, section_id, api_data)
-        return {
-          :data => Rails.cache.read("OSMAPI-register-#{section_id}-#{term_id}"),
-          :http_error => false,
-          :osm_error => false
-        }
+        return Rails.cache.read("OSMAPI-register-#{section_id}-#{term_id}")
       end
 
-      response = perform_query("users.php?action=register&sectionid=#{section_id}&termid=#{term_id}", api_data)
+      data = perform_query("users.php?action=register&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
-      unless response[:http_error] || response[:osm_error]
-        data = response[:data]['items']
-        data.each do |item|
-          item.symbolize_keys!
-          item[:scoutid] = item[:scoutid].to_i
-          item[:sectionid] = item[:sectionid].to_i
-          item[:patrolid] = item[:patrolid].to_i
-        end
-        self.user_can_access :register, section_id, api_data
-        Rails.cache.write("OSMAPI-register-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl/2)
-        response[:data] = data
-      else
-        response[:data] = []
+      data = data['items']
+      data.each do |item|
+        item.symbolize_keys!
+        item[:scoutid] = item[:scoutid].to_i
+        item[:sectionid] = item[:sectionid].to_i
+        item[:patrolid] = item[:patrolid].to_i
       end
-
-      return response
+      self.user_can_access :register, section_id, api_data
+      Rails.cache.write("OSMAPI-register-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl/2)
+      return data
     end
 
     # Create an evening in OSM
@@ -653,10 +485,7 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
+    # @returns a boolean representing if the operation suceeded or not
     def create_evening(section_id, meeting_date, api_data={})
       section_id = section_id.to_i
       evening_api_data = {
@@ -665,16 +494,14 @@ module OSM
         'activityid' => -1
       }
 
-      response = perform_query("programme.php?action=addActivityToProgramme", api_data.merge(evening_api_data))
+      data = perform_query("programme.php?action=addActivityToProgramme", api_data.merge(evening_api_data))
 
       # The cached programmes for the section will be out of date - remove them
-      unless response[:http_error] || response[:osm_error]
-        get_terms(api_data)[:data].each do |term|
-          Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == section_id
-        end
+      get_terms(api_data).each do |term|
+        Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == section_id
       end
 
-      return response
+      return data
     end
 
     # Update an evening in OSM
@@ -682,10 +509,7 @@ module OSM
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns a hash containing the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request, only if the data was not fetched from the cache
+    # @returns a boolean representing if the operation suceeded or not
     def update_evening(programme_item, api_data={})
       response = perform_query("programme.php?action=editEvening", api_data.merge({
         'eveningid' => programme_item.evening_id,
@@ -704,10 +528,8 @@ module OSM
       }))
 
       # The cached programmes for the section will be out of date - remove them
-      unless response[:http_error] || response[:osm_error]
-        get_terms(api_data)[:data].each do |term|
-          Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == programme_item.section_id
-        end
+      get_terms(api_data).each do |term|
+        Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == programme_item.section_id
       end
 
       return response
@@ -717,11 +539,7 @@ module OSM
     # Make the query to the OSM API
     # @param url the script on the remote server to invoke
     # @param api_data (optional) a hash containing the values to be sent to the server
-    # @returns a hash with the following keys:
-    #   * :http_error - false if no error occured, otherwise an integer of the HTTP status code
-    #   * :osm_error - false if no error occured, otherwise a string containing the error message
-    #   * :response - what HTTParty returned when making the request
-    #   * :data - (only if :http_error is false and osm_error is false) the parsed JSON returned by OSM
+    # @returns the parsed JSON returned by OSM
     def perform_query(url, api_data={})
       api_data['apiid'] = @@api_id
       api_data['token'] = @@api_token
@@ -738,31 +556,23 @@ module OSM
         puts api_data.to_s
       end
 
-      result = HTTParty.post("#{@base_url}/#{url}", {:body => api_data})
-      to_return = {
-        :http_error => !result.response.code.eql?('200') ? result.response.code : false,
-        :response => result,
-      }
+      begin
+        result = HTTParty.post("#{@base_url}/#{url}", {:body => api_data})
+      rescue SocketError, TimeoutError, FakeWeb::NetConnectNotAllowedError
+        raise ConnectionError.new('A problem occured on the internet.')
+      end
+      raise ConnectionError.new("HTTP Status code was #{result.response.code}") if !result.response.code.eql?('200')
 
       if Rails.env.development?
         puts "Result from OSM request to #{url}"
         puts result.response.body
       end
 
-      unless to_return[:http_error]
-        if looks_like_json?(result.response.body)
-          decoded = ActiveSupport::JSON.decode(result.response.body)
-          osm_error = get_osm_error(decoded)
-          unless osm_error
-            to_return[:data] = decoded
-          else
-            to_return[:osm_error] = osm_error
-          end
-        else
-          to_return[:osm_error] = result.response.body
-        end
-      end
-      return to_return
+      raise Error.new(result.response.body) unless looks_like_json?(result.response.body)
+      decoded = ActiveSupport::JSON.decode(result.response.body)
+      osm_error = get_osm_error(decoded)
+      raise Error.new(osm_error) if osm_error
+      return decoded        
     end
 
     def looks_like_json?(text)
@@ -1295,7 +1105,7 @@ module OSM
   end
 
   def self.find_current_term_id(api, section_id, data={})
-    terms = api.get_terms(data)[:data]
+    terms = api.get_terms(data)
     unless terms.nil?
       terms.each do |term|
         return term.id if term.current? && (term.section_id == section_id)

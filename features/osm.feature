@@ -40,8 +40,8 @@ Feature: OSM
         And I fill in "Email" with "alice@example.com"
         And I fill in "Password" with "password"
         And I press "Connect to OSM"
-        Then I should be on the connect_to_osm page
-        And I should not see "Sucessfully connected to your OSM account."
+        Then I should not see "Sucessfully connected to your OSM account."
+	And I should see "We're sorry, an OSM error occured"
         And I should see "A simulated OSM API error occured"
         And "alice@example.com" should not be connected to OSM
 
@@ -200,3 +200,9 @@ Feature: OSM
         And I go to the list of email_reminders
         And I follow "[Send]" in the "Actions" column of the "Tuesday" row
 	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
+
+    Scenario: OSM Connection error
+	Given "alice@example.com" is connected to OSM
+        When I signin as "alice@example.com" with password "P@55word"
+        Then I should see "We're sorry, we tried talking to OSM but something went wrong"
+	And I should see "A problem occured on the internet"

@@ -48,15 +48,9 @@ class User < ActiveRecord::Base
     api = OSM::API.new
     result = api.authorize(email, password)
 
-    unless result[:http_error] || result[:osm_error]
-      write_attribute(:osm_userid, result[:data]['userid'])
-      write_attribute(:osm_secret, result[:data]['secret'])
-      return save
-    else
-      errors.add(:connect_to_osm, result[:osm_error]) if result[:osm_error]
-      errors.add(:connect_to_osm, "HTTP ERROR #{result[:http_error]}") if result[:http_error]
-      return false
-    end
+    write_attribute(:osm_userid, result['userid'])
+    write_attribute(:osm_secret, result['secret'])
+    return save
   end
 
 
