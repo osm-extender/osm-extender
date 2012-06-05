@@ -7,26 +7,31 @@
     <th>Actions</th>
     <th>Connected<br/>to OSM?</th>
     <th>Email<br/>reminders</th>
+    <th>Email<br/>lists</th>
   </tr>
   <%- @users.each do |user| %>
     <tr>
       <td><%= user.id %></td>
-      <td><%= image_tag "https://secure.gravatar.com/avatar/#{user.gravatar_id}?size=60&default=identicon".html_safe, :size=>'60x60', :alt=>"#{user.name}'s gravatar" %></td>
+      <td><%= image_tag "https://secure.gravatar.com/avatar/#{user.gravatar_id}?size=80&default=identicon".html_safe, :size=>'80x80', :alt=>"#{user.name}'s gravatar" %></td>
       <td><%= user.name %></td>
       <td><%= user.email_address %></td>
       <td>
         <%- if can? :edit, user %>
-          <%= link_to('Edit user', edit_user_path(user))%><br/>
+          <%= link_to 'Edit user', edit_user_path(user) %><br/>
         <%- end %>
         <%- if can? :reset_password, user %>
-          <%= link_to('Reset password', reset_password_user_path(user))%><br/>
+          <%= link_to 'Reset password', reset_password_user_path(user) %><br/>
         <%- end %>
         <%- if can? :resend_activation, user %>
-          <%= link_to('Resend activation email', resend_activation_user_path(user))%><br/>
+          <%= link_to 'Resend activation email', resend_activation_user_path(user) %><br/>
+        <%- end %>
+        <%- if can? :delete, user %>
+          <%= link_to 'Delete user', user, confirm: 'Are you sure?', method: :delete %>
         <%- end %>
       </td>
       <td><%= yes_no user.connected_to_osm? %></td>
       <td><%= user.email_reminders.count %></td>
+      <td><%= user.email_lists.count %></td>
     </tr>
   <%- end %>
 </table>

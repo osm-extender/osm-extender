@@ -15,6 +15,8 @@ OSMExtender::Application.routes.draw do
   put 'my_account/update' => 'my_account#update', :as => 'update_my_account'
   get 'my_account/connect_to_osm' => 'my_account#connect_to_osm', :as => 'connect_to_osm'
   post 'my_account/connect_to_osm' => 'my_account#connect_to_osm2', :as => 'connect_to_osm2'
+  get 'my_account/delete' => 'my_account#confirm_delete', :as => 'confirm_delete_my_account'
+  post 'my_account/delete' => 'my_account#delete', :as => 'delete_my_account'
 
   post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
   get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'

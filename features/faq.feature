@@ -12,7 +12,7 @@ Feature: FAQ Administration
 
     Background:
 	Given I have no users
-        And I have no FAQs
+        And I have no faqs
         And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
@@ -78,7 +78,7 @@ Feature: FAQ Administration
         And I check "Active"
         And I press "Submit"
         Then I should see "FAQ was successfully created"
-        And I should have 3 FAQs
+        And I should have 3 faqs
 
     Scenario: Create FAQ (not authorised)
         When I signin as "bob@example.com" with password "P@55word"

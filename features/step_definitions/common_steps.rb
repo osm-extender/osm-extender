@@ -4,6 +4,10 @@ Given /^I have the following (.+) records?$/ do |factory, table|
   end
 end
 
+Given /^I have no (.+)(?:s| records)$/ do |model_name|
+  Kernel.const_get(model_name.gsub(' ', '_').camelize).delete_all
+end
+
 Given /^time is frozen$/ do
   Timecop.freeze Time.now.utc
 end
@@ -26,6 +30,11 @@ When /^(?:|I )post to (.+)$/ do |page_name|
     page.driver.get(page.driver.response["Location"], {}, { "HTTP_REFERER" => page.driver.request.url })  if page.driver.response.redirect?
   end
   raise Capybara::InfiniteRedirectError, "redirected more than 5 times, check for infinite redirects." if page.driver.response.redirect?
+end
+
+
+Then /^I should have (\d+) (.+)(?:s| records)$/ do |count, model_name|
+  Kernel.const_get(model_name.gsub(' ', '_').camelize).count.should == count.to_i
 end
 
 Then /^the "([^\"]*)" column of the "([^\"]*)" row (.*)$/ do |column_title, row_title, action|

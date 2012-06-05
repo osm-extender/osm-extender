@@ -1,0 +1,16 @@
+<% provide :title, "Confirm Deletion of #{current_user.name}'s Account" %>
+
+<p>Deleting your account is irreversiable, should you wish to use this service again (and you're more than welcome to) you will need to create a new account and configure all your options again. You currently have (and will loose) the following:</p>
+<ul>
+  <%- @currently_have.each do |item, count| %>
+    <li><%= count %> <%= item.pluralize(count) %></li>
+  <%- end %>
+</ul>
+
+
+<p>If you are sure you wish to delete your account then enter your password and click the button below, otherwise use any of the menu items to do something else.</p>
+<%= form_tag delete_my_account_path do %>
+  <%= hidden_field_tag :confirmation_code, @confirmation_code %>
+  <%= password_field_tag :password %>
+  <%= submit_tag 'Delete my account' %>
+<%- end %>

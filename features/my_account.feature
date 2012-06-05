@@ -166,3 +166,28 @@ Feature: My Account
 	And I press "Change password"
 	Then I should see "Password is not allowed to contain part of your name"
 	And I should be on the update_my_password page
+
+
+    Scenario: Delete
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the delete my account page
+	Then I should be on the confirm delete my account page
+	And I should see "1 reminder email"
+	When I fill in "password" with "P@55word"
+	And I press "Delete my account"
+	Then I should see "Your account was deleted"
+	And I should be on the root page
+	And I should have 1 users
+	And I should have 0 email reminders
+	And I should have 0 email reminder items
+	And I should have 0 email lists
+
+    Scenario: Delete (wrong password)
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the delete my account page
+	And I fill in "password" with "WRONG"
+	And I press "Delete my account"
+	Then I should see "Incorrect password"
+	And I should be on the confirm delete my account page
+

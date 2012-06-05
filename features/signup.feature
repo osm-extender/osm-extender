@@ -31,7 +31,7 @@ Feature: Sign up
         And I fill in "Password" with "P@55word"
         And I fill in "Password confirmation" with "P@55word"
         And I press "Sign up"
-        Then I should have 1 user
+        Then I should have 1 users
         And I should see "Your signup was successful"
 	And I should be on the root page
         And "somebody@somewhere.com" should receive an email with subject /Activate Your Account/
@@ -54,7 +54,7 @@ Feature: Sign up
 	And I fill in "Signup code" with "abc123"
         And I press "Sign up"
         Then I should see "Your signup was successful"
-        Then I should have 1 user
+        Then I should have 1 users
 
     Scenario: Signup (with blank signup code)
 	Given the configuration for "signup code" is ""
@@ -66,7 +66,7 @@ Feature: Sign up
         And I fill in "Password confirmation" with "P@55word"
         And I press "Sign up"
         Then I should see "Your signup was successful"
-        Then I should have 1 user
+        Then I should have 1 users
 
 
     Scenario: Signup (signed in)
@@ -187,7 +187,7 @@ Feature: Sign up
         And I fill in "Password" with "aB3$hj37"
         And I fill in "Password confirmation" with "aB3$hj37"
         And I press "Sign up"
-        Then I should have 1 user
+        Then I should have 1 users
         And I should see "Email address has already been taken"
         And I should not see "Your signup was successful"
 	And I should be on the users page
@@ -202,7 +202,7 @@ Feature: Sign up
         And I fill in "Password" with "aB3$hj37"
         And I fill in "Password confirmation" with "aB3$hj37"
         And I press "Sign up"
-        Then I should have 1 user
+        Then I should have 1 users
         And I should see "Email address has already been taken"
         And I should not see "Your signup was successful"
 
