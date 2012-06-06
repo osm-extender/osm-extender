@@ -4,7 +4,7 @@ module ApplicationHelper
   # @param text the text in markdown format
   # @returns an interpreted html_safe string representation of text
   def markdown(text)
-    options = [:hard_wrap, :autolink, :no_intraemphasis]
+    options = [:hard_wrap, :autolink, :no_intraemphasis, :filter_html]
     RedcarpetCompat.new(text, *options).to_html.html_safe
   end
 
