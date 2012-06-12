@@ -29,6 +29,9 @@ OSMExtender::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
+  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  config.force_ssl = true
+
   # Set log level
   config.log_level = :debug
 
