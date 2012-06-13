@@ -22,11 +22,6 @@ Given /^"([^"]*)" has activation_token "([^"]*)"$/ do |email, activation_token|
   user.save!
 end
 
-
-Given /^I have no users$/ do
-  User.delete_all
-end
-
 Given /^"([^"]*)" has been a locked user account$/ do |email|
     user = User.find_by_email_address(email)
     user.lock_expires_at = Time.now.utc - 1
@@ -59,10 +54,6 @@ When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |email, password|
   click_button 'Sign in'
 end
 
-
-Then /^I should have (\d+) users?$/ do |count|
-  User.count.should == count.to_i
-end
 
 Then /^"([^"]*)" should be a locked user account$/ do |email|
     user = User.find_by_email_address(email)

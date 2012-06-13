@@ -15,7 +15,7 @@ class Ability
     can :delete, ProgrammeReviewBalancedCache do |item|
       result = false
       if user.connected_to_osm?
-        user.osm_api.get_roles[:data].each do |role|
+        user.osm_api.get_roles.each do |role|
           result = true if (role.section.id == item.section_id)
         end
       end

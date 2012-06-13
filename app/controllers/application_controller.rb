@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
     permission_on = [permission_on] unless permission_on.is_a?(Array)
 
     permission_on.each do |on|
-      osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id)[:data]
+      osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id)
       osmx_can = osmx_permissions.send("can_#{permission_to.to_s}?", on)
       user_can = current_role.send("can_#{permission_to.to_s}?", on)
       return false unless (osmx_can && user_can)
@@ -83,6 +83,11 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error] = 'You are not authorised to do that.'
     redirect_to(current_user ? my_page_path : signin_path)
+  end
+
+
+  rescue_from OSM::Error do |exception|
+    render :template => "error/osm", :status => 503, :locals => {:exception => exception}
   end
 
 

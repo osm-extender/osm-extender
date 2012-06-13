@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
 
       # Set current section
       if current_user.connected_to_osm?
-        current_user.osm_api.get_roles[:data].each do |role|
+        current_user.osm_api.get_roles.each do |role|
           if role.default
             session[:current_role] = role
             break
@@ -54,7 +54,7 @@ class SessionsController < ApplicationController
 
     # Check user has access to section then change current section
     if current_user.connected_to_osm?
-      current_user.osm_api.get_roles[:data].each do |role|
+      current_user.osm_api.get_roles.each do |role|
         if section_id == role.section.id
           session[:current_role] = role
           break

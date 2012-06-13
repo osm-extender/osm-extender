@@ -9,13 +9,14 @@ class ProgrammeReviewController < ApplicationController
     @cached_terms = ProgrammeReviewBalancedCache.where(['section_id = ?', current_section.id])
     
     @terms = {}
-    (current_user.osm_api.get_terms[:data] || []).each do |term|
+    current_user.osm_api.get_terms.each do |term|
       @terms[term.id] = term if (term.section_id == current_section.id)
     end
   end
 
   def balanced_data
-    render :json => ProgrammeReview.new(current_user, current_section).balanced
+    data = ProgrammeReview.new(current_user, current_section).balanced
+    render :json => data
   end
 
 end

@@ -115,7 +115,7 @@ class EmailListsController < ApplicationController
 
   def get_groupings
     groupings = {}
-    current_user.osm_api.get_groupings(current_section.id)[:data].each do |grouping|
+    current_user.osm_api.get_groupings(current_section.id).each do |grouping|
       groupings[grouping.name] = grouping.id
     end
     return groupings

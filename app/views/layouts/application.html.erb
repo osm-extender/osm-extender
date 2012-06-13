@@ -51,7 +51,7 @@
       </div><!-- banner -->
 
       <div id="secondary_menu">
-        <%- if current_user %>
+        <%- if current_user && !content_for?(:hide_secondary_menu) %>
           <div id="current_section">
             <%- if current_user.connected_to_osm? && current_role %>
               Current section: <%= current_role.long_name %>

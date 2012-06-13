@@ -27,48 +27,48 @@ function drawCharts() {
       var number_zones_options = {
         focusTarget: 'category',
         vAxis: {
-          maxValue: data['statistics']['zones']['number']['max_value'],
           gridlines: {
-            count: ((data['statistics']['zones']['number']['max_value'] + 1) / 2) + 1,
+            count: graphGridLines(data['statistics']['zones']['number']['max_value'], 5)
           }
         },
         width: 750, height: 350
       };
+      number_zones_options.vAxis.maxValue = graphAxisMaxValue(data['statistics']['zones']['number']['max_value'], number_zones_options.vAxis.gridlines.count);
 
       var number_methods_options = {
         focusTarget: 'category',
         vAxis: {
-          maxValue: data['statistics']['methods']['number']['max_value'],
           gridlines: {
-            count: ((data['statistics']['methods']['number']['max_value'] + 1) / 2) + 1,
+            count: graphGridLines(data['statistics']['methods']['number']['max_value'], 5)
           }
         },
         width: 750, height: 350
       };
+      number_methods_options.vAxis.maxValue = graphAxisMaxValue(data['statistics']['methods']['number']['max_value'], number_methods_options.vAxis.gridlines.count);
 
       var time_zones_options = {
         focusTarget: 'category',
         vAxis: {
           title: 'Minutes',
-          maxValue: (Math.floor(data['statistics']['zones']['time']['max_value'] / 60) + 1) * 60,
           gridlines: {
-            count: (Math.floor(data['statistics']['zones']['time']['max_value'] / 60) + 2),
+            count: graphGridLines(Math.ceil(data['statistics']['zones']['time']['max_value']/60), 5)
           }
         },
         width: 750, height: 350
       };
+      time_zones_options.vAxis.maxValue = Math.ceil(data['statistics']['zones']['time']['max_value'] / 60)  *  60;
 
       var time_methods_options = {
         focusTarget: 'category',
         vAxis: {
           title: 'Minutes',
-          maxValue: (Math.floor(data['statistics']['methods']['time']['max_value'] / 60) + 1) * 60,
           gridlines: {
-            count: (Math.floor(data['statistics']['methods']['time']['max_value'] / 60) + 2),
+            count: graphGridLines(Math.ceil(data['statistics']['methods']['time']['max_value']/60), 5)
           }
         },
         width: 750, height: 350
       };
+      time_methods_options.vAxis.maxValue = Math.ceil(data['statistics']['methods']['time']['max_value'] / 60)  *  60;
 
       drawChart(data['zones']['number'], data['zone_labels'], number_zones_options, number_zones_chart, 'zone', 'number');
       drawChart(data['methods']['number'], data['method_labels'], number_methods_options, number_methods_chart, 'method', 'number');

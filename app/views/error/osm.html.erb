@@ -1,0 +1,11 @@
+<% provide :head_title, "OSM Error" %>
+<% provide :hide_secondary_menu, true %>
+
+<div class="dialog">
+    <%- if exception.is_a?(OSM::ConnectionError) %>
+        <h1>We're sorry, we tried talking to OSM but something went wrong</h1>
+    <%- else %>
+        <h1>We're sorry, an OSM error occured</h1>
+    <%- end %>
+    <p><%= exception.message %></p>
+</div>

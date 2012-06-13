@@ -9,7 +9,7 @@ class StaticController < ApplicationController
 
   def my_page
     if current_user.connected_to_osm?
-      @roles = current_user.osm_api.get_roles[:data]
+      @roles = current_user.osm_api.get_roles
     else
       @roles = []
       flash[:instruction] = "You need to connect your account to your OSM account. #{self.class.helpers.link_to 'Connect now.', connect_to_osm_path}".html_safe
@@ -27,9 +27,9 @@ class StaticController < ApplicationController
   def osm_permissions
     @osmx_permissions = Hash.new
     @other_roles = Array.new
-    current_user.osm_api.get_roles[:data].each do |role|
+    current_user.osm_api.get_roles.each do |role|
       @other_roles.push role unless role == current_role
-      @osmx_permissions[role.section.id] = current_user.osm_api.get_our_api_access(role.section.id, {:no_cache => true})[:data]
+      @osmx_permissions[role.section.id] = current_user.osm_api.get_our_api_access(role.section.id, {:no_cache => true})
     end
     @other_roles.sort!
   end

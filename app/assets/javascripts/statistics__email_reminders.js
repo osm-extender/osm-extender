@@ -17,41 +17,41 @@ function drawCharts() {
       var number_options = {
         focusTarget: 'category',
         vAxis: {
-          maxValue: data['number']['max_value'],
           minValue: 0,
           gridlines: {
-            count: ((data['number']['max_value'] + 1) / 2) + 1,
+            count: graphGridLines(data['number']['max_value'], 5)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
+      number_options.vAxis.maxValue = graphAxisMaxValue(data['number']['max_value'], number_options.vAxis.gridlines.count);
 
       var day_options = {
         focusTarget: 'category',
         vAxis: {
-          maxValue: data['day']['max_value'],
           minValue: 0,
           gridlines: {
-            count: ((data['day']['max_value'] + 1) / 2) + 1,
+            count: graphGridLines(data['day']['max_value'], 5)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
+      day_options.vAxis.maxValue = graphAxisMaxValue(data['day']['max_value'], day_options.vAxis.gridlines.count);
 
       var item_options = {
         focusTarget: 'category',
         vAxis: {
-          maxValue: data['item']['max_value'],
           minValue: 0,
           gridlines: {
-            count: ((data['item']['max_value'] + 1) / 2) + 1,
+            count: graphGridLines(data['item']['max_value'], 5)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
+      item_options.vAxis.maxValue = graphAxisMaxValue(data['item']['max_value'], item_options.vAxis.gridlines.count);
 
 
       drawNumberChart(data['number']['data'], number_options, number_chart);

@@ -50,6 +50,14 @@ class UsersController < ApplicationController
       render :new
     end
   end
+
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+
+    flash[:notice] = 'The user was deleted.'
+    redirect_to users_path
+  end
   
   def activate_account
     user = User.load_from_activation_token(params[:token].to_s)

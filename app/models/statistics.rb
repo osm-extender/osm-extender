@@ -1,4 +1,4 @@
-class StatisticsCache < ActiveRecord::Base
+class Statistics < ActiveRecord::Base
   attr_accessible :date, :users, :email_reminders, :email_reminders_by_day, :email_reminders_by_type
 
   serialize :email_reminders_by_day, Array
