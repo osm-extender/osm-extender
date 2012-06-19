@@ -1,4 +1,5 @@
 class Session < ActiveRecord::Base
+  attr_accessible :session_id, :data
 
   def self.delete_old_sessions(inactive_for=1.hour, total_age=6.hours)
     if inactive_for.is_a?(String)

@@ -1,4 +1,6 @@
 class EmailList < ActiveRecord::Base
+  attr_accessible :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping
+
   belongs_to :user
 
   validates_presence_of :user
