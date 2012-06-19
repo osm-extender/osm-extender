@@ -10,6 +10,10 @@ function drawCharts() {
     dataType:"json",
     async: false,
     success: function(data, status, jqXHR) {
+      var number_desired_steps = 5;
+      var day_desired_steps = 5;
+      var item_desired_steps = 5;
+
       var number_chart = new google.visualization.LineChart(document.getElementById('number_chart'));
       var day_chart = new google.visualization.BarChart(document.getElementById('day_chart'));
       var item_chart = new google.visualization.BarChart(document.getElementById('item_chart'));
@@ -19,39 +23,39 @@ function drawCharts() {
         vAxis: {
           minValue: 0,
           gridlines: {
-            count: graphGridLines(data['number']['max_value'], 5)
+            count: graphGridLines(data['number']['max_value'], number_desired_steps)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
-      number_options.vAxis.maxValue = graphAxisMaxValue(data['number']['max_value'], number_options.vAxis.gridlines.count);
+      number_options.vAxis.maxValue = graphStepSize(data['number']['max_value'], number_desired_steps) * (number_options.vAxis.gridlines.count - 1);
 
       var day_options = {
         focusTarget: 'category',
         vAxis: {
           minValue: 0,
           gridlines: {
-            count: graphGridLines(data['day']['max_value'], 5)
+            count: graphGridLines(data['day']['max_value'], day_desired_steps)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
-      day_options.vAxis.maxValue = graphAxisMaxValue(data['day']['max_value'], day_options.vAxis.gridlines.count);
+      day_options.vAxis.maxValue = graphStepSize(data['day']['max_value'], day_desired_steps) * (day_options.vAxis.gridlines.count - 1);
 
       var item_options = {
         focusTarget: 'category',
         vAxis: {
           minValue: 0,
           gridlines: {
-            count: graphGridLines(data['item']['max_value'], 5)
+            count: graphGridLines(data['item']['max_value'], item_desired_steps)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
-      item_options.vAxis.maxValue = graphAxisMaxValue(data['item']['max_value'], item_options.vAxis.gridlines.count);
+      item_options.vAxis.maxValue = graphStepSize(data['item']['max_value'], item_desired_steps) * (item_options.vAxis.gridlines.count - 1);
 
 
       drawNumberChart(data['number']['data'], number_options, number_chart);
