@@ -13,7 +13,7 @@ class FaqsController < ApplicationController
   end
 
   def list
-    @faqs = Faq.where("active = #{ActiveRecord::Base.connection.quoted_true}")
+    @faqs = Faq.where(['active = ?', true])
 
     respond_to do |format|
       format.html # list.html.erb
