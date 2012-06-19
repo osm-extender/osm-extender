@@ -72,7 +72,7 @@ class EmailReminderItem < ActiveRecord::Base
 
   def configuration
     default = default_configuration
-    config = read_attribute(:configuration).unserialized_value
+    config = read_attribute(:configuration)
     config.select {|k,v| default.keys.include?(k)}
     return default.merge(config)
   end

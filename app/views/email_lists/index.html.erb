@@ -14,7 +14,7 @@
       <td>
         <%= link_to '[Get addresses]', email_list_addresses_path(email_list) %>
         <%= link_to '[Edit]', edit_email_list_path(email_list) %>
-        <%= link_to '[Destroy]', email_list, confirm: 'Are you sure?', method: :delete %>
+        <%= link_to '[Destroy]', email_list, data: {:confirm => 'Are you sure?'}, method: :delete %>
       </td>
     </tr>
   <% end %>

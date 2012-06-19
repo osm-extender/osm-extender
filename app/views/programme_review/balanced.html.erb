@@ -41,7 +41,7 @@
       <table>
         <tr><th>Term</th><th>Created at</th><th>Actions</th></tr>
         <%- @cached_terms.each do |term| %>
-          <tr><td><%= @terms[term.term_id].name %></td><td><%= term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(term.created_at) %> ago)</td><td><%= link_to '[Delete]', term, confirm: 'Are you sure?', method: :delete %></td></tr>
+          <tr><td><%= @terms[term.term_id].name %></td><td><%= term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(term.created_at) %> ago)</td><td><%= link_to '[Delete]', term, data: {:confirm => 'Are you sure?'}, method: :delete %></td></tr>
         <%- end %>
       </table>
     <%- end %>
