@@ -215,7 +215,12 @@ end
 Given /^an OSM request to get due badges for section (\d+) and term (\d+) will return nothing$/ do |section_id, term_id|
   url = "challenges.php?action=outstandingBadges&section=cubs&sectionid=#{section_id}&termid=#{term_id}"
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => [].to_json)
-end  
+end
+
+Given /^an OSM request to get notepads will return nothing$/ do
+  url = 'api.php?action=getNotepads'
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => [].to_json)
+end
 
 Given /^an OSM request to get groupings for section (\d+) will have the groupings?$/ do |section_id, table|
   url = "users.php?action=getPatrols&sectionid=#{section_id}"

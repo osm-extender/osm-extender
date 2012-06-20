@@ -195,7 +195,6 @@ Feature: OSM
 	    | term_id | name   |
 	    | 1       | Term 1 |
 	And an OSM request to get due badges for section 1 and term 1 will return nothing
-
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Send]" in the "Actions" column of the "Tuesday" row
@@ -206,3 +205,22 @@ Feature: OSM
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "We're sorry, we tried talking to OSM but something went wrong"
 	And I should see "A problem occured on the internet"
+
+    Scenario: Fix an empty array representing no notepads
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | badge      | read    |
+	And no emails have been sent
+	And "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a notepad item in her "Tuesday" email reminder for section 1
+	And an OSM request to get sections will give 1 section
+	And an OSM request to get terms for section 1 will have the term
+	    | term_id | name   |
+	    | 1       | Term 1 |
+	And an OSM request to get notepads will return nothing
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Send]" in the "Actions" column of the "Tuesday" row
+	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
