@@ -22,6 +22,7 @@ Feature: Email Lists
 	    | A          | Member    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
 	    | B          | Member    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           |
 	    | C          | Member    |                |                |                |                | 1           |
+	    | A2         | Member    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
 	And an OSM request to get groupings for section 1 will have the groupings
 	    | grouping_id | name |
 	    | 1           | A    |
@@ -52,6 +53,7 @@ Feature: Email Lists
 	And I should not see "A Member"
 	And I should not see "B Member"
 	And I should see "C Member"
+	And I should not see "A2 Member"
 
     Scenario: Get list of addresses (are not in a six)
         When I signin as "alice@example.com" with password "P@55word"

@@ -30,9 +30,9 @@ class EmailList < ActiveRecord::Base
         added_address_for_member = false
         [:email1, :email2, :email3, :email4].each do |emailN|
           email = member.send(emailN)
-          if self.send(emailN) && !email.blank? && !@emails.include?(email)
-          #  collecting this email?  not blank     havn't already collected
-            @emails.push email
+          if self.send(emailN) && !email.blank?
+          #  collecting this email?  not blank
+            @emails.push email unless @emails.include?(email)
             added_address_for_member = true
           end
         end
