@@ -14,7 +14,10 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
     not_seen = []
     register.each do |member|
-      not_seen.push member unless seen_member_in?(member, dates_to_check)
+      not_seen.push ({
+        :first_name => member[:firstname],
+        :last_name => member[:lastname],
+      }) unless seen_member_in?(member, dates_to_check)
     end
     return not_seen
   end
@@ -24,8 +27,8 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
     (1 + rand(3)).times do
       data.push ({
-        :firstname => Faker::Name.first_name,
-        :lastname => Faker::Name.last_name,
+        :first_name => Faker::Name.first_name,
+        :last_name => Faker::Name.last_name,
       })
     end
     return data
@@ -57,7 +60,9 @@ class EmailReminderItemNotSeen < EmailReminderItem
   private
   def seen_member_in?(member, dates_to_check)
     dates_to_check.each do |date|
-      return true if member[date.to_sym].eql?('1')
+      if member[date.to_sym].eql?('Yes') || member[date.to_sym].eql?('No') # Allowed absences are OK
+        return true
+      end
     end
     return false
   end
