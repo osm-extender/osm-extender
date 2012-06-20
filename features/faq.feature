@@ -55,6 +55,7 @@ Feature: FAQ Administration
 	And I follow "[Edit]" in the "Actions" column of the "FAQ 1" row
         And I fill in "Question" with "FAQ 1A"
         And I fill in "Answer" with "This is answer 1A."
+        And I fill in "Tags" with "1,2,<<<New Tag>>>"
         And I press "Submit"
         Then I should see "FAQ was successfully updated"
 
@@ -75,10 +76,41 @@ Feature: FAQ Administration
         And I follow "Administer FAQs"
         And I fill in "Question" with "FAQ 3"
         And I fill in "Answer" with "This is answer 3"
+        And I fill in "Tags" with "1,2,<<<New Tag>>>"
         And I check "Active"
         And I press "Submit"
         Then I should see "FAQ was successfully created"
         And I should have 3 faqs
+
+    Scenario: Create FAQ (missing question)
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of faqs
+        And I fill in "Answer" with "This is answer 1A."
+        And I fill in "Tags" with "1"
+        And I press "Submit"
+	Then I should see "Question can't be blank"
+        Then I should not see "FAQ was successfully created"
+        And I should have 2 faqs
+
+    Scenario: Create FAQ (missing answer)
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of faqs
+        And I fill in "Question" with "FAQ 1A"
+        And I fill in "Tags" with "1"
+        And I press "Submit"
+	Then I should see "Answer can't be blank"
+        Then I should not see "FAQ was successfully created"
+        And I should have 2 faqs
+
+    Scenario: Create FAQ (missing tags)
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of faqs
+        And I fill in "Question" with "FAQ 1A"
+        And I fill in "Answer" with "This is answer 1A."
+        And I press "Submit"
+	Then I should see "Must have at least one tag"
+        Then I should not see "FAQ was successfully created"
+        And I should have 2 faqs
 
     Scenario: Create FAQ (not authorised)
         When I signin as "bob@example.com" with password "P@55word"

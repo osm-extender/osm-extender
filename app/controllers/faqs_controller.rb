@@ -1,5 +1,5 @@
 class FaqsController < ApplicationController
-  skip_before_filter :require_login, :only => [:list]
+  skip_before_filter :require_login, :only => :list
   load_and_authorize_resource
 
   def index
@@ -13,7 +13,11 @@ class FaqsController < ApplicationController
   end
 
   def list
-    @faqs = Faq.where(['active = ?', true])
+    @faqs = {}
+    FaqTag.all.each do |tag|
+      active_faqs = tag.active_faqs
+      @faqs[tag.name] = active_faqs unless active_faqs.empty?
+    end
 
     respond_to do |format|
       format.html # list.html.erb

@@ -55,6 +55,10 @@ module OSMExtender
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']
 
+    # Add 'special' assets
+    config.assets.paths << Rails.root.join("vendor", "jquery-tokeninput", "src")
+    config.assets.paths << Rails.root.join("vendor", "jquery-tokeninput", "styles")
+
     # Allow mailer views to access helpers in application_helpers
     config.to_prepare do
       ActionMailer::Base.helper "application"

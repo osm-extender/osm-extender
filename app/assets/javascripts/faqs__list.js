@@ -1,5 +1,5 @@
 jQuery(document).ready(function(){
-        $('#accordion h3').click(function() {
+        $('.accordion_faqs h3').click(function() {
                 $(this).next().toggle('slow');
                 return false;
         }).next().hide();
