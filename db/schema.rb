@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120620093548) do
+ActiveRecord::Schema.define(:version => 20120620125309) do
 
   create_table "email_lists", :force => true do |t|
     t.text     "name"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20120620093548) do
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "system_id"
   end
 
   create_table "programme_review_balanced_caches", :force => true do |t|

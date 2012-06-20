@@ -23,23 +23,21 @@ class AddFaqTags < ActiveRecord::Migration
     ft_osmx = FaqTag.create(:name => 'Online Scout Manager Extender')
     ft_features = FaqTag.create(:name => 'Features')
 
-    unless Rails.env.test?
-      say "Adding tags to FAQs"
-      {
-        "What's Online Scout Manager Extender" => [ft_osmx],
-        "Is it safe to give this site my Online Scout Manager password?" => [ft_osmx],
-        "I would like Online Scout Manager Extender to ..." => [ft_osmx],
-        "What's the OSM permissions page?" => [ft_features],
-        "What's the Email lists feature?" => [ft_features],
-        "What's the Programme review feature?" => [ft_features],
-        "What's the Email reminder feature?" => [ft_features],
-        "What's the Programme wizard feature?" => [ft_features],
-      }.each do |key, value|
-        say key, true
-        faq = Faq.find_by_question(key)
-        faq.tags = value
-        faq.save
-      end
+    say "Adding tags to FAQs"
+    {
+      "What's Online Scout Manager Extender" => [ft_osmx],
+      "Is it safe to give this site my Online Scout Manager password?" => [ft_osmx],
+      "I would like Online Scout Manager Extender to ..." => [ft_osmx],
+      "What's the OSM permissions page?" => [ft_features],
+      "What's the Email lists feature?" => [ft_features],
+      "What's the Programme review feature?" => [ft_features],
+      "What's the Email reminder feature?" => [ft_features],
+      "What's the Programme wizard feature?" => [ft_features],
+    }.each do |key, value|
+      say key, true
+      faq = Faq.find_by_question(key)
+      faq.tags = value
+      faq.save
     end
   end
 

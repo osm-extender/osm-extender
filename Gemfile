@@ -22,6 +22,7 @@ gem 'redcarpet'     # Used to format FAQ Answers
 gem 'will_paginate'
 gem 'premailer-rails3'  # Used to easily generate HTML emails (also does plain text counterpart)
 gem 'faker'         # Used to generate fake data for sample emails
+gem 'seed-fu'       # Used to seed the database when data may change
 
 
 # Gems used only for assets and not required

@@ -17,7 +17,8 @@ Feature: My Account
         And "contactus@example.com" should have 1 email
 
     Scenario: Logged in user should see their name and email address but no captcha
-        Given I have the following user records
+	Given I have no users
+        And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
         And "alice@example.com" is an activated user account
