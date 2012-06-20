@@ -179,7 +179,16 @@ SettingValue.seed(:key,
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",
   },
 )
-
+if Rails.env.test?
+  SettingValue.seed(:key,
+    {
+      :key => 'test',
+      :value => 'a1b2c3d4',
+      :description => 'A test value.'
+    }
+  )
+end
+puts
 
 
 #SeedFu.seed(fixture_paths, filter) # Both argumants optional - github.com/mbleigh/seed-fu
