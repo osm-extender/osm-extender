@@ -104,89 +104,95 @@ puts
 #
 puts "Configuring OSMX"
 puts "----------------"
-SettingValue.seed(:key,
+config = [
   {
+    :prompt => ['What email address should contact us form submissions be sent to', 'contactus@example.com'],
     :key => 'contact us - to',
-    :value => prompt('What email address should contact us form submissions be sent to', 'contactus@example.com'),
     :description => 'Which email address submissions of the contact us form should be sent to.',
   },{
+    :prompt => ['What email address should notifier mails be sent from', 'notifier-mailer@example.com'],
     :key => 'notifier mailer - from',
-    :value => prompt('What email address should notifier mails be sent from', 'notifier-mailer@example.com'),
     :description => 'Which email address notification messages should claim to be from.',
   },{
+    :prompt => ['What email address should user related mails be sent from', 'user-mailer@example.com'],
     :key => 'user mailer - from',
-    :value => prompt('What email address should user related mails be sent from', 'user-mailer@example.com'),
     :description => 'Which email address user account messages should claim to be from.',
   },{
+    :prompt => ['What email address should reminder mails be sent from', 'reminder-mailer@example.com'],
     :key => 'reminder mailer - from',
-    :value => prompt('What email address should reminder mails be sent from', 'reminder-mailer@example.com'),
     :description => 'Which email address reminder emails should claim to be from',
   },{
+    :prompt => ['What email address should reminder failure mails be sent to', 'reminder-mailer-failed@example.com'],
     :key => 'notifier mailer - send failed reminder to',
-    :value => prompt('What email address should reminder failure mails be sent to', 'reminder-mailer-failed@example.com'),
     :description => 'Which email address to send debugging information from failed email reminder messages to',
   },{
+    :prompt => ['What address should exception notifications be sent to', 'exceptions@example.com'],
     :key => 'notifier mailer - send exception to',
-    :value => self.prompt('What address should exception notifications be sent to', 'exceptions@example.com'),
     :description => 'Which email address should exceptions be sent to. If this is blank then this email will not be sent.',
   },{
+    :prompt => ['What is the OSM API ID to use', '12'],
     :key => 'OSM API - id',
-    :value => prompt('What is the OSM API ID to use', '12'),
     :description => 'The ID you got from Ed at OSM.',
   },{
+    :prompt => ['What is the OSM API token to use', '1234567890'],
     :key => 'OSM API - token',
-    :value => prompt('What is the OSM API token to use', '1234567890'),
     :description => 'The token you got from Ed at OSM.',
   },{
+    :prompt => ['What is the name displayed on OSM\'s External Access tab for this API', 'Example API'],
     :key => 'OSM API - name',
-    :value => prompt('What is the name displayed on OSM\'s External Access tab for this API', 'Example API'),
     :description => "The name your API has on OSM's External Access tab.",
   },{
+    :prompt => ['What is the public key to use with ReCAPTCHA', '11223344556677889900'],
     :key => 'ReCAPTCHA - public key',
-    :value => prompt('What is the public key to use with ReCAPTCHA', '11223344556677889900'),
     :description => 'The public key you got from ReCAPTCHA.',
   },{
+    :prompt => ['What is the private key to use with ReCAPTCHA', '00998877665544332211'],
     :key => 'ReCAPTCHA - private key',
-    :value => prompt('What is the private key to use with ReCAPTCHA', '00998877665544332211'),
     :description => 'The private key you got from ReCAPTCHA.',
   },{
+    :prompt => ['What is the address of your SMTP server', 'smtp.example.com'],
     :key => 'Mail Server - Address',
-    :value => prompt('What is the address of your SMTP server', 'smtp.example.com'),
     :description => 'The address of the SMTP server to use for outgoing email.',
   },{
+    :prompt => ['What port on the SMTP server should be used', '25'],
     :key => 'Mail Server - Port',
-    :value => prompt('What port on the SMTP server should be used', '25'),
     :description => 'The port of the SMTP server to use for outgoing email (this is normally 25).',
   },{
+    :prompt => ['What is your login domain on the SMTP server', ''],
     :key => 'Mail Server - Domain',
-    :value => prompt('What is your login domain on the SMTP server', ''),
     :description => 'The login domain for the SMTP server to use for outgoing email.',
   },{
+    :prompt => ['What is your username on the SMTP server', 'sender@example.com'],
     :key => 'Mail Server - Username',
-    :value => prompt('What is your username on the SMTP server', 'sender@example.com'),
     :description => 'The login username for the SMTP server to use for outgoing email.',
   },{
+    :prompt => ['What is your password on the SMTP server', 'abcd1234'],
     :key => 'Mail Server - Password',
-    :value => prompt('What is your password on the SMTP server', 'abcd1234'),
     :description => 'The login password for the SMTP server to use for outgoing email.',
   },{
+    :prompt => ['What signup code would you like to require users to use (if blank then no code will be asked for)', ''],
     :key => 'signup code',
-    :value => prompt('What signup code would you like to require users to use (if blank then no code will be asked for)', ''),
     :description => 'A code which must be supplied to create an account (useful for temporarily limiting signups). If this is blank then no signup code will be required.',
   },{
+    :prompt => ['For how long should the settings read from the database be used without being reloaded', '1 second'],
     :key => 'maximum settings age',
-    :value => self.prompt('For how long should the settings read from the database be used without being reloaded', '1 second'),
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",
-  },
-)
+  }
+]
 if Rails.env.test?
-  SettingValue.seed(:key,
+  config += [
     {
       :key => 'test',
       :value => 'a1b2c3d4',
       :description => 'A test value.'
     }
-  )
+  ]
+end
+config.each do |setting|
+  sv = SettingValue.find_or_create_by_key(setting[:key])
+  sv.description = setting[:description]
+  sv.value = setting[:value] || prompt(setting[:prompt][0], setting[:prompt][1]) unless sv.persisted?
+  sv.save!
 end
 puts
 
