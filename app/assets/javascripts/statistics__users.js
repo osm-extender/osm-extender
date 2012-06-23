@@ -10,6 +10,8 @@ function drawCharts() {
     dataType:"json",
     async: false,
     success: function(data, status, jqXHR) {
+      var users_desired_steps = 5;
+
       var users_chart = new google.visualization.LineChart(document.getElementById('users_chart'));
 
       var users_options = {
@@ -17,13 +19,13 @@ function drawCharts() {
         vAxis: {
           minValue: 0,
           gridlines: {
-            count: graphGridLines(data['max_value'], 5)
+            count: graphGridLines(data['max_value'], users_desired_steps)
           }
         },
         legend: {position: 'none'},
         width: 750, height: 350
       };
-      users_options.vAxis.maxValue = graphAxisMaxValue(data['max_value'], users_options.vAxis.gridlines.count);
+      users_options.vAxis.maxValue = graphStepSize(data['max_value'], users_desired_steps) * (users_options.vAxis.gridlines.count - 1);
 
       drawChart(data['data'], users_options, users_chart);
     }

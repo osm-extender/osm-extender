@@ -107,7 +107,7 @@ class EmailListsController < ApplicationController
   def clean_params(params_in)
     params = params_in.clone
     [:email1, :email2, :email3, :email4, :match_type].each do |key|
-      params[key] = params[key].downcase.eql?('true')
+      params[key] = params[key].is_a?(String) ? params[key].downcase.eql?('true') : false
     end
     params[:match_grouping] = params[:match_grouping].to_i
     return params

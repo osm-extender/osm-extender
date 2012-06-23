@@ -17,7 +17,7 @@
     <td><%= email_reminder_item.configuration %></td>
     <td><%= link_to 'Show', email_reminder_item %></td>
     <td><%= link_to 'Edit', edit_email_reminder_item_path(email_reminder_item) %></td>
-    <td><%= link_to 'Destroy', email_reminder_item, confirm: 'Are you sure?', method: :delete %></td>
+    <td><%= link_to 'Destroy', email_reminder_item, data: {:confirm => 'Are you sure?'}, method: :delete %></td>
   </tr>
 <% end %>
 </table>

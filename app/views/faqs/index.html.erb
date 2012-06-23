@@ -18,7 +18,7 @@
     <td>
       <%= link_to '[Show]', faq %>
       <%= link_to '[Edit]', edit_faq_path(faq) %>
-      <%= link_to '[Delete]', faq, confirm: 'Are you sure?', method: :delete %>
+      <%= link_to '[Delete]', faq, data: {:confirm => 'Are you sure?'}, method: :delete %>
     </td>
   </tr>
 <% end %>

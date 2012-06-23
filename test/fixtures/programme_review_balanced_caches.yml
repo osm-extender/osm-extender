@@ -1,9 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
-
-#one:
-#  term_id: 1
-#  section_id: 1
-#  zone_totals: MyText
-#  method_totals: MyText
-#  created_at: <%= 1.day.ago %>
-#  updated_at: <%= 1.day.ago %>

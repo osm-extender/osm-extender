@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
-gem 'rails'
+gem 'rails', '>=3.2.5'
 gem 'activesupport', '>= 3.2'
 gem 'actionmailer'
 
@@ -22,6 +22,7 @@ gem 'redcarpet'     # Used to format FAQ Answers
 gem 'will_paginate'
 gem 'premailer-rails3'  # Used to easily generate HTML emails (also does plain text counterpart)
 gem 'faker'         # Used to generate fake data for sample emails
+gem 'seed-fu'       # Used to seed the database when data may change
 
 
 # Gems used only for assets and not required

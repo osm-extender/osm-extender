@@ -21,7 +21,7 @@
         <%- end %></td>
         <td>
           <%= link_to '[Edit]', self.send("edit_#{item.class.to_s.gsub!(/(.)([A-Z])/,'\1_\2').downcase!}_path", @email_reminder, item) %>
-          <%= link_to '[Destroy]', email_reminder_item_path(@email_reminder, item), confirm: 'Are you sure?', method: :delete %>
+          <%= link_to '[Destroy]', email_reminder_item_path(@email_reminder, item), data: {:confirm => 'Are you sure?'}, method: :delete %>
         </td>
       </tr>
     <%- end %>

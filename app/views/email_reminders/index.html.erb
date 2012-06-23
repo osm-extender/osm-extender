@@ -16,7 +16,7 @@
         <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
         <%= link_to '[Preview]', preview_email_reminder_path(email_reminder), :target=>'_blank' %>
         <%= link_to '[Send]', send_email_reminder_path(email_reminder) %>
-        <%= link_to '[Destroy]', email_reminder, confirm: 'Are you sure?', method: :delete %>
+        <%= link_to '[Destroy]', email_reminder, data: {:confirm => 'Are you sure?'}, method: :delete %>
       </td>
     </tr>
   <% end %>

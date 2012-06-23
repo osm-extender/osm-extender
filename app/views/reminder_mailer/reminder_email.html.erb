@@ -62,7 +62,7 @@ The programme for the following <%= pluralize(@data[:config][:EmailReminderItemP
 <h1>Members Not Seen</h1>
 The following <%= (@data[:data][:EmailReminderItemNotSeen].size > 1) ? 'members have' : 'member has' %> not been seen for at least the last <%= pluralize(@data[:config][:EmailReminderItemNotSeen][:the_last_n_weeks], 'week') %>:
 <ul><%- @data[:data][:EmailReminderItemNotSeen].each do |member| %>
-  <li><%= member[:firstname] %> <%= member[:lastname] %></li>
+  <li><%= member[:first_name] %> <%= member[:last_name] %></li>
 <%- end %></ul>
 
 <hr/>

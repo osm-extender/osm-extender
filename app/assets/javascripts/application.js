@@ -30,14 +30,5 @@ function graphStepSize(range, targetSteps) {
 }
 
 function graphGridLines(range, targetSteps) {
-  if (range < targetSteps) {
-    targetSteps = range;
-  }
-  var stepSize = graphStepSize(range, targetSteps);
-
-  return (1 + (stepSize * targetSteps)); // Add one for the x axis
-}
-
-function graphAxisMaxValue(maxValue, gridlines) {
-  return(graphStepSize(maxValue, gridlines) * (gridlines - 1));
+  return Math.ceil(range / graphStepSize(range, targetSteps)) + 1; // Add one for the x axis
 }

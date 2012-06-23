@@ -1,4 +1,6 @@
 class EmailReminder < ActiveRecord::Base
+  attr_accessible :user, :section_id, :send_on
+
   belongs_to :user
   has_many :items, :class_name=>'EmailReminderItem', :dependent=>:destroy
 

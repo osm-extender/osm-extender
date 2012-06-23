@@ -9,6 +9,7 @@ FactoryGirl.define do
   factory :faq do
     sequence(:question) { |n| "FAQ #{n}" }
     sequence(:answer) { |n| "This is answer #{n}." }
-    active true    
+    active true
+    tag_tokens "1"
   end
 end

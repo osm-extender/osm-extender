@@ -116,6 +116,7 @@ module OSM
       end
 
       data = perform_query('api.php?action=getNotepads', api_data)
+      data = {} unless data.is_a?(Hash)
 
       data.each_key do |key|
         Rails.cache.write("OSMAPI-notepad-#{key}", data[key], :expires_in => @@default_cache_ttl*2)
