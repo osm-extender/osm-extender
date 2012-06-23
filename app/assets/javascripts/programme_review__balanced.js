@@ -19,6 +19,11 @@ function drawCharts() {
     success: function(data, status, jqXHR) {
       updateStatus('Processing data.');
 
+      var number_zones_steps = (data['statistics']['zones']['number']['max_value'] > 5) ?  graphGridLines(data['statistics']['zones']['number']['max_value'], 5) : data['statistics']['zones']['number']['max_value'];
+      var number_methods_steps = (data['statistics']['methods']['number']['max_value'] > 5) ? graphGridLines(data['statistics']['methods']['number']['max_value'], 5) : data['statistics']['methods']['number']['max_value'];
+      var time_zones_steps = Math.ceil(data['statistics']['zones']['time']['max_value'] / 60);
+      var time_methods_steps = Math.ceil(data['statistics']['methods']['time']['max_value'] / 60);
+
       var number_zones_chart = new google.visualization.LineChart(document.getElementById('number_zones_chart'));
       var number_methods_chart = new google.visualization.LineChart(document.getElementById('number_methods_chart'));
       var time_zones_chart = new google.visualization.LineChart(document.getElementById('time_zones_chart'));
@@ -28,47 +33,47 @@ function drawCharts() {
         focusTarget: 'category',
         vAxis: {
           gridlines: {
-            count: graphGridLines(data['statistics']['zones']['number']['max_value'], 5)
+            count: number_zones_steps + 1
           }
         },
         width: 750, height: 350
       };
-      number_zones_options.vAxis.maxValue = graphAxisMaxValue(data['statistics']['zones']['number']['max_value'], number_zones_options.vAxis.gridlines.count);
+      number_zones_options.vAxis.maxValue = number_zones_steps * graphStepSize(data['statistics']['zones']['number']['max_value'], number_zones_steps);
 
       var number_methods_options = {
         focusTarget: 'category',
         vAxis: {
           gridlines: {
-            count: graphGridLines(data['statistics']['methods']['number']['max_value'], 5)
+            count: number_methods_steps + 1
           }
         },
         width: 750, height: 350
       };
-      number_methods_options.vAxis.maxValue = graphAxisMaxValue(data['statistics']['methods']['number']['max_value'], number_methods_options.vAxis.gridlines.count);
+      number_methods_options.vAxis.maxValue = number_methods_steps * graphStepSize(data['statistics']['methods']['number']['max_value'], number_methods_steps);
 
       var time_zones_options = {
         focusTarget: 'category',
         vAxis: {
           title: 'Minutes',
           gridlines: {
-            count: graphGridLines(Math.ceil(data['statistics']['zones']['time']['max_value']/60), 5)
+            count: time_zones_steps + 1
           }
         },
         width: 750, height: 350
       };
-      time_zones_options.vAxis.maxValue = Math.ceil(data['statistics']['zones']['time']['max_value'] / 60)  *  60;
+      time_zones_options.vAxis.maxValue = time_zones_steps * 60;
 
       var time_methods_options = {
         focusTarget: 'category',
         vAxis: {
           title: 'Minutes',
           gridlines: {
-            count: graphGridLines(Math.ceil(data['statistics']['methods']['time']['max_value']/60), 5)
+            count: time_methods_steps + 1
           }
         },
         width: 750, height: 350
       };
-      time_methods_options.vAxis.maxValue = Math.ceil(data['statistics']['methods']['time']['max_value'] / 60)  *  60;
+      time_methods_options.vAxis.maxValue = time_methods_steps * 60;
 
       drawChart(data['zones']['number'], data['zone_labels'], number_zones_options, number_zones_chart, 'zone', 'number');
       drawChart(data['methods']['number'], data['method_labels'], number_methods_options, number_methods_chart, 'method', 'number');
