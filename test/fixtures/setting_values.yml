@@ -1,0 +1,96 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+contact_to:
+  key: contact us - to
+  value: contactus@example.com
+  description: Which email address submissions of the contact us form should be sent to.
+
+notifier_from:
+  key: notifier mailer - from
+  value: notifier-mailer@example.com
+  description: Which email address notification messages should claim to be from.
+
+user_from:
+  key: user mailer - from
+  value: user-mailer@example.com
+  description: Which email address user account messages should claim to be from.
+
+signup_code:
+  key: signup code
+  value: 
+  description: A code which must be supplied to create an account (useful for temporarily limiting signups). If this is blank then no signup code will be required.
+
+reminder_from:
+  key: reminder mailer - from
+  value: reminder-mailer@example.com
+  description: Which email address reminder emails should claim to be from.
+
+reminder_failure_to:
+  key: notifier mailer - send failed reminder to
+  value: reminder-mailer-failed@example.com
+  description: Which email address to send debugging information from failed email reminder messages to. If this is blank then this email will not be sent.
+
+osm_id:
+  key: OSM API - id
+  value: 12
+  description: The ID you got from Ed at OSM
+
+osm_token:
+  key: OSM API - token
+  value: 1234567890
+  description: The token you got from Ed at OSM
+
+osm_name:
+  key: OSM API - name
+  value: Robert Gauld's API
+  description: The name your API has on OSM's External Access tab
+
+recaptcha_public:
+  key: ReCAPTCHA - public key
+  value: 11223344556677889900
+  description: The public key you got from ReCAPTCHA
+
+recaptcha_private:
+  key: ReCAPTCHA - private key
+  value: 00998877665544332211
+  description: The private key you got from ReCAPTCHA
+
+mail_server_address:
+  key: Mail Server - Address
+  value: smtp.example.com
+  description: The address of the SMTP server to use for outgoing email
+
+mail_server_port:
+  key: Mail Server - Port
+  value: 25
+  description: The port of the SMTP server to use for outgoing email (this is normally 25)
+
+mail_server_domain:
+  key: Mail Server - Domain
+  value:  
+  description: The login domain for the SMTP server to use for outgoing email
+
+mail_server_username:
+  key: Mail Server - Username
+  value: sender@example.com
+  description: The login username for the SMTP server to use for outgoing email
+
+mail_server_password:
+  key: Mail Server - Password
+  value: abcd1234
+  description: The login password for the SMTP server to use for outgoing email
+
+maximum_settings_age:
+  key: maximum settings age
+  value: 1 second
+  description: How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. "10 minutes" or "1 hour"
+
+exception_to:
+  key: notifier mailer - send exception to
+  value: exceptions@example.com
+  description: Which email address should exceptions be sent to. If this is blank then this email will not be sent.
+
+test_setting:
+  key: test
+  value: a1b2c3d4
+  description: A test value.

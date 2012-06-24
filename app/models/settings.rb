@@ -9,7 +9,7 @@ class Settings
   end
 
   def self.read(key)
-    self.setup  if defined?(@@values).nil? || self.too_old?
+    self.setup if defined?(@@values).nil? || self.too_old?
     @@values[key]
   end
 
@@ -25,7 +25,8 @@ class Settings
 
   private
   def self.too_old?
-    maximum_age = (@@values['maximum settings age'] || '15 minutes')
+    return true if @@last_read.nil?
+    maximum_age = !@@values['maximum settings age'].blank? ? @@values['maximum settings age'] : '15 minutes'
     @@last_read < maximum_age.split.inject { |count, unit| count.to_i.send(unit).ago }
   end
 end
