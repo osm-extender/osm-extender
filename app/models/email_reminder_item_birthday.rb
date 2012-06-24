@@ -7,14 +7,16 @@ class EmailReminderItemBirthday < EmailReminderItem
 
     members = user.osm_api.get_members(section_id)
     members.each do |member|
-      birthday = next_birthday_for_member(member, earliest)
-      if birthday < latest
-        item = {
-          :name => member.name,
-          :birthday => birthday,
-          :age_on_birthday => ((birthday - member.date_of_birth) / 365).to_i,
-        }
-        data.push item
+      unless member.date_of_birth.nil?
+        birthday = next_birthday_for_member(member, earliest)
+        if birthday < latest
+          item = {
+            :name => member.name,
+            :birthday => birthday,
+            :age_on_birthday => ((birthday - member.date_of_birth) / 365).to_i,
+          }
+          data.push item
+        end
       end
     end
 

@@ -210,9 +210,9 @@ Feature: Reminder Email
 	    | term_id | name   |
 	    | 1       | Term 1 |
 	And an OSM request to get members for section 1 in term 1 will have the members
-	    | email1         | email2         | email3         | email4         | grouping_id |
-	    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
-	    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           |
+	    | email1         | email2         | email3         | email4         | grouping_id | date_of_birth |
+	    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |               |
+	    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           | 0000-00-00    |
 	And an OSM request to get events for section 1 will have the events
 	    | name    | in how many days |
 	    | Event 1 | 7                |
