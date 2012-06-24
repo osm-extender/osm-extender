@@ -106,92 +106,83 @@ puts "Configuring OSMX"
 puts "----------------"
 config = [
   {
-    :prompt => ['What email address should contact us form submissions be sent to', 'contactus@example.com'],
+    :prompt => 'What email address should contact us form submissions be sent to',
     :key => 'contact us - to',
     :description => 'Which email address submissions of the contact us form should be sent to.',
   },{
-    :prompt => ['What email address should notifier mails be sent from', 'notifier-mailer@example.com'],
+    :prompt => 'What email address should notifier mails be sent from',
     :key => 'notifier mailer - from',
     :description => 'Which email address notification messages should claim to be from.',
   },{
-    :prompt => ['What email address should user related mails be sent from', 'user-mailer@example.com'],
+    :prompt => 'What email address should user related mails be sent from',
     :key => 'user mailer - from',
     :description => 'Which email address user account messages should claim to be from.',
   },{
-    :prompt => ['What email address should reminder mails be sent from', 'reminder-mailer@example.com'],
+    :prompt => 'What email address should reminder mails be sent from',
     :key => 'reminder mailer - from',
     :description => 'Which email address reminder emails should claim to be from',
   },{
-    :prompt => ['What email address should reminder failure mails be sent to', 'reminder-mailer-failed@example.com'],
+    :prompt => 'What email address should reminder failure mails be sent to',
     :key => 'notifier mailer - send failed reminder to',
     :description => 'Which email address to send debugging information from failed email reminder messages to',
   },{
-    :prompt => ['What address should exception notifications be sent to', 'exceptions@example.com'],
+    :prompt => 'What address should exception notifications be sent to',
     :key => 'notifier mailer - send exception to',
     :description => 'Which email address should exceptions be sent to. If this is blank then this email will not be sent.',
   },{
-    :prompt => ['What is the OSM API ID to use', '12'],
+    :prompt => 'What is the OSM API ID to use',
     :key => 'OSM API - id',
     :description => 'The ID you got from Ed at OSM.',
   },{
-    :prompt => ['What is the OSM API token to use', '1234567890'],
+    :prompt => 'What is the OSM API token to use',
     :key => 'OSM API - token',
     :description => 'The token you got from Ed at OSM.',
   },{
-    :prompt => ['What is the name displayed on OSM\'s External Access tab for this API', 'Example API'],
+    :prompt => 'What is the name displayed on OSM\'s External Access tab for this API',
     :key => 'OSM API - name',
     :description => "The name your API has on OSM's External Access tab.",
   },{
-    :prompt => ['What is the public key to use with ReCAPTCHA', '11223344556677889900'],
+    :prompt => 'What is the public key to use with ReCAPTCHA',
     :key => 'ReCAPTCHA - public key',
     :description => 'The public key you got from ReCAPTCHA.',
   },{
-    :prompt => ['What is the private key to use with ReCAPTCHA', '00998877665544332211'],
+    :prompt => 'What is the private key to use with ReCAPTCHA',
     :key => 'ReCAPTCHA - private key',
     :description => 'The private key you got from ReCAPTCHA.',
   },{
-    :prompt => ['What is the address of your SMTP server', 'smtp.example.com'],
+    :prompt => 'What is the address of your SMTP server',
     :key => 'Mail Server - Address',
     :description => 'The address of the SMTP server to use for outgoing email.',
   },{
-    :prompt => ['What port on the SMTP server should be used', '25'],
+    :prompt => 'What port on the SMTP server should be used',
     :key => 'Mail Server - Port',
     :description => 'The port of the SMTP server to use for outgoing email (this is normally 25).',
   },{
-    :prompt => ['What is your login domain on the SMTP server', ''],
+    :prompt => 'What is your login domain on the SMTP server',
     :key => 'Mail Server - Domain',
     :description => 'The login domain for the SMTP server to use for outgoing email.',
   },{
-    :prompt => ['What is your username on the SMTP server', 'sender@example.com'],
+    :prompt => 'What is your username on the SMTP server',
     :key => 'Mail Server - Username',
     :description => 'The login username for the SMTP server to use for outgoing email.',
   },{
-    :prompt => ['What is your password on the SMTP server', 'abcd1234'],
+    :prompt => 'What is your password on the SMTP server',
     :key => 'Mail Server - Password',
     :description => 'The login password for the SMTP server to use for outgoing email.',
   },{
-    :prompt => ['What signup code would you like to require users to use (if blank then no code will be asked for)', ''],
+    :prompt => 'What signup code would you like to require users to use (if blank then no code will be asked for)',
     :key => 'signup code',
     :description => 'A code which must be supplied to create an account (useful for temporarily limiting signups). If this is blank then no signup code will be required.',
   },{
-    :prompt => ['For how long should the settings read from the database be used without being reloaded', '1 second'],
+    :prompt => 'For how long should the settings read from the database be used without being reloaded',
     :key => 'maximum settings age',
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",
   }
 ]
-if Rails.env.test?
-  config += [
-    {
-      :key => 'test',
-      :value => 'a1b2c3d4',
-      :description => 'A test value.'
-    }
-  ]
-end
 config.each do |setting|
   sv = SettingValue.find_or_create_by_key(setting[:key])
   sv.description = setting[:description]
-  sv.value = setting[:value] || prompt(setting[:prompt][0], setting[:prompt][1]) unless sv.persisted?
+  sv.value = setting[:value] || prompt(setting[:prompt], '') unless sv.persisted?
   sv.save!
 end
 puts

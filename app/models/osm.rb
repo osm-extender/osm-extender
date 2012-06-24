@@ -936,7 +936,7 @@ module OSM
       @phone4 = data['phone4']
       @address = data['address']
       @address2 = data['address2']
-      @date_of_birth = Date.parse(data['dob'], 'yyyy-mm-dd')
+      @date_of_birth = OSM.parse_date(data['dob'])
       @started = data['started']
       @joined_in_years = data['joining_in_yrs']
       @parents = data['parents']
@@ -948,7 +948,7 @@ module OSM
       @subs = data['subs']
       @grouping_id = data['patrolid'].to_i
       @grouping_leader = data['patrolleader'] # 0 - No, 1 = seconder, 2 = sixer
-      @joined = Date.parse(data['joined'], 'yyyy-mm-dd')
+      @joined = OSM.parse_date(data['joined'])
       @age = data['age'] # 'yy / mm'
       @joined_years = data['yrs']
       @patrol = data['patrol']
@@ -1121,6 +1121,14 @@ module OSM
     elsif !date.blank?
       return DateTime.parse(date, 'yyyy-mm-dd')
     else
+      return nil
+    end
+  end
+
+  def self.parse_date(date)
+    begin
+      return Date.parse(date, 'yyyy-mm-dd')
+    rescue ArgumentError
       return nil
     end
   end
