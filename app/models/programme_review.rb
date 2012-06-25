@@ -250,7 +250,7 @@ class ProgrammeReview
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
 
-    @user.osm_api.get_programme(term.section_id, term.id).each do |programme|
+    @user.osm_api.get_programme(term.section_id, term.id, {:no_cache => true}).each do |programme|
       date_key = programme.meeting_date.strftime('%Y_%m')
       zones[:number][date_key] = blank_hash_for(@@zones) if zones[:number][date_key].nil?
       zones[:time][date_key] = blank_hash_for(@@zones) if zones[:time][date_key].nil?
@@ -258,7 +258,7 @@ class ProgrammeReview
       methods[:time][date_key] = blank_hash_for(@@methods) if methods[:time][date_key].nil?
 
       programme.activities.each do |activity|
-        activity_details = @user.osm_api.get_activity(activity.activity_id)
+        activity_details = @user.osm_api.get_activity(activity.activity_id, nil, {:no_cache => true})
         unless activity_details.nil?
           tags_in_array(activity_details.tags, @@zones[@section.type]).each do |tag|
             zone_or_method = tag[0]
