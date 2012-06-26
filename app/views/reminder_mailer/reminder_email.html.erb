@@ -1,72 +1,11 @@
 <p>This is your reminder email for <%= @role.long_name %>.</p>
 
-<%- if @data[:data][:EmailReminderItemNotepad] && !@data[:data][:EmailReminderItemNotepad].blank? %>
-<h1>Section Notepad</h1>
-<%= RedcarpetCompat.new(@data[:data][:EmailReminderItemNotepad], :hard_wrap, :autolink, :no_intraemphasis).to_html.html_safe %>
-
+<%- @data.each do |item| %>
+<%- unless item[:data].empty? %>
+<h1><%= item[:item].human_name.titleize %></h1>
+<%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:configuration] %>
 <hr/>
 <%- end %>
-<%- if @data[:data][:EmailReminderItemBirthday] && !@data[:data][:EmailReminderItemBirthday].empty? %>
-<h1>Birthdays</h1>
-The following <%= (@data[:data][:EmailReminderItemBirthday].size > 1) ? 'members have birthdays' : 'member has a birthday' %> between <%= ordinalized_date(@data[:config][:EmailReminderItemBirthday][:the_last_n_months].months.ago, "%d %b %Y") %> and <%= ordinalized_date(@data[:config][:EmailReminderItemBirthday][:the_next_n_months].months.from_now, "%d %b %Y") %>:
-<ul><%- @data[:data][:EmailReminderItemBirthday].each do |birthday| %>
-  <li><%= birthday[:name] %> <%= (birthday[:birthday] < Date.today) ? 'turned' : 'turns' %> <%= birthday[:age_on_birthday] %> on <%= ordinalized_date(birthday[:birthday], "%a the %d of %b %Y") %></li>
-<%- end %></ul>
-
-<hr/>
 <%- end %>
-<%- if @data[:data][:EmailReminderItemDueBadge] && !@data[:data][:EmailReminderItemDueBadge].by_member.empty? %>
-<h1>Due Badges</h1>
-<h2>The following <%= (@data[:data][:EmailReminderItemDueBadge].by_member.size > 1) ? 'members are' : 'member is' %> due badges</h2>
-<%- badges_due = @data[:data][:EmailReminderItemDueBadge].by_member %>
-<%- badge_totals = @data[:data][:EmailReminderItemDueBadge].totals %>
-<%- badges = @data[:data][:EmailReminderItemDueBadge].descriptions %>
-<ul><%- badges_due.each_key do |member| %>
-  <li><%= member %>:
-<ul><%- badges_due[member].each do |due_badge| %>
-    <li><%= badges[due_badge[:badge]][:name] %><%- unless due_badge[:extra_information].blank? %> (<%= due_badge[:extra_information] %>)<%- end %></li>
-<%- end %></ul></li>
-<%- end %></ul>
-
-<h2>You need to have the following badges</h2>
-<ul><%- badge_totals.each_key do |badge| %>
-<%- badge_totals[badge].each_key do |badge_extra| %>
-  <li><%= badges[badge][:name] %><%- unless badge_extra.blank? %> (<%= badge_extra %>)<%- end %> x <%= badge_totals[badge][badge_extra] %></li>
-<%- end %>
-<%- end %></ul>
-
-<hr/>
-<%- end %>
-<%- if @data[:data][:EmailReminderItemEvent] && !@data[:data][:EmailReminderItemEvent].empty? %>
-<h1>Events</h1>
-The following events are happening in the next <%= pluralize(@data[:config][:EmailReminderItemEvent][:the_next_n_months], 'month') %>:
-<ul><%- @data[:data][:EmailReminderItemEvent].each do |event| %>
-  <li><%= event.name %><%- if event.start %> on <%= ordinalized_date(event.start, "%a %d of %b %Y at %H:%M") %><%- end %></li>
-<%- end %></ul>
-
-<hr/>
-<%- end %>
-<%- if @data[:data][:EmailReminderItemProgramme] && !@data[:data][:EmailReminderItemProgramme].empty? %>
-<h1>Programme</h1>
-The programme for the following <%= pluralize(@data[:config][:EmailReminderItemProgramme][:the_next_n_weeks], 'week') %> is:
-<ul><%- @data[:data][:EmailReminderItemProgramme].each do |programme| %>
-  <li><%= programme[:title] %><%- if programme[:date] %> on <%= ordinalized_date(programme[:date], "%a %d of %b") %><%- end %><%- if programme[:start_time] %> at <%= programme[:start_time] %><%- end %><%- if programme[:end_time] %> until <%= programme[:end_time] %><%- end %>
-<ul><%- programme[:activities].each do |activity| %>
-    <li><%= activity %></li>
-<%- end %></ul></li>
-<%- end %></ul>
-
-<hr/>
-<%- end %>
-<%- if @data[:data][:EmailReminderItemNotSeen] && !@data[:data][:EmailReminderItemNotSeen].empty? %>
-<h1>Members Not Seen</h1>
-The following <%= (@data[:data][:EmailReminderItemNotSeen].size > 1) ? 'members have' : 'member has' %> not been seen for at least the last <%= pluralize(@data[:config][:EmailReminderItemNotSeen][:the_last_n_weeks], 'week') %>:
-<ul><%- @data[:data][:EmailReminderItemNotSeen].each do |member| %>
-  <li><%= member[:first_name] %> <%= member[:last_name] %></li>
-<%- end %></ul>
-
-<hr/>
-<%- end %>
-
 
 <p>Please note that if you have configured your reminder to include an item which has not been included it just means there is no information for that item to display.</p>

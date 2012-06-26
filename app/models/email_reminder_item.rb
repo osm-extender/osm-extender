@@ -1,12 +1,15 @@
 # This class is expected to be inherited from, the inheriting class MUST:
 # * provide a get_data method which will return the data to be provided to the email template
-# * provide a labels method to return a hash (keys are the keys into the configuration hash, values are the labels to display to the user)
+# * provide a get_fake_data method which will return a fake version of the data for use in previewing the data without accessing OSM
+# * human_name - to return a user friendly name for the class (e.g. Missed Scouts)
 # * provide a default_configuration method to return a complete configuration hash with default values
-# * provide a configuration_types method to return a hash (keys are the keys used in the above hash, value is the Class that the value should be converted to)
-# * provide a friendly_name method to return a user friendly name for the class (e.g. Missed Scouts)
+# * provide the following methods unless default_configuration returns an empty hash
+#   * configuration_labels - to return a hash (keys are the keys into the configuration hash, values are the labels to display to the user)
+#   * configuration_types - to return a hash (keys are the keys used in the above hash, value is the Class that the value should be converted to)
+#   * human_configuration - to return a string containing a user friendly version of the configuration (e.g. "From 1 week ago to 3 weeks time")
 
 class EmailReminderItem < ActiveRecord::Base
-  attr_accessible :email_reminder, :configuration
+  attr_accessible :email_reminder, :configuration, :position
 
   belongs_to :email_reminder
 
@@ -17,12 +20,18 @@ class EmailReminderItem < ActiveRecord::Base
 
   validate :only_one_of_each_type
 
+  acts_as_list
+
 
   def get_data
     raise "This method must be overridden"
   end
 
-  def labels
+  def get_fake_data
+    raise "This method must be overridden"
+  end
+
+  def human_name
     raise "This method must be overridden"
   end
 
@@ -30,12 +39,29 @@ class EmailReminderItem < ActiveRecord::Base
     raise "This method must be overridden"
   end
 
-  def configuration_types
-    raise "This method must be overridden"
+
+  def configuration_labels
+    if default_configuration.empty?
+      return {}
+    else
+      raise "This method must be overridden"
+    end
   end
 
-  def friendly_name
-    raise "This method must be overridden"
+  def configuration_types
+    if default_configuration.empty?
+      return {}
+    else
+      raise "This method must be overridden"
+    end
+  end
+
+  def human_configuration
+    if default_configuration.empty?
+      return "There are no settings for this item."
+    else
+      raise "This method must be overridden"
+    end
   end
 
 
@@ -92,7 +118,7 @@ class EmailReminderItem < ActiveRecord::Base
   def only_one_of_each_type
     email_reminder.items.each do |item|
       if (item.type == self.type) && (item != self)
-        errors.add(:email_reminder, "already has #{an_or_a(friendly_name)} #{friendly_name.downcase} reminder")
+        errors.add(:email_reminder, "already has #{an_or_a(human_name)} #{human_name.downcase} reminder")
       end
     end
   end

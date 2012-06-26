@@ -66,8 +66,7 @@ Feature: Reminder Email
         And I fill in "How many months into the future?" with "4"
         And I press "Create birthdays item"
         Then I should see "Item was successfully added"
-        And I should see "How many months into the past?: 3" in the "Configuration" column of the "Birthdays" row
-        And I should see "How many months into the future?: 4" in the "Configuration" column of the "Birthdays" row
+        And I should see "From 3 months ago to 4 months time." in the "Configuration" column of the "Birthdays" row
 
     Scenario: Add event item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -78,7 +77,7 @@ Feature: Reminder Email
         And I fill in "How many months into the future?" with "6"
         And I press "Create events item"
         Then I should see "Item was successfully added"
-        And I should see "How many months into the future?: 6" in the "Configuration" column of the "Events" row
+        And I should see "For the next 6 months." in the "Configuration" column of the "Events" row
 
     Scenario: Add programme item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -89,7 +88,7 @@ Feature: Reminder Email
         And I fill in "How many weeks into the future?" with "8"
         And I press "Create programme item"
         Then I should see "Item was successfully added"
-        And I should see "How many weeks into the future?: 8" in the "Configuration" column of the "Programme" row
+        And I should see "For the next 8 weeks." in the "Configuration" column of the "Programme" row
 
     Scenario: Add not seen item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -100,7 +99,7 @@ Feature: Reminder Email
         And I fill in "For how many weeks?" with "1"
         And I press "Create members not seen item"
         Then I should see "Item was successfully added"
-        And I should see "For how many weeks?: 1" in the "Configuration" column of the "Members not seen" row
+        And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
 
     Scenario: Add due badge item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -110,15 +109,17 @@ Feature: Reminder Email
         And I follow "Due badges"
         And I press "Create due badges item"
         Then I should see "Item was successfully added"
+        And I should see "There are no settings for this item." in the "Configuration" column of the "Due badges" row
 
     Scenario: Add notepad item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
-        And I follow "Section notepad"
-        And I press "Create notepad item"
+        And I follow "Section Notepad"
+        And I press "Create section notepad item"
         Then I should see "Item was successfully added"
+        And I should see "There are no settings for this item." in the "Configuration" column of the "Section Notepad" row
 
     Scenario: Message and no list when no more items to add to reminder
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
@@ -149,8 +150,7 @@ Feature: Reminder Email
         And I fill in "How many months into the future?" with "4"
         And I press "Update birthdays item"
         Then I should see "Item was successfully updated"
-        And I should see "How many months into the past?: 3" in the "Configuration" column of the "Birthdays" row
-        And I should see "How many months into the future?: 4" in the "Configuration" column of the "Birthdays" row
+        And I should see "From 3 months ago to 4 months time." in the "Configuration" column of the "Birthdays" row
 
     Scenario: Edit event item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -162,7 +162,7 @@ Feature: Reminder Email
         And I fill in "How many months into the future?" with "6"
         And I press "Update events item"
         Then I should see "Item was successfully updated"
-        And I should see "How many months into the future?: 6" in the "Configuration" column of the "Events" row
+        And I should see "For the next 6 months." in the "Configuration" column of the "Events" row
 
     Scenario: Edit programme item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -174,7 +174,7 @@ Feature: Reminder Email
         And I fill in "How many weeks into the future?" with "8"
         And I press "Update programme item"
         Then I should see "Item was successfully updated"
-        And I should see "How many weeks into the future?: 8" in the "Configuration" column of the "Programme" row
+        And I should see "For the next 8 weeks." in the "Configuration" column of the "Programme" row
 
     Scenario: Edit not seen item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -186,7 +186,7 @@ Feature: Reminder Email
         And I fill in "For how many weeks?" with "1"
         And I press "Update members not seen item"
         Then I should see "Item was successfully updated"
-        And I should see "For how many weeks?: 1" in the "Configuration" column of the "Members not seen" row
+        And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
 
 
     Scenario: Preview the email

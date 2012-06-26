@@ -1,0 +1,17 @@
+<h2>The following <%= (data.by_member.size > 1) ? 'members are' : 'member is' %> due badges</h2>
+<%- badges_due = data.by_member %>
+<%- badge_totals = data.totals %>
+<%- badges = data.descriptions %>
+<ul><%- badges_due.each_key do |member| %>
+  <li><%= member %>:
+<ul><%- badges_due[member].each do |due_badge| %>
+    <li><%= badges[due_badge[:badge]][:name] %><%- unless due_badge[:extra_information].blank? %> (<%= due_badge[:extra_information] %>)<%- end %></li>
+<%- end %></ul></li>
+<%- end %></ul>
+
+<h2>You need to have the following badges</h2>
+<ul><%- badge_totals.each_key do |badge| %>
+<%- badge_totals[badge].each_key do |badge_extra| %>
+  <li><%= badges[badge][:name] %><%- unless badge_extra.blank? %> (<%= badge_extra %>)<%- end %> x <%= badge_totals[badge][badge_extra] %></li>
+<%- end %>
+<%- end %></ul>

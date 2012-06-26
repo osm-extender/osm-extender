@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120620125309) do
+ActiveRecord::Schema.define(:version => 20120626105956) do
 
   create_table "email_lists", :force => true do |t|
     t.text     "name"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20120620125309) do
     t.text     "configuration"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "position",          :default => 0, :null => false
   end
 
   add_index "email_reminder_items", ["email_reminder_id"], :name => "index_email_reminder_items_on_email_reminder_id"

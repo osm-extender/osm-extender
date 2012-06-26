@@ -788,7 +788,7 @@ module OSM
 
     # Custom section type checkers
     [:beavers, :cubs, :scouts, :explorers, :adult, :waiting].each do |attribute|
-      define_method "#{attribute}_section=" do
+      define_method "#{attribute}_section?" do
         @type == attribute
       end
     end
@@ -1147,6 +1147,10 @@ module OSM
           @totals[key][item[:extra]] = @totals[key][item[:extra]].to_i + 1
         end
       end
+    end
+
+    def empty?
+      return @by_member.empty?
     end
 
   end

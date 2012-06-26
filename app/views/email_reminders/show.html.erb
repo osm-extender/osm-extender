@@ -18,10 +18,8 @@
     <tr><th>Item</th><th>Configuration</th></tr>
     <%- @email_reminder.items.each do |item| %>
       <tr>
-        <td><%= item.friendly_name %></td>
-        <td><%- item.configuration.each_key do |key| %>
-          <%= item.labels[key] %>: <%= item.configuration[key] %><br/>
-        <%- end %></td>
+        <td><%= item.human_name %></td>
+        <td><%= item.human_configuration %></td>
       </tr>
     <%- end %>
   </table>

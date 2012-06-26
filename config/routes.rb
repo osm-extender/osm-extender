@@ -56,6 +56,7 @@ OSMExtender::Application.routes.draw do
   end
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
   get 'email_reminders/:id/send_email' => 'email_reminders#send_email', :as => 'send_email_reminder'
+  post 'email_reminders/:id/re_order' => 'email_reminders#re_order', :as => 're_order_email_reminder'
 
   get 'settings' => 'settings#edit', :as => 'edit_settings'
   put 'settings' => 'settings#update', :as => 'update_settings'

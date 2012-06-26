@@ -1,7 +1,7 @@
 class EmailRemindersController < ApplicationController
   before_filter :require_connected_to_osm
   before_filter :setup_tertiary_menu
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>:re_order
 
   # GET /email_reminders
   # GET /email_reminders.json
@@ -16,7 +16,7 @@ class EmailRemindersController < ApplicationController
   # GET /email_reminders/1
   # GET /email_reminders/1.json
   def show
-    @email_reminder = EmailReminder.find(params[:id])
+    @email_reminder = current_user.email_reminders.find(params[:id])
     @tertiary_menu_items.push(['Edit this reminder', edit_email_reminder_path(@email_reminder)])
     @tertiary_menu_items.push(['Preview this reminder', '#preview'])
 
@@ -29,7 +29,7 @@ class EmailRemindersController < ApplicationController
   # GET /email_reminders/new
   # GET /email_reminders/new.json
   def new
-    @email_reminder = EmailReminder.new
+    @email_reminder = current_user.email_reminders.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -39,7 +39,7 @@ class EmailRemindersController < ApplicationController
 
   # GET /email_reminders/1/edit
   def edit
-    @email_reminder = EmailReminder.find(params[:id])
+    @email_reminder = current_user.email_reminders.find(params[:id])
     @available_items = get_available_items
   end
 
@@ -67,7 +67,7 @@ class EmailRemindersController < ApplicationController
   # PUT /email_reminders/1
   # PUT /email_reminders/1.json
   def update
-    @email_reminder = EmailReminder.find(params[:id])
+    @email_reminder = current_user.email_reminders.find(params[:id])
 
     respond_to do |format|
       if @email_reminder.update_attributes(params[:email_reminder])
@@ -83,7 +83,7 @@ class EmailRemindersController < ApplicationController
   # DELETE /email_reminders/1
   # DELETE /email_reminders/1.json
   def destroy
-    @email_reminder = EmailReminder.find(params[:id])
+    @email_reminder = current_user.email_reminders.find(params[:id])
     @email_reminder.destroy
 
     respond_to do |format|
@@ -93,15 +93,22 @@ class EmailRemindersController < ApplicationController
   end
 
 
+  def re_order
+    params[:email_reminder_item].each_with_index do |id, index|
+      current_user.email_reminders.find(params[:id]).items.update_all({position: index+1}, {id: id})
+    end
+    render nothing: true
+  end
+
   def preview
-    email_reminder = EmailReminder.find(params[:id])
+    email_reminder = current_user.email_reminders.find(params[:id])
     @role = current_role
     @data = email_reminder.get_fake_data
     render "reminder_mailer/reminder_email", :layout => 'mail'
   end
 
   def send_email
-    email_reminder = EmailReminder.find(params[:id])
+    email_reminder = current_user.email_reminders.find(params[:id])
     unless email_reminder.nil?
       email_reminder.send_email
       respond_to do |format|
@@ -151,7 +158,7 @@ class EmailRemindersController < ApplicationController
       end
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotepad')
-      items.push ({:name => 'Section notepad', :type => 'notepad', :as_link => true})
+      items.push ({:name => 'Section Notepad', :type => 'notepad', :as_link => true})
     end
     return items
   end

@@ -31,22 +31,12 @@ class EmailReminderItemDueBadge < EmailReminderItem
   end
 
 
-  def labels
-    {
-    }
-  end
-
   def default_configuration
     {
     }
   end
 
-  def configuration_types
-    {
-    }
-  end
-
-  def friendly_name
+  def human_name
     return 'Due badges'
   end
 

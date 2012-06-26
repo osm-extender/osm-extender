@@ -2,7 +2,7 @@ class EmailReminder < ActiveRecord::Base
   attr_accessible :user, :section_id, :send_on
 
   belongs_to :user
-  has_many :items, :class_name=>'EmailReminderItem', :dependent=>:destroy
+  has_many :items, :class_name=>'EmailReminderItem', :dependent=>:destroy, :order => :position
 
   validates_presence_of :user
   
@@ -44,14 +44,17 @@ class EmailReminder < ActiveRecord::Base
 
   private
   def build_data(data_method)
-    data = {}
-    config = {}
+    reminder_items = Array.new
+
     items.each do |item|
-      key = item.type.to_sym
-      data[key] = item.send(data_method)
-      config[key] = item.configuration
+      reminder_items.push ({
+        :item => item,
+        :data => item.send(data_method),
+        :configuration => item.configuration,
+      })
     end
-    return {:data=>data, :config=>config}
+
+    return reminder_items
   end
 
 end
