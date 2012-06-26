@@ -39,7 +39,8 @@ OSMExtender::Application.routes.draw do
   get 'programme_review/balanced' => 'programme_review#balanced', :as => 'programme_review_balanced'
   get 'programme_review/balanced_data' => 'programme_review#balanced_data', :as => 'programme_review_balanced_data'
 
-  delete 'programme_review_balanced_cache/:id(.:format)' => 'programme_review_balanced_cache#destroy', :as => 'programme_review_balanced_cach'
+  delete 'programme_review_balanced_cache/:id(.:format)' => 'programme_review_balanced_cache#destroy', :as => 'programme_review_balanced_cache'
+  post 'programme_review_balanced_cache/delete_multiple(.:format)' => 'programme_review_balanced_cache#destroy_multiple', :as => 'delete_multiple_programme_review_balanced_cache'
 
   resources :password_resets
   resources :contact_us, :only=>[:new, :create]

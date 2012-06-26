@@ -37,13 +37,16 @@
 
     <%- unless @cached_terms.empty? %>
       <h2>Caching</h2>
-      <p>In order to speed up the generation of these graphs the data from some of your terms was retreieved from a cache, it the activities used within these terms (or the programme for the term) has changed since they were generated then they will be out of date. If this is the case you may delete the cached data using the links in the table below.</p>
-      <table>
-        <tr><th>Term</th><th>Created at</th><th>Actions</th></tr>
-        <%- @cached_terms.each do |term| %>
-          <tr><td><%= @terms[term.term_id].name %></td><td><%= term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(term.created_at) %> ago)</td><td><%= link_to '[Delete]', term, data: {:confirm => 'Are you sure?'}, method: :delete %></td></tr>
-        <%- end %>
-      </table>
+      <%= form_tag delete_multiple_programme_review_balanced_cache_path, :method => :post do %>
+        <p>In order to speed up the generation of these graphs the data from some of your terms was retreieved from a cache, it the activities used within these terms (or the programme for the term) has changed since they were generated then they will be out of date. If this is the case you may delete the cached data using the links in the table below.</p>
+        <table>
+          <tr><th></th><th>Term</th><th>Created at</th><th>Actions</th></tr>
+          <%- @cached_terms.each do |cached_term| %>
+            <tr><td><%= check_box_tag "term_ids[]", @terms[cached_term.term_id].id %></td><td><%= @terms[cached_term.term_id].name %></td><td><%= cached_term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(cached_term.created_at) %> ago)</td><td><%= link_to '[Delete]', cached_term, data: {:confirm => 'Are you sure?'}, method: :delete %></td></tr>
+          <%- end %>
+        </table>
+        <div style="text-align: center;"><%= submit_tag "Delete selected cache entries" %></div>
+      <% end %>
     <%- end %>
   </div>
 

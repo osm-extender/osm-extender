@@ -2,17 +2,20 @@ class ProgrammeReviewBalancedCacheController < ApplicationController
   load_and_authorize_resource
 
   def destroy
-    @programme_review_balanced_cache = ProgrammeReviewBalancedCache.find(params[:id])
+    ProgrammeReviewBalancedCache.for_section(current_section).find(params[:id]).delete
 
-    if can? :delete, @programme_review_balanced_cache
-      @programme_review_balanced_cache.destroy
-      respond_to do |format|
-        format.html { redirect_to root_path }
-        format.json { head :ok }
-      end
+    respond_to do |format|
+      format.html { redirect_to programme_review_balanced_path }
+      format.json { head :ok }
+    end
+  end
 
-    else
-      redirect_back_or_to_root
+  def destroy_multiple
+    ProgrammeReviewBalancedCache.for_section(current_section).delete_all(:term_id => params[:term_ids])
+
+    respond_to do |format|
+      format.html { redirect_to programme_review_balanced_path }
+      format.json { head :ok }
     end
   end
 
