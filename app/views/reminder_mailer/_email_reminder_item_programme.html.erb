@@ -1,0 +1,7 @@
+The programme for the following <%= pluralize(configuration[:the_next_n_weeks], 'week') %> is:
+<ul><%- data.each do |programme| %>
+  <li><%= programme[:title] %><%- if programme[:date] %> on <%= ordinalized_date(programme[:date], "%a %d of %b") %><%- end %><%- if programme[:start_time] %> at <%= programme[:start_time] %><%- end %><%- if programme[:end_time] %> until <%= programme[:end_time] %><%- end %>
+<ul><%- programme[:activities].each do |activity| %>
+    <li><%= activity %></li>
+<%- end %></ul></li>
+<%- end %></ul>

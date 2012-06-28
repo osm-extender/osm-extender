@@ -16,6 +16,7 @@ class AddFaqTags < ActiveRecord::Migration
     end
     add_index :faq_tagings, :faq_id
     add_index :faq_tagings, :faq_tag_id
+    add_index :faq_tagings, [:faq_id, :faq_tag_id], :unique=>true
   end
 
 

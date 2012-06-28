@@ -34,12 +34,15 @@ OSMExtender::Application.routes.draw do
 
   resources :faqs
   get 'help' => 'faqs#list', :as => 'list_faqs'
+  post 'faqs/:tag_id/re_order' => 'faqs#re_order', :as => 're_order_faqs'
   get 'faq_tags' => 'faq_tags#index'
+  post 'faq_tags/re_order' => 'faq_tags#re_order', :as => 're_order_faq_tags'
 
   get 'programme_review/balanced' => 'programme_review#balanced', :as => 'programme_review_balanced'
   get 'programme_review/balanced_data' => 'programme_review#balanced_data', :as => 'programme_review_balanced_data'
 
   delete 'programme_review_balanced_cache/:id(.:format)' => 'programme_review_balanced_cache#destroy', :as => 'programme_review_balanced_cach'
+  post 'programme_review_balanced_cache/delete_multiple(.:format)' => 'programme_review_balanced_cache#destroy_multiple', :as => 'delete_multiple_programme_review_balanced_cache'
 
   resources :password_resets
   resources :contact_us, :only=>[:new, :create]
@@ -55,6 +58,7 @@ OSMExtender::Application.routes.draw do
   end
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
   get 'email_reminders/:id/send_email' => 'email_reminders#send_email', :as => 'send_email_reminder'
+  post 'email_reminders/:id/re_order' => 'email_reminders#re_order', :as => 're_order_email_reminder'
 
   get 'settings' => 'settings#edit', :as => 'edit_settings'
   put 'settings' => 'settings#update', :as => 'update_settings'

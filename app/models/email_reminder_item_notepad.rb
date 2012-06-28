@@ -8,23 +8,13 @@ class EmailReminderItemNotepad < EmailReminderItem
     return Faker::Lorem.paragraph(1 + rand(3))
   end
 
-  def labels
-    {
-    }
-  end
-
   def default_configuration
     {
     }
   end
 
-  def configuration_types
-    {
-    }
-  end
-
-  def friendly_name
-    return 'Notepad'
+  def human_name
+    return 'Section Notepad'
   end
 
 end

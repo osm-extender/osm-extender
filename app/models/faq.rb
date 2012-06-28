@@ -13,7 +13,7 @@ class Faq < ActiveRecord::Base
   validate :ensure_at_least_one_tag
 
   def tag_tokens=(tokens)
-    self.tag_ids = FaqTag.ids_from_tokens(tokens)
+    self.tag_ids = FaqTag.ids_from_tags(tokens)
   end
 
 

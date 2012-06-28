@@ -34,7 +34,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
     return data
   end
 
-  def labels
+  def configuration_labels
     {
       :the_last_n_weeks => 'For how many weeks?',
     }
@@ -52,8 +52,12 @@ class EmailReminderItemNotSeen < EmailReminderItem
     }
   end
 
-  def friendly_name
+  def human_name
     return 'Members not seen'
+  end
+
+  def human_configuration
+    "In the last #{configuration[:the_last_n_weeks]} #{"week".pluralize(configuration[:the_last_n_weeks])}."
   end
 
 

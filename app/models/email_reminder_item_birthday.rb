@@ -45,7 +45,7 @@ class EmailReminderItemBirthday < EmailReminderItem
   end
 
 
-  def labels
+  def configuration_labels
     {
       :the_next_n_months => 'How many months into the future?',
       :the_last_n_months => 'How many months into the past?',
@@ -66,9 +66,15 @@ class EmailReminderItemBirthday < EmailReminderItem
     }
   end
 
-  def friendly_name
-    return 'Birthdays'
+  def human_name
+    'Birthdays'
   end
+
+  def human_configuration
+    "From #{configuration[:the_last_n_months]} #{"month".pluralize(configuration[:the_last_n_months])} ago " +
+    "to #{configuration[:the_next_n_months]} months time."
+  end
+
 
   private
   def next_birthday_for_member(member, from=Date.today)

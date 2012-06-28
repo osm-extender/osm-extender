@@ -12,15 +12,6 @@ class Ability
 
     # Things everyone can do
     can :list, Faq
-    can :delete, ProgrammeReviewBalancedCache do |item|
-      result = false
-      if user.connected_to_osm?
-        user.osm_api.get_roles.each do |role|
-          result = true if (role.section.id == item.section_id)
-        end
-      end
-      result
-    end
 
     unless user
       # Things only non authenticated users can do
@@ -28,7 +19,7 @@ class Ability
 
     else
       # Things only authenticated users can do
-      can [:administer, :preview, :send_email], EmailReminder do |reminder|
+      can [:administer, :preview, :send_email, :re_order], EmailReminder do |reminder|
         reminder.user == user
       end
       can :create, EmailReminder
@@ -42,6 +33,15 @@ class Ability
         list.user == user
       end
       can [:create, :preview], EmailList
+      can [:destroy, :destroy_multiple], ProgrammeReviewBalancedCache do |item|
+        result = false
+        if user.connected_to_osm?
+          user.osm_api.get_roles.each do |role|
+            result = true if (role.section.id == item.section_id)
+          end
+        end
+        result
+      end
 
       # Things user administrators can do
       if user.can_administer_users?
@@ -53,7 +53,9 @@ class Ability
 
       # Things FAQ administrators can do
       if user.can_administer_faqs?
-        can :administer, Faq
+        can [:administer, :re_order], Faq
+        can [:administer, :re_order], FaqTag
+        can :administer, FaqTaging
       end
 
       # Things Settings administrators can do

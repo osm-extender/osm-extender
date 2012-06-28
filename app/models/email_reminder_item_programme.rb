@@ -58,7 +58,7 @@ class EmailReminderItemProgramme < EmailReminderItem
   end
 
 
-  def labels
+  def configuration_labels
     {
       :the_next_n_weeks => 'How many weeks into the future?',
     }
@@ -76,9 +76,14 @@ class EmailReminderItemProgramme < EmailReminderItem
     }
   end
 
-  def friendly_name
+  def human_name
     return 'Programme'
   end
+
+  def human_configuration
+    "For the next #{configuration[:the_next_n_weeks]} #{"week".pluralize(configuration[:the_next_n_weeks])}."
+  end
+
 
   private
   def configuration_is_valid

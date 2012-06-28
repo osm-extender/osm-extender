@@ -6,7 +6,7 @@ class ProgrammeReviewController < ApplicationController
   def balanced
     @methods = ProgrammeReview.methods[current_section.type]
     @zones = ProgrammeReview.zones[current_section.type]
-    @cached_terms = ProgrammeReviewBalancedCache.where(['section_id = ?', current_section.id])
+    @cached_terms = ProgrammeReviewBalancedCache.for_section(current_section)
     
     @terms = {}
     current_user.osm_api.get_terms.each do |term|

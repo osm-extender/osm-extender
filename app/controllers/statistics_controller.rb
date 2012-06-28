@@ -62,7 +62,7 @@ class StatisticsController < ApplicationController
     items_max = 0
     todays_data.email_reminders_by_type.each do |key, value|
       items_max = value if value > items_max
-      items[Kernel.const_get(key).new.friendly_name] = value
+      items[Kernel.const_get(key).new.human_name] = value
     end
 
     return {

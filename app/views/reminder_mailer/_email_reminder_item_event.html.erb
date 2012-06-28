@@ -1,0 +1,4 @@
+The following events are happening in the next <%= pluralize(configuration[:the_next_n_months], 'month') %>:
+<ul><%- data.each do |event| %>
+  <li><%= event.name %><%- if event.start %> on <%= ordinalized_date(event.start, "%a %d of %b %Y at %H:%M") %><%- end %></li>
+<%- end %></ul>

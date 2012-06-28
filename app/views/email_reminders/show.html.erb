@@ -14,17 +14,11 @@
 <h2>Items</h2>
 <%- unless @email_reminder.items.empty? %>
   <p>This reminder contains the following items.</p>
-  <table>
-    <tr><th>Item</th><th>Configuration</th></tr>
+  <ol>
     <%- @email_reminder.items.each do |item| %>
-      <tr>
-        <td><%= item.friendly_name %></td>
-        <td><%- item.configuration.each_key do |key| %>
-          <%= item.labels[key] %>: <%= item.configuration[key] %><br/>
-        <%- end %></td>
-      </tr>
+      <li><%= item.human_name %> (<%= item.human_configuration %>)</li>
     <%- end %>
-  </table>
+  </ol>
 <%- else %>
   <p>This email reminder has no items yet.</p>
 <%- end %>

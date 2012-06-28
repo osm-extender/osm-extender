@@ -1,0 +1,5 @@
+The following <%= (data.size > 1) ? 'members have' : 'member has' %> not been seen for at least the last <%= pluralize(configuration[:the_last_n_weeks], 'week') %>:
+<ul><%- data.each do |member| %>
+  <li><%= member[:first_name] %> <%= member[:last_name] %></li>
+<%- end %></ul>
+Note that members who have a known absense are treated as being present.
