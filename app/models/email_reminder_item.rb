@@ -18,6 +18,8 @@ class EmailReminderItem < ActiveRecord::Base
   validates_presence_of :email_reminder_id
   validates_presence_of :type
 
+  validates_numericality_of :position, :only_integer=>true, :greater_than_or_equal_to=>0
+
   validate :only_one_of_each_type
 
   acts_as_list

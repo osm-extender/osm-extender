@@ -1,6 +1,7 @@
 class EmailRemindersController < ApplicationController
   before_filter :require_connected_to_osm
   before_filter :setup_tertiary_menu
+  load_and_authorize_resource
 
   # GET /email_reminders
   # GET /email_reminders.json

@@ -2,14 +2,14 @@
 
 <div style="text-align: center;">
   <%- @faqs.each_key do |tag| %>
-    <a href="#<%= tag.downcase.gsub(/[^a-z]+/, '_') %>">[<%= tag.titleize %>]</a>
+    <a href="#<%= tag.name.parameterize.underscore %>">[<%= tag.name.titleize %>]</a>
   <%- end %>
 </div>
 
-<%- @faqs.each_key do |tag| %>
-  <a name="<%= tag.downcase.gsub(/[^a-z]+/, '_') %>"><h2><%= tag.titleize %></h2>
-  <div id="accordion-<%= tag %>" class="ui-accordion accordion_faqs" style="width: 90%; margin-right: auto; margin-left:auto;">
-    <% @faqs[tag].each do |faq| %>
+<%- @faqs.each do |tag, faqs| %>
+  <a name="<%= tag.name.parameterize.underscore %>"><h2><%= tag.name.titleize %></h2>
+  <div id="accordion-<%= tag.name.parameterize.underscore %>" class="ui-accordion accordion_faqs" style="width: 90%; margin-right: auto; margin-left:auto;">
+    <% faqs.each do |faq| %>
       <h3 class="ui-accordion-header"><a href="#"><%= faq.question %></a></h3>
       <div class="ui-accordion-content"><%= markdown faq.answer %></div>
     <% end %>

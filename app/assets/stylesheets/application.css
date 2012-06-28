@@ -44,6 +44,13 @@ table {
     margin-right:       auto;
 }
 
+table.left {
+    margin-left: 0px;
+}
+table.right {
+    margin-right: 0px;
+}
+
 table, th, td {
     border:             2px solid green;
 }

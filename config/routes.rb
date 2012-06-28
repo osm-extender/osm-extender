@@ -34,7 +34,9 @@ OSMExtender::Application.routes.draw do
 
   resources :faqs
   get 'help' => 'faqs#list', :as => 'list_faqs'
+  post 'faqs/:tag_id/re_order' => 'faqs#re_order', :as => 're_order_faqs'
   get 'faq_tags' => 'faq_tags#index'
+  post 'faq_tags/re_order' => 'faq_tags#re_order', :as => 're_order_faq_tags'
 
   get 'programme_review/balanced' => 'programme_review#balanced', :as => 'programme_review_balanced'
   get 'programme_review/balanced_data' => 'programme_review#balanced_data', :as => 'programme_review_balanced_data'

@@ -3,8 +3,9 @@ class FaqsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @faqs = Faq.all
+    @faqs = FaqTag.all_by_tag(:all_faqs => true)
     @faq = Faq.new
+    @faq_tags = FaqTag.order(:name)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,11 +14,7 @@ class FaqsController < ApplicationController
   end
 
   def list
-    @faqs = {}
-    FaqTag.all.each do |tag|
-      active_faqs = tag.active_faqs
-      @faqs[tag.name] = active_faqs unless active_faqs.empty?
-    end
+    @faqs = FaqTag.all_by_tag
 
     respond_to do |format|
       format.html # list.html.erb
@@ -88,6 +85,13 @@ class FaqsController < ApplicationController
     else
       redirect_back_or_to_root
     end
+  end
+
+  def re_order
+    params["faq_#{params[:tag_id]}"].each_with_index do |id, index|
+      FaqTaging.find_by_faq_tag_id_and_faq_id(params[:tag_id], id).update_attributes({position: index+1})
+    end
+    render nothing: true
   end
 
 end

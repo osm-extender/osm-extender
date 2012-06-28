@@ -53,7 +53,9 @@ class Ability
 
       # Things FAQ administrators can do
       if user.can_administer_faqs?
-        can :administer, Faq
+        can [:administer, :re_order], Faq
+        can [:administer, :re_order], FaqTag
+        can :administer, FaqTaging
       end
 
       # Things Settings administrators can do
