@@ -130,4 +130,13 @@ class ApplicationController < ActionController::Base
     session[:current_role].section
   end
 
+
+  def get_groupings
+    groupings = {}
+    current_user.osm_api.get_groupings(current_section.id).each do |grouping|
+      groupings[grouping.name] = grouping.id
+    end
+    return groupings
+  end
+
 end
