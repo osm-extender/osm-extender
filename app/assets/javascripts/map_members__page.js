@@ -65,7 +65,7 @@ var plotMember = function(member) {
           title: member.name
         });
         marker.info = new google.maps.InfoWindow({
-          content: '<b>' + member.address + '</b><br/>' + member.name
+          content: member.name
         });
         google.maps.event.addListener(marker, 'click', function() {
           marker.info.open(map, marker);
@@ -98,7 +98,7 @@ var plotMember = function(member) {
         }
         markers[location].setTitle('Multiple members.');
         markers[location].info = new google.maps.InfoWindow({
-          content: '<b>' + member.address + '</b><ul>' + listOfMembers + '</ul>'
+          content: '<ul>' + listOfMembers + '</ul>'
         });
       }
     } else {
