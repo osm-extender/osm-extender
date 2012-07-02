@@ -2,8 +2,8 @@ class Faq < ActiveRecord::Base
   attr_accessible :question, :answer, :active, :tag_tokens
   attr_reader :tag_tokens
 
-  has_many :faq_tagings, :dependent => :destroy
-  has_many :tags, :class_name => :'FaqTag', :source => :faq_tag, :through => :faq_tagings
+  has_many :tagings, :class_name => :FaqTaging, :dependent => :destroy
+  has_many :tags, :class_name => :FaqTag, :source => :faq_tag, :through => :tagings
 
   validates_presence_of :question
   validates_uniqueness_of :question

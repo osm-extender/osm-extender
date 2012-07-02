@@ -21,13 +21,6 @@ for (var colourName in colours) {
   );
 }
 
-var pinMultiple = new google.maps.MarkerImage(
-  'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%2B|AAAAFF',
-  new google.maps.Size(21, 34),
-  new google.maps.Point(0,0),
-  new google.maps.Point(10, 34)
-);
-
 var pinBase = new google.maps.MarkerImage(
   'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=star|AAFFAA',
   new google.maps.Size(21, 34),
@@ -89,7 +82,12 @@ var plotMember = function(member) {
           if (this_member.grouping_id != membersInSameGrouping) {membersInSameGrouping = null;}
         }
         if (membersInSameGrouping == null) {  // members are not in the same grouping
-          markers[location].setIcon(pinMultiple);
+          markers[location].setIcon(new google.maps.MarkerImage(
+            'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + members[location].length + '|AAAAFF',
+            new google.maps.Size(21, 34),
+            new google.maps.Point(0,0),
+            new google.maps.Point(10, 34)
+          ));
         } else {
           markers[location].setIcon(new google.maps.MarkerImage(
             'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + members[location].length + '|' + colours[document.getElementById('pin-' + member.grouping_id).value],

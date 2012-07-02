@@ -94,6 +94,12 @@ Faq.seed(:system_id,
     :answer => "The programme wizard feature allows you create a number of evenings with a specified title and start/end times easily. You specify the start date, end date and how many days should be between each meeting, along with the meeting title, start time and end time - OSMX does the rest.",
     :tags => [faq_tag_features],
     :active => true
+  },{
+    :system_id => 9,
+    :question => "What's the Map members feature?",
+    :answer => "The map members feature allows you to see a map depicting how your members are distributed. You can specify which address is used as well as what colour pin to use for each of your groupings, if you have a grouping named with one of the available colours then that colour should be picked for you. You can optionally enter the address of your meeting place for inclusion on the map (it is shown by a light green pin with a star inside). If more than one member lives at the same address then the number of members at that address appears in the pin. If the pin is light blue then the members at a shared address are not in the same grouping.\n\nThe location of the addresses are gathered from Google's geocoding service, the minimum detail the address needs should be streey address and either town or postcode (e.g. '12 Some Street, Some town' or '123 Some Lane, AB34 5FG').",
+    :tags => [faq_tag_features],
+    :active => true
   },
 )
 puts
