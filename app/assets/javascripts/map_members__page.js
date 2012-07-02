@@ -104,8 +104,15 @@ var plotMember = function(member) {
         });
       }
     } else {
-      alert("Geocoding " + member.name + "'s address (" + member.address + ") was not successful for the following reason:\n" + status);
+      appendStatus(member.name + ' not included (' + status + ')');
     }
+  }
+}
+
+// Allow member to be inscope in callback function
+var geocodeMember = function(member) {
+  return function() {
+    geocoder.geocode( { 'address': member.address}, plotMember(member));
   }
 }
 
@@ -114,6 +121,7 @@ function plot() {
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
   markers = {};
   members = {};
+  updateStatus('');
   var base = document.getElementById('base').value;
   if (base.length > 0) {
     geocoder.geocode( { 'address': base}, function(results, status) {
@@ -129,7 +137,7 @@ function plot() {
         });
         map.fitBounds(bounds.extend(location));
       } else {
-        alert("Geocoding of your meeting place was not successful for the following reason:\n" + status);
+        appendStatus('Meeting place not included (' + status + ')');
       }
     });
   }
@@ -142,11 +150,18 @@ function plot() {
       for (var index in data['members']) {
         var member = data['members'][index];
         if (member.address.length > 0) {
-          geocoder.geocode( { 'address': member.address}, plotMember(member));
+          setTimeout(geocodeMember(member), (index * 500));   // Don't hammer the API too fast
         } else {
-          alert(member.name + ' does not have an address entered in OSM.');
+          appendStatus(member.name + ' not included (does not have selected address)');
         }
       }
     }
   });
+}
+
+function updateStatus(message) {
+  $("#status_message").html(message);
+}
+function appendStatus(message) {
+  $("#status_message").html($("#status_message").html() + ($("#status_message").html().length > 0 ? '<br/>' : '') + message);
 }
