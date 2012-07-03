@@ -1,8 +1,8 @@
 class FaqTaging < ActiveRecord::Base
   attr_accessible :faq, :tag, :position
 
-  belongs_to :tag, :class_name => 'FaqTag', :inverse_of => :tagings
-  belongs_to :faq, :inverse_of => :tagings
+  belongs_to :tag, :class_name => 'FaqTag', :foreign_key => :tag_id
+  belongs_to :faq, :foreign_key => :faq_id
 
   validates_presence_of :tag
   validates_presence_of :faq
@@ -12,5 +12,12 @@ class FaqTaging < ActiveRecord::Base
   validates_numericality_of :position, :only_integer=>true, :greater_than_or_equal_to=>0
 
   acts_as_list
+  
+  after_destroy :delete_tag_if_unused
+
+
+  def delete_tag_if_unused
+    tag.destroy if tag.faqs.size == 0
+  end
 
 end

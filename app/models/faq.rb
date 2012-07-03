@@ -2,7 +2,7 @@ class Faq < ActiveRecord::Base
   attr_accessible :question, :answer, :active, :tag_tokens
   attr_reader :tag_tokens
 
-  has_many :tagings, :class_name => :FaqTaging, :dependent => :destroy, :inverse_of => :tag
+  has_many :tagings, :class_name => :FaqTaging, :dependent => :destroy
   has_many :tags, :class_name => :FaqTag, :source => :tag, :through => :tagings
 
   validates_presence_of :question

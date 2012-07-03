@@ -1,7 +1,7 @@
 class FaqTag < ActiveRecord::Base
   attr_accessible :name, :position
 
-  has_many :tagings, :class_name => :FaqTaging, :dependent => :destroy, :order => :position, :inverse_of => :tag, :foreign_key => :tag_id
+  has_many :tagings, :class_name => :FaqTaging, :dependent => :destroy, :order => :position, :foreign_key => :tag_id
   has_many :faqs, :through => :tagings, :order => :position
 
   validates_presence_of :name
