@@ -46,6 +46,7 @@ puts "Creating FAQs"
 puts "-------------"
 faq_tag_osmx = FaqTag.find_or_create_by_name('Online Scout Manager Extender')
 faq_tag_features = FaqTag.find_or_create_by_name('Features')
+faq_tag_er = FaqTag.find_or_create_by_name('Email reminders')
 Faq.seed(:system_id,
   {
     :system_id => 1,
@@ -86,7 +87,7 @@ Faq.seed(:system_id,
     :system_id => 7,
     :question => "What's the Email reminder feature?",
     :answer => "The email reminder feature is designed to send you a weekly email of things you should be aware of, it is customisable - you get to choose what items appear and how far back/forwrd they look. In order to get started follow the links into the Email reminders area and to create a new reminder. Once you have created your reminder you'll need to add some items to it (otherwise you'll get a blank email each week). The availible items are:\n\n* Birthdays - Members of your section who have either just had or are about to have a birthday, you can customise from how far in the past to how far in the future birthdays are shown for.\n* Badges due - Displays a list of what badges each member is due.\n* Programme - Lists the programme (and activities) for the next few weeks, you can customise how many weeks ahead it looks.\n* Events - Lists the events coming up in the next few months, you can customise how many months ahead it looks.\n* Members not seen - Displays the members who have not been marked present for the last few weeks, you can customise how many weeks behind it looks.\n* Section notepad - Displays the contents of OSM's notepad for the section.",
-    :tags => [faq_tag_features],
+    :tags => [faq_tag_features, faq_tag_er],
     :active => true
   },{
     :system_id => 8,
@@ -99,6 +100,18 @@ Faq.seed(:system_id,
     :question => "What's the Map members feature?",
     :answer => "The map members feature allows you to see a map depicting how your members are distributed. You can specify which address is used as well as what colour pin to use for each of your groupings, if you have a grouping named with one of the available colours then that colour should be picked for you. You can optionally enter the address of your meeting place for inclusion on the map (it is shown by a light green pin with a star inside). If more than one member lives at the same address then the number of members at that address appears in the pin. If the pin is light blue then the members at a shared address are not in the same grouping.\n\nThe location of the addresses are gathered from Google's geocoding service, the minimum detail the address needs should be streey address and either town or postcode (e.g. '12 Some Street, Some town' or '123 Some Lane, AB34 5FG').",
     :tags => [faq_tag_features],
+    :active => true
+  },{
+    :system_id => 10,
+    :question => "How can I share my email reminder with other leaders?",
+    :answer => "Visit the  Email reminders page and you'll have a [Sharing] option in the actions column of the table. Clicking this allows you to view the people you have shared the reminder with, you can use the last row of the table to add new people. When a new person is added they will receive an email containing a link which they need to follow in order to subscribe to the reminder.",
+    :tags => [faq_tag_er],
+    :active => true
+  },{
+    :system_id => 11,
+    :question => "How can I change my subscription to an email reminder?",
+    :answer => "Every time you receive a reminder email or change your subscription state the email will contain a link to follow in order to do this. Additionally if you are an OSMX user you'll be able to edit your subscription to any reminder which has been shared with you by going to the Email reminders page.",
+    :tags => [faq_tag_er],
     :active => true
   },
 )

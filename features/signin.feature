@@ -1,6 +1,6 @@
 @signin
 @user
-@email
+@user_mailer
 
 Feature: Sign in
     As a user of the site
@@ -66,6 +66,7 @@ Feature: Sign in
 	And I should be on the sessions page
 
 
+    @send_email
     Scenario: User should be locked after 3 bad logins
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."

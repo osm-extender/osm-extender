@@ -60,8 +60,8 @@
               Current section: <%= current_role.long_name %>
             <%- end %>
           </div>
+          <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
           <%- if current_user.connected_to_osm? && current_role %>
-            <%- if !current_section.waiting? %><div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
@@ -74,7 +74,7 @@
             <%- end %>
           <%- else %>
             <div style="margin-left: 10%; margin-right: 10%; margin-top: auto; margin-bottom: auto; text-align: center; font-weight: bold;">
-              <p>Once you have <%= link_to 'connected to OSM', connect_to_osm_path %> links to things you can do will appear here.</p>
+              <p>Once you have <%= link_to 'connected to OSM', connect_to_osm_path %> links to more things you can do will appear here.</p>
             </div>
           <%- end %>
         <%- end %>
@@ -109,7 +109,7 @@
             </div><!-- notices_instruction -->
           <%- end %>
         </div><!-- notices -->
-      <% end %>
+      <%- end %>
     </div><!-- header -->
 
     <div id="tertiary_menu">

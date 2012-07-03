@@ -51,7 +51,7 @@ Feature: Map Members
     Scenario: Get page (incorrect OSM permission)
 	Given an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
-	    | member  | none    |
+	    | member     | none    |
         When I signin as "alice@example.com" with password "P@55word"
 	And I go to the map_members page
 	Then I should see "You do not have the correct OSM permissions"
@@ -60,7 +60,7 @@ Feature: Map Members
     Scenario: Get data (incorrect OSM permission)
 	Given an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
-	    | member  | none    |
+	    | member     | none    |
         When I signin as "alice@example.com" with password "P@55word"
 	And I go to the map_members_data page
 	Then I should see "You do not have the correct OSM permissions"

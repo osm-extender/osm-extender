@@ -12,6 +12,14 @@ Given /^"([^"]*)" has a reminder email for section (\d*) on "([^"]*)"$/ do |emai
   er = EmailReminder.create :user => user, :send_on => day, :section_id => section_id.to_i
 end
 
+Given /^"([^"]*)" has shared her "([^"]*)" email reminder with "([^"]*)" and it is in the (.*) state$/ do |user, day, sharee, state|
+  reminder = User.find_by_email_address!(user).email_reminders.first
+  share = reminder.shares.build(:name=>'A person', :email_address=>sharee)
+  share.state = state.downcase.to_sym
+  share.save!
+  step "no emails have been sent"
+end
+
 Given /^"([^"]*)" has an? (.*) item in (?:her|his|their) "(.*)" email reminder for section (\d*)$/ do |email_address, type, day, section_id|
   section_id = section_id.to_i
   types = {

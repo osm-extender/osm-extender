@@ -12,4 +12,5 @@ FactoryGirl.define do
     active true
     tag_tokens "1"
   end
+
 end

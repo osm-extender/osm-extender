@@ -1,9 +1,11 @@
 @contact_us
+@notification_mailer
 
 Feature: My Account
     As a user of the site
     I want to be able to contact the people who run it
 
+    @send_email
     Scenario: Send message
         When I go to the root page
         And I follow "Contact us"

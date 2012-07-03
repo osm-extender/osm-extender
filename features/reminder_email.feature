@@ -1,6 +1,6 @@
 @reminder_email
 @reminder_email_item
-@email
+@reminder_mailer
 @osm
 
 Feature: Reminder Email
@@ -43,6 +43,7 @@ Feature: Reminder Email
         Given I have the following user records
 	    | email_address     | name  |
 	    | bob@example.com   | Bob   |
+	And "bob@example.com" is connected to OSM
         And "bob@example.com" has a reminder email for section 1 on "Tuesday"
         And "alice@example.com" has a reminder email for section 1 on "Monday"
         When I signin as "alice@example.com" with password "P@55word"
@@ -203,6 +204,7 @@ Feature: Reminder Email
         And I should see "Members Not Seen"
 
 
+    @send_email
     Scenario: Send the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
 	And an OSM request to get sections will give 1 section
@@ -248,6 +250,7 @@ Feature: Reminder Email
         And I should see "Members Not Seen" in the email body
 
 
+    @send_email
     Scenario: Sending the email fails
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
         When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent

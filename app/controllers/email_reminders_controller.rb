@@ -1,13 +1,17 @@
 class EmailRemindersController < ApplicationController
-  before_filter :require_connected_to_osm
-  before_filter { forbid_section_type :waiting }
+  before_filter :require_connected_to_osm, :except => [:index, :show, :preview, :send_email]
+  before_filter :except => [:index, :show, :preview, :send_email] do
+    forbid_section_type :waiting
+  end
   before_filter :setup_tertiary_menu
   load_and_authorize_resource
 
   # GET /email_reminders
   # GET /email_reminders.json
   def index
-    @email_reminders = current_user.email_reminders.where(['section_id = ?', current_section.id])
+    @my_reminders = current_user.email_reminders.order(:section_name)
+    @shared_reminders = EmailReminderShare.shared_with(current_user)
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @email_reminders }
@@ -17,9 +21,8 @@ class EmailRemindersController < ApplicationController
   # GET /email_reminders/1
   # GET /email_reminders/1.json
   def show
-    @email_reminder = current_user.email_reminders.find(params[:id])
-    @tertiary_menu_items.push(['Edit this reminder', edit_email_reminder_path(@email_reminder)])
-    @tertiary_menu_items.push(['Preview this reminder', '#preview'])
+    @email_reminder = EmailReminder.find(params[:id])
+    @tertiary_menu_items = nil unless @email_reminder.user == current_user
 
     respond_to do |format|
       format.html # show.html.erb
@@ -102,35 +105,31 @@ class EmailRemindersController < ApplicationController
   end
 
   def preview
-    email_reminder = current_user.email_reminders.find(params[:id])
-    @role = current_role
-    @data = email_reminder.get_fake_data
+    @reminder = EmailReminder.find(params[:id])
+    @data = @reminder.get_fake_data
     render "reminder_mailer/reminder_email", :layout => 'mail'
   end
 
   def send_email
-    email_reminder = current_user.email_reminders.find(params[:id])
+    email_reminder = EmailReminder.find(params[:id])
     unless email_reminder.nil?
-      email_reminder.send_email
-      respond_to do |format|
-        format.html { redirect_to email_reminders_url, notice: 'Email reminder was successfully sent.' }
-        format.json { head :ok }
-      end
+      email_reminder.send_email :only_to => current_user, :skip_subscribed_check => true
+      redirect_to email_reminders_path, notice: 'Email reminder was successfully sent.'
     else
-      respond_to do |format|
-        format.html { redirect_to email_reminders_url, error: 'Email reminder could not be sent.' }
-        format.json { head :error }
-      end
+      redirect_to email_reminders_path, error: 'Email reminder could not be sent.'
     end
   end
 
 
   private
   def setup_tertiary_menu
-    @tertiary_menu_items = [
-      ['List of reminders', email_reminders_path],
-      ['New reminder', new_email_reminder_path],
-    ]
+    @tertiary_menu_items = nil
+    if current_user.connected_to_osm? && !current_section.waiting?
+      @tertiary_menu_items = [
+        ['List of reminders', email_reminders_path],
+        ['New reminder', new_email_reminder_path],
+      ]
+    end
   end
 
   def get_available_items

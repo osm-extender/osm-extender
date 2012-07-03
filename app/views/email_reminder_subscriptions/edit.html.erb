@@ -1,0 +1,51 @@
+<% provide :title, "Edit Subscription to Email Reminder" %>
+
+
+<div style="text-align: center;">
+
+  <div style="display: inline-block; text-align: left; vertical-align: top; padding-right: 10%;">
+    <p>This email reminder will send you the following details for<br/>
+    <%= @share.reminder.section_name %> every <%= day_name(@share.reminder.send_on) %>:</p>
+    <ul>
+      <%- @share.reminder.items.each do |item| %>
+        <li><%= item.human_name %></li>
+      <%- end %>
+    </ul>
+  </div>
+  
+  
+  <div style="display: inline-block; text-align: left; vertical-align: top;">
+    <% if @share.errors.any? %>
+      <div id="error_messages">
+        <h2>The following errors occured:</h2>
+        <ul>
+          <% for message in @share.errors.full_messages %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_tag change_email_reminder_subscription_path(@share.id) do %>
+      <%= hidden_field_tag :auth_code, params[:auth_code] %>
+    
+      <div class="field">
+        <%= label_tag :state, 'Subscription state' %><br/>
+        <%= select_tag :state, options_for_select(@states, @state) %>
+      </div>
+    
+      <div class="field"><br/>
+        <%= label_tag :name, 'Your name' %><br/>
+        <%= text_field_tag :name, @share.name %>
+      </div>
+    
+      <div class="field"><br/>
+        <%= label_tag :email_address, 'Your email address' %><br/>
+        <%= email_field_tag :email_address, @share.email_address %>
+      </div>
+    
+      <%= submit_tag 'Update subscription' %>
+    <%- end %>
+  </div>
+
+</div>

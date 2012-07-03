@@ -1,6 +1,6 @@
 @forgotten_password
 @user
-@email
+@user_mailer
 
 Feature: Forgotten Password
     As a user of the site
@@ -16,6 +16,7 @@ Feature: Forgotten Password
         And "alice@example.com" is an activated user account
 
 
+    @send_email
     Scenario: Forgotten Password
         When I go to the signin page
         And I follow "Forgotten your password?"

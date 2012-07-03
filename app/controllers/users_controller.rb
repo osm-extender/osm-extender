@@ -73,7 +73,7 @@ class UsersController < ApplicationController
 
   def reset_password
     user = User.find(params[:id])
-    authorize! :reset_password, user
+
     if user.deliver_reset_password_instructions!
       redirect_to(users_path, :notice => 'Password reset instructions have been sent to the user.')
     else
@@ -83,7 +83,6 @@ class UsersController < ApplicationController
 
   def resend_activation
     user = User.find(params[:id])
-    authorize! :resend_activation, user
 
     user.send((User.sorcery_config.activation_token_expires_at_attribute_name.to_s + '='), (Time.now.utc + User.sorcery_config.activation_token_expiration_period).to_datetime)
     user.save

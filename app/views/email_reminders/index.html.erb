@@ -1,27 +1,69 @@
 <% provide :title, 'Email reminders' %>
 
 
-<%- unless @email_reminders.empty? %>
+<h2>Your reminders</h2>
+<%- if current_user.connected_to_osm? %>
+  <%- unless @my_reminders.empty? %>
+    <table>
+      <tr>
+        <th>Section</th>
+        <th>Send on</th>
+        <th>Actions</th>
+      </tr>
+    
+    <%- @my_reminders.each do |email_reminder| %>
+      <tr>
+        <td><%= email_reminder.section_name %></td>
+        <td><%= day_name(email_reminder.send_on) %></td>
+        <td>
+          <%= link_to '[Show]', email_reminder %>
+          <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
+          <%= link_to '[Sharing]', email_reminder_shares_path(email_reminder) %>
+          <%= link_to '[Preview]', preview_email_reminder_path(email_reminder), :target=>'_blank' %>
+          <%= link_to '[Send]', send_email_reminder_path(email_reminder), data: {:confirm => 'This will send the email only to you, continue?'} %>
+          <%= link_to '[Destroy]', email_reminder, data: {:confirm => 'Are you sure?'}, method: :delete %>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+    <p>When previewing an email fake data is used in order to ensure that all the selected items have something to show.</p>
+  <%- else %>
+    <p>You do not currently have any email reminders setup, <%= link_to 'create one', new_email_reminder_path %>.</p>
+  <%- end %>
+
+<%- else %>
+  <%- unless current_user.connected_to_osm? %>
+    <p>You must <%= link_to 'connect to OSM', connect_to_osm_path %> in order to setup your own email reminders.</p>
+  <%- end %>
+<%- end %>
+
+
+<%- unless @shared_reminders.empty? %>
+  <h2>Reminders shared with you</h2>
   <table>
     <tr>
+      <th>Shared By</th>
+      <th>Section</th>
       <th>Send on</th>
+      <th>Current<br/>State</th>
       <th>Actions</th>
     </tr>
   
-  <% @email_reminders.each do |email_reminder| %>
+  <%- @shared_reminders.each do |email_reminder_share| %>
+  <%- email_reminder = email_reminder_share.reminder %>
     <tr>
+      <td><%= email_reminder.user.name %></td>
+      <td><%= email_reminder.section_name %></td>
       <td><%= day_name(email_reminder.send_on) %></td>
+      <td><%= email_reminder_share.state.to_s.capitalize %></td>
       <td>
+        <%= link_to '[Edit subscription]', edit_email_reminder_subscription_path(:id => email_reminder_share.id, :auth_code => email_reminder_share.auth_code) %>
         <%= link_to '[Show]', email_reminder %>
-        <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
         <%= link_to '[Preview]', preview_email_reminder_path(email_reminder), :target=>'_blank' %>
-        <%= link_to '[Send]', send_email_reminder_path(email_reminder) %>
-        <%= link_to '[Destroy]', email_reminder, data: {:confirm => 'Are you sure?'}, method: :delete %>
+        <%= link_to '[Send]', send_email_reminder_path(email_reminder), data: {:confirm => 'This will send the email only to you, continue?'} %>
       </td>
     </tr>
   <% end %>
   </table>
   <p>When previewing an email fake data is used in order to ensure that all the selected items have something to show.</p>
-<%- else %>
-  <p>You do not currently have any email reminders setup, <%= link_to 'create one', new_email_reminder_path %>.</p>
 <%- end %>

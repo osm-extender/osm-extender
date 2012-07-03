@@ -52,17 +52,22 @@ OSMExtender::Application.routes.draw do
   resources :contact_us, :only=>[:new, :create]
 
   resources :email_reminders do
-    resources :email_reminder_items, :as => 'items'
-    resources :email_reminder_item_birthdays, :as => 'item_birthdays'
-    resources :email_reminder_item_due_badges, :as => 'item_due_badges'
-    resources :email_reminder_item_events, :as => 'item_events'
-    resources :email_reminder_item_not_seens, :as => 'item_not_seens'
-    resources :email_reminder_item_programmes, :as => 'item_programmes'
-    resources :email_reminder_item_notepads, :as => 'item_notepads'
+    resources :email_reminder_shares, :as => 'shares', :only => [:index, :destroy, :new, :create], :path => 'shares'
+    post 'shares/:id/resend_notification' => 'email_reminder_shares#resend_shared_with_you', :as => 'resend_share_notification'
+    resources :email_reminder_items, :as => 'items', :path => 'items'
+    resources :email_reminder_item_birthdays, :as => 'item_birthdays', :path => 'item_birthdays'
+    resources :email_reminder_item_due_badges, :as => 'item_due_badges', :path => 'item_due_badges'
+    resources :email_reminder_item_events, :as => 'item_events', :path => 'item_events'
+    resources :email_reminder_item_not_seens, :as => 'item_not_seens', :path => 'item_not_seen'
+    resources :email_reminder_item_programmes, :as => 'item_programmes', :path => 'item_programme'
+    resources :email_reminder_item_notepads, :as => 'item_notepads', :path => 'item_notepad'
   end
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
   get 'email_reminders/:id/send_email' => 'email_reminders#send_email', :as => 'send_email_reminder'
   post 'email_reminders/:id/re_order' => 'email_reminders#re_order', :as => 're_order_email_reminder'
+
+  get 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#edit', :as => 'edit_email_reminder_subscription'
+  post 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#change', :as => 'change_email_reminder_subscription'
 
   get 'settings' => 'settings#edit', :as => 'edit_settings'
   put 'settings' => 'settings#update', :as => 'update_settings'

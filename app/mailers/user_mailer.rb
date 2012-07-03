@@ -1,6 +1,6 @@
-class UserMailer < ActionMailer::Base
+class UserMailer < ApplicationMailer
   default from: Settings.read('user mailer - from')
-  layout 'mail'
+
 
   def activation_needed(user)
     @user = user
@@ -37,19 +37,15 @@ class UserMailer < ActionMailer::Base
   end
 
 
-  private
-  def build_subject(subject)
-    start = 'OSMExtender'
-    start += " (#{Rails.env.upcase})" unless Rails.env.production?
-    return "#{start} - #{subject}"
+  # Patch as Sorcery doesn't allow a class 'between' this and ApplicationMailer
+  def self.superclass
+    return ApplicationMailer.superclass
   end
 
+
+  private
   def build_email_address(address=@user.email_address)
     return "\"#{@user.name}\" <#{address}>"
-  end
-
-  def build_url(path)
-    return Rails.configuration.root_url.to_s + path
   end
 
 end

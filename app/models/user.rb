@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :can_administer_settings, :can_view_statistics, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
+  has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
   has_many :email_lists, :dependent => :destroy
 
   after_save :send_email_on_attribute_changes
@@ -18,6 +19,7 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
+
 
   def change_password!(new_password, new_password_confirmation=new_password)
     self.password = new_password
