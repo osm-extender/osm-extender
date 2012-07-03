@@ -28,6 +28,7 @@ OSMExtender::Application.routes.draw do
   resources :users
   get 'users/:id/reset_password' => 'users#reset_password', :as => 'reset_password_user'
   get 'users/:id/resend_activation' => 'users#resend_activation', :as => 'resend_activation_user'
+  post 'users/:id/unlock' => 'users#unlock', :as => 'unlock_user'
 
   resources :sessions
   get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
