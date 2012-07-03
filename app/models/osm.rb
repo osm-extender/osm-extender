@@ -790,7 +790,7 @@ module OSM
 
     # Custom section type checkers
     [:beavers, :cubs, :scouts, :explorers, :adult, :waiting].each do |attribute|
-      define_method "#{attribute}_section?" do
+      define_method "#{attribute}?" do
         @type == attribute
       end
     end

@@ -1,5 +1,5 @@
 class ProgrammeWizardController < ApplicationController
-  before_filter :require_youth_section
+  before_filter { require_section_type :youth }
   before_filter :require_connected_to_osm
   before_filter { require_osm_permission :write, :programme }
 

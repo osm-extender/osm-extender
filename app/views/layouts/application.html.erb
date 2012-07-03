@@ -63,7 +63,7 @@
           <%- if current_user.connected_to_osm? && current_role %>
             <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
             <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div><%- end %>
-            <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
+            <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:write, :programme) %><div class="menu_item"><%= link_to 'Programme wizard', new_create_programme_path %></div><%- end %>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
