@@ -141,3 +141,13 @@ Feature: Account Administration
         When I go to resend the activation email for "bob@example.com"
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+
+@focus
+    Scenario: Unlock user
+	Given "bob@example.com" is a locked user account
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of users
+	And I follow "Unlock user" in the "Actions" column of the "bob@example.com" row
+	Then I should see "The user was unlocked."
+	And I should be on the list of users
+	And "bob@example.com" should not be a locked user account

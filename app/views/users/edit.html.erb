@@ -31,7 +31,10 @@
     <div class="field">
       Locked account?<br/>
       <%= yes_no @user.locked?, false %>
-      <%- if @user.locked? %>(Lock expires at <%= @user.lock_expires_at %>)<% end %>
+      <%- if @user.locked? %>
+        (Lock expires at <%= @user.lock_expires_at %>)
+        <%= link_to 'Unlock', unlock_user_path(@user), :method=>:post %>
+      <% end %>
     </div>
     <div class="field">
       Connected to OSM<br/>

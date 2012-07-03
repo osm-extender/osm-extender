@@ -758,7 +758,7 @@ module OSM
 
       @id = id.to_i
       @name = name
-      @subscription_level = subscription_levels[data['subscription_level'] - 1]
+      @subscription_level = subscription_levels[data['subscription_level'].to_i - 1]
       @subscription_expires = data['subscription_expires'] ? Date.parse(data['subscription_expires'], 'yyyy-mm-dd') : nil
       @type = !data['sectionType'].nil? ? data['sectionType'].to_sym : :unknown
       @num_scouts = data['numscouts']

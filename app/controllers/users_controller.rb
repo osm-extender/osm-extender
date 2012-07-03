@@ -95,6 +95,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def unlock
+    user = User.find(params[:id])
+    if user.unlock
+      redirect_to users_path, :notice => 'The user was unlocked.'
+    else
+      render :action => :edit
+    end
+  end
+
 
   private  
   def sort_column
