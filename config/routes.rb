@@ -44,6 +44,9 @@ OSMExtender::Application.routes.draw do
   delete 'programme_review_balanced_cache/:id(.:format)' => 'programme_review_balanced_cache#destroy', :as => 'programme_review_balanced_cach'
   post 'programme_review_balanced_cache/delete_multiple(.:format)' => 'programme_review_balanced_cache#destroy_multiple', :as => 'delete_multiple_programme_review_balanced_cache'
 
+  get 'map_members' => 'map_members#page', :as => 'map_members'
+  get 'map_members/data' => 'map_members#data', :as => 'map_members_data'
+
   resources :password_resets
   resources :contact_us, :only=>[:new, :create]
 

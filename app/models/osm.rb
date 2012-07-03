@@ -611,9 +611,11 @@ module OSM
         puts api_data.to_s
       end
 
+      connection_error_exceptions = [SocketError, TimeoutError, OpenSSL::SSL::SSLError]
+      connection_error_exceptions.push(FakeWeb::NetConnectNotAllowedError) if Rails.env.test? # Since FakeWeb is only defined in the test environment
       begin
         result = HTTParty.post("#{@base_url}/#{url}", {:body => api_data})
-      rescue SocketError, TimeoutError, FakeWeb::NetConnectNotAllowedError
+      rescue *connection_error_exceptions
         raise ConnectionError.new('A problem occured on the internet.')
       end
       raise ConnectionError.new("HTTP Status code was #{result.response.code}") if !result.response.code.eql?('200')
@@ -788,7 +790,7 @@ module OSM
 
     # Custom section type checkers
     [:beavers, :cubs, :scouts, :explorers, :adult, :waiting].each do |attribute|
-      define_method "#{attribute}_section?" do
+      define_method "#{attribute}?" do
         @type == attribute
       end
     end

@@ -1,7 +1,7 @@
 <p>This is your reminder email for <%= @role.long_name %>.</p>
 
 <%- @data.each do |item| %>
-<%- unless item[:data].empty? %>
+<%- unless item[:data].nil? || item[:data].empty? %>
 <h1><%= item[:item].human_name.titleize %></h1>
 <%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:configuration] %>
 <hr/>

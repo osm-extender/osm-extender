@@ -1,0 +1,26 @@
+<% provide :title, 'Map Members' %>
+<% provide :use_maps, true %>
+
+<div id="status_message" style="width: 50%; margin-left: auto; margin-right: auto; background-color: #ff8888; text-align: left; font-weight: bold;"></div>
+
+<div style="width: 710px; margin-left: auto; margin-right: auto;">
+  <div id="setup" style="width: 300px; margin-top: 0px; display: inline-block; vertical-align: middle;">
+    <h2>Setup Map</h2>
+    
+    <h3>Pin colours for each <%= get_grouping_name(current_section.type) %></h3>
+    <%- @groupings.each do |name, id| %>
+      <label for="pin-<%= id %>" style="display: inline-block; min-width: 100px; text-align: right;"><%= name %></label> <%= select_tag "pin-#{id}", options_from_collection_for_select(@pin_colours, :to_s, :to_s, (@pin_colours.include?(name.capitalize) ? name.capitalize : ((id == -2) ? 'White' : nil))) %><br/>
+    <%- end %>
+    
+    <h3>Which address?</h3>
+    Use the <%= select_tag 'address', options_from_collection_for_select({:address=>current_section.column_names[:address], :address2=>current_section.column_names[:address2]}, :first, :last) %> Address.
+
+    <h3>Where do you meet?</h3>
+    <%= text_field_tag 'base' %>(optional)
+
+    <h2>Plot your members</h2>
+    <%= button_tag 'Plot members', :name=>'plot', :type => :button, :onClick => 'plot();' %>
+  </div>
+  
+  <div id="map" style="width: 400px; height: 400px; display: inline-block; vertical-align: middle;"></div>
+</div>

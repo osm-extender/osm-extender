@@ -1,4 +1,5 @@
 class EmailListsController < ApplicationController
+  before_filter { forbid_section_type :waiting }
   before_filter :require_connected_to_osm
   before_filter { require_osm_permission :read, :member }
   load_and_authorize_resource
@@ -111,14 +112,6 @@ class EmailListsController < ApplicationController
     end
     params[:match_grouping] = params[:match_grouping].to_i
     return params
-  end
-
-  def get_groupings
-    groupings = {}
-    current_user.osm_api.get_groupings(current_section.id).each do |grouping|
-      groupings[grouping.name] = grouping.id
-    end
-    return groupings
   end
 
 end

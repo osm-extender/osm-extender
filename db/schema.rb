@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120627212414) do
+ActiveRecord::Schema.define(:version => 20120702175459) do
 
   create_table "email_lists", :force => true do |t|
     t.text     "name"
@@ -49,14 +49,15 @@ ActiveRecord::Schema.define(:version => 20120627212414) do
 
   create_table "faq_tagings", :force => true do |t|
     t.integer  "faq_id",                    :null => false
-    t.integer  "faq_tag_id",                :null => false
+    t.integer  "tag_id",                    :null => false
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
     t.integer  "position",   :default => 0, :null => false
   end
 
+  add_index "faq_tagings", ["faq_id", "tag_id"], :name => "index_faq_tagings_on_faq_id_and_tag_id", :unique => true
   add_index "faq_tagings", ["faq_id"], :name => "index_faq_tagings_on_faq_id"
-  add_index "faq_tagings", ["faq_tag_id"], :name => "index_faq_tagings_on_faq_tag_id"
+  add_index "faq_tagings", ["tag_id"], :name => "index_faq_tagings_on_tag_id"
 
   create_table "faq_tags", :force => true do |t|
     t.string   "name",                      :null => false
