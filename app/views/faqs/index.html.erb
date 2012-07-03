@@ -20,7 +20,7 @@
           <%- faqs.each do |faq| %>
             <tr id="faq_<%= tag.id %>_<%= faq.id %>">
               <td><span class="drag_handle">[re-order]</span> <%= faq.question %></td>
-              <td><%= faq.active ? 'Yes' : 'No' %></td>
+              <td><%= yes_no(faq.active) %></td>
               <td>
                 <%= link_to '[Show]', faq %>
                 <%= link_to '[Edit]', edit_faq_path(faq) %>
