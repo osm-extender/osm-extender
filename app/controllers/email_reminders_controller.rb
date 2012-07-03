@@ -1,5 +1,6 @@
 class EmailRemindersController < ApplicationController
   before_filter :require_connected_to_osm
+  before_filter { forbid_section_type :waiting }
   before_filter :setup_tertiary_menu
   load_and_authorize_resource
 
@@ -138,24 +139,16 @@ class EmailRemindersController < ApplicationController
       items.push ({:name => 'Birthdays', :type => 'birthday', :as_link => has_osm_permission?(:read, :member)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent')
-      if current_section.youth_section?
-        items.push ({:name => 'Events', :type => 'event', :as_link => has_osm_permission?(:read, :programme)})
-      end
+      items.push ({:name => 'Events', :type => 'event', :as_link => has_osm_permission?(:read, :programme)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme')
-      if current_section.youth_section?
-        items.push ({:name => 'Programme', :type => 'programme', :as_link => has_osm_permission?(:read, :programme)})
-      end
+      items.push ({:name => 'Programme', :type => 'programme', :as_link => has_osm_permission?(:read, :programme)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen')
-      if current_section.youth_section?
-        items.push ({:name => 'Member not seen', :type => 'not_seen', :as_link => has_osm_permission?(:read, :register)})
-      end
+      items.push ({:name => 'Member not seen', :type => 'not_seen', :as_link => has_osm_permission?(:read, :register)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
-      if current_section.youth_section?
-        items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
-      end
+      items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotepad')
       items.push ({:name => 'Section Notepad', :type => 'notepad', :as_link => true})

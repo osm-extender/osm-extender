@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
 
   # Ensure the current section if it is of a given type
   # if not redirect them to the relevant page and set an instruction flash
-  # @param type a string of symbol representing the type of section to require (may be :beavers, :cubs ... or :youth)
+  # @param type a string of symbol representing the type of section to require (may be :beavers, :cubs ... or :youth_section)
   def require_section_type(type)
     unless current_section.send("#{type}?")
       flash[:error] = "The current section must be a #{type} section to do that."
@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
 
   # Forbid the current section if it is of a given type
   # if so redirect them to the relevant page and set an instruction flash
-  # @param type a string of symbol representing the type of section to forbid (may be :beavers, :cubs ... or :youth)
+  # @param type a string of symbol representing the type of section to forbid (may be :beavers, :cubs ... or :youth_section)
   def forbid_section_type(type)
     if current_section.send("#{type}?")
       flash[:error] = "The current section must not be a #{type} section to do that."
