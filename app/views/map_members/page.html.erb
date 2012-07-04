@@ -1,8 +1,6 @@
 <% provide :title, 'Map Members' %>
 <% provide :use_maps, true %>
 
-<div id="status_message" style="width: 50%; margin-left: auto; margin-right: auto; background-color: #ff8888; text-align: left; font-weight: bold;"></div>
-
 <div style="width: 710px; margin-left: auto; margin-right: auto;">
   <div id="setup" style="width: 300px; margin-top: 0px; display: inline-block; vertical-align: middle;">
     <h2>Setup Map</h2>
@@ -21,6 +19,11 @@
     <h2>Plot your members</h2>
     <%= button_tag 'Plot members', :name=>'plot', :type => :button, :onClick => 'plot();' %>
   </div>
-  
-  <div id="map" style="width: 400px; height: 400px; display: inline-block; vertical-align: middle;"></div>
+
+  <div style="display: inline-block; vertical-align: middle; text-align: center;">
+    <div id="map" style="width: 400px; height: 400px; margin-bottom: 10px;"></div>
+    <div id="progress" style="width: 100%; background-color: #8888ff; text-align: left;"></div>
+    <div id="errors" style="width: 100%; background-color: #ff8888; text-align: left; font-weight: bold;"></div>
+  </div>
+
 </div>
