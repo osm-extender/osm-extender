@@ -48,6 +48,8 @@ var bounds = null;
 var geocoder = new google.maps.Geocoder();
 var groupings = null;
 var markers = null;
+var membersAll = 0;
+var membersDone = 0;
 
 // Allow member to be inscope in callback function
 var plotMember = function(member) {
@@ -101,6 +103,7 @@ var plotMember = function(member) {
           content: '<ul>' + listOfMembers + '</ul>'
         });
       }
+      incrementProgress();
     } else {
       appendStatus(member.name + ' not included (' + status + ')');
     }
@@ -119,7 +122,9 @@ function plot() {
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
   markers = {};
   members = {};
-  updateStatus('');
+  membersDone = 0;
+  $("#errors").html('');
+  $("#progress").html('Fetching map.');
   var base = document.getElementById('base').value;
   if (base.length > 0) {
     geocoder.geocode( { 'address': base}, function(results, status) {
@@ -145,10 +150,11 @@ function plot() {
     async: false,
     success: function(data, status, jqXHR) {
       groupings = data['groupings'];
+      membersAll = data['members'].length;
       for (var index in data['members']) {
         var member = data['members'][index];
         if (member.address.length > 0) {
-          setTimeout(geocodeMember(member), (index * 500));   // Don't hammer the API too fast
+          setTimeout(geocodeMember(member), (index * 1000));   // Don't hammer the API too fast
         } else {
           appendStatus(member.name + ' not included (does not have selected address)');
         }
@@ -157,9 +163,13 @@ function plot() {
   });
 }
 
-function updateStatus(message) {
-  $("#status_message").html(message);
+
+function appendError(message) {
+  $("#errors").html($("#errors").html() + ($("#errors").html().length > 0 ? '<br/>' : '') + message);
 }
-function appendStatus(message) {
-  $("#status_message").html($("#status_message").html() + ($("#status_message").html().length > 0 ? '<br/>' : '') + message);
+
+function incrementProgress() {
+  ++membersDone;
+  progress = (membersDone < membersAll) ? 'Completed ' + membersDone + ' of ' + membersAll + '.' : 'Finished.';
+  $("#progress").html(progress);
 }
