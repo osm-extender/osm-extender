@@ -21,7 +21,6 @@ Feature: Reminder Email
         And "alice@example.com" is an activated user account
 	And "alice@example.com" is connected to OSM
         And "bob@example.com" is an activated user account
-	And no emails have been sent
 	And an OSM request to "get roles" will give 1 role
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
@@ -29,6 +28,7 @@ Feature: Reminder Email
 	And an OSM request to get the notepad for section 1 will give "This is a test notepad message."
 	And "alice@example.com" has a reminder email for section 1 on "Tuesday"
         And "alice@example.com" has a notepad item in her "Tuesday" email reminder for section 1
+	And no emails have been sent
 
 
     @send_email
