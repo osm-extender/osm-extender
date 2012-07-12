@@ -33,7 +33,7 @@ function drawCharts() {
 
       var day_options = {
         focusTarget: 'category',
-        vAxis: {
+        hAxis: {
           minValue: 0,
           gridlines: {
             count: graphGridLines(data['day']['max_value'], day_desired_steps)
@@ -42,11 +42,11 @@ function drawCharts() {
         legend: {position: 'none'},
         width: 750, height: 350
       };
-      day_options.vAxis.maxValue = graphStepSize(data['day']['max_value'], day_desired_steps) * (day_options.vAxis.gridlines.count - 1);
+      day_options.hAxis.maxValue = graphStepSize(data['day']['max_value'], day_desired_steps) * (day_options.hAxis.gridlines.count - 1);
 
       var item_options = {
         focusTarget: 'category',
-        vAxis: {
+        hAxis: {
           minValue: 0,
           gridlines: {
             count: graphGridLines(data['item']['max_value'], item_desired_steps)
@@ -55,7 +55,7 @@ function drawCharts() {
         legend: {position: 'none'},
         width: 750, height: 350
       };
-      item_options.vAxis.maxValue = graphStepSize(data['item']['max_value'], item_desired_steps) * (item_options.vAxis.gridlines.count - 1);
+      item_options.hAxis.maxValue = graphStepSize(data['item']['max_value'], item_desired_steps) * (item_options.hAxis.gridlines.count - 1);
 
 
       drawNumberChart(data['number']['data'], number_options, number_chart);
