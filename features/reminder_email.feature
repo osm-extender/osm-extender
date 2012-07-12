@@ -196,6 +196,7 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Preview]" in the "Actions" column of the "Tuesday" row
         Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
+	And I should see "Fake data has been used in order to ensure that all the selected items have something to show."
 	And I should see "Section Notepad"
 	And I should see "Birthdays"
         And I should see "Due Badges"
