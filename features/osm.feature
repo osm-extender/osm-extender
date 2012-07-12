@@ -229,3 +229,18 @@ Feature: OSM
         And I go to the list of email_reminders
         And I follow "[Send]" in the "Actions" column of the "Tuesday" row
 	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
+
+    @send_email
+    Scenario: Fix non existant array when no events
+	Given "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 1 role
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | programme  | read    |
+	And no emails have been sent
+	And "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a event item in her "Tuesday" email reminder for section 1
+	And an OSM request to get sections will give 1 section
+	And an OSM request to get events for section 1 will return nothing
+        When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
+	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"

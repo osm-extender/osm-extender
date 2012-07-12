@@ -439,8 +439,10 @@ module OSM
       data = perform_query("events.php?action=getEvents&sectionid=#{section_id}", api_data)
 
       result = Array.new
-      data['items'].each do |item|
-        result.push OSM::Event.new(item)
+      unless data['items'].nil?
+        data['items'].each do |item|
+          result.push OSM::Event.new(item)
+        end
       end
       self.user_can_access :programme, section_id, api_data
       Rails.cache.write("OSMAPI-events-#{section_id}", result, :expires_in => @@default_cache_ttl)
