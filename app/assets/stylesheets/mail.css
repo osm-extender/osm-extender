@@ -18,6 +18,27 @@ td#banner {
   vertical-align:     middle;
 }
 
+td.notice {
+  padding: 8px;
+}
+td#notices_error {
+    background-color:   #ff4444;
+    border-color:       red;
+    font-weight:        bold;
+}
+td#notices_warning {
+    background-color:   #fff288;
+    border-color:       yellow;
+}
+td#notices_notice {
+    background-color:   #90f090;
+    border-color:       green;
+}
+td#notices_instruction {
+    background-color:   #c0c0f0;
+    border-color:       blue;
+}
+
 hr {
   margin-left:        auto;
   margin-right:       auto;
