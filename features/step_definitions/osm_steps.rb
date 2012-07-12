@@ -134,7 +134,8 @@ Given /^an OSM request to get the register structure for term (\d+) and section 
   url = "users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}"
 
   rows = []
-  range = weeks..1
+  range = 1..weeks
+  range = range.to_a.reverse
   range.each_with_index do |ago, index|
     date = ago.weeks.ago.strftime('%Y-%m-%d')
     row = {
