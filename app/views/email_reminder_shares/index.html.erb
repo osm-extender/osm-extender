@@ -1,0 +1,35 @@
+<% provide :title, 'Email reminder sharing' %>
+
+<h2>Reminder shared with</h2>
+<%= form_for @email_reminder_share, :validate=>true do |f| %>
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Email address</th>
+      <th>State</th>
+      <th>Actions</th>
+    </tr>
+  
+    <%- @email_reminder_shares.each do |share| %>
+      <tr>
+        <td><%= share.name %></td>
+        <td><%= share.email_address %></td>
+        <td><%= share.state.capitalize %></td>
+        <td>
+            <%- if share.pending? %>
+              <%= link_to '[Resend notification]', email_reminder_resend_share_notification_path(share.reminder, share), method: :post, data: {:confirm => "Before resending please check with #{share.name} that the previous one didn't end up in their spam box. Do you wish to resend the notification?"} %>
+            <%- end %>
+            <%= link_to '[Destroy]', email_reminder_share_path(share.reminder, share), data: {:confirm => 'Are you sure?'}, method: :delete %>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td><%= f.text_field :name %></td>
+      <td><%= f.email_field :email_address %></td>
+      <td></td>
+      <td><%= f.submit 'Add new person' %></td>
+    </tr>
+  </table>
+<%- end %>

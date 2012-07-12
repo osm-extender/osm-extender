@@ -18,6 +18,7 @@ class FaqTaging < ActiveRecord::Base
 
   def delete_tag_if_unused
     tag.destroy if tag.faqs.size == 0
+    return true
   end
 
 end

@@ -1,32 +1,56 @@
-class ReminderMailer < ActionMailer::Base
+class ReminderMailer < ApplicationMailer
   default from: Settings.read('reminder mailer - from')
-  layout 'mail'
 
-  def reminder_email(user, role, data)
+
+  def reminder_email(reminder, data, send_to)
+    @reminder = reminder
     @data = data
-    @role = role
+
+    @share = send_to[:share]
+    @share_url = build_url(edit_email_reminder_subscription_path(:id => @share.id, :auth_code => @share.auth_code)) unless @share.nil?
 
     mail ({
-      :subject => build_subject("Reminder Email for #{@role.long_name}"),
-      :to => "\"#{user.name}\" <#{user.email_address}>",
+      :subject => build_subject("Reminder Email for #{@reminder.section_name}"),
+      :to => "\"#{send_to[:name]}\" <#{send_to[:email_address]}>",
     })
   end
 
-  def failed(email_reminder, role)
-    @email_reminder = email_reminder
-    @role = role
+  def failed(reminder)
+    @reminder = reminder
+
     mail ({
-      :subject => build_subject("Reminder Email for #{@role.long_name} Failed"),
-      :to => "\"#{@email_reminder.user.name}\" <#{@email_reminder.user.email_address}>",
+      :subject => build_subject("Reminder Email for #{@reminder.section_name} Failed"),
+      :to => "\"#{@reminder.user.name}\" <#{@reminder.user.email_address}>",
     })
   end
 
 
-  private
-  def build_subject(subject)
-    start = 'OSMExtender'
-    start += " (#{Rails.env.upcase})" unless Rails.env.production?
-    return "#{start} - #{subject}"
+  def shared_with_you(share)
+    @share = share
+    @url = build_url(edit_email_reminder_subscription_path(:id => @share.id, :auth_code => @share.auth_code))
+    @contact_link = build_url(new_contact_u_path)
+    mail ({
+      :subject => build_subject("A Reminder Email for #{@share.reminder.section_name} was Shared With You"),
+      :to => "\"#{@share.name}\" <#{@share.email_address}>",
+    })
+  end
+
+  def subscribed(share)
+    @share = share
+    @url = build_url(edit_email_reminder_subscription_path(:id => @share.id, :auth_code => @share.auth_code))
+    mail ({
+      :subject => build_subject("Subscribed to reminder for #{@share.reminder.section_name} on #{%w{Sunday Monday Tuesday Wednesday Thursday Friday Saturday}[@share.reminder.send_on]}"),
+      :to => "\"#{@share.name}\" <#{@share.email_address}>",
+    })
+  end
+
+  def unsubscribed(share)
+    @share = share
+    @url = build_url(edit_email_reminder_subscription_path(:id => @share.id, :auth_code => @share.auth_code))
+    mail ({
+      :subject => build_subject("Unsubscribed from reminder for #{@share.reminder.section_name} on #{%w{Sunday Monday Tuesday Wednesday Thursday Friday Saturday}[@share.reminder.send_on]}"),
+      :to => "\"#{@share.name}\" <#{@share.email_address}>",
+    })
   end
 
 end

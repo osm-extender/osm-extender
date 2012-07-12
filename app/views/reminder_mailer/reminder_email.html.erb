@@ -1,11 +1,25 @@
-<p>This is your reminder email for <%= @role.long_name %>.</p>
+<p>This is your reminder email for <%= @reminder.section_name %>.</p>
 
-<%- @data.each do |item| %>
+<%- @data[:include_items].each do |item| %>
 <%- unless item[:data].nil? || item[:data].empty? %>
 <h1><%= item[:item].human_name.titleize %></h1>
-<%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:configuration] %>
+<%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
 <hr/>
 <%- end %>
 <%- end %>
 
-<p>Please note that if you have configured your reminder to include an item which has not been included it just means there is no information for that item to display.</p>
+<%- unless @data[:exclude_items].empty? %>
+  <h1>Excluded Items</h1>
+  <p>The following items were configured for this reminder but were excluded as they had no data:</p>
+  <ul><%- @data[:exclude_items].each do |item| %>
+    <li><%= item.human_name.titleize %></li>
+  <%- end %></ul>
+<%- end %>
+
+<%- unless @share.nil? %>
+  <h1>This Reminder is Shared With You</h1>
+  <p>
+    You are getting this reminder because <%= @share.reminder.user.name %> shared it with you. You can edit your subscription to this email by following the link below.
+    <br/><%= link_to @share_url, @share_url %>
+  </p>
+<%- end %>

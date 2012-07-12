@@ -1,6 +1,5 @@
-class NotifierMailer < ActionMailer::Base
+class NotifierMailer < ApplicationMailer
   default from: Settings.read('notifier mailer - from')
-  layout 'mail'
   helper_method :inspect_object
 
   def contact_form_submission(contact, to)
@@ -32,12 +31,6 @@ class NotifierMailer < ActionMailer::Base
   end
 
   private
-  def build_subject(subject)
-    start = 'OSMExtender'
-    start += " (#{Rails.env.upcase})" unless Rails.env.production?
-    return "#{start} - #{subject}"
-  end
-
   def inspect_object(object)
     case object
     when Hash, Array

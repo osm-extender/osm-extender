@@ -1,0 +1,32 @@
+<% provide :title, "Share with a new person" %>
+
+<%= form_for @email_reminder_share, :validate=>true do |f| %>
+  <%- if @email_reminder_share.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@email_reminder_share.errors.count, "error") %> prohibited the reminder from being shared:</h2>
+
+      <ul>
+      <%- @email_reminder_share.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <%- end %>
+      </ul>
+    </div>
+  <%- end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :email_address %><br />
+    <%= f.email_field :email_address %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit 'Share' %>
+  </div>
+
+<%- end %>
+
+
+<%= link_to 'Back', email_reminder_shares_path(@email_reminder_share.reminder) %>

@@ -28,6 +28,10 @@ module NavigationHelpers
       reset_password_user_path(User.find_by_email_address($1))
     when /^resend the activation email for "([^"]*)"$/
       resend_activation_user_path(User.find_by_email_address($1))
+    when /^([^"]*) "([^"]*)"'s email reminder$/
+      method = ($1.eql?('show')) ? '' : "/#{$1}"
+      reminder = User.find_by_email_address!($2).email_reminders.first
+      "/email_reminders/#{reminder.id}#{method}"
     when /^"(.+)"$/
       $1
 

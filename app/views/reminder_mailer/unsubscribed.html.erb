@@ -1,0 +1,5 @@
+<p>Thank you <%= @share.name %>, you are now unsubscribed from the reminder email for <%= @share.reminder.section_name %> on <%= day_name(@share.reminder.send_on) %>.</p>
+
+<p>Should you wish to resubscribe to the email then please use the following link, just as long as <%= @share.reminder.user.name %> is still sharing it with you.
+<br/><%= link_to @url, @url %>
+</p>

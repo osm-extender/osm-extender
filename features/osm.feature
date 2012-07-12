@@ -105,11 +105,13 @@ Feature: OSM
 	And I should not see "Programme wizard"
 	And I should not see "Email lists"
 	And I should not see "OSM permissions"
+	And I should not see "Map members"
 
     Scenario: Message but no links for non connected user
         When I signin as "alice@example.com" with password "P@55word"
-	Then I should see "links to things you can do will appear here"
-	And I should not see "Email reminders"
+	Then I should see "Email reminders"
+	And I should see "links to more things you can do will appear here"
+	And I should not see "Map members"
 	And I should not see "Programme review"
 	And I should not see "Programme wizard"
 	And I should not see "Email lists"
@@ -129,6 +131,7 @@ Feature: OSM
 	And I should see "Programme wizard"
 	And I should see "Email lists"
 	And I should see "OSM permissions"
+	And I should see "Map members"
 
     Scenario: Message and selected links for connected user without permissions
 	Given "alice@example.com" is connected to OSM
@@ -181,6 +184,7 @@ Feature: OSM
 	Then I should not see "something went wrong"
 	And I should see "Section 1 (1st Somewhere)"
 
+    @send_email
     Scenario: Fix for empty array representing no due badges
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role
@@ -197,7 +201,7 @@ Feature: OSM
 	And an OSM request to get due badges for section 1 and term 1 will return nothing
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
-        And I follow "[Send]" in the "Actions" column of the "Tuesday" row
+	And I follow "[Send]" in the "Actions" column of the "Tuesday" row
 	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
 
     Scenario: OSM Connection error
@@ -206,6 +210,7 @@ Feature: OSM
         Then I should see "We're sorry, we tried talking to OSM but something went wrong"
 	And I should see "A problem occured on the internet"
 
+    @send_email
     Scenario: Fix an empty array representing no notepads
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role

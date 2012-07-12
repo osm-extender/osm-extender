@@ -169,7 +169,12 @@ Feature: My Account
 
 
     Scenario: Delete
-	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	Given an OSM request to "get roles" will give 1 role
+	And "alice@example.com" is connected to OSM
+	And "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | none    |
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the delete my account page
 	Then I should be on the confirm delete my account page

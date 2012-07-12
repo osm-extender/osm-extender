@@ -1,6 +1,6 @@
 @user_admin
 @user
-@email
+@user_mailer
 
 Feature: Account Administration
     As an administrator of the site
@@ -99,6 +99,7 @@ Feature: Account Administration
 
 
 
+    @send_email
     Scenario: Reset Password
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of users
@@ -119,6 +120,7 @@ Feature: Account Administration
 	And I should be on the signin page
 
 
+    @send_email
     Scenario: Resend Activation Email
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of users
@@ -142,7 +144,7 @@ Feature: Account Administration
 	Then I should see "You must be signed in"
 	And I should be on the signin page
 
-@focus
+
     Scenario: Unlock user
 	Given "bob@example.com" is a locked user account
         When I signin as "alice@example.com" with password "P@55word"

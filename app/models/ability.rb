@@ -23,16 +23,31 @@ class Ability
         reminder.user == user
       end
       can :create, EmailReminder
+      can [:preview, :send_email, :show], EmailReminder do |reminder|
+        result = false
+        reminder.shares.each do |share|
+          result = true if share.email_address.downcase.eql?(user.email_address.downcase)
+        end
+        result
+      end
 
       can :administer, EmailReminderItem do |item|
         can? :administer, item.email_reminder
       end
       can :create, EmailReminderItem
 
+      can [:create, :destroy, :index], EmailReminderShare do |share|
+        share.reminder.user == user
+      end
+      can :resend_shared_with_you, EmailReminderShare do |share|
+        share.reminder.user == user  &&  share.pending?
+      end
+
+      can [:create, :preview], EmailList
       can [:administer, :get_addresses], EmailList do |list|
         list.user == user
       end
-      can [:create, :preview], EmailList
+
       can [:destroy, :destroy_multiple], ProgrammeReviewBalancedCache do |item|
         result = false
         if user.connected_to_osm?
@@ -42,6 +57,7 @@ class Ability
         end
         result
       end
+
 
       # Things user administrators can do
       if user.can_administer_users?
