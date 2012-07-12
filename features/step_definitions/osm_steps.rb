@@ -242,8 +242,6 @@ Given /^an OSM request to get groupings for section (\d+) will have the grouping
 end
 
 Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do |section_id, table|
-  url = "api.php?action=getTerms"
-
   terms = Array.new
   table.hashes.each do |hash|
      terms.push ({
@@ -261,7 +259,12 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
   body[-1] = ']'
   body += '}'
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
+end
+
+Given /^an OSM request to get terms for section (\d+) will have no terms$/ do |section_id|
+  body = '{"' + section_id + '":[]}'
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
 end
 
 Given /^an OSM request to get programme for section (\d+) term (\d+) will have (\d+) programme items?$/ do |section, term, items|

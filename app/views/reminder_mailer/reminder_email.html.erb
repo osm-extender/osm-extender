@@ -1,11 +1,21 @@
 <p>This is your reminder email for <%= @reminder.section_name %>.</p>
 
+
 <%- @data[:include_items].each do |item| %>
 <%- unless item[:data].nil? || item[:data].empty? %>
 <h1><%= item[:item].human_name.titleize %></h1>
 <%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
 <hr/>
 <%- end %>
+<%- end %>
+
+
+<%- unless @data[:error_items].empty? %>
+  <h1>Some Errors Occured</h1>
+  <p>The following items raised errors whilst being processed:</p>
+  <ul><%- @data[:error_items].each do |error| %>
+    <li><%= error[:item].human_name.titleize %> - <%= error[:exception].message %></li>
+  <%- end %></ul>
 <%- end %>
 
 <%- unless @data[:exclude_items].empty? %>

@@ -613,11 +613,9 @@ module OSM
         puts api_data.to_s
       end
 
-      connection_error_exceptions = [SocketError, TimeoutError, OpenSSL::SSL::SSLError]
-      connection_error_exceptions.push(FakeWeb::NetConnectNotAllowedError) if Rails.env.test? # Since FakeWeb is only defined in the test environment
       begin
         result = HTTParty.post("#{@base_url}/#{url}", {:body => api_data})
-      rescue *connection_error_exceptions
+      rescue SocketError, TimeoutError, OpenSSL::SSL::SSLError
         raise ConnectionError.new('A problem occured on the internet.')
       end
       raise ConnectionError.new("HTTP Status code was #{result.response.code}") if !result.response.code.eql?('200')
@@ -1169,12 +1167,15 @@ module OSM
 
   def self.find_current_term_id(api, section_id, data={})
     terms = api.get_terms(data)
+
+    # Return the term we are currently in
     unless terms.nil?
       terms.each do |term|
-        return term.id if term.current? && (term.section_id == section_id)
+        return term.id if (term.section_id == section_id) && term.current?
       end
     end
-    return nil
+
+    raise Error.new('There is no current term for the section.')
   end
 
   def self.make_datetime(date, time)

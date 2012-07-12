@@ -204,12 +204,6 @@ Feature: OSM
 	And I follow "[Send]" in the "Actions" column of the "Tuesday" row
 	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
 
-    Scenario: OSM Connection error
-	Given "alice@example.com" is connected to OSM
-        When I signin as "alice@example.com" with password "P@55word"
-        Then I should see "We're sorry, we tried talking to OSM but something went wrong"
-	And I should see "A problem occured on the internet"
-
     @send_email
     Scenario: Fix an empty array representing no notepads
 	Given "alice@example.com" is connected to OSM
