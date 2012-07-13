@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120706152627) do
+ActiveRecord::Schema.define(:version => 20120713130728) do
 
   create_table "email_lists", :force => true do |t|
     t.integer  "user_id"
@@ -126,13 +126,14 @@ ActiveRecord::Schema.define(:version => 20120706152627) do
   add_index "setting_values", ["key"], :name => "index_setting_values_on_key", :unique => true
 
   create_table "statistics", :force => true do |t|
-    t.date     "date",                    :null => false
+    t.date     "date",                         :null => false
     t.integer  "users"
     t.integer  "email_reminders"
     t.text     "email_reminders_by_day"
     t.text     "email_reminders_by_type"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.text     "email_reminder_shares_by_day"
   end
 
   add_index "statistics", ["date"], :name => "index_statistics_caches_on_date", :unique => true

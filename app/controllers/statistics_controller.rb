@@ -52,9 +52,10 @@ class StatisticsController < ApplicationController
 
     todays_data = Statistics.create_or_retrieve_for_date(Date.today)
 
-    by_day = todays_data.email_reminders_by_day
+    by_day = [todays_data.email_reminders_by_day, todays_data.email_reminder_shares_by_day]
     by_day_max = 0
-    by_day.each do |count|
+    (0..6).each do |i|
+      count = by_day[0][i] + by_day[1][i]['pending'] + by_day[1][i]['subscribed'] + by_day[1][i]['unsubscribed']
       by_day_max = count if count > by_day_max
     end
 
