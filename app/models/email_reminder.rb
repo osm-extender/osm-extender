@@ -80,22 +80,25 @@ class EmailReminder < ActiveRecord::Base
   def build_data(data_method)
     include_items = []
     exclude_items = []
+    error_items = []
 
     items.each do |item|
-      data = item.send(data_method)
-      unless data.nil?
-        include_items.push ({
-          :item => item,
-          :data => data,
-        })
-      else
-        exclude_items.push item
+      begin
+        data = item.send(data_method)
+        unless data.nil?
+          include_items.push ({ :item => item, :data => data })
+        else
+          exclude_items.push item
+        end
+      rescue OSM::Error => exception
+        error_items.push({ :item => item, :exception => exception })
       end
     end
 
     return {
       :include_items => include_items,
       :exclude_items => exclude_items,
+      :error_items => error_items
     }
   end
 

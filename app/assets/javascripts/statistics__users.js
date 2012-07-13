@@ -23,7 +23,7 @@ function drawCharts() {
           }
         },
         legend: {position: 'none'},
-        width: 750, height: 350
+        width: 1000, height: 350
       };
       users_options.vAxis.maxValue = graphStepSize(data['max_value'], users_desired_steps) * (users_options.vAxis.gridlines.count - 1);
 

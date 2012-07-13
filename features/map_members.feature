@@ -21,6 +21,9 @@ Feature: Map Members
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
+	And an OSM request to get groupings for section 1 will have the groupings
+	    | grouping_id | name |
+	    | 1           | A    |
 	And an OSM request to get members for section 1 in term 1 will have the members
 	    | first_name | last_name |
 	    | A          | Member    |

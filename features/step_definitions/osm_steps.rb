@@ -134,7 +134,8 @@ Given /^an OSM request to get the register structure for term (\d+) and section 
   url = "users.php?action=registerStructure&sectionid=#{section_id}&termid=#{term_id}"
 
   rows = []
-  range = weeks..1
+  range = 1..weeks
+  range = range.to_a.reverse
   range.each_with_index do |ago, index|
     date = ago.weeks.ago.strftime('%Y-%m-%d')
     row = {
@@ -242,8 +243,6 @@ Given /^an OSM request to get groupings for section (\d+) will have the grouping
 end
 
 Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do |section_id, table|
-  url = "api.php?action=getTerms"
-
   terms = Array.new
   table.hashes.each do |hash|
      terms.push ({
@@ -261,7 +260,12 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
   body[-1] = ']'
   body += '}'
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
+end
+
+Given /^an OSM request to get terms for section (\d+) will have no terms$/ do |section_id|
+  body = '{"' + section_id + '":[]}'
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
 end
 
 Given /^an OSM request to get programme for section (\d+) term (\d+) will have (\d+) programme items?$/ do |section, term, items|
@@ -432,4 +436,13 @@ end
 Given /^an OSM request to get roles will have strange extra records$/ do
   body = '[{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"cubs\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[[\"1\",{\"name\":\"Subs\",\"extraid\":\"529\"}],[\"2\",{\"name\":\"Subs 2\",\"extraid\":\"530\"}]],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"1","sectionname":"Section 1","section":"cubs","isDefault":"1","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}}]'
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getUserRoles", :body => body)
+end
+
+Given /^an OSM request to get events for section (\d+) will return nothing$/ do |section_id|
+  data = {
+    "identifier" => "eventid",
+    "label" => "name"
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/events.php?action=getEvents&sectionid=#{section_id}", :body => data.to_json)
 end

@@ -1,7 +1,8 @@
 class Statistics < ActiveRecord::Base
-  attr_accessible :date, :users, :email_reminders, :email_reminders_by_day, :email_reminders_by_type
+  attr_accessible :date, :users, :email_reminders, :email_reminders_by_day, :email_reminder_shares_by_day, :email_reminders_by_type
 
   serialize :email_reminders_by_day, Array
+  serialize :email_reminder_shares_by_day, Array
   serialize :email_reminders_by_type, Hash
 
   validates_presence_of :date
@@ -31,10 +32,18 @@ class Statistics < ActiveRecord::Base
     data[:email_reminders] = EmailReminder.where(['created_at < ?', date + 1]).count
 
     by_day = Array.new(7, 0)
-    EmailReminder.where(['created_at < ?', date + 1]).group(:send_on).count.each do |day, count|
-      by_day[day] = count
+    shared_by_day = Array.new(7)
+    (0..6).each do |i|
+      shared_by_day[i] = {"pending"=>0, "subscribed"=>0, "unsubscribed"=>0}
+    end
+    EmailReminder.where(['created_at < ?', date + 1]).each do |reminder|
+      by_day[reminder.send_on] += 1
+      reminder.shares.where(['created_at < ?', date + 1]).group(:state).count.each do |state, count|
+        shared_by_day[reminder.send_on][state] += count
+      end
     end
     data[:email_reminders_by_day] = by_day
+    data[:email_reminder_shares_by_day] = shared_by_day
 
     data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', date + 1]).group(:type).count
 

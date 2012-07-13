@@ -263,3 +263,17 @@ Feature: Reminder Email
 
         When "reminder-mailer-failed@example.com" opens the email with subject "Reminder Email Failed"
         Then I should see "A reminder email failed" in the email body
+
+
+    @send_email
+    Scenario: An item has an error
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a due badges item in her "Tuesday" email reminder for section 1
+	And an OSM request to get sections will give 1 section
+	And an OSM request to get terms for section 1 will have no terms
+
+        When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
+	Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere)"
+
+        When "alice@example.com" opens the email with subject "Reminder Email for Section 1 (1st Somewhere)"
+        Then I should see "Due Badges - There is no current term for the section." in the email body
