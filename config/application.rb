@@ -50,7 +50,7 @@ module OSMExtender
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.10'
+    config.assets.version = '1.11'
 
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']

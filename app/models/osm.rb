@@ -733,7 +733,7 @@ module OSM
       return compare_group_name unless compare_group_name == 0
 
       return 0 if self.section.type == another_role.section.type
-      [:beavers, :cubs, :scouts, :explorers, :waiting, :adult].each do |type|
+      [:beavers, :cubs, :scouts, :explorers, :waiting, :adults].each do |type|
         return -1 if self.section.type == type
         return 1 if another_role.section.type == type
       end
@@ -789,7 +789,7 @@ module OSM
     end
 
     # Custom section type checkers
-    [:beavers, :cubs, :scouts, :explorers, :adult, :waiting].each do |attribute|
+    [:beavers, :cubs, :scouts, :explorers, :adults, :waiting].each do |attribute|
       define_method "#{attribute}?" do
         @type == attribute
       end
