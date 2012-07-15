@@ -7,6 +7,10 @@ class SessionsController < ApplicationController
   def create
     user = login(params[:email_address].downcase, params[:password])
     if user
+      # since user has remembered their password remove any reset tokens
+      user.clear_reset_password_token
+      user.save!
+
       # prevent session fixation attack
       old_session = {}
       keys_to_preserve = [:user_id, :return_to_url, :last_action_time, :login_time]
