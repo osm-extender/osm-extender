@@ -156,16 +156,6 @@ class User < ActiveRecord::Base
   end
 
   public
-  # fix sorcery bug involving sqlite
-  def self.load_from_token(token, token_attr_name, token_expiration_date_attr)
-    return nil if token.blank?
-    user = User.where(["trim(#{token_attr_name}) = ?", token]).first
-    if !user.blank? && !user.send(token_expiration_date_attr).nil?
-      return Time.now.utc < user.send(token_expiration_date_attr) ? user : nil
-    end
-    user
-  end
-
   # Patch sorcery to clear reset password token on sucessful authentication
   def self.authenticate(*credentials)
     user = super(*credentials)
