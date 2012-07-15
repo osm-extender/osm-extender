@@ -95,3 +95,16 @@ Feature: Forgotten Password
         Then I should see "Password is not allowed to contain part of your name"
 	And I should be on "/password_resets/abc123"
         And "alice@example.com" should receive no email with subject /Password Changed/
+
+
+    @send_email
+    Scenario: Reset token on a successful signin
+        When I go to the signin page
+        And I follow "Forgotten your password?"
+        And I fill in "Email address" with "alice@example.com"
+        And I press "Request password reset"
+        Then I should see "Instructions have been sent to your email address."
+        When I signin as "alice@example.com" with password "wrong"
+	Then "alice@example.com" should have a password reset token
+        When I signin as "alice@example.com" with password "P@55word"
+	Then "alice@example.com" should not have a password reset token

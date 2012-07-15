@@ -165,5 +165,12 @@ class User < ActiveRecord::Base
     end
     user
   end
-  
+
+  # Patch sorcery to clear reset password token on sucessful authentication
+  def self.authenticate(*credentials)
+    user = super(*credentials)
+    user.send(:clear_reset_password_token) unless user.nil?
+    user
+  end
+
 end
