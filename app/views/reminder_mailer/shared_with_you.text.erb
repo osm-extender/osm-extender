@@ -2,7 +2,7 @@ Hello <%= @share.name %>, <%= @share.reminder.user.name %> has decided to share 
 
 If you decide to subscribe to the email then every <%= day_name(@share.reminder.send_on) %> you'll receive an email with the following details:
 <%- @share.reminder.items.each do |item| %>
-  * <%= item.human_name %>
+  * <%= item.class.human_name %>
 <%- end %>
 
 You will be able to unsubscribe at any time, to subscribe to the email please follow the link below

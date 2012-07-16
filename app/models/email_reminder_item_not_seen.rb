@@ -34,25 +34,25 @@ class EmailReminderItemNotSeen < EmailReminderItem
     return data
   end
 
-  def configuration_labels
+  def self.configuration_labels
     {
       :the_last_n_weeks => 'For how many weeks?',
     }
   end
 
-  def default_configuration
+  def self.default_configuration
     {
       :the_last_n_weeks => 2,
     }
   end
 
-  def configuration_types
+  def self.configuration_types
     {
       :the_last_n_weeks => Fixnum,
     }
   end
 
-  def human_name
+  def self.human_name
     return 'Members not seen'
   end
 

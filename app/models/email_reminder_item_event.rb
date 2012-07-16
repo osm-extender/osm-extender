@@ -38,25 +38,25 @@ class EmailReminderItemEvent < EmailReminderItem
   end
 
 
-  def configuration_labels
+  def self.configuration_labels
     {
       :the_next_n_months => 'How many months into the future?',
     }
   end
 
-  def default_configuration
+  def self.default_configuration
     {
       :the_next_n_months => 3,
     }
   end
 
-  def configuration_types
+  def self.configuration_types
     {
       :the_next_n_months => Fixnum,
     }
   end
 
-  def human_name
+  def self.human_name
     return 'Events'
   end
 

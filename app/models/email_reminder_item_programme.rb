@@ -58,25 +58,25 @@ class EmailReminderItemProgramme < EmailReminderItem
   end
 
 
-  def configuration_labels
+  def self.configuration_labels
     {
       :the_next_n_weeks => 'How many weeks into the future?',
     }
   end
 
-  def default_configuration
+  def self.default_configuration
     {
       :the_next_n_weeks => 4,
     }
   end
 
-  def configuration_types
+  def self.configuration_types
     {
       :the_next_n_weeks => Fixnum,
     }
   end
 
-  def human_name
+  def self.human_name
     return 'Programme'
   end
 

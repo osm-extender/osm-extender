@@ -1,8 +1,8 @@
-<% provide :title, "Show email reminder item (#{@email_reminder_item.human_name.downcase})" %>
+<% provide :title, "Show email reminder item (#{@email_reminder_item.class.human_name.downcase})" %>
 
 <p>
   <b>Type:</b>
-  <%= @email_reminder_item.human_name %>
+  <%= @email_reminder_item.class.human_name %>
 </p>
 
 <p>
