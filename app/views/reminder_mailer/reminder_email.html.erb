@@ -2,11 +2,9 @@
 
 
 <%- @data[:include_items].each do |item| %>
-<%- unless item[:data].nil? || item[:data].empty? %>
-<h1><%= item[:item].human_name.titleize %></h1>
+  <h1><%= item[:item].human_name.titleize %></h1>
 <%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
-<hr/>
-<%- end %>
+  <hr/>
 <%- end %>
 
 

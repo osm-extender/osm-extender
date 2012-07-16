@@ -85,7 +85,7 @@ class EmailReminder < ActiveRecord::Base
     items.each do |item|
       begin
         data = item.send(data_method)
-        unless data.nil?
+        unless data.nil? || data.blank? || data.empty?
           include_items.push ({ :item => item, :data => data })
         else
           exclude_items.push item
