@@ -23,7 +23,7 @@ class EmailReminderItemEvent < EmailReminderItem
 
     (1 + rand(3)).times do
       date = rand(configuration[:the_next_n_months].months / 1.day).days.from_now.strftime('%y-%m-%d')
-      data.push OSM::Event.new({
+      data.push Osm::Event.new({
         'name' => Faker::Lorem.words(2 + rand(3)).join(' '),
         'startdate' => date,
         'starttime' => "1#{rand(9)}:00",

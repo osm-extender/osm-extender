@@ -58,7 +58,7 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
      permissions.push [hash['permission'], hash['granted']]
   end
 
-  body = '{"apis":[{"apiid":"' + OSM::API.api_id + '","name":"Test API","permissions":{'
+  body = '{"apis":[{"apiid":"' + Osm::Api.api_id + '","name":"Test API","permissions":{'
   permissions.each do |permission|
     permission[1] = 0 if permission[1].eql?('none')
     permission[1] = 10 if permission[1].eql?('read')

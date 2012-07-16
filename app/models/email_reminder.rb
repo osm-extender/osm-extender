@@ -90,7 +90,7 @@ class EmailReminder < ActiveRecord::Base
         else
           exclude_items.push item
         end
-      rescue OSM::Error => exception
+      rescue Osm::Error => exception
         error_items.push({ :item => item, :exception => exception })
       end
     end

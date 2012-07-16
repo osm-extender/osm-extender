@@ -1,9 +1,9 @@
-module OSM
+module Osm
 
   class Error < Exception; end
   class ConnectionError < Error; end
 
-  class API
+  class Api
 
     @@default_cache_ttl = 30.minutes  # Some things will only be cached for half this time
                                       # Whereas others will be cached for twice this time
@@ -87,7 +87,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an array of OSM::Role objects
+    # @returns an array of Osm::Role objects
     def get_roles(options={})
       api_data = options[:api_data] || {}
 
@@ -99,7 +99,7 @@ module OSM
 
       result = Array.new
       data.each do |item|
-        role = OSM::Role.new(item)
+        role = Osm::Role.new(item)
         result.push role
         Rails.cache.write("OSMAPI-section-#{role.section.id}", role.section, :expires_in => @@default_cache_ttl*2)
         self.user_can_access :section, role.section.id, api_data
@@ -168,7 +168,7 @@ module OSM
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
     # @returns nil if an error occured or the user does not have access to that section
-    # @returns an OSM::SectionConfig object otherwise
+    # @returns an Osm::SectionConfig object otherwise
     def get_section(section_id, options={})
       api_data = options[:api_data] || {}
 
@@ -193,7 +193,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an array of OSM::Patrol objects
+    # @returns an array of Osm::Patrol objects
     def get_groupings(section_id, options={})
       api_data = options[:api_data] || {}
 
@@ -205,7 +205,7 @@ module OSM
 
       result = Array.new
       data['patrols'].each do |item|
-        grouping = OSM::Grouping.new(item)
+        grouping = Osm::Grouping.new(item)
         result.push grouping
         Rails.cache.write("OSMAPI-grouping-#{grouping.id}", grouping, :expires_in => @@default_cache_ttl*2)
         self.user_can_access :grouping, grouping.id, api_data
@@ -221,7 +221,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns  an array of OSM::Term objects
+    # @returns  an array of Osm::Term objects
     def get_terms(options={})
       api_data = options[:api_data] || {}
 
@@ -234,7 +234,7 @@ module OSM
       result = Array.new
       data.each_key do |key|
         data[key].each do |item|
-          term = OSM::Term.new(item)
+          term = Osm::Term.new(item)
           result.push term
           Rails.cache.write("OSMAPI-term-#{term.id}", term, :expires_in => @@default_cache_ttl*2)
           self.user_can_access :term, term.id, api_data
@@ -253,7 +253,7 @@ module OSM
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
     # @returns nil if an error occured or the user does not have access to that term
-    # @returns an OSM::Term object otherwise
+    # @returns an Osm::Term object otherwise
     def get_term(term_id, options={})
       api_data = options[:api_data] || {}
 
@@ -279,7 +279,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an array of OSM::ProgrammeItem objects
+    # @returns an array of Osm::ProgrammeItem objects
     def get_programme(section_id, term_id, options={})
       api_data = options[:api_data] || {}
 
@@ -296,7 +296,7 @@ module OSM
       activities = data['activities'] || {}
 
       items.each do |item|
-        programme_item = OSM::ProgrammeItem.new(item, activities[item['eveningid']])
+        programme_item = Osm::ProgrammeItem.new(item, activities[item['eveningid']])
         result.push programme_item
         programme_item.activities.each do |activity|
           self.user_can_access :activity, activity.activity_id, api_data
@@ -315,7 +315,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an OSM::Activity object
+    # @returns an Osm::Activity object
     def get_activity(activity_id, version=nil, options={})
       api_data = options[:api_data] || {}
 
@@ -330,7 +330,7 @@ module OSM
         data = perform_query("programme.php?action=getActivity&id=#{activity_id}&version=#{version}", api_data)
       end
 
-      activity = OSM::Activity.new(data)
+      activity = Osm::Activity.new(data)
       Rails.cache.write("OSMAPI-activity-#{activity_id}-#{nil}", activity, :expires_in => @@default_cache_ttl*2) if version.nil?
       Rails.cache.write("OSMAPI-activity-#{activity_id}-#{activity.version}", activity, :expires_in => @@default_cache_ttl/2)
       self.user_can_access :activity, activity.id, api_data
@@ -346,10 +346,10 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an array of OSM::Member objects
+    # @returns an array of Osm::Member objects
     def get_members(section_id, term_id=nil, options={})
       api_data = options[:api_data] || {}
-      term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
+      term_id = Osm::find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if !options[:no_cache] && Rails.cache.exist?("OSMAPI-members-#{section_id}-#{term_id}") && self.user_can_access?(:member, section_id, api_data)
         return Rails.cache.read("OSMAPI-members-#{section_id}-#{term_id}")
@@ -359,7 +359,7 @@ module OSM
 
       result = Array.new
       data['items'].each do |item|
-        result.push OSM::Member.new(item)
+        result.push Osm::Member.new(item)
       end
       self.user_can_access :member, section_id, api_data
       Rails.cache.write("OSMAPI-members-#{section_id}-#{term_id}", result, :expires_in => @@default_cache_ttl)
@@ -374,7 +374,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an array of OSM::ApiAccess objects
+    # @returns an array of Osm::ApiAccess objects
     def get_api_access(section_id, options={})
       api_data = options[:api_data] || {}
 
@@ -386,7 +386,7 @@ module OSM
 
       result = Array.new
       data['apis'].each do |item|
-        this_item = OSM::ApiAccess.new(item)
+        this_item = Osm::ApiAccess.new(item)
         result.push this_item
         self.user_can_access(:programme, section_id, api_data) if this_item.can_read?(:programme)
         self.user_can_access(:member, section_id, api_data) if this_item.can_read?(:member)
@@ -404,12 +404,12 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an OSM::ApiAccess objects
+    # @returns an Osm::ApiAccess objects
     def get_our_api_access(section_id, options={})
       api_data = options[:api_data] || {}
 
-      if !options[:no_cache] && Rails.cache.exist?("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}")
-        return Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{OSM::API.api_id}")
+      if !options[:no_cache] && Rails.cache.exist?("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{Osm::Api.api_id}")
+        return Rails.cache.read("OSMAPI-api_access-#{api_data['userid'] || @userid}-#{section_id}-#{Osm::Api.api_id}")
       end
 
       data = get_api_access(section_id, options)
@@ -428,7 +428,7 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an array of OSM::Event objects
+    # @returns an array of Osm::Event objects
     def get_events(section_id, options={})
       api_data = options[:api_data] || {}
 
@@ -441,7 +441,7 @@ module OSM
       result = Array.new
       unless data['items'].nil?
         data['items'].each do |item|
-          result.push OSM::Event.new(item)
+          result.push Osm::Event.new(item)
         end
       end
       self.user_can_access :programme, section_id, api_data
@@ -457,10 +457,10 @@ module OSM
     #   * :api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #     * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #     * 'secret' (optional) the OSM secret belonging to the above user
-    # @returns an OSM::DueBadges object
+    # @returns an Osm::DueBadges object
     def get_due_badges(section_id, term_id=nil, options={})
       api_data = options[:api_data] || {}
-      term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
+      term_id = Osm::find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if !options[:no_cache] && Rails.cache.exist?("OSMAPI-due_badges-#{section_id}-#{term_id}") && self.user_can_access?(:badge, section_id, api_data)
         return Rails.cache.read("OSMAPI-due_badges-#{section_id}-#{term_id}")
@@ -469,7 +469,7 @@ module OSM
       section_type = get_section(section_id, api_data).type.to_s
       data = perform_query("challenges.php?action=outstandingBadges&section=#{section_type}&sectionid=#{section_id}&termid=#{term_id}", api_data)
 
-      data = OSM::DueBadges.new(data)
+      data = Osm::DueBadges.new(data)
       self.user_can_access :badge, section_id, api_data
       Rails.cache.write("OSMAPI-due_badges-#{section_id}-#{term_id}", data, :expires_in => @@default_cache_ttl*2)
 
@@ -486,7 +486,7 @@ module OSM
     # @returns an array of hashes representing the rows of the register
     def get_register_structure(section_id, term_id=nil, options={})
       api_data = options[:api_data] || {}
-      term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
+      term_id = Osm::find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if !options[:no_cache] && Rails.cache.exist?("OSMAPI-register_structure-#{section_id}-#{term_id}") && self.user_can_access?(:register, section_id, api_data)
         return Rails.cache.read("OSMAPI-register_structure-#{section_id}-#{term_id}")
@@ -516,7 +516,7 @@ module OSM
     # @returns an array of hashes representing the attendance of each member
     def get_register(section_id, term_id=nil, options={})
       api_data = options[:api_data] || {}
-      term_id = OSM.find_current_term_id(self, section_id, api_data) if term_id.nil?
+      term_id = Osm::find_current_term_id(self, section_id, api_data) if term_id.nil?
 
       if !options[:no_cache] && Rails.cache.exist?("OSMAPI-register-#{section_id}-#{term_id}") && self.user_can_access?(:register, section_id, api_data)
         return Rails.cache.read("OSMAPI-register-#{section_id}-#{term_id}")
@@ -562,7 +562,7 @@ module OSM
     end
 
     # Update an evening in OSM
-    # @param programme_item is the OSM::ProgrammeItem object to update
+    # @param programme_item is the Osm::ProgrammeItem object to update
     # @param api_data (optional) a hash containing information to be sent to the server, it may contain the following keys:
     #   * 'userid' (optional) the OSM userid to make the request as, this will override one provided using the set_user method
     #   * 'secret' (optional) the OSM secret belonging to the above user
@@ -689,7 +689,7 @@ module OSM
     # Initialize a new UserRole using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @section = OSM::Section.new(data['sectionid'], data['sectionname'], ActiveSupport::JSON.decode(data['sectionConfig']), self)
+      @section = Osm::Section.new(data['sectionid'], data['sectionname'], ActiveSupport::JSON.decode(data['sectionConfig']), self)
       @group_name = data['groupname']
       @group_id = data['groupid'].to_i
       @group_normalized = data['groupNormalised'].to_i
@@ -891,7 +891,7 @@ module OSM
       @activities = Array.new
       unless activities.nil?
         activities.each do |item|
-          @activities.push OSM::ProgrammeActivity.new(item)
+          @activities.push Osm::ProgrammeActivity.new(item)
         end
       end
     end
@@ -961,7 +961,7 @@ module OSM
       @deletable = data['deletable']
       @used = data['used']
       @versions = data['versions']
-      @sections = OSM::make_array_of_symbols(data['sections'] || [])
+      @sections = Osm::make_array_of_symbols(data['sections'] || [])
       @tags = data['tags'] || []
       @files = data['files']
       @badges = data['badges']
@@ -992,7 +992,7 @@ module OSM
       @phone4 = data['phone4']
       @address = data['address']
       @address2 = data['address2']
-      @date_of_birth = OSM.parse_date(data['dob'])
+      @date_of_birth = Osm::parse_date(data['dob'])
       @started = data['started']
       @joined_in_years = data['joining_in_yrs']
       @parents = data['parents']
@@ -1004,7 +1004,7 @@ module OSM
       @subs = data['subs']
       @grouping_id = data['patrolid'].to_i
       @grouping_leader = data['patrolleader'] # 0 - No, 1 = seconder, 2 = sixer
-      @joined = OSM.parse_date(data['joined'])
+      @joined = Osm::parse_date(data['joined'])
       @age = data['age'] # 'yy / mm'
       @joined_years = data['yrs']
       @patrol = data['patrol']
@@ -1066,7 +1066,7 @@ module OSM
     # Determine if this API is the API being used to make requests
     # @returns - true if this is the API being used, false otherwise
     def our_api?
-      return @id == OSM::API.api_id
+      return @id == Osm::Api.api_id
     end
 
   end
@@ -1097,8 +1097,8 @@ module OSM
       @id = data['eventid']
       @section_id = data['sectionid']
       @name = data['name']
-      @start = OSM::make_datetime(data['startdate'], data['starttime'])
-      @end = OSM::make_datetime(data['enddate'], data['endtime'])
+      @start = Osm::make_datetime(data['startdate'], data['starttime'])
+      @end = Osm::make_datetime(data['enddate'], data['endtime'])
       @cost = data['cost']
       @location = data['location']
       @notes = data['notes']

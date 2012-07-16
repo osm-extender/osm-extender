@@ -27,7 +27,7 @@ class EmailReminderItemDueBadge < EmailReminderItem
       end
     end
 
-    return OSM::DueBadges.new(data)
+    return Osm::DueBadges.new(data)
   end
 
 

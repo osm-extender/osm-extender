@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   end
 
   def connect_to_osm(email, password)
-    api = OSM::API.new
+    api = Osm::Api.new
     result = api.authorize(email, password)
 
     write_attribute(:osm_userid, result['userid'])
@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
 
   def osm_api
     if connected_to_osm?
-      @osm_api ||= OSM::API.new(read_attribute(:osm_userid), read_attribute(:osm_secret))
+      @osm_api ||= Osm::Api.new(read_attribute(:osm_userid), read_attribute(:osm_secret))
       return @osm_api
     else
       return nil
