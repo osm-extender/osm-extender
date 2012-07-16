@@ -19,6 +19,7 @@ Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?bran
  - What's the programme for the next few weeks
  - Who's got a birthday around now
  - The contents of your section's notepad
+ Email reminders may be shared with other users, regardless of wether they use OSMX or not.
 
 
 [Email lists]
@@ -31,6 +32,10 @@ Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?bran
 
 [Programme wizard]
  Allows you to easily add a number of meetings to your programme, you specify the start date, end date, interval between meetings, start time, end time and meeting title, OSMX does the rest.
+
+[Map members]
+ View a map of where the members of your section live in relation to your meeting point.
+
 
 == Setting up \OSM Extender
 Please follow the information in the {project's wiki}[https://github.com/robertgauld/OSMExtender/wiki/Running-the-system].
