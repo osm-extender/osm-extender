@@ -136,22 +136,22 @@ class EmailRemindersController < ApplicationController
   def get_available_items
     items = []
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday')
-      items.push ({:name => 'Birthdays', :type => 'birthday', :as_link => has_osm_permission?(:read, :member)})
+      items.push ({:type => EmailReminderItemBirthday, :as_link => has_osm_permission?(:read, :member)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent')
-      items.push ({:name => 'Events', :type => 'event', :as_link => has_osm_permission?(:read, :programme)})
+      items.push ({:type => EmailReminderItemEvent, :as_link => has_osm_permission?(:read, :programme)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme')
-      items.push ({:name => 'Programme', :type => 'programme', :as_link => has_osm_permission?(:read, :programme)})
+      items.push ({:type => EmailReminderItemProgramme, :as_link => has_osm_permission?(:read, :programme)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen')
-      items.push ({:name => 'Member not seen', :type => 'not_seen', :as_link => has_osm_permission?(:read, :register)})
+      items.push ({:type => EmailReminderItemNotSeen, :as_link => has_osm_permission?(:read, :register)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
-      items.push ({:name => 'Due badges', :type => 'due_badge', :as_link => has_osm_permission?(:read, :badge)})
+      items.push ({:type => EmailReminderItemDueBadge, :as_link => has_osm_permission?(:read, :badge)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotepad')
-      items.push ({:name => 'Section Notepad', :type => 'notepad', :as_link => true})
+      items.push ({:type => EmailReminderItemNotepad, :as_link => true})
     end
     return items
   end

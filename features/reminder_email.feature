@@ -96,7 +96,7 @@ Feature: Reminder Email
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
-        And I follow "Member not seen"
+        And I follow "Members not seen"
         And I fill in "For how many weeks?" with "1"
         And I press "Create members not seen item"
         Then I should see "Item was successfully added"
