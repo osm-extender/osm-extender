@@ -1,5 +1,7 @@
-require 'osm/version'
+require 'version'
 Dir[File.join(File.dirname(__FILE__) , 'osm', '*.rb')].each {|file| require file }
+
+require 'date'
 
 
 module Osm
@@ -29,10 +31,20 @@ module Osm
   end
 
   def self.make_datetime(date, time)
-    if (!date.blank? && !time.blank?)
-      return DateTime.parse((date + ' ' + time), 'yyyy-mm-dd hh:mm:ss')
-    elsif !date.blank?
-      return DateTime.parse(date, 'yyyy-mm-dd')
+    date = nil if date.nil? || date.empty?
+    time = nil if time.nil? || time.empty?
+    if (!date.nil? && !time.nil?)
+      begin
+        return DateTime.strptime((date + ' ' + time), '%Y-%m-%d %H:%M:%S')
+      rescue ArgumentError
+        return nil
+      end
+    elsif !date.nil?
+      begin
+        return DateTime.strptime(date, '%Y-%m-%d')
+      rescue ArgumentError
+        return nil
+      end
     else
       return nil
     end
@@ -40,7 +52,7 @@ module Osm
 
   def self.parse_date(date)
     begin
-      return Date.parse(date, 'yyyy-mm-dd')
+      return Date.strptime(date, '%Y-%m-%d')
     rescue ArgumentError
       return nil
     end

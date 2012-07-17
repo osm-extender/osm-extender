@@ -2,7 +2,8 @@ module Osm
 
   class Api
 
-    @@default_cache_ttl = 30.minutes  # Some things will only be cached for half this time
+    @@default_cache_ttl = 30 * 60     # The default caching time for responses from OSM (in seconds)
+                                      # Some things will only be cached for half this time
                                       # Whereas others will be cached for twice this time
                                       # Most items however will be cached for this time
 
