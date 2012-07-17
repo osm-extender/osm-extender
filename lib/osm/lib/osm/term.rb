@@ -10,8 +10,8 @@ module Osm
       @id = data['termid'].to_i
       @section_id = data['sectionid'].to_i
       @name = data['name']
-      @start = Date.parse(data['startdate'], 'yyyy-mm-dd')
-      @end = Date.parse(data['enddate'], 'yyyy-mm-dd')
+      @start = Osm::parse_date(data['startdate'])
+      @end = Osm::parse_date(data['enddate'])
     end
 
     # Determine if the term is completly before the passed date

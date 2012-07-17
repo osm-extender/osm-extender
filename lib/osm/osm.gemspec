@@ -18,8 +18,11 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.add_runtime_dependency 'rails', '>= 3.2.5'  # Used to provide the cache (and the environment controls slightly different behavior in perform_query)
+  s.add_runtime_dependency 'activesupport', '>= 3.2'  # Used to parse JSON from OSM
   s.add_runtime_dependency 'httparty'   # Used to make web requests to the API
 
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'fakeweb'
 
