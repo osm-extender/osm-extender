@@ -16,11 +16,12 @@
         <td><%= email_reminder.section_name %></td>
         <td><%= day_name(email_reminder.send_on) %></td>
         <td>
+          <%- confirm_send = (email_reminder.shares.size > 0) ? {data: {:confirm => 'This will send the email only to you, continue?'}} : nil %>
           <%= link_to '[Show]', email_reminder %>
           <%= link_to '[Edit]', edit_email_reminder_path(email_reminder) %>
           <%= link_to '[Sharing]', email_reminder_shares_path(email_reminder) %>
           <%= link_to '[Preview]', preview_email_reminder_path(email_reminder), :target=>'_blank' %>
-          <%= link_to '[Send]', send_email_reminder_path(email_reminder), data: {:confirm => 'This will send the email only to you, continue?'} %>
+          <%= link_to '[Send]', send_email_reminder_path(email_reminder), confirm_send %>
           <%= link_to '[Destroy]', email_reminder, data: {:confirm => 'Are you sure?'}, method: :delete %>
         </td>
       </tr>
