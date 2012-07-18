@@ -16,7 +16,6 @@ describe "Online Scout Manager" do
     it "Returns the current term for the section from all terms returned by OSM" do
       Osm::Api.configure({:api_id=>'1234', :api_token=>'12345678', :api_name=>'API', :api_site=>:scout})
       api = Osm::Api.new('2345', 'abcd')
-      section_id = 9
 
       body = '{"9":['
       body += '{"termid":"1","name":"Term 1","sectionid":"9","startdate":"' + (Date.today - 90).strftime('%Y-%m-%d') + '","enddate":"' + (Date.today - 31).strftime('%Y-%m-%d') + '"},'
@@ -25,7 +24,7 @@ describe "Online Scout Manager" do
       body += ']}'
       FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
 
-      Osm::find_current_term_id(api, section_id).should == 2
+      Osm::find_current_term_id(api, 9).should == 2
     end
 
     it "Raises an error if there is no current term" do
