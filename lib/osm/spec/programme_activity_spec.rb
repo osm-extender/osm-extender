@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'date'
 
 describe "Programme Activity" do
 
@@ -8,14 +7,14 @@ describe "Programme Activity" do
     data = {
       'eveningid' => 1,
       'activityid' => 2,
-      'title' => 'Evening Name',
+      'title' => 'Activity Name',
       'notes' => 'Notes',
     }
     pa = Osm::ProgrammeActivity.new(data)
 
     pa.evening_id.should == 1
     pa.activity_id.should == 2
-    pa.title.should == 'Evening Name'
+    pa.title.should == 'Activity Name'
     pa.notes.should == 'Notes'
   end
 

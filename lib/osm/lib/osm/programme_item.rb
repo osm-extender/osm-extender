@@ -19,7 +19,7 @@ module Osm
       @leaders = data['leaders'] || ''
       @start_time = data['starttime'].nil? ? nil : data['starttime'][0..4]
       @end_time = data['endtime'].nil? ? nil : data['endtime'][0..4]
-      @meeting_date = Date.parse(data['meetingdate'], 'yyyy-mm-dd')
+      @meeting_date = Osm::parse_date(data['meetingdate'])
       @google_calendar = data['googlecalendar']
 
       @activities = Array.new
