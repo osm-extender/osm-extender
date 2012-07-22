@@ -58,7 +58,7 @@ module Osm
     end
 
     def ==(another_role)
-      self.section.id == another_role.try(:section).try(:id)
+      self.section == another_role.try(:section)
     end
 
   end
