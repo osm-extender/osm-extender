@@ -9,10 +9,11 @@ module Osm
     # @param data the hash of data for the object returned by the API
     def initialize(id, name, data, role)
       subscription_levels = [:bronze, :silver, :gold]
+      subscription_level = data['subscription_level'].to_i - 1
 
       @id = id.to_i
       @name = name
-      @subscription_level = subscription_levels[data['subscription_level'].to_i - 1]
+      @subscription_level = (subscription_levels[subscription_level] unless subscription_level < 0) || :unknown
       @subscription_expires = data['subscription_expires'] ? Date.parse(data['subscription_expires'], 'yyyy-mm-dd') : nil
       @type = !data['sectionType'].nil? ? data['sectionType'].to_sym : :unknown
       @num_scouts = data['numscouts']

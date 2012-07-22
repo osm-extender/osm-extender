@@ -2,6 +2,7 @@
 require 'spec_helper'
 require 'date'
 
+
 class DummyRole
   attr_reader :id
   def initialize(id)
@@ -49,6 +50,20 @@ describe "Section" do
     section.mobile_fields.should == {}
     section.extra_records.should == []
     section.role.should == role
+  end
+
+  it "Create has sensible defaults" do
+    section = Osm::Section.new(1, 'Name', {}, nil)
+
+    section.subscription_level.should == :unknown
+    section.subscription_expires.should == nil
+    section.type.should == :unknown
+    section.num_scouts.should == nil
+    section.column_names.should == {}
+    section.fields.should == {}
+    section.intouch_fields.should == {}
+    section.mobile_fields.should == {}
+    section.extra_records.should == []
   end
 
 
