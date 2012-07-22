@@ -2,7 +2,7 @@ module Osm
 
   class Member
 
-    attr_reader :id, :section_id, :type, :first_name, :last_name, :email1, :email2, :email3, :email4, :phone1, :phone2, :phone3, :phone4, :address, :address2, :date_of_birth, :started, :joined_in_years, :parents, :notes, :medical, :religion, :school, :enthnicity, :subs, :grouping_id, :grouping_leader, :joined, :age, :joined_years, :patrol
+    attr_reader :id, :section_id, :type, :first_name, :last_name, :email1, :email2, :email3, :email4, :phone1, :phone2, :phone3, :phone4, :address, :address2, :date_of_birth, :started, :joined_in_years, :parents, :notes, :medical, :religion, :school, :ethnicity, :subs, :grouping_id, :grouping_leader, :joined, :age, :joined_years, :patrol
 
     # Initialize a new Member using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
@@ -23,8 +23,8 @@ module Osm
       @address = data['address']
       @address2 = data['address2']
       @date_of_birth = Osm::parse_date(data['dob'])
-      @started = data['started']
-      @joined_in_years = data['joining_in_yrs']
+      @started = Osm::parse_date(data['started'])
+      @joined_in_years = data['joining_in_yrs'].to_i
       @parents = data['parents']
       @notes = data['notes']
       @medical = data['medical']
@@ -36,7 +36,7 @@ module Osm
       @grouping_leader = data['patrolleader'] # 0 - No, 1 = seconder, 2 = sixer
       @joined = Osm::parse_date(data['joined'])
       @age = data['age'] # 'yy / mm'
-      @joined_years = data['yrs']
+      @joined_years = data['yrs'].to_i
       @patrol = data['patrol']
     end
 

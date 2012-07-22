@@ -51,6 +51,7 @@ module Osm
   end
 
   def self.parse_date(date)
+    return nil if date.nil?
     begin
       return Date.strptime(date, '%Y-%m-%d')
     rescue ArgumentError
