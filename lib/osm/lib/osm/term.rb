@@ -54,7 +54,17 @@ module Osm
     end
 
     def <=>(another_term)
-      self.start <=> another_term.start
+      compare = self.section_id <=> another_term.try(:section_id)
+      return compare unless compare == 0
+
+      compare = self.start <=> another_term.try(:start)
+      return compare unless compare == 0
+
+      self.id <=> another_term.try(:id)
+    end
+
+    def ==(another_term)
+      self.id == another_term.try(:id)
     end
 
   end
