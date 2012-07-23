@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe "Term" do
+describe "DueBadge" do
 
   it "Create" do
     data = {
