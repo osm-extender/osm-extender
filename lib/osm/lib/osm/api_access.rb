@@ -7,13 +7,14 @@ module Osm
     # Initialize a new API Access using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @id = data['apiid']
+      @id = data['apiid'].to_i
       @name = data['name']
-      @permissions = (data['permissions'] || {}).symbolize_keys
+      @permissions = data['permissions'] || {}
 
-      # Convert permission values to a number
-      @permissions.each_key do |key|
+      # Rubyfy permissions hash
+      @permissions.keys.each do |key|
         @permissions[key] = @permissions[key].to_i
+        @permissions[(key.to_sym rescue key) || key] = @permissions.delete(key) # Symbolize key
       end
     end
 
