@@ -7,7 +7,7 @@ module Osm
     # Initialize a new API Access using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @id = data['apiid'].to_i
+      @id = data['apiid']
       @name = data['name']
       @permissions = data['permissions'] || {}
 

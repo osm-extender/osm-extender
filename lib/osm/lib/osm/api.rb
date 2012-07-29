@@ -24,14 +24,6 @@ module Osm
       set_user(userid, secret)
     end
 
-    # Set the OSM user to make future requests as
-    # @param userid the OSM userid to use (get this using the authorize method)
-    # @param secret the OSM secret to use (get this using the authorize method)
-    def set_user(userid, secret)
-      @userid = userid
-      @secret = secret
-    end
-
     # Configure the API options used by all instances of the class
     # @param options - a hash containing the following keys:
     #   * :api_id - the apiid given to you for using the OSM id
@@ -66,6 +58,7 @@ module Osm
     end
 
     # Get the userid and secret to be able to act as a certain user on the OSM system
+    # Also set's the 'current user'
     # @param email the login email address of the user on OSM
     # @param password the login password of the user on OSM
     # @returns hash containing the following keys:
@@ -76,7 +69,9 @@ module Osm
         'email' => email,
         'password' => password,
       }
-      perform_query('users.php?action=authorise', api_data)
+      data = perform_query('users.php?action=authorise', api_data)
+      set_user(data['userid'], data['secret'])
+      return data
     end
 
     # Get the user's roles
@@ -556,7 +551,7 @@ module Osm
         Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == section_id
       end
 
-      return data
+      return data.is_a?(Hash) && (data['result'] == 0)
     end
 
     # Update an evening in OSM
@@ -569,7 +564,7 @@ module Osm
       response = perform_query("programme.php?action=editEvening", api_data.merge({
         'eveningid' => programme_item.evening_id,
         'sectionid' => programme_item.section_id,
-        'meetingdate' => programme_item.meeting_date.strftime('%Y-%m-%d'),
+        'meetingdate' => programme_item.meeting_date.try(:strftime, '%Y-%m-%d'),
         'starttime' => programme_item.start_time,
         'endtime' => programme_item.end_time,
         'title' => programme_item.title,
@@ -587,10 +582,54 @@ module Osm
         Rails.cache.delete("OSMAPI-programme-#{term.section_id}-#{term.id}") if term.section_id == programme_item.section_id
       end
 
-      return response
+      return response.is_a?(Hash) && (response['result'] == 0)
     end
 
+
+    protected
+    # Set access permission for the current user on a resource stored in the cache
+    # @param resource_type a symbol representing the resource type (:section, :grouping, :term, :activity, :programme, :member, :badge, :register)
+    # @param resource_id the id of the resource being checked
+    # @param api_data the data hash used in accessing the api
+    # @param permission (optional, default true) wether the user can access the resource
+    def user_can_access(resource_type, resource_id, api_data, permission=true)
+      user = (api_data['userid'] || @userid).to_i
+      resource_id = resource_id.to_i
+      resource_type = resource_type.to_sym
+
+      @@user_access[user] = {} if @@user_access[user].nil?
+      @@user_access[user][resource_type] = {} if @@user_access[user][resource_type].nil?
+
+      @@user_access[user][resource_type][resource_id] = permission
+    end
+
+    # Get access permission for the current user on a resource stored in the cache
+    # @param resource_type a symbol representing the resource type (:section, :grouping, :term, :activity, :programme, :member, :badge, :register)
+    # @param resource_id the id of the resource being checked
+    # @param api_data the data hash used in accessing the api
+    # @returns true if the user can access the resource
+    # @returns false if the user can not access the resource
+    # @returns nil if the combination of user and resource has not been seen
+    def user_can_access?(resource_type, resource_id, api_data)
+      user = (api_data['userid'] || @userid).to_i
+      resource_id = resource_id.to_i
+      resource_type = resource_type.to_sym
+
+      return nil if @@user_access[user].nil?
+      return nil if @@user_access[user][resource_type].nil?
+      return @@user_access[user][resource_type][resource_id]
+    end
+
+
     private
+    # Set the OSM user to make future requests as
+    # @param userid the OSM userid to use (get this using the authorize method)
+    # @param secret the OSM secret to use (get this using the authorize method)
+    def set_user(userid, secret)
+      @userid = userid
+      @secret = secret
+    end
+
     # Make the query to the OSM API
     # @param url the script on the remote server to invoke
     # @param api_data (optional) a hash containing the values to be sent to the server
@@ -640,40 +679,6 @@ module Osm
       to_return = false if to_return.blank?
       puts "OSM API ERROR: #{to_return}" if Rails.env.development? && to_return
       return to_return
-    end
-
-    protected
-    # Set access permission for the current user on a resource stored in the cache
-    # @param resource_type a symbol representing the resource type (:section, :grouping, :term, :activity, :programme, :member, :badge, :register)
-    # @param resource_id the id of the resource being checked
-    # @param api_data the data hash used in accessing the api
-    # @param permission (optional, default true) wether the user can access the resource
-    def user_can_access(resource_type, resource_id, api_data, permission=true)
-      user = (api_data['userid'] || @userid).to_i
-      resource_id = resource_id.to_i
-      resource_type = resource_type.to_sym
-
-      @@user_access[user] = {} if @@user_access[user].nil?
-      @@user_access[user][resource_type] = {} if @@user_access[user][resource_type].nil?
-
-      @@user_access[user][resource_type][resource_id] = permission
-    end
-
-    # Get access permission for the current user on a resource stored in the cache
-    # @param resource_type a symbol representing the resource type (:section, :grouping, :term, :activity, :programme, :member, :badge, :register)
-    # @param resource_id the id of the resource being checked
-    # @param api_data the data hash used in accessing the api
-    # @returns true if the user can access the resource
-    # @returns false if the user can not access the resource
-    # @returns nil if the combination of user and resource has not been seen
-    def user_can_access?(resource_type, resource_id, api_data)
-      user = (api_data['userid'] || @userid).to_i
-      resource_id = resource_id.to_i
-      resource_type = resource_type.to_sym
-
-      return nil if @@user_access[user].nil?
-      return nil if @@user_access[user][resource_type].nil?
-      return @@user_access[user][resource_type][resource_id]
     end
 
   end

@@ -1,14 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
 
-module Osm
-  class Api
-    def self.api_id
-      1
-    end
-  end
-end
-
 
 describe "API Access" do
 
@@ -20,7 +12,7 @@ describe "API Access" do
     }
     api_access = Osm::ApiAccess.new(data)
 
-    api_access.id.should == 1
+    api_access.id.should == '1'
     api_access.name.should == 'Name'
     api_access.permissions.should == {:permission => 100}
   end
@@ -48,6 +40,8 @@ describe "API Access" do
 
 
   it "Tells us if it's the our api" do
+    Osm::Api.stub(:api_id) { '1' }
+
     apis = {
       :ours => Osm::ApiAccess.new({'apiid' => '1', 'name' => 'Name', 'permissions' => {}}),
       :not_ours => Osm::ApiAccess.new({'apiid' => '2', 'name' => 'Name', 'permissions' => {}}),

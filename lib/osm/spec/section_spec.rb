@@ -3,19 +3,19 @@ require 'spec_helper'
 require 'date'
 
 
-class DummyRole
-  attr_reader :id
-  def initialize(id)
-    @id = id
-  end
-  def <=>(another)
-    @id <=> another.try(:id)
-  end
-end
-
-
-
 describe "Section" do
+
+  class DummyRole
+    attr_reader :id
+    def initialize(id)
+      @id = id
+    end
+    def <=>(another)
+      @id <=> another.try(:id)
+    end
+  end
+
+
 
   it "Create" do
     data = {
