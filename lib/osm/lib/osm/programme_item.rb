@@ -50,7 +50,7 @@ module Osm
         }
         to_save.push this_activity
       end
-      return to_save.to_json
+      return ActiveSupport::JSON.encode(to_save)
     end
 
   end
