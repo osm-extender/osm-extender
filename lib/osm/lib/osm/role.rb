@@ -9,8 +9,8 @@ module Osm
     def initialize(data)
       @section = Osm::Section.new(data['sectionid'], data['sectionname'], ActiveSupport::JSON.decode(data['sectionConfig']), self)
       @group_name = data['groupname']
-      @group_id = data['groupid'].to_i
-      @group_normalized = data['groupNormalised'].to_i
+      @group_id = Osm::to_i_or_nil(data['groupid'])
+      @group_normalized = Osm::to_i_or_nil(data['groupNormalised'])
       @default = data['isDefault'].eql?('1') ? true : false
       @permissions = (data['permissions'] || {}).symbolize_keys
 

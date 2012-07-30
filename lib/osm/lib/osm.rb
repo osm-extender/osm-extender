@@ -59,5 +59,13 @@ module Osm
     end
   end
 
+  def self.to_i_or_nil(item)
+    return nil if item.nil?
+    begin
+      return item.to_i
+    rescue
+      return nil
+    end
+  end
 
 end

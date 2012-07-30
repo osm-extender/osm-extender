@@ -7,7 +7,7 @@ module Osm
     # Initialize a new API Access using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @id = data['apiid']
+      @id = data['apiid'].to_i
       @name = data['name']
       @permissions = data['permissions'] || {}
 
@@ -35,7 +35,7 @@ module Osm
     # Determine if this API is the API being used to make requests
     # @returns - true if this is the API being used, false otherwise
     def our_api?
-      return @id == Osm::Api.api_id
+      return @id == Osm::Api.api_id.to_i
     end
 
   end

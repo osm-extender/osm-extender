@@ -104,7 +104,7 @@ describe "API" do
 
     it "Fetch the user's notepads" do
       FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads", :body => {"1" => "Section 1", "2" => "Section 2"}.to_json)
-      Osm::Api.new('1', '2').get_notepads.should == {'1' => 'Section 1', '2' => 'Section 2'}
+      Osm::Api.new('1', '2').get_notepads.should == {1 => 'Section 1', 2 => 'Section 2'}
     end
 
 
@@ -254,7 +254,7 @@ describe "API" do
 
       FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/users.php?action=getUserDetails&sectionid=1&termid=2", :body => body.to_json)
       members = Osm::Api.new('1', '2').get_members(1, 2)
-      members[0].id.should == '1'
+      members[0].id.should == 1
     end
 
 
@@ -268,7 +268,7 @@ describe "API" do
       }
       FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/users.php?action=getAPIAccess&sectionid=1", :body => body.to_json)
       apis = Osm::Api.new('1', '2').get_api_access(1)
-      apis[0].id.should == '1'
+      apis[0].id.should == 1
     end
 
 
@@ -286,7 +286,7 @@ describe "API" do
       }
       FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/users.php?action=getAPIAccess&sectionid=1", :body => body.to_json)
       api = Osm::Api.new('1', '2').get_our_api_access(1)
-      api.id.should == '1'
+      api.id.should == 1
     end
 
     it "Fetch our API Access for a section (not in returned data)" do
@@ -319,7 +319,7 @@ describe "API" do
       }
       FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/events.php?action=getEvents&sectionid=1", :body => body.to_json)
       events = Osm::Api.new('1', '2').get_events(1)
-      events[0].id.should == '1'
+      events[0].id.should == 1
     end
 
 
@@ -371,7 +371,7 @@ describe "API" do
         'token' => @api_config[:api_token],
         'userid' => 'user',
         'secret' => 'secret',
-        'meetingdate' => '2012-07-29',
+        'meetingdate' => '2000-01-02',
         'sectionid' => 1,
         'activityid' => -1,
       }
@@ -379,7 +379,7 @@ describe "API" do
       api = Osm::Api.new('user', 'secret')
       api.stub(:get_terms) { [] }
       HTTParty.should_receive(:post).with(url, {:body => post_data}) { DummyHttpResult.new(:response=>{:code=>'200', :body=>'{"result":0}'}) }
-      api.create_evening(1, Date.today).should be_true
+      api.create_evening(1, Date.new(2000, 1, 2)).should be_true
     end
 
     it "Create an evening (failed)" do
@@ -389,7 +389,7 @@ describe "API" do
         'token' => @api_config[:api_token],
         'userid' => 'user',
         'secret' => 'secret',
-        'meetingdate' => '2012-07-29',
+        'meetingdate' => '2000-01-02',
         'sectionid' => 1,
         'activityid' => -1,
       }
@@ -397,7 +397,7 @@ describe "API" do
       api = Osm::Api.new('user', 'secret')
       api.stub(:get_terms) { [] }
       HTTParty.should_receive(:post).with(url, {:body => post_data}) { DummyHttpResult.new(:response=>{:code=>'200', :body=>'{"result":1}'}) }
-      api.create_evening(1, Date.today).should be_false
+      api.create_evening(1, Date.new(2000, 1, 2)).should be_false
     end
 
 
@@ -452,7 +452,7 @@ describe "API" do
       }
 
       HTTParty.should_receive(:post).with(url, {:body => post_data}) { DummyHttpResult.new(:response=>{:code=>'200', :body=>'{"1":"Section 1"}'}) }
-      Osm::Api.new('user', 'secret').get_notepads.should == {'1' => 'Section 1'}
+      Osm::Api.new('user', 'secret').get_notepads.should == {1 => 'Section 1'}
     end
 
     it "Uses the user and secret passed in" do
@@ -465,7 +465,7 @@ describe "API" do
       }
 
       HTTParty.should_receive(:post).with(url, {:body => post_data}) { DummyHttpResult.new(:response=>{:code=>'200', :body=>'{"1":"Section 1"}'}) }
-      Osm::Api.new('1', '2').get_notepads(:api_data => {'userid'=>'user', 'secret'=>'secret'}).should == {'1' => 'Section 1'}
+      Osm::Api.new('1', '2').get_notepads(:api_data => {'userid'=>'user', 'secret'=>'secret'}).should == {1 => 'Section 1'}
     end
   end
 

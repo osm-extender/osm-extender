@@ -7,8 +7,8 @@ module Osm
     # Initialize a new Term using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @id = data['termid'].to_i
-      @section_id = data['sectionid'].to_i
+      @id = Osm::to_i_or_nil(data['termid'])
+      @section_id = Osm::to_i_or_nil(data['sectionid'])
       @name = data['name']
       @start = Osm::parse_date(data['startdate'])
       @end = Osm::parse_date(data['enddate'])

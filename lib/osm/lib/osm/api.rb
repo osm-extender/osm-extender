@@ -116,11 +116,13 @@ module Osm
         return Rails.cache.read("OSMAPI-notepads-#{api_data[:userid] || @userid}")
       end
 
-      data = perform_query('api.php?action=getNotepads', api_data)
-      data = {} unless data.is_a?(Hash)
+      notepads = perform_query('api.php?action=getNotepads', api_data)
+      return {} unless notepads.is_a?(Hash)
 
-      data.each_key do |key|
-        Rails.cache.write("OSMAPI-notepad-#{key}", data[key], :expires_in => @@default_cache_ttl*2)
+      data = {}
+      notepads.each do |key, value|
+        data[key.to_i] = value
+        Rails.cache.write("OSMAPI-notepad-#{key}", value, :expires_in => @@default_cache_ttl*2)
       end
 
       Rails.cache.write("OSMAPI-notepads-#{api_data[:userid] || @userid}", data, :expires_in => @@default_cache_ttl*2)
@@ -147,7 +149,7 @@ module Osm
       return nil unless notepads.is_a? Hash
 
       notepads.each_key do |key|
-        return notepads[key] if key.to_i == section_id
+        return notepads[key] if key == section_id
       end
 
       return nil

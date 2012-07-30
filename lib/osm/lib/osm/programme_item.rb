@@ -9,8 +9,8 @@ module Osm
     # @param data the hash of data for the object returned by the API
     # @param activities an array of hashes to generate the list of ProgrammeActivity objects
     def initialize(data, activities)
-      @evening_id = data['eveningid']
-      @section_id = data['sectionid']
+      @evening_id = Osm::to_i_or_nil(data['eveningid'])
+      @section_id = Osm::to_i_or_nil(data['sectionid'])
       @title = data['title'] || 'Unnamed meeting'
       @notes_for_parents = data['notesforparents'] || ''
       @games = data['games'] || ''

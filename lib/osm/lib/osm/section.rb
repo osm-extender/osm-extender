@@ -11,7 +11,7 @@ module Osm
       subscription_levels = [:bronze, :silver, :gold]
       subscription_level = data['subscription_level'].to_i - 1
 
-      @id = id.to_i
+      @id = Osm::to_i_or_nil(id)
       @name = name
       @subscription_level = (subscription_levels[subscription_level] unless subscription_level < 0) || :unknown
       @subscription_expires = data['subscription_expires'] ? Date.parse(data['subscription_expires'], 'yyyy-mm-dd') : nil

@@ -7,8 +7,8 @@ module Osm
     # Initialize a new Member using the hash returned by the API call
     # @param data the hash of data for the object returned by the API
     def initialize(data)
-      @id = data['scoutid']
-      @section_id = data['sectionid']
+      @id = Osm::to_i_or_nil(data['scoutid'])
+      @section_id = Osm::to_i_or_nil(data['sectionid'])
       @type = data['type']
       @first_name = data['firstname']
       @last_name = data['lastname']
@@ -32,7 +32,7 @@ module Osm
       @school = data['school']
       @ethnicity = data['ethnicity']
       @subs = data['subs']
-      @grouping_id = data['patrolid'].to_i
+      @grouping_id = Osm::to_i_or_nil(data['patrolid'])
       @grouping_leader = data['patrolleader'] # 0 - No, 1 = seconder, 2 = sixer
       @joined = Osm::parse_date(data['joined'])
       @age = data['age'] # 'yy / mm'
