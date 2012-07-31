@@ -120,7 +120,7 @@ GEM
     oauth2 (0.5.2)
       faraday (~> 0.7)
       multi_json (~> 1.0)
-    osm (0.0.2)
+    osm (0.0.3)
       activesupport (>= 3.2)
       httparty
       rails (>= 3.2.5)
@@ -242,13 +242,14 @@ DEPENDENCIES
   factory_girl
   faker
   fakeweb
+  httparty
   jquery-rails
   jquery-ui-rails
   letter_opener
   memcache-client
   minitest
   mysql
-  osm (>= 0.0.2)
+  osm (>= 0.0.3)
   premailer-rails3
   rails (>= 3.2.5)
   recaptcha
