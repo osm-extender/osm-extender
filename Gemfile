@@ -16,6 +16,7 @@ gem 'jquery-ui-rails'
 gem 'client_side_validations'
 
 # Misc
+gem 'osm'           # For using the OSM API
 gem 'httparty'      # Used by OSM::API to make requests
 gem 'recaptcha'
 gem 'redcarpet'     # Used to format FAQ Answers
