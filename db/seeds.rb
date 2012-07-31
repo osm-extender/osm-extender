@@ -119,6 +119,18 @@ Faq.seed(:system_id,
     :answer => "Cookies are small text files stored on you computer, they are small parcels of data which a web server gives to a web browser, the browser then sends them back to the server which each request. Since the browser makes a new connection to the server each time you load a page cookies allow the server to keep track of who is viewing a page.\n\nThis is how OSMX uses cookies - when you signin a random number is generated and sent to your browser as a cookie as well as being stored on the server, this number allows the server to check sho you are currently signed in as. These cookies are set to expire (i.e. be deleted) when your browser is closed.\n\nOSMX also uses services from other providers which set cookies, these are:\n\n* [Google ReCAPTCHA](http://www.google.com/recaptcha/policy)\n\nYou can find out more about cookies by visiting [www.allaboutcookies.org](http://www.allaboutcookies.org/).",
     :tags => [faq_tag_osmx],
     :active => true
+  },{
+    :system_id => 13,
+    :question => "How does Online Scout Manager Extender store passwords?",
+    :answer => "When you create your account or change you password the password you provide is combined with a newly generated salt (collection of random characters) and hashed (encrypted in such a way as it can't be decrypted) and stored with the salt in the database. When you signin the password you provided is combined with the salt retreived from the database and hashed, the result is compared with the contents of the database. This ensures that not even people with access to the database can see what your password is, there is no way to recover it which is why when you've forgotten your password you are required to create a new one.\n\nYou can find out more about why this is done by visiting [crackstation.net/hashing-security.htm](http://crackstation.net/hashing-security.htm).",
+    :tags => [faq_tag_osmx],
+    :active => true
+  },{
+    :system_id => 14,
+    :question => "How do I pick a good password?",
+    :answer => "A good password is one which a cracker needs to spend a lot of time on - every password can be cracked given enough time. The first thing is not to use a word in the dictionary (even if some letters are replaced by numbers) as crackers will try these first, when this fails crackers have no choice but to actually guess every combination of letters and numbers. Once the crackers have to resort to guessing every combination the secret is to make the pool of possible password as large as possible, this can be done by having a long password or password with a lot of different types of characters (upper case, lower case, numbers and punctuation).\n\nYou can find out more about picking a good password by visiting [https://www.grc.com/haystack.htm](https://www.grc.com/haystack.htm).",
+    :tags => [faq_tag_osmx],
+    :active => true
   }
 )
 puts
