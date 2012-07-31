@@ -113,7 +113,13 @@ Faq.seed(:system_id,
     :answer => "Every time you receive a reminder email or change your subscription state the email will contain a link to follow in order to do this. Additionally if you are an OSMX user you'll be able to edit your subscription to any reminder which has been shared with you by going to the Email reminders page.",
     :tags => [faq_tag_er],
     :active => true
-  },
+  },{
+    :system_id => 12,
+    :question => "Does Online Scout Manager Extender use cookies (and what are they anyway)?",
+    :answer => "Cookies are small text files stored on you computer, they are small parcels of data which a web server gives to a web browser, the browser then sends them back to the server which each request. Since the browser makes a new connection to the server each time you load a page cookies allow the server to keep track of who is viewing a page.\n\nThis is how OSMX uses cookies - when you signin a random number is generated and sent to your browser as a cookie as well as being stored on the server, this number allows the server to check sho you are currently signed in as. These cookies are set to expire (i.e. be deleted) when your browser is closed.\n\nOSMX also uses services from other providers which set cookies, these are:\n\n* [Google ReCAPTCHA](http://www.google.com/recaptcha/policy)\n\nYou can find out more about cookies by visiting [www.allaboutcookies.org](http://www.allaboutcookies.org/).",
+    :tags => [faq_tag_osmx],
+    :active => true
+  }
 )
 puts
 
