@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   end
 
   def connect_to_osm(email, password)
-    api = OSM::API.new
+    api = Osm::Api.new
     result = api.authorize(email, password)
 
     write_attribute(:osm_userid, result['userid'])
@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
 
   def osm_api
     if connected_to_osm?
-      @osm_api ||= OSM::API.new(read_attribute(:osm_userid), read_attribute(:osm_secret))
+      @osm_api ||= Osm::Api.new(read_attribute(:osm_userid), read_attribute(:osm_secret))
       return @osm_api
     else
       return nil
@@ -156,14 +156,8 @@ class User < ActiveRecord::Base
   end
 
   public
-  # fix sorcery bug involving sqlite
-  def self.load_from_token(token, token_attr_name, token_expiration_date_attr)
-    return nil if token.blank?
-    user = User.where(["trim(#{token_attr_name}) = ?", token]).first
-    if !user.blank? && !user.send(token_expiration_date_attr).nil?
-      return Time.now.utc < user.send(token_expiration_date_attr) ? user : nil
-    end
-    user
+  def clear_reset_password_token
+    super
   end
-  
+
 end

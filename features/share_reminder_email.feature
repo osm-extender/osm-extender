@@ -1,6 +1,6 @@
 @share_reminder_email
-@reminder_email
-@reminder_email_item
+@email_reminder
+@email_reminder_item
 @reminder_mailer
 @osm
 

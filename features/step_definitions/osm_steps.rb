@@ -58,7 +58,7 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
      permissions.push [hash['permission'], hash['granted']]
   end
 
-  body = '{"apis":[{"apiid":"' + OSM::API.api_id + '","name":"Test API","permissions":{'
+  body = '{"apis":[{"apiid":"' + Osm::Api.api_id + '","name":"Test API","permissions":{'
   permissions.each do |permission|
     permission[1] = 0 if permission[1].eql?('none')
     permission[1] = 10 if permission[1].eql?('read')
@@ -91,7 +91,7 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
 
   body = '{"identifier":"scoutid","items":['
   members.each do |member|
-    body += "{\"scoutid\":\"1\",\"sectionid\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"#{member[:first_name]}\",\"lastname\":\"#{member[:last_name]}\",\"email1\":\"#{member[:email1]}\",\"email2\":\"#{member[:email2]}\",\"email3\":\"#{member[:email3]}\",\"email4\":\"#{member[:email4]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{member[:date_of_birth]}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolid\":\"#{member[:grouping_id]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
+    body += "{\"scoutid\":\"1\",\"sectionidO\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"#{member[:first_name]}\",\"lastname\":\"#{member[:last_name]}\",\"email1\":\"#{member[:email1]}\",\"email2\":\"#{member[:email2]}\",\"email3\":\"#{member[:email3]}\",\"email4\":\"#{member[:email4]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{member[:date_of_birth]}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolidO\":\"#{member[:grouping_id]}\",\"patrolleaderO\":\"0\",\"patrolid\":\"#{member[:grouping_id]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
   end
   body[-1] = ']'
   body += '}'
@@ -212,16 +212,6 @@ Given /^an OSM request to get due badges for section (\d+) and term (\d+) will r
   }
 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
-end
-
-Given /^an OSM request to get due badges for section (\d+) and term (\d+) will return nothing$/ do |section_id, term_id|
-  url = "challenges.php?action=outstandingBadges&section=cubs&sectionid=#{section_id}&termid=#{term_id}"
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => [].to_json)
-end
-
-Given /^an OSM request to get notepads will return nothing$/ do
-  url = 'api.php?action=getNotepads'
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => [].to_json)
 end
 
 Given /^an OSM request to get groupings for section (\d+) will have the groupings?$/ do |section_id, table|
@@ -424,25 +414,4 @@ end
 def get_osm_body(description)
   return '{"secret":"abc123","userid":"1234"}' if description.eql?('authorize')
   return nil
-end
-
-
-
-Given /^an OSM request to get roles will have a section with no type$/ do
-  body = '[{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Subs\",\"extraid\":\"529\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"1","sectionname":"Section 1","section":"cubs","isDefault":"1","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}}]'
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getUserRoles", :body => body)
-end
-
-Given /^an OSM request to get roles will have strange extra records$/ do
-  body = '[{"sectionConfig":"{\"subscription_level\":3,\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"cubs\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[[\"1\",{\"name\":\"Subs\",\"extraid\":\"529\"}],[\"2\",{\"name\":\"Subs 2\",\"extraid\":\"530\"}]],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"1","sectionname":"Section 1","section":"cubs","isDefault":"1","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}}]'
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getUserRoles", :body => body)
-end
-
-Given /^an OSM request to get events for section (\d+) will return nothing$/ do |section_id|
-  data = {
-    "identifier" => "eventid",
-    "label" => "name"
-  }
-
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/events.php?action=getEvents&sectionid=#{section_id}", :body => data.to_json)
 end

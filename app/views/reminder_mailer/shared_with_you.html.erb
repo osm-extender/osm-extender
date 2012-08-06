@@ -3,7 +3,7 @@
 <p>If you decide to subscribe to the email then every <%= day_name(@share.reminder.send_on) %> you'll receive an email with the following details:</p>
 <ul>
   <%- @share.reminder.items.each do |item| %>
-    <li><%= item.human_name %></li>
+    <li><%= item.class.human_name %></li>
   <%- end %>
 </ul>
 

@@ -140,7 +140,7 @@ function plot() {
         });
         map.fitBounds(bounds.extend(location));
       } else {
-        appendStatus('Meeting place not included (' + status + ')');
+        appendError('Meeting place not included (' + status + ')');
       }
     });
   }
@@ -156,7 +156,7 @@ function plot() {
         if (member.address.length > 0) {
           setTimeout(geocodeMember(member), (index * 1000));   // Don't hammer the API too fast
         } else {
-          appendStatus(member.name + ' not included (does not have selected address)');
+          appendError(member.name + ' not included (does not have selected address)');
         }
       }
     }

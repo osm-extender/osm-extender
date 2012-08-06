@@ -19,13 +19,12 @@ namespace :scheduled  do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
     reminders = EmailReminder.where(['send_on = ?', Date.today.wday]).order('section_id')
     count = reminders.size
+    count_length = count.to_s.length
     puts "No emails to send" if count == 0
     reminders.each_with_index do |reminder, index|
-      $PROGRAM_NAME = "OSMX #{Rails.env} - Sending Reminder Email (#{index + 1} of #{count})"
-      puts "Sending #{index + 1} of #{count}"
+      puts "Sending #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{reminder.id})"
       reminder.send_email
     end
-    $PROGRAM_NAME = "OSMX #{Rails.env} - Sent Reminder Emails"
   end
 
   desc "Gather statistics"

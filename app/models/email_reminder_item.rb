@@ -1,11 +1,12 @@
-# This class is expected to be inherited from, the inheriting class MUST:
-# * provide a get_data method which will return the data to be provided to the email template
-# * provide a get_fake_data method which will return a fake version of the data for use in previewing the data without accessing OSM
-# * human_name - to return a user friendly name for the class (e.g. Missed Scouts)
-# * provide a default_configuration method to return a complete configuration hash with default values
-# * provide the following methods unless default_configuration returns an empty hash
-#   * configuration_labels - to return a hash (keys are the keys into the configuration hash, values are the labels to display to the user)
-#   * configuration_types - to return a hash (keys are the keys used in the above hash, value is the Class that the value should be converted to)
+# This class is expected to be inherited from.
+# The inheriting class MUST provide the following methods:
+# * get_data method - to return the data to be provided to the email template
+# * get_fake_data - to will return a fake version of the data for use in previewing the data without accessing OSM
+# * self.human_name - to return a user friendly name for the class (e.g. Missed Scouts)
+# * self.default_configuration - to return a complete configuration hash with default values
+# * Unless default_configuration returns an empty hash
+#   * self.configuration_labels - to return a hash (keys are the keys into the configuration hash, values are the labels to display to the user)
+#   * self.configuration_types - to return a hash (keys are the keys used in the above hash, value is the Class that the value should be converted to)
 #   * human_configuration - to return a string containing a user friendly version of the configuration (e.g. "From 1 week ago to 3 weeks time")
 
 class EmailReminderItem < ActiveRecord::Base
@@ -26,43 +27,44 @@ class EmailReminderItem < ActiveRecord::Base
 
 
   def get_data
-    raise "This method must be overridden"
+    raise "The get_data method must be overridden"
   end
 
   def get_fake_data
-    raise "This method must be overridden"
-  end
-
-  def human_name
-    raise "This method must be overridden"
-  end
-
-  def default_configuration
-    raise "This method must be overridden"
+    raise "The get_fake_data method must be overridden"
   end
 
 
-  def configuration_labels
-    if default_configuration.empty?
+  def self.human_name
+    raise "The self.human_name method must be overridden"
+  end
+
+  def self.default_configuration
+    raise "The self.default_configuration method must be overridden"
+  end
+
+  def self.configuration_labels
+    if self.default_configuration.empty?
+      return {}
+    else
+      raise "The self.configuration_labels method must be overridden"
+    end
+  end
+
+  def self.configuration_types
+    if self.default_configuration.empty?
       return {}
     else
       raise "This method must be overridden"
     end
   end
 
-  def configuration_types
-    if default_configuration.empty?
-      return {}
-    else
-      raise "This method must be overridden"
-    end
-  end
 
   def human_configuration
-    if default_configuration.empty?
+    if self.class.default_configuration.empty?
       return "There are no settings for this item."
     else
-      raise "This method must be overridden"
+      raise "The human_configuration method must be overridden"
     end
   end
 
@@ -74,14 +76,14 @@ class EmailReminderItem < ActiveRecord::Base
       String => :to_s,
       Symbol => :to_sym
     }
-    default = default_configuration
+    default = self.class.default_configuration
 
     # Ensure only keys in the default_configuration exist in configuration
     config.select {|k,v| default.keys.include?(k) && default[k] != v}
 
     # Make any type conversions required
     config.each_key do |key|
-      conversion_function = conversion_functions[configuration_types[key]]
+      conversion_function = conversion_functions[self.class.configuration_types[key]]
       unless conversion_function.nil?
         begin
           config[key] = config[key].send(conversion_function)
@@ -99,7 +101,7 @@ class EmailReminderItem < ActiveRecord::Base
   end
 
   def configuration
-    default = default_configuration
+    default = self.class.default_configuration
     config = read_attribute(:configuration)
     config.select {|k,v| default.keys.include?(k)}
     return default.merge(config)

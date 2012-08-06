@@ -27,16 +27,16 @@ class EmailReminderItemDueBadge < EmailReminderItem
       end
     end
 
-    return OSM::DueBadges.new(data)
+    return Osm::DueBadges.new(data)
   end
 
 
-  def default_configuration
+  def self.default_configuration
     {
     }
   end
 
-  def human_name
+  def self.human_name
     return 'Due badges'
   end
 

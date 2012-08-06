@@ -18,7 +18,7 @@
     <tbody id="items" data-update-url="<%= re_order_email_reminder_url %>" data-csrf-token="<%= form_authenticity_token.to_s %>">
       <%- @email_reminder.items.each do |item| %>
         <tr id="email_reminder_item_<%= item.id %>">
-          <td><span class="drag_handle">[re-order]</span> <%= item.human_name %></td>
+          <td><span class="drag_handle">[re-order]</span> <%= item.class.human_name %></td>
           <td><%= item.human_configuration %></td>
           <td>
             <%= link_to '[Edit]', self.send("edit_#{item.class.to_s.gsub!(/(.)([A-Z])/,'\1_\2').downcase!}_path", @email_reminder, item) %>
@@ -39,9 +39,9 @@
   <ul>
     <%- @available_items.each do |item| %>
       <%- if item[:as_link] %>
-        <li><%= link_to item[:name], self.send("new_email_reminder_item_#{item[:type]}_path", @email_reminder) %>
+        <li><%= link_to item[:type].human_name, self.send("new_#{item[:type].name.underscore}_path", @email_reminder) %>
       <%- else %>
-        <li><%= item[:name] %> - You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to this item
+        <li><%= item[:type].human_name %> - You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to this item
       <%- end %>
     <%- end %>
   </ul>

@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  rescue_from OSM::Error do |exception|
+  rescue_from Osm::Error do |exception|
     render :template => "error/osm", :status => 503, :locals => {:exception => exception}
   end
 
