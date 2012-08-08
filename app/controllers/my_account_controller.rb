@@ -52,12 +52,7 @@ class MyAccountController < ApplicationController
   def connect_to_osm2
     if current_user.connect_to_osm(params[:email], params[:password])
       # Set current section
-      current_user.osm_api.get_roles.each do |role|
-        if role.default
-          session[:current_role] = role
-          break
-        end
-      end
+      set_current_role current_user.osm_api.get_roles.first
 
       # Send user to the OSM permissions page
       flash[:instruction] = 'Please use OSM to allow us access to your data, following the intructions below.'

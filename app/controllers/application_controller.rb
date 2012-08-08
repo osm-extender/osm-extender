@@ -134,6 +134,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_current_role(role)
+    raise ArgumentError unless role.is_a?(Osm::Role)
+    session[:current_role] = role
+  end
   def current_role
     session[:current_role]
   end
