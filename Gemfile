@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
-gem 'rails', '>=3.2.5'
+gem 'rails', '>=3.2.8'
 gem 'activesupport', '>= 3.2'
 gem 'actionmailer'
 
