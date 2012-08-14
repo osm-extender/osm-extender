@@ -65,6 +65,12 @@ class EmailRemindersController < ApplicationController
 
   def preview
     @reminder = EmailReminder.find(params[:id])
+    @data = @reminder.get_data
+    render "reminder_mailer/reminder_email", :layout => 'mail'
+  end
+
+  def sample
+    @reminder = EmailReminder.find(params[:id])
     @data = @reminder.get_fake_data
     flash.now[:notice] = 'Fake data has been used in order to ensure that all the selected items have something to show.'
     render "reminder_mailer/reminder_email", :layout => 'mail'

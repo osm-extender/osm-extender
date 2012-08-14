@@ -62,6 +62,7 @@ OSMExtender::Application.routes.draw do
     resources :email_reminder_item_programmes, :as => 'item_programmes', :path => 'item_programme'
     resources :email_reminder_item_notepads, :as => 'item_notepads', :path => 'item_notepad'
   end
+  get 'email_reminders/:id/sample' => 'email_reminders#sample', :as => 'sample_email_reminder'
   get 'email_reminders/:id/preview' => 'email_reminders#preview', :as => 'preview_email_reminder'
   get 'email_reminders/:id/send_email' => 'email_reminders#send_email', :as => 'send_email_reminder'
   post 'email_reminders/:id/re_order' => 'email_reminders#re_order', :as => 're_order_email_reminder'
