@@ -193,9 +193,50 @@ Feature: Reminder Email
 
     Scenario: Preview the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+	And an OSM request to get sections will give 1 section
+	And an OSM request to get terms for section 1 will have the term
+	    | term_id | name   |
+	    | 1       | Term 1 |
+	And an OSM request to get members for section 1 in term 1 will have the members
+	    | email1         | email2         | email3         | email4         | grouping_id | date_of_birth |
+	    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |               |
+	    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           | 0000-00-00    |
+	And an OSM request to get events for section 1 will have the events
+	    | name    | in how many days |
+	    | Event 1 | 7                |
+	    | Event 2 | 300              |
+	And an OSM request to get programme for section 1 term 1 will have 2 programme items
+	And an OSM request to get activity 11 will have tags "global"
+	And an OSM request to get activity 12 will have tags "outdoors"
+	And an OSM request to get activity 21 will have tags "belief, values"
+	And an OSM request to get activity 22 will have tags "global, outdoors"
+	And an OSM request to get the register structure for term 1 and section 1 will cover the last 4 weeks
+	And an OSM request to get the register for term 1 and section 1 will have the following members and attendance
+	    | name  | from weeks ago | to weeks ago |
+	    | Alice | 4              | 1            |
+	    | Bob   | 4              | 3            |
+	And an OSM request to get due badges for section 1 and term 1 will result in the following being due their "Test" badge
+	    | name  | completed | extra |
+	    | Alice | 4         | info  |
+	    | Bob   | 5         |       |
+	And an OSM request to get the notepad for section 1 will give "This is a test notepad message."
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Preview]" in the "Actions" column of the "Tuesday" row
+        Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
+	And I should not see "Fake data has been used in order to ensure that all the selected items have something to show."
+	And I should see "Section Notepad"
+	And I should see "Birthdays"
+        And I should see "Due Badges"
+        And I should see "Events"
+        And I should see "Programme"
+        And I should see "Members Not Seen"
+
+    Scenario: Sample the email
+	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Sample]" in the "Actions" column of the "Tuesday" row
         Then I should see "This is your reminder email for Section 1 (1st Somewhere)"
 	And I should see "Fake data has been used in order to ensure that all the selected items have something to show."
 	And I should see "Section Notepad"

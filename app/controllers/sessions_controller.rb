@@ -24,12 +24,7 @@ class SessionsController < ApplicationController
 
       # Set current section
       if current_user.connected_to_osm?
-        current_user.osm_api.get_roles.each do |role|
-          if role.default
-            session[:current_role] = role
-            break
-          end
-        end
+        set_current_role current_user.osm_api.get_roles.first
       end
       
       redirect_back_or_to my_page_path, :notice => 'Sucessfully signed in.'
@@ -60,7 +55,7 @@ class SessionsController < ApplicationController
     if current_user.connected_to_osm?
       current_user.osm_api.get_roles.each do |role|
         if section_id == role.section.id
-          session[:current_role] = role
+          set_current_role role
           break
         end
       end

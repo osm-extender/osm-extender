@@ -57,7 +57,7 @@ class FaqsController < ApplicationController
 
   def re_order
     params["faq_#{params[:tag_id]}"].each_with_index do |id, index|
-      FaqTaging.find_by_faq_tag_id_and_faq_id(params[:tag_id], id).update_attributes({position: index+1})
+      FaqTaging.find_by_tag_id_and_faq_id(params[:tag_id], id).update_attributes({position: index+1})
     end
     render nothing: true
   end

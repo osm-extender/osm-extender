@@ -1,12 +1,12 @@
 source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
-gem 'rails', '>=3.2.5'
+gem 'rails', '>=3.2.8'
 gem 'activesupport', '>= 3.2'
 gem 'actionmailer'
 
 # Authentication / Authorisation
-gem 'sorcery'
+gem 'sorcery', '= 0.7.12'
 gem 'cancan'
 
 # Javascript
@@ -16,7 +16,7 @@ gem 'jquery-ui-rails'
 gem 'client_side_validations'
 
 # Misc
-gem 'osm', '>= 0.0.5' # For using the OSM API
+gem 'osm', '= 0.0.8' # For using the OSM API
 gem 'httparty'      # Used by OSM::API to make requests
 gem 'recaptcha'
 gem 'redcarpet'     # Used to format FAQ Answers
