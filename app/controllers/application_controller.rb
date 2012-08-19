@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
     permission_on = [permission_on] unless permission_on.is_a?(Array)
 
     permission_on.each do |on|
-      osmx_permissions = current_user.osm_api.get_our_api_access(current_section.id)
+      osmx_permissions = current_user.osm_api.get_our_api_access(current_section)
       osmx_can = osmx_permissions.send("can_#{permission_to.to_s}?", on)
       user_can = current_role.send("can_#{permission_to.to_s}?", on)
       return false unless (osmx_can && user_can)
@@ -148,7 +148,7 @@ class ApplicationController < ActionController::Base
 
   def get_groupings
     groupings = {}
-    current_user.osm_api.get_groupings(current_section.id).each do |grouping|
+    current_user.osm_api.get_groupings(current_section).each do |grouping|
       groupings[grouping.name] = grouping.id
     end
     return groupings

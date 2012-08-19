@@ -5,6 +5,7 @@ ActionDispatch::Callbacks.to_prepare do
       :api_token  => Settings.read('OSM API - token'),
       :api_name   => Settings.read('OSM API - name'),
       :api_site   => :scout,
+      :cache      => Rails.cache,
     )
   end
 end

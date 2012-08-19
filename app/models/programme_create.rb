@@ -43,7 +43,7 @@ class ProgrammeCreate
       updated = 0
       (user.osm_api.get_terms).each do |term|
         unless ((term.start > programme_end) || (term.end < programme_start)) # Term may contain meetings
-          (user.osm_api.get_programme(term.section_id, term.id)).each do |programme|
+          (user.osm_api.get_programme(term.section_id, term)).each do |programme|
             if (meetings.include?(programme.meeting_date) && programme.title.eql?('Unnamed meeting') &&
                 programme.notes_for_parents.blank? && programme.games.blank? &&
                 programme.pre_notes.blank? && programme.post_notes.blank? && programme.leaders.blank? &&
