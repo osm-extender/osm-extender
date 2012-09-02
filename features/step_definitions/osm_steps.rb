@@ -105,7 +105,7 @@ Given /^an OSM request to get events for section (\d+) will have the events$/ do
   events = Array.new
   table.hashes.each_with_index do |hash, index|
     event = {
-      "eventid" => index.to_s,
+      "eventid" => (index + 1).to_s,
       "name" => hash['name'],
       "startdate" => hash['in how many days'].to_i.days.from_now.strftime('%Y-%m-%d'),
       "enddate" => nil,
@@ -164,7 +164,7 @@ Given /^an OSM request to get the register for term (\d+) and section (\d+) will
     from_weeks_ago = hash['from weeks ago'].to_i
     to_weeks_ago = hash['to weeks ago'].to_i
     row = {
-      'scoutid' => index.to_s,
+      'scoutid' => (index + 1).to_s,
       'firstname' => hash['name'],
       'lastname' => 'Smith',
       'sectionid' => section_id,
@@ -197,7 +197,7 @@ Given /^an OSM request to get due badges for section (\d+) and term (\d+) will r
   members = []
   table.hashes.each_with_index do |hash, index|
     member = {
-      'scoutid' => index.to_s,
+      'scoutid' => (index + 1).to_s,
       'firstname' => hash['name'],
       'lastname' => 'Smith',
       'completed' => hash['completed'],

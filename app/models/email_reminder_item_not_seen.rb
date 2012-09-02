@@ -5,19 +5,22 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
     api = user.osm_api
     register_structure = api.get_register_structure(section_id)
-    register = api.get_register(section_id)
+    register = api.get_register_data(section_id)
 
     dates_to_check = []
-    register_structure[1][:rows].each do |row|
-      dates_to_check.push row[:name] if (Date.parse(row[:name]) > earliest)
+    register_structure.each do |row|
+      unless /\A[0-9]{4}-[0-2][0-9]-[0-3][0-9]\Z/.match(row.name).nil?
+        date = Date.strptime(row.name, '%Y-%m-%d')
+        dates_to_check.push date if (date > earliest)
+      end
     end
 
     not_seen = []
-    register.each do |member|
+    register.each do |row|
       not_seen.push ({
-        :first_name => member['firstname'],
-        :last_name => member['lastname'],
-      }) if not_seen_member_in?(member, dates_to_check)
+        :first_name => row.first_name,
+        :last_name => row.last_name,
+      }) if not_seen_member_in?(row, dates_to_check)
     end
     return not_seen
   end
@@ -65,7 +68,8 @@ class EmailReminderItemNotSeen < EmailReminderItem
   def not_seen_member_in?(member, dates_to_check)
     return false if dates_to_check.empty?
     dates_to_check.each do |date|
-      if member[date].eql?('Yes') || member[date].eql?('No') # Allowed absences are OK
+      was_there = member.attendance[date]
+      if was_there.eql?('Yes') || was_there.eql?('No') # Allowed absences are OK
         return false
       end
     end
