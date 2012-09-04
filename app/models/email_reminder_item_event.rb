@@ -22,13 +22,12 @@ class EmailReminderItemEvent < EmailReminderItem
     data = []
 
     (1 + rand(3)).times do
-      date = rand(configuration[:the_next_n_months].months / 1.day).days.from_now.strftime('%y-%m-%d')
+      start_datetime = rand(configuration[:the_next_n_months].months / 1.day).days.from_now.to_datetime
+      end_datetime = start_datetime + 2.days - 6.hours
       data.push Osm::Event.new({
-        'name' => Faker::Lorem.words(2 + rand(3)).join(' '),
-        'startdate' => date,
-        'starttime' => "1#{rand(9)}:00",
-        'enddate' => date,
-        'endtime' => "2#{rand(4)}:00",
+        :name => Faker::Lorem.words(2 + rand(3)).join(' '),
+        :start => start_datetime,
+        :end => end_datetime
       })
     end
 

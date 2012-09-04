@@ -120,7 +120,7 @@ GEM
     oauth2 (0.5.2)
       faraday (~> 0.7)
       multi_json (~> 1.0)
-    osm (0.0.11)
+    osm (0.0.17)
       activesupport (>= 3.2)
       httparty
     polyglot (0.3.3)
@@ -247,7 +247,7 @@ DEPENDENCIES
   memcache-client
   minitest
   mysql
-  osm (= 0.0.11)
+  osm (= 0.0.17)
   premailer-rails3
   rails (>= 3.2.8)
   recaptcha

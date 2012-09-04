@@ -75,7 +75,13 @@ Faq.seed(:system_id,
   },{
     :system_id => 5,
     :question => "What's the Email lists feature?",
-    :answer => "The Email lists feature allows you to create a list of email addresses (which you can then copy-paste into your email). You can select which of the four email fields in OSM to include and some basic selection criteria.\n\nSimply tick off the email fields you'd like to get the email addresses from and use the drop down boxes to choose which email addresses to get. For example \"for members who are not in the leaders\" would give you all youth members.\n\nAfter retreiving the list of email addresses you'll be able to save the list for future reuse. Saving the list saves the criteria used for generating it, not the actual email addresses.",
+    :answer => <<-_END_,
+The Email lists feature allows you to create a list of email addresses (which you can then copy-paste into your email). You can select which of the four email fields in OSM to include and some basic selection criteria.
+
+Simply tick off the email fields you'd like to get the email addresses from and use the drop down boxes to choose which email addresses to get. For example "for members who are not in the leaders" would give you all youth members.
+
+After retreiving the list of email addresses you'll be able to save the list for future reuse. Saving the list saves the criteria used for generating it, not the actual email addresses.
+_END_
     :tags => [faq_tag_features],
     :active => true
   },{ :system_id => 6,
@@ -86,7 +92,16 @@ Faq.seed(:system_id,
   },{
     :system_id => 7,
     :question => "What's the Email reminder feature?",
-    :answer => "The email reminder feature is designed to send you a weekly email of things you should be aware of, it is customisable - you get to choose what items appear and how far back/forwrd they look. In order to get started follow the links into the Email reminders area and to create a new reminder. Once you have created your reminder you'll need to add some items to it (otherwise you'll get a blank email each week). The availible items are:\n\n* Birthdays - Members of your section who have either just had or are about to have a birthday, you can customise from how far in the past to how far in the future birthdays are shown for.\n* Badges due - Displays a list of what badges each member is due.\n* Programme - Lists the programme (and activities) for the next few weeks, you can customise how many weeks ahead it looks.\n* Events - Lists the events coming up in the next few months, you can customise how many months ahead it looks.\n* Members not seen - Displays the members who have not been marked present for the last few weeks, you can customise how many weeks behind it looks.\n* Section notepad - Displays the contents of OSM's notepad for the section.",
+    :answer => <<-_END_,
+The email reminder feature is designed to send you a weekly email of things you should be aware of, it is customisable - you get to choose what items appear and how far back/forwrd they look. In order to get started follow the links into the Email reminders area and to create a new reminder. Once you have created your reminder you'll need to add some items to it (otherwise you'll get a blank email each week). The availible items are:
+
+* Birthdays - Members of your section who have either just had or are about to have a birthday, you can customise from how far in the past to how far in the future birthdays are shown for.
+* Badges due - Displays a list of what badges each member is due.
+* Programme - Lists the programme (and activities) for the next few weeks, you can customise how many weeks ahead it looks.
+* Events - Lists the events coming up in the next few months, you can customise how many months ahead it looks.
+* Members not seen - Displays the members who have not been marked present for the last few weeks, you can customise how many weeks behind it looks.
+* Section notepad - Displays the contents of OSM's notepad for the section.
+_END_
     :tags => [faq_tag_features, faq_tag_er],
     :active => true
   },{
@@ -98,7 +113,11 @@ Faq.seed(:system_id,
   },{
     :system_id => 9,
     :question => "What's the Map members feature?",
-    :answer => "The map members feature allows you to see a map depicting how your members are distributed. You can specify which address is used as well as what colour pin to use for each of your groupings, if you have a grouping named with one of the available colours then that colour should be picked for you. You can optionally enter the address of your meeting place for inclusion on the map (it is shown by a light green pin with a star inside). If more than one member lives at the same address then the number of members at that address appears in the pin. If the pin is light blue then the members at a shared address are not in the same grouping.\n\nThe location of the addresses are gathered from Google's geocoding service, the minimum detail the address needs should be streey address and either town or postcode (e.g. '12 Some Street, Some town' or '123 Some Lane, AB34 5FG').",
+    :answer => <<-_END_,
+The map members feature allows you to see a map depicting how your members are distributed. You can specify which address is used as well as what colour pin to use for each of your groupings, if you have a grouping named with one of the available colours then that colour should be picked for you. You can optionally enter the address of your meeting place for inclusion on the map (it is shown by a light green pin with a star inside). If more than one member lives at the same address then the number of members at that address appears in the pin. If the pin is light blue then the members at a shared address are not in the same grouping.
+
+The location of the addresses are gathered from Google's geocoding service, the minimum detail the address needs should be streey address and either town or postcode (e.g. '12 Some Street, Some town' or '123 Some Lane, AB34 5FG').
+_END_
     :tags => [faq_tag_features],
     :active => true
   },{
@@ -116,19 +135,37 @@ Faq.seed(:system_id,
   },{
     :system_id => 12,
     :question => "Does Online Scout Manager Extender use cookies (and what are they anyway)?",
-    :answer => "Cookies are small text files stored on you computer, they are small parcels of data which a web server gives to a web browser, the browser then sends them back to the server which each request. Since the browser makes a new connection to the server each time you load a page cookies allow the server to keep track of who is viewing a page.\n\nThis is how OSMX uses cookies - when you signin a random number is generated and sent to your browser as a cookie as well as being stored on the server, this number allows the server to check sho you are currently signed in as. These cookies are set to expire (i.e. be deleted) when your browser is closed.\n\nOSMX also uses services from other providers which set cookies, these are:\n\n* [Google ReCAPTCHA](http://www.google.com/recaptcha/policy)\n\nYou can find out more about cookies by visiting [www.allaboutcookies.org](http://www.allaboutcookies.org/).",
+    :answer => <<-_END_,
+Cookies are small text files stored on you computer, they are small parcels of data which a web server gives to a web browser, the browser then sends them back to the server which each request. Since the browser makes a new connection to the server each time you load a page cookies allow the server to keep track of who is viewing a page.
+
+This is how OSMX uses cookies - when you signin a random number is generated and sent to your browser as a cookie as well as being stored on the server, this number allows the server to check sho you are currently signed in as. These cookies are set to expire (i.e. be deleted) when your browser is closed.
+
+OSMX also uses services from other providers which set cookies, these are:
+
+* [Google ReCAPTCHA](http://www.google.com/recaptcha/policy)
+
+You can find out more about cookies by visiting [www.allaboutcookies.org](http://www.allaboutcookies.org/).
+_END_
     :tags => [faq_tag_osmx],
     :active => true
   },{
     :system_id => 13,
     :question => "How does Online Scout Manager Extender store passwords?",
-    :answer => "When you create your account or change you password the password you provide is combined with a newly generated salt (collection of random characters) and hashed (encrypted in such a way as it can't be decrypted) and stored with the salt in the database. When you signin the password you provided is combined with the salt retreived from the database and hashed, the result is compared with the contents of the database. This ensures that not even people with access to the database can see what your password is, there is no way to recover it which is why when you've forgotten your password you are required to create a new one.\n\nYou can find out more about why this is done by visiting [crackstation.net/hashing-security.htm](http://crackstation.net/hashing-security.htm).",
+    :answer => <<-_END_,
+When you create your account or change you password the password you provide is combined with a newly generated salt (collection of random characters) and hashed (encrypted in such a way as it can't be decrypted) and stored with the salt in the database. When you signin the password you provided is combined with the salt retreived from the database and hashed, the result is compared with the contents of the database. This ensures that not even people with access to the database can see what your password is, there is no way to recover it which is why when you've forgotten your password you are required to create a new one.
+
+You can find out more about why this is done by visiting [crackstation.net/hashing-security.htm](http://crackstation.net/hashing-security.htm).
+_END_
     :tags => [faq_tag_osmx],
     :active => true
   },{
     :system_id => 14,
     :question => "How do I pick a good password?",
-    :answer => "A good password is one which a cracker needs to spend a lot of time on - every password can be cracked given enough time. The first thing is not to use a word in the dictionary (even if some letters are replaced by numbers) as crackers will try these first, when this fails crackers have no choice but to actually guess every combination of letters and numbers. Once the crackers have to resort to guessing every combination the secret is to make the pool of possible password as large as possible, this can be done by having a long password or password with a lot of different types of characters (upper case, lower case, numbers and punctuation).\n\nYou can find out more about picking a good password by visiting [https://www.grc.com/haystack.htm](https://www.grc.com/haystack.htm).",
+    :answer => <<-_END_,
+A good password is one which a cracker needs to spend a lot of time on - every password can be cracked given enough time. The first thing is not to use a word in the dictionary (even if some letters are replaced by numbers) as crackers will try these first, when this fails crackers have no choice but to actually guess every combination of letters and numbers. Once the crackers have to resort to guessing every combination the secret is to make the pool of possible password as large as possible, this can be done by having a long password or password with a lot of different types of characters (upper case, lower case, numbers and punctuation).
+
+You can find out more about picking a good password by visiting [https://www.grc.com/haystack.htm](https://www.grc.com/haystack.htm).
+_END_
     :tags => [faq_tag_osmx],
     :active => true
   }
