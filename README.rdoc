@@ -7,6 +7,10 @@ Master {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branc
 
 Staging {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=staging"/>}[http://travis-ci.org/robertgauld/OSMExtender]
 
+This project also uses gemnasium to help ensure we're using the latest version of libraries.
+
+Master {<img src="https://gemnasium.com/robertgauld/OSMExtender.png" alt="Dependency Status" />}[https://gemnasium.com/robertgauld/OSMExtender]
+
 
 ==Welcome to \OSM Extender
 \OSM Extender was created to add some personally desired features to {the Online Scout Manager}[https://www.onlinescoutmanager.co.uk], since it took little extra effort to allow other people to also benefit from these features the project was born. Currently the features that \OSM Extender provides are:
