@@ -112,7 +112,7 @@ class ProgrammeReview
     get_terms.each do |term|
       next if term.before?(start) || term.after?(finish)
       earliest = term.start if term.start < earliest
-      latest = term.end if term.end > latest
+      latest = term.finish if term.finish > latest
 
       cached_term_data = ProgrammeReviewBalancedCache.find_by_term_id(term.id)
       if cached_term_data.nil? || cached_term_data.data[:version] != 1

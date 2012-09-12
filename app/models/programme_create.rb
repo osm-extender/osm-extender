@@ -42,16 +42,16 @@ class ProgrammeCreate
       # Find what we just added
       updated = 0
       (user.osm_api.get_terms).each do |term|
-        unless ((term.start > programme_end) || (term.end < programme_start)) # Term may contain meetings
+        unless ((term.start > programme_end) || (term.finish < programme_start)) # Term may contain meetings
           (user.osm_api.get_programme(term.section_id, term)).each do |programme|
             if (meetings.include?(programme.meeting_date) && programme.title.eql?('Unnamed meeting') &&
                 programme.notes_for_parents.blank? && programme.games.blank? &&
                 programme.pre_notes.blank? && programme.post_notes.blank? && programme.leaders.blank? &&
-                programme.activities.eql?([]) && programme.start_time.nil? && programme.end_time.nil?
+                programme.activities.eql?([]) && programme.start_time.nil? && programme.finish_time.nil?
             ) # This is probably something we just added
               programme.title = evening_title
               programme.start_time = evening_start
-              programme.end_time = evening_end
+              programme.finish_time = evening_end
               result = user.osm_api.update_evening(programme)
               updated += 1
             end
@@ -103,11 +103,11 @@ class ProgrammeCreate
     earliest = nil
     latest = nil
     (user.osm_api.get_terms).sort.each do |term|
-      unless term.end < programme_start || term.start > programme_end
+      unless term.finish < programme_start || term.start > programme_end
         earliest = earliest || term.start
-        latest = latest || term.end
+        latest = latest || term.finish
         earliest = (term.start < earliest) ? term.start : earliest
-        latest = (term.end > latest) ? term.end : latest
+        latest = (term.finish > latest) ? term.finish : latest
       end
     end
     errors.add(:programme_start, "can't be before your terms (add/edit them in OSM)") if (earliest.nil? || programme_start < earliest)
