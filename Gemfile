@@ -6,7 +6,7 @@ gem 'activesupport', '>= 3.2'
 gem 'actionmailer'
 
 # Authentication / Authorisation
-gem 'sorcery', '= 0.7.12'
+gem 'sorcery', '>= 0.7.13'
 gem 'cancan'
 
 # Javascript
