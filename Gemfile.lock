@@ -14,6 +14,9 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.3)
+    active_attr (0.6.0)
+      activemodel (>= 3.0.2, < 4.1)
+      activesupport (>= 3.0.2, < 4.1)
     activemodel (3.2.8)
       activesupport (= 3.2.8)
       builder (~> 3.0.0)
@@ -87,6 +90,7 @@ GEM
     httparty (0.8.3)
       multi_json (~> 1.0)
       multi_xml
+    httpauth (0.1)
     i18n (0.6.0)
     journey (1.0.4)
     jquery-rails (2.0.2)
@@ -117,10 +121,13 @@ GEM
     mysql (2.8.1)
     nokogiri (1.5.5)
     oauth (0.4.6)
-    oauth2 (0.5.2)
+    oauth2 (0.6.1)
       faraday (~> 0.7)
-      multi_json (~> 1.0)
-    osm (0.0.17)
+      httpauth (~> 0.1)
+      multi_json (~> 1.3)
+    osm (0.0.19)
+      active_attr
+      activemodel
       activesupport (>= 3.2)
       httparty
     polyglot (0.3.3)
@@ -189,10 +196,10 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.5.3)
     simplecov-html (0.5.3)
-    sorcery (0.7.12)
+    sorcery (0.7.13)
       bcrypt-ruby (~> 3.0.0)
       oauth (~> 0.4.4)
-      oauth2 (~> 0.5.1)
+      oauth2 (~> 0.6.0)
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -247,7 +254,7 @@ DEPENDENCIES
   memcache-client
   minitest
   mysql
-  osm (= 0.0.17)
+  osm (= 0.0.19)
   premailer-rails3
   rails (>= 3.2.8)
   recaptcha
@@ -256,7 +263,7 @@ DEPENDENCIES
   sass-rails
   seed-fu
   simplecov (>= 0.3.8)
-  sorcery (= 0.7.12)
+  sorcery (>= 0.7.13)
   sqlite3
   therubyracer
   timecop

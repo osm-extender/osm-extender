@@ -8,8 +8,6 @@ class User < ActiveRecord::Base
   has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
   has_many :email_lists, :dependent => :destroy
 
-  after_save :send_email_on_attribute_changes
-
   validates_presence_of :name
 
   validates_presence_of :email_address
@@ -147,12 +145,6 @@ class User < ActiveRecord::Base
       end
     end
     return true
-  end
-
-  def send_email_on_attribute_changes
-    if lock_expires_at_changed?
-      UserMailer.account_locked(self).deliver unless lock_expires_at.nil?
-    end
   end
 
   public

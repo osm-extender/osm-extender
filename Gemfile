@@ -6,7 +6,7 @@ gem 'activesupport', '>= 3.2'
 gem 'actionmailer'
 
 # Authentication / Authorisation
-gem 'sorcery', '= 0.7.12'
+gem 'sorcery', '>= 0.7.13'
 gem 'cancan'
 
 # Javascript
@@ -16,7 +16,7 @@ gem 'jquery-ui-rails'
 gem 'client_side_validations'
 
 # Misc
-gem 'osm', '= 0.0.17' # For using the OSM API
+gem 'osm', '= 0.0.19' # For using the OSM API
 gem 'httparty'      # Used by OSM::API to make requests
 gem 'recaptcha'
 gem 'redcarpet'     # Used to format FAQ Answers

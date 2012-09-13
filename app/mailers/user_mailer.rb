@@ -28,14 +28,6 @@ class UserMailer < ApplicationMailer
     })
   end
 
-  def account_locked(user)
-    @user = user
-    mail ({
-      :subject => build_subject('Account Locked'),
-      :to => build_email_address
-    })
-  end
-
 
   # Patch as Sorcery doesn't allow a class 'between' this and ApplicationMailer
   def self.superclass

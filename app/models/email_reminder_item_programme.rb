@@ -15,7 +15,7 @@ class EmailReminderItemProgramme < EmailReminderItem
           if (programme_item.meeting_date > earliest) && (programme_item.meeting_date < latest)
             item = {
               :start_time => programme_item.start_time,
-              :end_time => programme_item.end_time,
+              :end_time => programme_item.finish_time,
               :date => programme_item.meeting_date,
               :title => programme_item.title,
               :activities => [],

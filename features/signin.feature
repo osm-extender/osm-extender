@@ -75,7 +75,6 @@ Feature: Sign in
         When I signin as "alice@example.com" with password "wrong"
         Then "alice@example.com" should be a locked user account
 	And I should see "The account was locked."
-	And "alice@example.com" should receive an email with subject /Account Locked/
 
     Scenario: User should be unlocked after timeout
 	Given "alice@example.com" has been a locked user account
