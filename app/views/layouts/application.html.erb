@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= content_for?(:head_title) ? "OSMExtender - #{yield(:head_title)}" : (content_for?(:title) ? "OSMExtender - #{yield(:title)}" : 'OSMExtender') %></title>
+  <title>
+    <%- if content_for?(:head_title) %>
+      OSMExtender - <%= yield(:head_title) %>
+    <%- else %>
+      <%- if content_for?(:title) %>
+         OSMExtender - <%= yield(:title) %>
+      <%- else %>
+        OSMExtender
+      <%- end %>
+    <%- end %>
+  </title>
 
   <%= stylesheet_link_tag 'jquery.ui.all' %>
   <%= stylesheet_link_tag 'token-input' %>
