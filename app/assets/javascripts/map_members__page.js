@@ -105,7 +105,7 @@ var plotMember = function(member) {
       }
       incrementProgress();
     } else {
-      appendStatus(member.name + ' not included (' + status + ')');
+      appendError(member.name + ' not included (' + status + ')');
     }
   }
 }
