@@ -100,7 +100,7 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
 end
 
 Given /^an OSM request to get events for section (\d+) will have the events$/ do |section_id, table|
-  url = "events.php?action=getEvents&sectionid=#{section_id}"
+  url = "events.php?action=getEvents&sectionid=#{section_id}&showArchived=true"
 
   events = Array.new
   table.hashes.each_with_index do |hash, index|
