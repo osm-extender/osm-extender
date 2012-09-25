@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120713130728) do
+ActiveRecord::Schema.define(:version => 20120924204240) do
 
   create_table "email_lists", :force => true do |t|
     t.integer  "user_id"
@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(:version => 20120713130728) do
     t.boolean  "can_administer_faqs",                           :default => false
     t.boolean  "can_administer_settings",                       :default => false
     t.boolean  "can_view_statistics",                           :default => false
+    t.integer  "startup_section",                               :default => 0,     :null => false
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"

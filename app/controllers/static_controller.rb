@@ -9,9 +9,13 @@ class StaticController < ApplicationController
 
   def my_page
     if current_user.connected_to_osm?
-      @roles = current_user.osm_api.get_roles
+      roles = current_user.osm_api.get_roles.sort
+      @sections = roles.inject([]) do |new_array, role|
+        new_array.push ({:id => role.section.id, :name => role.long_name})
+        new_array
+      end
     else
-      @roles = []
+      @sections = []
       flash[:instruction] = "You need to connect your account to your OSM account. #{self.class.helpers.link_to 'Connect now.', connect_to_osm_path}".html_safe
     end
 

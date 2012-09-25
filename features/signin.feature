@@ -65,7 +65,6 @@ Feature: Sign in
         Then I should see "You have not yet activated your account."
 	And I should be on the sessions page
 
-@focus
     @send_email
     Scenario: User should be locked after 3 bad logins
         When I signin as "alice@example.com" with password "wrong"

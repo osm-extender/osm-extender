@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
-  attr_accessible :name, :email_address, :password, :password_confirmation
+  attr_accessible :name, :email_address, :password, :password_confirmation, :startup_section
   attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :can_administer_settings, :can_view_statistics, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
+  validates_numericality_of :startup_section, :only_integer=>true, :greater_than_or_equal_to=>0
 
   def change_password!(new_password, new_password_confirmation=new_password)
     self.password = new_password

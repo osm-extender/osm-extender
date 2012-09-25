@@ -60,6 +60,11 @@ When /^I signin as "([^"]*)" with password "([^"]*)"$/ do |email, password|
   click_button 'Sign in'
 end
 
+When /^I signout$/ do
+  visit signout_url
+end
+
+
 
 Then /^"([^"]*)" should be a locked user account$/ do |email|
     user = User.find_by_email_address(email)
