@@ -16,36 +16,16 @@
   <tr><td id="banner_bottom" colspan="3"><%= image_tag 'transparent-1x30.png', :width => 1, :height => 30 %></td></tr>
 
   <!-- Flashes -->
-  <%- if defined?(flash) %>
+  <%- if defined?(flash.each) %>
     <tr><td colspan="3"><%= image_tag 'transparent-1x15.png', :width => 1, :height => 15 %></td></tr>
-    <%- if defined?(flash[:error]) && !flash[:error].blank? %>
+    <%- flash.each do |key, message| %>
       <tr>
         <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-        <td id="notices_error" class="notice"><%= flash[:error] %></td>
+        <td id="notices_<%= key %>" class="notice"><%= message %></td>
         <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
       </tr>
     <%- end %>
-    <%- if defined?(flash[:warning]) && !flash[:warning].blank? %>
-      <tr>
-        <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-        <td id="notices_warning" class="notice"><%= flash[:warning] %></td>
-        <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-      </tr>
-    <%- end %>
-    <%- if defined?(flash[:notice]) && !flash[:notice].blank? %>
-      <tr>
-        <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-        <td id="notices_notice" class="notice"><%= flash[:notice] %></td>
-        <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-      </tr>
-    <%- end %>
-    <%- if defined?(flash[:instruction]) && !flash[:instruction].blank? %>
-      <tr>
-        <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-        <td id="notices_instruction" class="notice"><%= flash[:instruction] %></td>
-        <td><%= image_tag 'transparent-30x30.png', :width => 30, :height => 30 %></td>
-      </tr>
-    <%- end %>
+    <tr><td colspan="3"><%= image_tag 'transparent-1x15.png', :width => 1, :height => 15 %></td></tr>
   <%- end %>
 
   <!--Content -->

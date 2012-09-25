@@ -98,25 +98,8 @@
 
       <%- if flash %>
         <div id="notices">
-          <%- if flash[:error] %>
-            <div id="notices_error">
-              <%= flash[:error] %>
-            </div><!-- notices_error -->
-          <%- end %>
-          <%- if flash[:warning] %>
-            <div id="notices_warning">
-              <%= flash[:warning] %>
-            </div><!-- notices_warning -->
-          <%- end %>
-          <%- if flash[:notice] %>
-            <div id="notices_notice">
-              <%= flash[:notice] %>
-            </div><!-- notices_notice -->
-          <%- end %>
-          <%- if flash[:instruction] %>
-            <div id="notices_instruction">
-              <%= flash[:instruction] %>
-            </div><!-- notices_instruction -->
+          <%- flash.each do |key, message| %>
+            <%= content_tag :div, message, :id => "notices_#{key}" %>
           <%- end %>
         </div><!-- notices -->
       <%- end %>
