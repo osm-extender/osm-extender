@@ -16,7 +16,7 @@ gem 'jquery-ui-rails', '~> 2.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '= 0.0.21'            # For using the OSM API
+gem 'osm', '= 0.0.23'            # For using the OSM API
 gem 'httparty', '~> 0.9'         # Used by OSM::API to make requests
 gem 'recaptcha', '~> 0.3'
 gem 'redcarpet', '~> 2.1'        # Used to format FAQ Answers

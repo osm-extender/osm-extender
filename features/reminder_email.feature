@@ -111,7 +111,7 @@ Feature: Reminder Email
         And I follow "Due badges"
         And I press "Create due badges item"
         Then I should see "Item was successfully added"
-        And I should see "There are no settings for this item." in the "Configuration" column of the "Due badges" row
+        And I should see "Without badge stock levels." in the "Configuration" column of the "Due badges" row
 
     Scenario: Add notepad item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -189,6 +189,18 @@ Feature: Reminder Email
         And I press "Update members not seen item"
         Then I should see "Item was successfully updated"
         And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
+
+    Scenario: Edit due badges item in reminder email
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a due badges item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Due badges" row
+        And I fill in "Show stock level of badges?" with "yes"
+        And I press "Update due badges item"
+        Then I should see "Item was successfully updated"
+        And I should see "With badge stock levels." in the "Configuration" column of the "Due badges" row
 
 
     Scenario: Preview the email
