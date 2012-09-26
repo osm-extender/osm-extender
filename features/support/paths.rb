@@ -14,6 +14,9 @@ module NavigationHelpers
     when /^the list of (.*)$/
       self.send("#{$1.downcase}_path".to_sym)
 
+    when /^the page for (.*) (\d+)$/
+      self.send("#{$1.downcase}_path".to_sym, $2.to_i)
+
     when /^edit the FAQ "([^"]*)"$/
       faq = Faq.find_by_question($1)
       edit_faq_path faq

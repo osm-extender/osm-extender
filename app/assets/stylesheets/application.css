@@ -122,8 +122,7 @@ div.pagination {
     font-size:          large;
     text-align:         center;
     vertical-align:     middle;
-    min-width:          120px;
-    max-width:          160px;
+    width:              120px;
     height:             60px;
     padding-left:       10px;
     padding-right:      10px;
@@ -166,8 +165,7 @@ div.pagination {
     font-size:          large;
     text-align:         center;
     vertical-align:     middle;
-    min-width:          120px;
-    max-width:          160px;
+    width:              150px;
     height:             40px;
     padding-left:       10px;
     padding-right:      10px;

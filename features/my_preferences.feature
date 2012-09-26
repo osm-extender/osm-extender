@@ -1,3 +1,4 @@
+@my_preferences
 @user
 
 Feature: My Preferences

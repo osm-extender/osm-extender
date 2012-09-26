@@ -15,9 +15,12 @@
 
   <%= stylesheet_link_tag 'jquery.ui.all' %>
   <%= stylesheet_link_tag 'token-input' %>
-  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag 'application', :media => :all %>
+  <%= stylesheet_link_tag 'application__print', :media=>:print %>
   <%= stylesheet_link_tag params[:controller] if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
   <%= stylesheet_link_tag "#{params[:controller]}__#{params[:action]}" if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}.css") %>
+  <%= stylesheet_link_tag "#{params[:controller]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__print.css") %>
+  <%= stylesheet_link_tag "#{params[:controller]}__#{params[:action]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}__print.css") %>
 
   <%= javascript_include_tag :jquery  %>
   <%= javascript_include_tag :jquery_ujs %>
@@ -74,10 +77,11 @@
           <%- if current_user.connected_to_osm? && current_role %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
+            <%- if !current_section.waiting? && has_osm_permission?(:read, :flexi) %><div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:write, :programme) %><div class="menu_item"><%= link_to 'Programme wizard', new_create_programme_path %></div><%- end %>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
-            <%- unless current_section.waiting? || (current_section.youth_section? && has_osm_permission?(:read, :member) && has_osm_permission?(:write, :programme)) || (!current_section.youth_section? && has_osm_permission?(:read, :member)) %>
+            <%- unless current_section.waiting? || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi]) && has_osm_permission?(:write, :programme)) || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi])) %>
               <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
                 <p>Some items have hidden from this menu becuase of how your <%= link_to 'OSM Permissions', osm_permissions_path %> are set.</p>
               </div>
