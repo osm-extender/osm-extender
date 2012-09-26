@@ -11,7 +11,34 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120924204240) do
+ActiveRecord::Schema.define(:version => 20120927102912) do
+
+  create_table "announcements", :force => true do |t|
+    t.text     "message",                           :null => false
+    t.datetime "start",                             :null => false
+    t.datetime "finish",                            :null => false
+    t.boolean  "public",         :default => false, :null => false
+    t.boolean  "prevent_hiding", :default => false, :null => false
+    t.datetime "emailed_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "email_lists", :force => true do |t|
     t.integer  "user_id"
@@ -68,6 +95,16 @@ ActiveRecord::Schema.define(:version => 20120924204240) do
   add_index "email_reminders", ["send_on"], :name => "index_email_reminders_on_send_on"
   add_index "email_reminders", ["user_id"], :name => "index_email_reminders_on_user_id"
 
+  create_table "emailed_announcements", :force => true do |t|
+    t.integer  "announcement_id"
+    t.integer  "user_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "emailed_announcements", ["announcement_id"], :name => "index_emailed_announcements_on_announcement_id"
+  add_index "emailed_announcements", ["user_id"], :name => "index_emailed_announcements_on_user_id"
+
   create_table "faq_tagings", :force => true do |t|
     t.integer  "faq_id",                    :null => false
     t.integer  "tag_id",                    :null => false
@@ -97,6 +134,18 @@ ActiveRecord::Schema.define(:version => 20120924204240) do
     t.datetime "updated_at",                   :null => false
     t.integer  "system_id"
   end
+
+  create_table "hidden_announcements", :force => true do |t|
+    t.integer  "user_id",         :null => false
+    t.integer  "announcement_id", :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "hidden_announcements", ["announcement_id", "user_id"], :name => "index_hidden_announcements_on_announcement_id_and_user_id", :unique => true
+  add_index "hidden_announcements", ["announcement_id"], :name => "index_hidden_announcements_on_announcement_id"
+  add_index "hidden_announcements", ["user_id", "announcement_id"], :name => "index_hidden_announcements_on_user_id_and_announcement_id", :unique => true
+  add_index "hidden_announcements", ["user_id"], :name => "index_hidden_announcements_on_user_id"
 
   create_table "programme_review_balanced_caches", :force => true do |t|
     t.integer  "term_id",      :null => false
@@ -160,6 +209,7 @@ ActiveRecord::Schema.define(:version => 20120924204240) do
     t.boolean  "can_administer_settings",                       :default => false
     t.boolean  "can_view_statistics",                           :default => false
     t.integer  "startup_section",                               :default => 0,     :null => false
+    t.boolean  "can_administer_announcements",                  :default => false
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"

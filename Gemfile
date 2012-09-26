@@ -25,6 +25,8 @@ gem 'premailer-rails3', '~> 1.3' # Used to easily generate HTML emails (also doe
 gem 'faker', '~> 1.1'            # Used to generate fake data for sample emails
 gem 'seed-fu', '~> 2.2'          # Used to seed the database when data may change
 gem 'acts_as_list', '~> 0.1'     # Makes lists of items orderable
+gem 'daemons', '~> 1.1'
+gem 'delayed_job_active_record', '~> 0.3'
 
 
 # Gems used only for assets and not required

@@ -22,16 +22,16 @@
     <%= select_tag :startup_section, options_for_select({'No preference'=>'0'}.merge(@sections.inject({}){ |new_hash, section| new_hash[section[:name]] = section[:id]; new_hash }), current_user.startup_section) %>
   </div>
 
+  <%= submit_tag 'Save preferences' %><br/>
+
   <div class="field">
-    <%= label_tag :Connected_to_OSM %><br/>
+    <%= label_tag 'Connected to OSM?' %><br/>
     <%- if current_user.connected_to_osm? %>
       <%= yes_no true %> - <%= link_to 'Connect to a different OSM account', connect_to_osm_path %>
     <%- else %>
       <%= yes_no false %> - <%= link_to 'Connect now!', connect_to_osm_path %>
     <%- end %>
   </div>
-
-  <%= submit_tag 'Save preferences' %>
 <% end %>
 
 

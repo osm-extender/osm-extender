@@ -59,6 +59,9 @@ class Ability
       end
 
 
+      can :hide, Announcement
+
+
       # Things user administrators can do
       if user.can_administer_users?
         can [:administer, :reset_password, :unlock], User
@@ -72,6 +75,11 @@ class Ability
         can [:administer, :re_order], Faq
         can [:administer, :re_order], FaqTag
         can :administer, FaqTaging
+      end
+
+      # Things Announcement administrators can do
+      if user.can_administer_announcements?
+        can :administer, Announcement
       end
 
       # Things Settings administrators can do

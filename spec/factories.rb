@@ -13,4 +13,10 @@ FactoryGirl.define do
     tag_tokens "1"
   end
 
+  factory :announcement do
+    sequence(:message) { |n| "Message #{n}" }
+    start Time.now
+    finish 1.week.from_now
+  end
+
 end

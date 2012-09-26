@@ -38,6 +38,11 @@ td#notices_instruction {
     background-color:   #c0c0f0;
     border-color:       blue;
 }
+td#notices_information {
+    background-color:   #d0d0d0;
+    border-color:       black;
+}
+
 
 hr {
   margin-left:        auto;

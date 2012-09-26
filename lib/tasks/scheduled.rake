@@ -7,13 +7,6 @@ namespace :scheduled  do
     puts "#{deleted} entries deleted."
   end
 
-  desc "Stop the balanced programme cache table getting too big"
-  task :clean_balanced_programme_cache => :environment do
-    $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Balanced Programme Cache"
-    deleted = ProgrammeReviewBalancedCache.delete_old.size
-    puts "#{deleted} entries deleted."
-  end
-
   desc "Send the reminder emails"
   task :send_reminder_emails => :environment do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
@@ -34,6 +27,25 @@ namespace :scheduled  do
     (earliest..Date.yesterday).each do |date|
       Statistics.create_or_retrieve_for_date date
     end
+  end
+
+
+  namespace :clean  do
+    desc "Stop the balanced programme cache table getting too big"
+    task :balanced_programme_cache => :environment do
+      $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Balanced Programme Cache"
+      deleted = ProgrammeReviewBalancedCache.delete_old.size
+      puts "#{deleted} programme review caches deleted."
+    end
+  
+    desc "Stop the announcements tables getting too big"
+    task :announcements => :environment do
+      $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Announcements"
+      deleted = Announcement.delete_old.size
+      puts "#{deleted} announcements deleted."
+    end
+
+    task :all => [:balanced_programme_cache, :announcements]
   end
 
 end

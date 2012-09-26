@@ -1,0 +1,36 @@
+<% provide :title, 'Site announcements' %>
+
+<h2>Add announcement</h2>
+<%= render 'form' %>
+
+<h2>Announcements</h2>
+<table>
+  <tr>
+    <th>Message</th>
+    <th>Current</th>
+    <th>Start</th>
+    <th>Finish</th>
+    <th>Public</th>
+    <th>Prevent hiding</th>
+    <th>Emailed</th>
+    <th>Actions</th>
+  </tr>
+
+<%- now = Time.now %>
+<% @announcements.reverse.each do |announcement| %>
+  <tr>
+    <td title="<%= announcement.message %>"><%= announcement.message.truncate(30) %></td>
+    <td><%= yes_no((announcement.start < now) && (announcement.finish > now)) %></td>
+    <td><%= distance_of_time_in_words_to_now(announcement.start) %> <%= (announcement.start < now) ? 'ago' : 'time' %></td>
+    <td><%= distance_of_time_in_words_to_now(announcement.finish) %> <%= (announcement.finish < now) ? 'ago' : 'time' %></td>
+    <td><%= yes_no(announcement.public, false) %></td>
+    <td><%= yes_no(announcement.prevent_hiding, false) %></td>
+    <td><%= (distance_of_time_in_words_to_now(announcement.emailed_at) + ' ago') if announcement.emailed_at? %></td>
+    <td>
+      <%= link_to '[Show]', announcement %>
+      <%= link_to '[Edit]', edit_announcement_path(announcement) %>
+      <%= link_to '[Destroy]', announcement, method: :delete, data: { confirm: 'Are you sure?' } %>
+    </td>
+  </tr>
+<% end %>
+</table>

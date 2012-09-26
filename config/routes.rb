@@ -80,6 +80,9 @@ OSMExtender::Application.routes.draw do
 
   resources :osm_flexi_records, :only => [:index, :show]
 
+  resources :announcements
+  post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
+
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
 

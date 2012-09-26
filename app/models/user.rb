@@ -2,11 +2,13 @@ class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
   attr_accessible :name, :email_address, :password, :password_confirmation, :startup_section
-  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :can_administer_settings, :can_view_statistics, :as => :admin
+  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :can_administer_settings, :can_view_statistics, :can_administer_announcements, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
   has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
   has_many :email_lists, :dependent => :destroy
+  has_many :hidden_announcements, :dependent => :destroy
+  has_many :emailed_announcements, :dependent => :destroy
 
   validates_presence_of :name
 
@@ -19,6 +21,7 @@ class User < ActiveRecord::Base
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
   validates_numericality_of :startup_section, :only_integer=>true, :greater_than_or_equal_to=>0
+
 
   def change_password!(new_password, new_password_confirmation=new_password)
     self.password = new_password
@@ -70,7 +73,6 @@ class User < ActiveRecord::Base
     return save
   end
 
-
   def osm_api
     if connected_to_osm?
       @osm_api ||= Osm::Api.new(read_attribute(:osm_userid), read_attribute(:osm_secret))
@@ -78,6 +80,11 @@ class User < ActiveRecord::Base
     else
       return nil
     end
+  end
+
+
+  def current_announcements
+    Announcement.are_current.ignoring(hidden_announcements.pluck(:announcement_id))
   end
 
   def gravatar_id
@@ -94,6 +101,7 @@ class User < ActiveRecord::Base
       scoped
     end
   end
+
   
   private
   # Use Steve Gibson's Password Haystacks logic to ensure password is sufficently secure

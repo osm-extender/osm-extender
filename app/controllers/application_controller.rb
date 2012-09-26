@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :current_role, :current_section, :has_osm_permission?
+  helper_method :current_role, :current_section, :current_announcements, :has_osm_permission?
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -145,6 +145,10 @@ class ApplicationController < ActionController::Base
     session[:current_role].section
   end
 
+
+  def current_announcements
+    @current_announcements ||= (current_user ? current_user.current_announcements : Announcement.are_current.are_public)
+  end
 
   def get_groupings
     groupings = {}

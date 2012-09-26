@@ -28,6 +28,14 @@ class UserMailer < ApplicationMailer
     })
   end
 
+  def announcement(user, announcement)
+    @user = user
+    @announcement = announcement
+    mail ({
+      :subject => build_subject('Announcement'),
+      :to => build_email_address
+    })
+  end
 
   # Patch as Sorcery doesn't allow a class 'between' this and ApplicationMailer
   def self.superclass

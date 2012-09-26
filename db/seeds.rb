@@ -34,6 +34,7 @@ unless User.where(['id = ?', 1]).size == 1
     u.can_administer_faqs = true
     u.can_administer_settings = true
     u.can_view_statistics = true
+    u.can_administer_announcements = true
   end
   puts
 end

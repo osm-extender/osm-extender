@@ -100,6 +100,19 @@
         </div>
       <%- end %>
 
+      <%- if current_announcements %>
+        <div id="announcements">
+          <%- current_announcements.each do |announcement| %>
+            <div id="announcement-<%= announcement.id %>">
+              <p><%= announcement.message %></p>
+              <%- if current_user && announcement.allow_hiding? %>
+                <%= link_to '[Hide this announcement]', '#', {:class => 'hide_link', :data => {'announcement-id' => announcement.id, 'csrf-token' => form_authenticity_token.to_s}} %>
+              <%- end %>
+            </div>
+          <%- end %>
+        </div>
+      <%- end %>
+
       <%- if flash %>
         <div id="notices">
           <%- flash.each do |key, message| %>
