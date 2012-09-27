@@ -46,7 +46,7 @@ Feature: Site Announcements
 
     Scenario: View announcements (signed in as announcement administrator)
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "Administer site announcements"
+        And I follow "Administer announcements"
         Then I should see "Public announcement"
         And I should see "Member announcement 1"
         And I should see "Member announcement 2"
@@ -54,7 +54,7 @@ Feature: Site Announcements
 
     Scenario: View announcements (not administrator)
         When I signin as "bob@example.com" with password "P@55word"
-        Then I should not see "Administer site announcements"
+        Then I should not see "Administer announcements"
         When I go to the list of announcements
         Then I should see "You are not authorised to do that."
 	And I should be on the my_page page
@@ -62,7 +62,7 @@ Feature: Site Announcements
 
     Scenario: Create announcement
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "Administer site announcements"
+        And I follow "Administer announcements"
         And I fill in "Message" with "Test"
         And I check "Public"
         And I check "Prevent hiding"
@@ -80,7 +80,7 @@ Feature: Site Announcements
 
     Scenario: Create announcement (emailing users)
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "Administer site announcements"
+        And I follow "Administer announcements"
         And I fill in "Message" with "Test"
         And I check "Email to users"
         And I press "Create Announcement"

@@ -69,13 +69,13 @@ ActiveRecord::Schema.define(:version => 20120927102912) do
   add_index "email_reminder_items", ["type"], :name => "index_email_reminder_items_on_type"
 
   create_table "email_reminder_shares", :force => true do |t|
-    t.integer  "reminder_id",                                        :null => false
-    t.string   "email_address",                                      :null => false
-    t.string   "name",                                               :null => false
-    t.string   "state",         :limit => 16, :default => "pending", :null => false
-    t.string   "auth_code",     :limit => 64,                        :null => false
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.integer  "reminder_id",                                         :null => false
+    t.string   "email_address",                                       :null => false
+    t.string   "name",                                                :null => false
+    t.string   "state",         :limit => 16,  :default => "pending", :null => false
+    t.string   "auth_code",     :limit => 128,                        :null => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
   end
 
   add_index "email_reminder_shares", ["auth_code"], :name => "index_email_reminder_shares_on_auth_code"

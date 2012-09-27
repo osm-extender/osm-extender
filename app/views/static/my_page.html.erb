@@ -33,16 +33,4 @@
     <%- end %>
   </div>
 <% end %>
-
-
-
-
-<%- unless @tasks.empty? %>
-<h2>Site Tasks</h2>
-<ul>
-  <%- @tasks.each do |task| %>
-    <li><%= link_to task[:name], task[:path] %></li>
-  <%- end %>
-</ul>
-<%- end %>
   
