@@ -51,7 +51,7 @@ class Announcement < ActiveRecord::Base
     if older_than.is_a?(String)
       older_than = older_than.split.inject { |count, unit| count.to_i.send(unit) }
     end
-    destroy_all ['updated_at <= ?', older_than]
+    destroy_all ['updated_at <= ? AND finish <= ?', older_than, older_than]
   end
 
 end
