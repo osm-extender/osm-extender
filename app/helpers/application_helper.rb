@@ -8,7 +8,7 @@ module ApplicationHelper
     RedcarpetCompat.new(text, *options).to_html.html_safe
   end
 
-  # Display either yes or no highlighted in gree or red
+  # Display either yes or no highlighted in green or red
   # @param value the boolean value being represented
   # @param positive_value (optional, default true) the value to be considered positive (and displayed in green)
   # @returns an HTML safe string
@@ -17,6 +17,19 @@ module ApplicationHelper
       return "<span style=\"color: green;\">#{value ? 'yes' : 'no'}</span>".html_safe
     else
       return "<span style=\"color: red;\">#{value ? 'YES' : 'NO'}</span>".html_safe
+    end
+  end
+
+  # Display texto highlighted in green or red
+  # @param value the boolean value being represented
+  # @param positive_value (optional, default true) the value to be considered positive (and displayed in green)
+  # @param text the text to display
+  # @returns an HTML safe string
+  def pos_neg(value, positive_value=true, text)
+    if positive_value == value
+      return "<span style=\"color: green;\">#{text}</span>".html_safe
+    else
+      return "<span style=\"color: red;\">#{text}</span>".html_safe
     end
   end
 

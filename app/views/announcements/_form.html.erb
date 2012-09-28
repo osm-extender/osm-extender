@@ -1,0 +1,45 @@
+<%= form_for @announcement, :validate=>true do |f| %>
+  <% if @announcement.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@announcement.errors.count, "error") %> prohibited this announcement from being saved:</h2>
+
+      <ul>
+      <% @announcement.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :message %><br/>
+    <%= f.text_area :message, {:rows => 3, :cols => 40} %>
+  </div>
+  <div class="field">
+    <%= f.label :start %><br/>
+    <%= f.datetime_select :start %>
+  </div>
+  <div class="field">
+    <%= f.label :finish %><br/>
+    <%= f.datetime_select :finish %>
+  </div>
+
+  <div class="field">
+    <%= f.check_box :public %>
+    <%= f.label :public %>
+  </div>
+  <div class="field">
+    <%= f.check_box :prevent_hiding %>
+    <%= f.label :prevent_hiding %>
+  </div>
+
+
+  <div class="field">
+    <%= check_box_tag :email_to_users %>
+    <%= label_tag :email_to_users %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

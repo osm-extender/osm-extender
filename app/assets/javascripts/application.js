@@ -5,6 +5,19 @@
 //= require_self
 
 
+$(function() {
+  $("#announcements div a.hide_link").live("click", function() {
+    $.ajax({
+      type: 'POST',
+      headers: {'X-CSRF-Token': $(this).data('csrf-token')},
+      url: '/announcements/' + $(this).data('announcement-id') + '/hide',
+      dataType: 'script'
+    });
+    return false;
+  });
+});
+
+
 
 var minimum_haystack_size = Math.pow(10, 14);
 

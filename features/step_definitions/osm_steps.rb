@@ -22,7 +22,7 @@ Given /^an OSM request to "get roles" will give (\d+) (?:(beaver|cub|scout|explo
 
   body = '['
   (1..roles).each do |role|
-    body += '{"sectionConfig":"{\"subscription_level\":\"3\",\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"' + type + '\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Subs\",\"extraid\":\"529\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"' + (role == 1 ? '1' : '0') + '","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
+    body += '{"sectionConfig":"{\"subscription_level\":\"3\",\"subscription_expires\":\"2013-01-05\",\"sectionType\":\"' + type + '\",\"columnNames\":{\"phone1\":\"Home Phone\",\"phone2\":\"Parent 1 Phone\",\"address\":\"Member\'s Address\",\"phone3\":\"Parent 2 Phone\",\"address2\":\"Address 2\",\"phone4\":\"Alternate Contact Phone\",\"subs\":\"Gender\",\"email1\":\"Parent 1 Email\",\"medical\":\"Medical / Dietary\",\"email2\":\"Parent 2 Email\",\"ethnicity\":\"Gift Aid\",\"email3\":\"Member\'s Email\",\"religion\":\"Religion\",\"email4\":\"Email 4\",\"school\":\"School\"},\"numscouts\":10,\"hasUsedBadgeRecords\":true,\"hasProgramme\":true,\"extraRecords\":[{\"name\":\"Flexi 1\",\"extraid\":\"' + role.to_s + '01\"},{\"name\":\"Flexi 2\",\"extraid\":\"' + role.to_s + '02\"}],\"wizard\":\"false\",\"fields\":{\"email1\":true,\"email2\":true,\"email3\":true,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":true,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":true,\"saved\":true},\"intouch\":{\"address\":true,\"address2\":false,\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"medical\":false},\"mobFields\":{\"email1\":false,\"email2\":false,\"email3\":false,\"email4\":false,\"address\":true,\"address2\":false,\"phone1\":true,\"phone2\":true,\"phone3\":true,\"phone4\":true,\"school\":false,\"religion\":false,\"ethnicity\":true,\"medical\":true,\"patrol\":true,\"subs\":false}}","groupname":"1st Somewhere","groupid":"1","groupNormalised":"1","sectionid":"' + role.to_s + '","sectionname":"Section ' + role.to_s + '","section":"cubs","isDefault":"' + (role == 1 ? '1' : '0') + '","permissions":{"badge":100,"member":100,"user":100,"register":100,"contact":100,"programme":100,"originator":1,"events":100,"finance":100,"flexi":100}},'
   end
   body[-1] = ']'
 
@@ -72,6 +72,58 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body) unless url.nil?
 end
 
+Given /^an OSM request to get_flexi_record_fields for section "(\d+)" flexi "(\d+)" will have the fields$/ do |section, flexi, table|
+  fields = Array.new
+  table.hashes.each do |hash|
+    fields.push ({
+      'field' => hash['id'],
+      'name' => hash['name'],
+      'width' => "150",
+      'editable' => !!hash['editable']
+    })
+  end
+
+  body = {
+    'structure' => [
+      {
+        'rows' => [
+          {'name' => 'First name','field' => 'firstname','width' => '150px'},
+          {'name' => 'Last name','field' => 'lastname','width' => '150px'},
+        ],
+        'noscroll' => true
+      },{
+        'rows' => fields
+      }
+    ]
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/extras.php?action=getExtra&sectionid=#{section}&extraid=#{flexi}", :body => body.to_json)
+end
+
+Given /^an OSM request to get_flexi_record_data for section "(\d+)" flexi "(\d+)" term "(\d+)" will have the data$/ do |section, flexi, term, table|
+  data = Array.new
+  table.hashes.each_with_index do |hash, index|
+    data.push(hash.reverse_merge({
+      'scoutid' => index.to_s,
+      'dob' => '',
+      'patrolid' => '1',
+      'total' => '',
+      'completed' => '',
+      'age' => '',
+      'patrol' => 'Patrol Name'
+    }))
+  end
+
+  body = {
+    'identifier' => 'scoutid',
+    'label' => 'name',
+    'items' => data,
+  }
+
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/extras.php?action=getExtraRecords&sectionid=#{section}&extraid=#{flexi}&termid=#{term}&section=cubs", :body => body.to_json)
+end
+
+
 Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members?$/ do |section_id, term_id, table|
   url = "users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}"
 
@@ -100,7 +152,7 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
 end
 
 Given /^an OSM request to get events for section (\d+) will have the events$/ do |section_id, table|
-  url = "events.php?action=getEvents&sectionid=#{section_id}"
+  url = "events.php?action=getEvents&sectionid=#{section_id}&showArchived=true"
 
   events = Array.new
   table.hashes.each_with_index do |hash, index|

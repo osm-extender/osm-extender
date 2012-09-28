@@ -18,6 +18,8 @@ OSMExtender::Application.routes.draw do
   get 'my_account/delete' => 'my_account#confirm_delete', :as => 'confirm_delete_my_account'
   post 'my_account/delete' => 'my_account#delete', :as => 'delete_my_account'
 
+  post 'my_preferences' => 'my_preferences#update', :as => 'update_my_preferences'
+
   post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
   get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'
   resources :email_lists
@@ -75,6 +77,11 @@ OSMExtender::Application.routes.draw do
 
   get 'create_programme' => 'programme_wizard#new_programme', :as => 'new_create_programme'
   post 'create_programme' => 'programme_wizard#create_programme'
+
+  resources :osm_flexi_records, :only => [:index, :show]
+
+  resources :announcements
+  post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'

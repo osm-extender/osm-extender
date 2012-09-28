@@ -71,10 +71,11 @@ class EmailReminderItem < ActiveRecord::Base
 
   def configuration=(config)
     conversion_functions = {
-      Fixnum => :to_i,
-      Float => :to_f,
-      String => :to_s,
-      Symbol => :to_sym
+      Fixnum => Proc.new { |value| value.to_i },
+      Float => Proc.new { |value| value.to_f },
+      String => Proc.new { |value| value.to_s },
+      Symbol => Proc.new { |value| value.to_sym },
+      :boolean => Proc.new { |value| value.is_a?(String) ? ['1', 'yes', 'true'].include?(value.downcase) : !!value }
     }
     default = self.class.default_configuration
 
@@ -86,7 +87,7 @@ class EmailReminderItem < ActiveRecord::Base
       conversion_function = conversion_functions[self.class.configuration_types[key]]
       unless conversion_function.nil?
         begin
-          config[key] = config[key].send(conversion_function)
+          config[key] = conversion_function.call(config[key])
           if config[key].nil?
             errors.add(key, "is invalid")
           end

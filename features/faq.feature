@@ -16,7 +16,7 @@ Feature: FAQ Administration
         And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
-	    | bob@example.com   | Bob |
+	    | bob@example.com   | Bob   |
         And I have the following faq records
 	    | question | answer            | active |
             | FAQ 1    | This is answer 1. | true   |

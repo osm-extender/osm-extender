@@ -17,12 +17,3 @@
   <%= label_tag :email_address %><br/>
   <%= current_user.email_address %>
 </div>
-
-<div class="field">
-  <%= label_tag :Connected_to_OSM %><br/>
-  <%- if current_user.connected_to_osm? %>
-    <%= yes_no true %> (user ID: <%= current_user.osm_userid %>) <%= link_to 'Connect to a different OSM account', connect_to_osm_path %>
-  <%- else %>
-    <%= yes_no false %> - <%= link_to 'Connect now!', connect_to_osm_path %>
-  <%- end %>
-</div>

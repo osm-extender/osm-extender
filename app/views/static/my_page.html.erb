@@ -5,22 +5,32 @@
 <%- end %>
 
 
-<%- if @roles.size > 1 %>
+<%- if @sections.size > 1 %>
   <h2>Change Current Section</h2>
   <ul>
-  <%- @roles.sort.each do |role| %>
-    <li><%= link_to role.long_name, "#{change_section_path}?section_id=#{role.section.id}" %></li>
+  <%- @sections.each do |section| %>
+    <li><%= link_to section[:name], "#{change_section_path}?section_id=#{section[:id]}" %></li>
   <%- end %>
   </ul>
 <%- end %>
 
 
-<%- unless @tasks.empty? %>
-<h2>Site Tasks</h2>
-<ul>
-  <%- @tasks.each do |task| %>
-    <li><%= link_to task[:name], task[:path] %></li>
-  <%- end %>
-</ul>
-<%- end %>
+<h2>My Preferences</h2>
+<%= form_tag update_my_preferences_path, :method=>:post do %>
+  <div class="field">
+    <%= label_tag :startup_section %><br/>
+    <%= select_tag :startup_section, options_for_select({'No preference'=>'0'}.merge(@sections.inject({}){ |new_hash, section| new_hash[section[:name]] = section[:id]; new_hash }), current_user.startup_section) %>
+  </div>
+
+  <%= submit_tag 'Save preferences' %><br/>
+
+  <div class="field">
+    <%= label_tag 'Connected to OSM?' %><br/>
+    <%- if current_user.connected_to_osm? %>
+      <%= yes_no true %> - <%= link_to 'Connect to a different OSM account', connect_to_osm_path %>
+    <%- else %>
+      <%= yes_no false %> - <%= link_to 'Connect now!', connect_to_osm_path %>
+    <%- end %>
+  </div>
+<% end %>
   

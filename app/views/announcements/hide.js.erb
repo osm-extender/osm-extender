@@ -1,0 +1,5 @@
+<%- if @error.nil? %>
+    $("#announcement-<%= @announcement.id %>").hide();
+<%- else %>
+    alert("<%= @error %>");
+<%- end %>
