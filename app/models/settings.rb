@@ -1,15 +1,11 @@
 class Settings
   
   def self.setup
-    @@values = {}
-    SettingValue.all.each do |value|
-      @@values[value.key] = value.value
-    end
-    @@last_read = Time.now
+    self.reread_settings
   end
 
   def self.read(key)
-    self.setup if defined?(@@values).nil? || self.too_old?
+    self.reread_settings if defined?(@@values).nil? || self.too_old?
     @@values[key]
   end
 
@@ -20,6 +16,14 @@ class Settings
     cv = SettingValue.create(:key => key) if cv.nil?
     cv.value = value
     cv.save
+  end
+
+  def self.reread_settings
+    @@values = {}
+    SettingValue.all.each do |value|
+      @@values[value.key] = value.value
+    end
+    @@last_read = Time.now
   end
 
 
