@@ -86,5 +86,7 @@ OSMExtender::Application.routes.draw do
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
 
+  get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
+
   root :to => 'static#welcome'
 end

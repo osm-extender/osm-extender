@@ -1,0 +1,76 @@
+<% provide :title, "Delayed jobs" %>
+
+
+<h2>Delayed Jobs</h2>
+<table>
+  <tr>
+    <th>id</th>
+    <th>Queue</th>
+    <th>Status</th>
+    <th>Priority</th>
+    <th>Attempts</th>
+    <th>Last error</th>
+    <th>Run at</tH>
+    <th>Locked at</tH>
+    <th>Failed at</tH>
+    <th>Created at</th>
+  </tr>
+  <%- @jobs.each do |job| %>
+  <%- handler = YAML::load(Delayed::Job.first.handler) %>
+  <%- job_text = "#{handler.object.name}#{(handler.object.methods.include?(:new) ? ' self.' : '.') + handler.method_name.to_s}(#{handler.args.map{|i| i.inspect}.join(', ')})" %>
+    <tr>
+      <td title="<%= job_text %>"><%= job.id %></td>
+      <td><%= job.queue %></td>
+      <td>
+        <%- if job.run_at? %>Waiting<%-end %>
+        <%- if job.locked_at %>Running<%- end %>
+        <%- if job.failed_at? %>Failed<%- end %>
+      </td>
+      <td>
+        <%= job.priority %><br/>
+        <%- if job.priority = @settings[:default_priority] %>
+          Default
+        <%- else %>
+          <%= (job.priority < @settings[:default_priority]) ? 'Higher' : 'Lower' %>
+        <%- end %>
+      </td>
+      <td><%= job.attempts %></td>
+      <td><%= job.last_error %></td>
+      <td>
+        <%= job.run_at %>
+        <%- if job.run_at? %><br/><%= distance_of_time_in_words_to_now(job.run_at) %> ago<%- end %>
+      </td>
+      <td>
+        <%= job.locked_at %>
+        <%- if job.locked_at? %><br/><%= distance_of_time_in_words_to_now(job.locked_at) %> ago<%- end %>
+      </td>
+      <td>
+        <%= job.failed_at %>
+        <%- if job.failed_at? %><br/><%= distance_of_time_in_words_to_now(job.failed_at) %> ago<%- end %>
+      </td>
+      <td>
+        <%= job.created_at %>
+        <br/><%= distance_of_time_in_words_to_now(job.created_at) %> ago
+      </td>
+    </tr>
+  <%- end %>
+</table>
+
+
+<h2>Settings</h2>
+<table>
+  <%- @settings.each do |key, value| %>
+    <tr>
+      <td><%= key %></td>
+      <td>
+        <%- if value.is_a?(ActiveSupport::Duration) # It's a time %>
+          <%- if value >= 3600 %><%= (value / 3600) %> hours<%- end %>
+          <%- if value >= 60 %><%= ((value / 60) % 60 ) %> minutes<%- end %>
+          <%= (value % 60) %> seconds
+        <%- else %>
+          <%= value.inspect %>
+        <%- end %>
+      </td>
+    </tr>
+  <%- end %>
+</table>
