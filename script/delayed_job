@@ -9,7 +9,7 @@ class DelayedJobWorker < DaemonSpawn::Base
   def start(args)
     ENV['RAILS_ENV'] ||= args.first || 'development'
     Dir.chdir RAILS_ROOT
-    require File.join('config', 'environment')
+    require File.join('.', 'config', 'environment')
 
     Delayed::Worker.new.start
   end
