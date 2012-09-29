@@ -63,7 +63,7 @@ group :test do
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 1.2'
   gem 'database_cleaner', '~> 0.8'
-  gem 'minitest', '~> 3.5'
+  gem 'minitest', '~> 4.0'
   gem 'simplecov', '~> 0.6', :require=>false
   gem 'turn', '~> 0.9', :require => false
   gem 'fakeweb', '~> 1.3'
