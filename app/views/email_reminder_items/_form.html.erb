@@ -12,8 +12,17 @@
 
   <%- @email_reminder_item.class.configuration_labels.keys.sort.each do |key| %>
   <div class="field">
-    <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label><br/>
-    <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
+    <%- case @email_reminder_item.class.configuration_types[key] %>
+      <%- when :integer, :positive_integer %>
+        <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label><br/>
+        <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
+      <%- when :boolean %>
+        <input type="checkbox" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="1" <%- if @email_reminder_item.configuration[key] %>checked="checked"<%- end %>/>
+        <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label>
+      <%- else %>
+        <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label><br/>
+        <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
+    <%- end %>
   </div>
   <%- end %>
 

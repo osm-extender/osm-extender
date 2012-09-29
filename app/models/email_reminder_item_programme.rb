@@ -72,7 +72,7 @@ class EmailReminderItemProgramme < EmailReminderItem
 
   def self.configuration_types
     {
-      :the_next_n_weeks => Fixnum,
+      :the_next_n_weeks => :positive_integer,
     }
   end
 
