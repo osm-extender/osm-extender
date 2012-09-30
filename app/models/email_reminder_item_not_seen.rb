@@ -51,7 +51,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
   def self.configuration_types
     {
-      :the_last_n_weeks => Fixnum,
+      :the_last_n_weeks => :positive_integer,
     }
   end
 

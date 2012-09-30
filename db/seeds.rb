@@ -35,6 +35,7 @@ unless User.where(['id = ?', 1]).size == 1
     u.can_administer_settings = true
     u.can_view_statistics = true
     u.can_administer_announcements = true
+    u.can_administer_delayed_job = true
   end
   puts
 end
@@ -252,6 +253,14 @@ config = [
     :prompt => 'For how long should the settings read from the database be used without being reloaded',
     :key => 'maximum settings age',
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",
+  },{
+    :prompt => 'Who is hosting this instance of OSMX',
+    :key => 'hosted by - name',
+    :description => "The name displayed in the banner for who is hosting this instance of OSMX (Leave blank to not have the Hosted by text)",
+  },{
+    :prompt => 'Where should the hosted by link go to',
+    :key => 'hosted by - link',
+    :description => "What url should the Hosted by text link to (leave blank for no link)",
   }
 ]
 config.each do |setting|

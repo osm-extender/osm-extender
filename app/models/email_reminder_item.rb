@@ -71,11 +71,11 @@ class EmailReminderItem < ActiveRecord::Base
 
   def configuration=(config)
     conversion_functions = {
-      Fixnum => Proc.new { |value| value.to_i },
-      Float => Proc.new { |value| value.to_f },
-      String => Proc.new { |value| value.to_s },
-      Symbol => Proc.new { |value| value.to_sym },
-      :boolean => Proc.new { |value| value.is_a?(String) ? ['1', 'yes', 'true'].include?(value.downcase) : !!value }
+      :integer => Proc.new { |value| value.to_i },
+      :positive_integer => Proc.new { |value| value.to_i.magnitude },
+      :boolean => Proc.new { |value| value.is_a?(String) ? value.eql?('1') : !!value },
+      :string => Proc.new { |value| value.to_s },
+      :symbol => Proc.new { |value| value.to_sym },
     }
     default = self.class.default_configuration
 

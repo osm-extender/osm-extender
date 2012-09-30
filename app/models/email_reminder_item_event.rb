@@ -51,7 +51,7 @@ class EmailReminderItemEvent < EmailReminderItem
 
   def self.configuration_types
     {
-      :the_next_n_months => Fixnum,
+      :the_next_n_months => :positive_integer,
     }
   end
 

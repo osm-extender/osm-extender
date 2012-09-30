@@ -61,8 +61,8 @@ class EmailReminderItemBirthday < EmailReminderItem
 
   def self.configuration_types
     {
-      :the_next_n_months => Fixnum,
-      :the_last_n_months => Fixnum,
+      :the_next_n_months => :positive_integer,
+      :the_last_n_months => :positive_integer,
     }
   end
 

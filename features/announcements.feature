@@ -78,6 +78,7 @@ Feature: Site Announcements
         And "alice@example.com" should receive no email with subject /Announcement/
         And "bob@example.com" should receive no email with subject /Announcement/
 
+    @send_email
     Scenario: Create announcement (emailing users)
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Administer announcements"

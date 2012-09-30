@@ -197,7 +197,7 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Due badges" row
-        And I fill in "Show stock level of badges?" with "yes"
+        And I check "Show stock level of badges?"
         And I press "Update due badges item"
         Then I should see "Item was successfully updated"
         And I should see "With badge stock levels." in the "Configuration" column of the "Due badges" row

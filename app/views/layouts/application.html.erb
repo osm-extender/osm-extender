@@ -61,7 +61,15 @@
         <%= image_tag 'banner.png', :width => 750, :height => 130, :alt=>'Banner image for OSMExtender' %>
         <div>
           <div style="float: left;">Adding functionallity to the <a href="https://www.onlinescoutmanager.co.uk" target="_blank">Online Scout Manager</a></div>
-          <div style="float: right;">Hosted by <a href="https://www.aberdeen-sas.org.uk" target="_blank">Aberdeen Scout Active Support</a></div>
+          <%- unless Settings.read('hosted by - name').blank? %>
+            <div style="float: right;">
+              <%- unless Settings.read('hosted by - link').blank? %>
+                Hosted by <%= link_to Settings.read('hosted by - name'), Settings.read('hosted by - link') %>
+              <%- else %>
+                Hosted by <%= Settings.read('hosted by - name') %>
+              <%- end %>
+            </div>
+          <%- end %>
           <div style="clear: both;"></div>
         </div>
       </div><!-- banner -->
@@ -96,6 +104,7 @@
               <%- if can?(:administer, Faq) %><div class="menu_item"><%= link_to('Administer FAQs', faqs_path) %></div><%- end %>
               <%- if can?(:administer, Announcement) %><div class="menu_item"><%= link_to('Administer announcements', announcements_path) %></div><%- end %>
               <%- if can?(:update, Settings) %><div class="menu_item"><%= link_to('Administer settings', edit_settings_path) %></div><%- end %>
+              <%- if current_user.can_administer_delayed_job? %><div class="menu_item"><%= link_to('Administer delayed job', delayed_jobs_path) %></div><%- end %>
               <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('User statistics', user_statistics_path) %></div><%- end %>
               <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('Reminder email statistics', email_reminders_statistics_path) %></div><%- end %>
             </div><!-- secondary_menu_admin -->
