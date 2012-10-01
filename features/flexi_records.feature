@@ -30,12 +30,13 @@ Feature: Flexi Records
 	Given an OSM request to get_flexi_record_fields for section "1" flexi "101" will have the fields
 	    | id         | name       |
 	    | firstname  | First name |
-	    | lastname   | last name  |
+	    | lastname   | Last name  |
 	    | f_01       | Custom 1   |
 	    | f_02       | Custom 2   |
 	And an OSM request to get_flexi_record_data for section "1" flexi "101" term "1" will have the data
 	    | firstname | lastname | f_01 | f_02 |
-	    | John      | Smith    | A    | B    |
+	    | John      | Smith    | A    | 1    |
+	    | Jane      | Doe      | xA   | 2    |
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |
@@ -50,7 +51,9 @@ Feature: Flexi Records
         And I should see "Custom 2"
 	And I should see "Smith" in the "Last name" column of the "John" row
 	And I should see "A" in the "Custom 1" column of the "John" row
-	And I should see "B" in the "Custom 2" column of the "John" row
+	And I should see "1" in the "Custom 2" column of the "John" row
+	And I should see "xA" in the "Custom 1" column of the "Jane" row
+	And I should see "2" in the "Custom 2" column of the "Jane" row
 
 
     Scenario: Show flexi records (not signed in)

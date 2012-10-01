@@ -36,8 +36,26 @@ class OsmFlexiRecordsController < ApplicationController
     render_not_found(nil) if @record.nil? # Record isn't accessible by this user
 
     @fields = current_user.osm_api.get_flexi_record_fields(@role.section, @record.id)
+    @field_order = []
+    @field_order = @fields.map{ |field| field.id }
+
+
+    # Get Totals & Counts
+    @total_count_fields = @field_order.select{ |field| field.match(/\Af_\d+\Z/) || ['total'].include?(field) }
+    @totals = {}
+    @counts = {}
+    @total_count_fields.each do |field|
+      @totals[field] = 0
+      @counts[field] = 0
+    end
+
     @records = current_user.osm_api.get_flexi_record_data(@role.section, @record.id)
-    @field_order = @fields.map{ |field| field.id}
+    @records.each do |record|
+      @total_count_fields.each do |field|
+        @totals[field] += record.fields[field].to_i
+        @counts[field] += 1 unless (record.fields[field].blank? || record.fields[field][0].eql?('x'))
+      end
+    end
 
   end
 
