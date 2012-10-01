@@ -110,11 +110,11 @@ Feature: OSM
     Scenario: Message but no links for non connected user
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should see "Email reminders"
+	And I should not see "Email lists"
 	And I should see "links to more things you can do will appear here"
 	And I should not see "Map members"
 	And I should not see "Programme review"
 	And I should not see "Programme wizard"
-	And I should not see "Email lists"
 	And I should not see "OSM permissions"
 
     Scenario: Links for connected user
@@ -142,10 +142,10 @@ Feature: OSM
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should see "Some items have hidden from this menu"
 	And I should see "Email reminders"
+	And I should see "Email lists"
+	And I should see "OSM permissions"
 	And I should not see "Programme review"
 	And I should not see "Programme wizard"
-	And I should not see "Email lists"
-	And I should see "OSM permissions"
 
 
     Scenario: No message and selected links for non youth section

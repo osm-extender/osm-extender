@@ -5,7 +5,7 @@ class MapMembersController < ApplicationController
 
 
   def page
-    @groupings = get_groupings
+    @groupings = get_current_section_groupings
     @pin_colours = %w{Red Green Blue Yellow Brown Orange Purple White Grey Black}
   end
 
@@ -23,7 +23,7 @@ class MapMembersController < ApplicationController
 
     render :json => {
       :members => members,
-      :groupings => get_groupings.invert
+      :groupings => get_current_section_groupings.invert
     }
   end
 

@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :current_role, :current_section, :current_announcements, :has_osm_permission?
+  helper_method :current_role, :current_section, :current_announcements, :has_osm_permission?, :get_section_names, :get_grouping_name
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -150,12 +150,39 @@ class ApplicationController < ActionController::Base
     @current_announcements ||= (current_user ? current_user.current_announcements : Announcement.are_current.are_public)
   end
 
-  def get_groupings
+  def get_current_section_groupings
     groupings = {}
     current_user.osm_api.get_groupings(current_section).each do |grouping|
       groupings[grouping.name] = grouping.id
     end
     return groupings
+  end
+
+  def get_all_groupings
+    groupings = {}
+    current_user.osm_api.get_roles.each do |role|
+      groupings[role.section.id] = {}
+      current_user.osm_api.get_groupings(role.section.id).each do |grouping|
+        groupings[role.section.id][grouping.name] = grouping.id
+      end
+    end
+    return groupings
+  end
+
+  def get_section_names
+    current_user.osm_api.get_roles.inject({}){ |hash, role| hash[role.section.id] = role.long_name ; hash }
+  end
+
+  # Get the grouping name (e.g. patrol) for a given section type
+  # @param type the type of section (:beavers, :cubs ...)
+  # @returns a string
+  def get_grouping_name(type)
+    {
+      :beavers=>'lodge',
+      :cubs=>'six',
+      :scouts=>'patrol',
+      :adults=>'section'
+    }[type] || 'grouping'
   end
 
 end

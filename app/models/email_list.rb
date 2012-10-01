@@ -1,5 +1,5 @@
 class EmailList < ActiveRecord::Base
-  attr_accessible :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping
+  attr_accessible :user, :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping
 
   belongs_to :user
 
@@ -21,8 +21,8 @@ class EmailList < ActiveRecord::Base
 
 
   def get_list
-    @emails = Array.new
-    @no_emails = Array.new
+    emails = Array.new
+    no_emails = Array.new
 
     members = user.osm_api.get_members(section_id)
     members.each do |member|
@@ -32,17 +32,17 @@ class EmailList < ActiveRecord::Base
           email = member.send(emailN)
           if self.send(emailN) && !email.blank?
           #  collecting this email?  not blank
-            @emails.push email unless @emails.include?(email)
+            emails.push email unless emails.include?(email)
             added_address_for_member = true
           end
         end
-        @no_emails.push member unless added_address_for_member
+        no_emails.push member.name unless added_address_for_member
       end
     end
 
     return {
-      :emails => @emails,
-      :no_emails => @no_emails
+      :emails => emails,
+      :no_emails => no_emails
     }
   end
 

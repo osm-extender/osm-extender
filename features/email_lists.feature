@@ -27,8 +27,8 @@ Feature: Email Lists
 	    | grouping_id | name |
 	    | 1           | A    |
 	    | 2           | B    |
-	And an OSM request to "get roles" will give 1 role
-	And an OSM request to get sections will give 1 section
+	And an OSM request to "get roles" will give 1 roles
+	And an OSM request to get sections will give 1 sections
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
@@ -124,14 +124,6 @@ Feature: Email Lists
 	Then I should see "You must be signed in"
 	And I should be on the signin page
 
-    Scenario: Get list of addresses (incorrect OSM permission)
-	Given an OSM request to get_api_access for section "1" will have the permissions
-	    | permission | granted |
-	    | member     | none    |
-        When I signin as "alice@example.com" with password "P@55word"
-	And I go to the email_lists page
-	Then I should see "You do not have the correct OSM permissions"
-	And I should be on the osm_permissions page
 
 
     Scenario: Save a search
@@ -161,7 +153,7 @@ Feature: Email Lists
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the email_lists page
         Then I should see "Test list"
-        And I should not see "Test list 2"
+        And I should see "Test list 2"
         And I should not see "Test list 3"
 
     Scenario: Edit a saved search
@@ -176,3 +168,26 @@ Feature: Email Lists
 	And I should be on the email_lists page
 	When I follow "[Edit]" in the "Actions" column of the "Test list" row
 	Then the "email_list[email1]" checkbox should not be checked
+
+
+    Scenario: View multiple saved searches
+	Given "alice@example.com" has a saved email list "Test list" for section "1"
+	And "alice@example.com" has a saved email list "Test list 2" for section "1"
+	And "alice@example.com" has a saved email list "Test list 3" for section "1"
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the email_lists page
+	And I check "email_list_1_selected"
+	And I check "email_list_2_selected"
+	And I press "Get addresses"
+
+	Then I should see "Test list"
+	And I should see "Test list 2"
+	And I should not see "Test list 3"
+        And I should see "a1@example.com"
+        And I should see "a2@example.com"
+        And I should see "a3@example.com"
+        And I should see "a4@example.com"
+        And I should see "b1@example.com"
+        And I should see "b2@example.com"
+        And I should see "b3@example.com"
+        And I should see "b4@example.com"
