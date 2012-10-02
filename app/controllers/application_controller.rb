@@ -134,6 +134,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
   def set_current_role(role)
     raise ArgumentError unless role.is_a?(Osm::Role)
     session[:current_role] = role
@@ -150,28 +151,32 @@ class ApplicationController < ActionController::Base
     @current_announcements ||= (current_user ? current_user.current_announcements : Announcement.are_current.are_public)
   end
 
+
   def get_current_section_groupings
-    groupings = {}
+    return @groupings unless @groupings.nil?
+    @groupings = {}
     current_user.osm_api.get_groupings(current_section).each do |grouping|
-      groupings[grouping.name] = grouping.id
+      @groupings[grouping.name] = grouping.id
     end
-    return groupings
+    return @groupings
   end
 
   def get_all_groupings
-    groupings = {}
+    return @groupings unless @groupings.nil?
+    @groupings = {}
     current_user.osm_api.get_roles.each do |role|
-      groupings[role.section.id] = {}
+      @groupings[role.section.id] = {}
       current_user.osm_api.get_groupings(role.section.id).each do |grouping|
-        groupings[role.section.id][grouping.name] = grouping.id
+        @groupings[role.section.id][grouping.name] = grouping.id
       end
     end
-    return groupings
+    return @groupings
   end
 
   def get_section_names
-    current_user.osm_api.get_roles.inject({}){ |hash, role| hash[role.section.id] = role.long_name ; hash }
+    @section_names ||= current_user.osm_api.get_roles.inject({}){ |hash, role| hash[role.section.id] = role.long_name ; hash }
   end
+
 
   # Get the grouping name (e.g. patrol) for a given section type
   # @param type the type of section (:beavers, :cubs ...)
