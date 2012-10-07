@@ -115,11 +115,13 @@ class EmailListsController < ApplicationController
     }
 
     @emails = []
+    @no_emails = {}
     @email_lists.each do |list|
       addresses = list.get_list
       addresses[:emails].each do |address|
         @emails.push address unless @emails.include?(address)
       end
+      @no_emails[list.id] = addresses[:no_emails]
     end
 
     @section_names = get_section_names

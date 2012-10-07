@@ -5,12 +5,20 @@
     <tr>
       <th>Section</th>
       <th>Name</th>
+      <th>No address for</th>
     </tr>
   
     <% @email_lists.each do |email_list| %>
       <tr>
         <td><%= @section_names[email_list.section_id] %></td>
         <td><%= email_list.name %></td>
+        <td>
+          <ul>
+            <%- @no_emails[email_list.id].each do |name| %>
+              <li><%= name %></li>
+            <%- end %>
+          </ul>
+        </td>
       </tr>
     <%- end %>
   </table>
