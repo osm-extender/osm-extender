@@ -13,7 +13,7 @@
   <p>The following members matched the selection criteria but had no email addresses to put in the list:</p>
   <ul>
     <%- @lists[:no_emails].each do |member| %>
-      <li><%= member.name %></li>
+      <li><%= member %></li>
     <%- end %>
   </ul>
 <%- end %>

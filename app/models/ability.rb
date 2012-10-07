@@ -44,7 +44,7 @@ class Ability
       end
 
       can [:create, :preview], EmailList
-      can [:administer, :get_addresses], EmailList do |list|
+      can [:administer, :get_addresses, :multiple], EmailList do |list|
         list.user == user
       end
 

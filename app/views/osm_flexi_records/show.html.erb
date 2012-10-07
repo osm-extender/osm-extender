@@ -5,7 +5,9 @@
   <thead>
     <tr class="row_head">
       <%- @fields.each do |field| %>
-        <th class="cell_<%= field.id %> cell_head"><%= field.name %></th>
+        <%- if @field_order.include?(field.id) %>
+          <th class="cell_<%= field.id %> field_head"><%= field.name %></th>
+        <%- end %>
       <%- end %>
     </tr>
   </thead>
@@ -13,10 +15,22 @@
     <%- @records.each do |record| %>
       <tr class="row_data">
         <%- @field_order.each do |field| %>
-          <td class="cell_<%= field %> cell_data"><%= record.fields[field] %></td>
+          <td class="cell_<%= field %> field_data"><%= record.fields[field] %></td>
         <%- end %>
       </tr>
     <%- end %>
+    <tr class="row_total">
+      <td class="label" colspan="<%= @field_order.size - @totals.size %>" style="text-align: right;">Total:</td>
+      <%- @total_count_fields.each do |field| %>
+        <td class="cell_<%= field %> field_total"><%= @totals[field] %></td>
+      <%- end %>
+    </tr>
+    <tr class="row_count">
+      <td class="label" colspan="<%= @field_order.size - @totals.size %>" style="text-align: right;">Count:</td>
+      <%- @total_count_fields.each do |field| %>
+        <td class="cell_<%= field %> field_count""><%= @counts[field] %></td>
+      <%- end %>
+    </tr>
   </tbody>
 </table>
 

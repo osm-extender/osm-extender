@@ -16,8 +16,7 @@ gem 'jquery-ui-rails', '~> 2.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '= 0.0.25'                 # For using the OSM API
-gem 'httparty', '~> 0.9'  # Used by OSM::API to make requests, NEED TO FIX THE GEM !!
+gem 'osm', '= 0.0.26'                 # For using the OSM API
 gem 'recaptcha', '~> 0.3'
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)

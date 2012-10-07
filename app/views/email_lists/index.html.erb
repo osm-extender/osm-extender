@@ -2,23 +2,34 @@
 
 <%- unless @email_lists.empty? %>
   <h2>Saved Lists</h2>
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Actions</th>
-    </tr>
-  
-  <% @email_lists.each do |email_list| %>
-    <tr>
-      <td><%= email_list.name %></td>
-      <td>
-        <%= link_to '[Get addresses]', email_list_addresses_path(email_list) %>
-        <%= link_to '[Edit]', edit_email_list_path(email_list) %>
-        <%= link_to '[Destroy]', email_list, data: {:confirm => 'Are you sure?'}, method: :delete %>
-      </td>
-    </tr>
-  <% end %>
-  </table>
+  <%= form_tag multiple_email_list_path do %>
+    <table>
+      <tr>
+        <th><%= check_box_tag :select_all, 1, false, :title => '(Un)Select all' %></th>
+        <th>Section</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    
+      <% @email_lists.each do |email_list| %>
+        <tr>
+          <td><%= check_box_tag "email_list[#{email_list.id}][selected]", 1, false, :class => 'select_email_list' %></td>
+          <td><%= @section_names[email_list.section_id] %></td>
+          <td><%= email_list.name %></td>
+          <td>
+            <%= link_to '[Get addresses]', email_list_addresses_path(email_list) %>
+            <%= link_to '[Edit]', edit_email_list_path(email_list) %>
+            <%= link_to '[Destroy]', email_list, data: {:confirm => 'Are you sure?'}, method: :delete %>
+          </td>
+        </tr>
+      <%- end %>
+    </table>
+
+    <div style="text-align: center;">
+      With all selected lists:
+      <%= submit_tag "Get addresses" %>
+    </div>
+  <%- end %>
 <%- end %>
 
 

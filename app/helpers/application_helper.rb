@@ -60,17 +60,6 @@ module ApplicationHelper
     link_to title, params.merge({:sort_column => column, :sort_direction => direction, :page => nil}), {:class => css_class}
   end
 
-  # Get the grouping name (e.g. patrol) for a given section type
-  # @param type the type of section (:beavers, :cubs ...)
-  # @returns a string
-  def get_grouping_name(type)
-    {
-      :beavers=>'lodge',
-      :cubs=>'six',
-      :scouts=>'patrol',
-      :adults=>'section'
-    }[type] || 'grouping'
-  end
 
   def div_for_password_strength_meter
     %q{<div id="password_strength_meter" style="display: inline-block; min-width: 215px; font-weight: bold; color: black; background-color: #7777ff;">No password!</div>}.html_safe

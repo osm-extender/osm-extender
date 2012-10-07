@@ -11,8 +11,8 @@ You asked for these email addresses<ul>
 For members who
 <%= @email_list.match_type ? 'are' : 'are not' %>
 in the
-<%- @groupings.merge({'Any'=>0}).each_key do |key| %>
-  <%= key.downcase if @groupings[key].to_i == @email_list.match_grouping %>
+<%- @groupings[@email_list.section_id].merge({'Any'=>0}).each do |key, value| %>
+  <%= key.downcase if value.to_i == @email_list.match_grouping %>
 <%- end %>
 <%= get_grouping_name(current_section.type) %>.
 

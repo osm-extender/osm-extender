@@ -1,0 +1,35 @@
+<% provide :title, 'Addresses for multiple lists' %>
+
+<h2>Lists used</h2>
+  <table>
+    <tr>
+      <th>Section</th>
+      <th>Name</th>
+      <th>No address for</th>
+    </tr>
+  
+    <% @email_lists.each do |email_list| %>
+      <tr>
+        <td><%= @section_names[email_list.section_id] %></td>
+        <td><%= email_list.name %></td>
+        <td>
+          <ul>
+            <%- @no_emails[email_list.id].each do |name| %>
+              <li><%= name %></li>
+            <%- end %>
+          </ul>
+        </td>
+      </tr>
+    <%- end %>
+  </table>
+
+
+<h2>List of Addresses</h2>
+<%- unless @emails.empty? %>
+  <p>Your list of email addresses appears below.</p>
+<div style="border-style: solid; border-color: black; border-width: 2px; width: 50%; margin-left: auto; margin-right: auto;"><pre>
+<%= @emails.join(",\n") %>
+</pre></div>
+<%- else %>
+  <p>No email addresses could be retrieved, either no members matched the selection criteria or those who did didn't have any of the selected email addresses.</p>
+<%- end %>

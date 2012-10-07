@@ -22,6 +22,7 @@ OSMExtender::Application.routes.draw do
 
   post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
   get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'
+  post 'email_lists/multiple' => 'email_lists#multiple', :as => 'multiple_email_list'
   resources :email_lists
 
   match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
