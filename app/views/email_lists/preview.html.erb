@@ -18,7 +18,7 @@ in the
 
 <h2>Save List</h2>
 <%= form_for @email_list, :validate=>true do |f| %>
-  <%- [:email1, :email2, :email3, :email4, :match_type, :match_grouping].each do |key| %>
+  <%- [:email1, :email2, :email3, :email4, :match_type, :match_grouping, :section_id].each do |key| %>
     <%= f.hidden_field key %>
   <%- end %>
 
