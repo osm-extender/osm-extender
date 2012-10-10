@@ -17,7 +17,7 @@ class EmailRemindersController < ApplicationController
   end
 
   def new
-    @email_reminder = current_user.email_reminders.new
+    @email_reminder = current_user.email_reminders.new(:section_id => current_section.id)
   end
 
   def edit
@@ -26,7 +26,7 @@ class EmailRemindersController < ApplicationController
   end
 
   def create
-    @email_reminder = current_user.email_reminders.new(params[:email_reminder].merge({:section_id=>current_section.id}))
+    @email_reminder = current_user.email_reminders.new(params[:email_reminder])
 
     if @email_reminder.save
       flash[:instruction] = 'You must now add some items to your reminder.'
