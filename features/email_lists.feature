@@ -14,6 +14,8 @@ Feature: Email Lists
 	    | alice@example.com | Alice |
         And "alice@example.com" is an activated user account
 	And "alice@example.com" is connected to OSM
+	And an OSM request to "get roles" will give 2 roles
+	And an OSM request to get sections will give 2 sections
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |
@@ -23,13 +25,21 @@ Feature: Email Lists
 	    | B          | Member    | b1@example.com | b2@example.com | b3@example.com | b4@example.com | 2           |
 	    | C          | Member    |                |                |                |                | 1           |
 	    | A2         | Member    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
+	And an OSM request to get members for section 2 in term 2 will have the members
+	    | first_name | last_name | email1         | email2         | email3         | email4         | grouping_id |
+	    | A          | Member    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 21          |
 	And an OSM request to get groupings for section 1 will have the groupings
 	    | grouping_id | name |
 	    | 1           | A    |
 	    | 2           | B    |
-	And an OSM request to "get roles" will give 1 roles
-	And an OSM request to get sections will give 1 sections
+	And an OSM request to get groupings for section 2 will have the groupings
+	    | grouping_id | name |
+	    | 21          | 2A   |
+	    | 22          | 2B   |
 	And an OSM request to get_api_access for section "1" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+	And an OSM request to get_api_access for section "2" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
 
@@ -127,14 +137,19 @@ Feature: Email Lists
 
 
     Scenario: Save a search
+	Given an OSM request to get terms for section 2 will have the term
+	    | term_id | name   |
+	    | 2       | Term 2 |
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the email_lists page
+	And I select "Section 2" from "email_list[section_id]"
         And I check "email_list[email1]"
         And I press "Get addresses"
 	And I fill in "Name" with "Test list"
 	And I press "Save this list"
 	Then I should see "Email list was successfully saved"
 	And I should be on the email_lists page
+	And I should see "Section 2" in the "Section" column of the "Test list" row
 
     Scenario: Run a saved search
 	Given "alice@example.com" has a saved email list "Test list" for section "1"

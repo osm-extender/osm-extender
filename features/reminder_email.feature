@@ -40,6 +40,27 @@ Feature: Reminder Email
 	And I should see "This email reminder has no items yet"
         And "alice@example.com" should have 1 email reminder
 
+    Scenario: Add reminder email (not the current section)
+	Given an OSM request to "get roles" will give 2 roles
+	And an OSM request to get_api_access for section "2" will have the permissions
+	    | permission | granted |
+	    | member     | read    |
+	    | programme  | read    |
+	    | register   | read    |
+	    | badge      | read    |
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "Email reminders"
+        And I follow "New reminder"
+	And I select "Section 2 (1st Somewhere)" from "Section"
+        And I select "Tuesday" from "Send on"
+        And I press "Create Email reminder"
+        Then I should see "successfully created"
+	And "Section 2 (1st Somewhere)" should be selected for "Section"
+	And I should see "now add some items to your reminder"
+        And I should see "Tuesday"
+	And I should see "This email reminder has no items yet"
+        And "alice@example.com" should have 1 email reminder
+
     Scenario: Should see only own reminders
         Given I have the following user records
 	    | email_address     | name  |

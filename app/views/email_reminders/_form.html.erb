@@ -12,6 +12,11 @@
   <% end %>
 
   <div class="field">
+    <%= f.label :section_id, 'Section' %><br />
+    <%= f.select :section_id, get_section_names.invert %>
+  </div>
+
+  <div class="field">
     <%= f.label :send_on %><br />
     <select id="email_reminder_send_on" name="email_reminder[send_on]">
       <option value="0"<%- if @email_reminder.send_on == 0 %> selected<%- end %>>Sunday</option>
@@ -23,6 +28,7 @@
       <option value="6"<%- if @email_reminder.send_on == 6 %> selected<%- end %>>Saturday</option>
     </select>
   </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>
