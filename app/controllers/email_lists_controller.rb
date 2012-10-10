@@ -28,7 +28,7 @@ class EmailListsController < ApplicationController
   end
 
   def create
-    @email_list = current_user.email_lists.new(clean_params(params[:email_list]).merge({:section_id=>current_section.id}))
+    @email_list = current_user.email_lists.new(clean_params(params[:email_list]))
 
     if @email_list.save
       redirect_to email_lists_url, notice: 'Email list was successfully saved.'
@@ -62,7 +62,7 @@ class EmailListsController < ApplicationController
   def preview
     @params = params
     @groupings = get_all_groupings
-    @email_list = current_user.email_lists.new(clean_params(params[:email_list]).merge({:section_id=>current_section.id}))
+    @email_list = current_user.email_lists.new(clean_params(params[:email_list]))
     @lists = @email_list.get_list
   end
 
