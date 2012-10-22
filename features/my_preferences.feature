@@ -25,12 +25,12 @@ Feature: My Preferences
     Scenario: Setting start up section
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should be on the my_page page
-        And I should see "Current section: Section 1"
+        And I should see "Current section: Section 1 (1st Somewhere)"
 
-        When I select "Section 2" from "Startup section"
+        When I select "1st Somewhere : Section 2" from "Startup section"
         And I press "Save preferences"
         Then I should see "Your preferences were updated."
         
         When I signout
         And I signin as "alice@example.com" with password "P@55word"
-        Then I should see "Current section: Section 2"
+        Then I should see "Current section: Section 2 (1st Somewhere)"

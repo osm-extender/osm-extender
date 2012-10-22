@@ -77,11 +77,11 @@
       <div id="secondary_menu">
         <%- if current_user && !content_for?(:hide_secondary_menu) %>
           <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
-          <%- if current_user.connected_to_osm? && current_role %>
+          <%- if current_user.connected_to_osm? && current_section %>
             <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
             <div id="current_section">
-              Current section: <%= current_role.long_name %>
+              Current section: <%= "#{current_section.name} (#{current_section.group_name})" %>
             </div>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :flexi) %><div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div><%- end %>

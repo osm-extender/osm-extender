@@ -4,8 +4,8 @@ class EmailReminderItemNotSeen < EmailReminderItem
     earliest = configuration[:the_last_n_weeks].weeks.ago.to_date
 
     api = user.osm_api
-    register_structure = api.get_register_structure(section_id)
-    register = api.get_register_data(section_id)
+    register_structure = Osm::Register.get_structure(api, section_id)
+    register = Osm::Register.get_attendance(api, section_id)
 
     dates_to_check = []
     register_structure.each do |row|

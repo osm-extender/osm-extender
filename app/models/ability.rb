@@ -51,8 +51,8 @@ class Ability
       can [:destroy, :destroy_multiple], ProgrammeReviewBalancedCache do |item|
         result = false
         if user.connected_to_osm?
-          user.osm_api.get_roles.each do |role|
-            result = true if (role.section.id == item.section_id)
+          Osm::Section.get_all(user.osm_api).each do |section|
+            result = true if (section.id == item.section_id)
           end
         end
         result

@@ -65,11 +65,10 @@ class User < ActiveRecord::Base
   end
 
   def connect_to_osm(email, password)
-    api = Osm::Api.new
-    result = api.authorize(email, password)
+    result = Osm::Api.authorize(email, password)
 
-    write_attribute(:osm_userid, result['userid'])
-    write_attribute(:osm_secret, result['secret'])
+    write_attribute(:osm_userid, result[:user_id])
+    write_attribute(:osm_secret, result[:secret])
     return save
   end
 

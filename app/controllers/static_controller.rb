@@ -9,10 +9,8 @@ class StaticController < ApplicationController
 
   def my_page
     if current_user.connected_to_osm?
-      roles = current_user.osm_api.get_roles.sort
-      @sections = roles.inject([]) do |new_array, role|
-        new_array.push ({:id => role.section.id, :name => role.long_name})
-        new_array
+      @sections = Osm::Section.get_all(current_user.osm_api).sort.map do |section|
+        {:id => section.id, :name => "#{section.group_name} : #{section.name}"}
       end
     else
       @sections = []
@@ -22,13 +20,14 @@ class StaticController < ApplicationController
 
 
   def osm_permissions
-    @osmx_permissions = Hash.new
-    @other_roles = Array.new
-    current_user.osm_api.get_roles.each do |role|
-      @other_roles.push role unless role == current_role
-      @osmx_permissions[role.section.id] = current_user.osm_api.get_our_api_access(role.section, {:no_cache => true})
+    api = current_user.osm_api
+    Osm::Model.cache_delete(api, ['permissions', api.user_id]) # Clear cached user permissions
+
+    @other_sections = Array.new
+    Osm::Section.get_all(api, :no_cache => true).each do |section|
+      @other_sections.push section unless section == current_section
     end
-    @other_roles.sort!
+    @other_sections.sort!
   end
 
 end

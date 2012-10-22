@@ -109,7 +109,7 @@ class ProgrammeReview
     earliest = Date.today
     latest = Date.today
 
-    get_terms.each do |term|
+    Osm::Term.get_for_section(@user.osm_api, @section.id).each do |term|
       next if term.before?(start) || term.after?(finish)
       earliest = term.start if term.start < earliest
       latest = term.finish if term.finish > latest
@@ -192,15 +192,6 @@ class ProgrammeReview
 
 
   private
-  def get_terms
-    terms = []
-    @user.osm_api.get_terms.each do |term|
-      terms.push term if term.section_id == @section.id
-    end
-    return terms
-  end
-
-
   def tags_in_array(tags, array)
     tags_in_array_r = []
 
@@ -250,7 +241,7 @@ class ProgrammeReview
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
 
-    @user.osm_api.get_programme(term.section_id, term, {:no_cache => true}).each do |programme|
+    Osm::Evening.get_programme(@user.osm_api, @section.id, term, {:no_cache => true}).each do |programme|
       date_key = programme.meeting_date.strftime('%Y_%m')
       zones[:number][date_key] = blank_hash_for(@@zones) if zones[:number][date_key].nil?
       zones[:time][date_key] = blank_hash_for(@@zones) if zones[:time][date_key].nil?
@@ -258,7 +249,7 @@ class ProgrammeReview
       methods[:time][date_key] = blank_hash_for(@@methods) if methods[:time][date_key].nil?
 
       programme.activities.each do |activity|
-        activity_details = @user.osm_api.get_activity(activity.activity_id, nil, {:no_cache => true})
+        activity_details = Osm::Activity.get(@user.osm_api, activity.activity_id, nil, {:no_cache => true})
         unless activity_details.nil?
           tags_in_array(activity_details.tags, @@zones[@section.type]).each do |tag|
             zone_or_method = tag[0]

@@ -95,11 +95,11 @@ class EmailListsController < ApplicationController
   def get_sections_data
     data = {}
     groupings = get_all_groupings
-    current_user.osm_api.get_roles.each do |role|
-      data[role.section.id] = {
-        'fields' => role.section.column_names.select{ |k,v| [:email1, :email2, :email3, :email4].include?(k) },
-        'grouping_name' => get_grouping_name(role.section.type),
-        'groupings' => groupings[role.section.id],
+    Osm::Section.get_all(current_user.osm_api).each do |section|
+      data[section.id] = {
+        'fields' => section.column_names.select{ |k,v| [:email1, :email2, :email3, :email4].include?(k) },
+        'grouping_name' => get_grouping_name(section.type),
+        'groupings' => groupings[section.id],
       }
     end
     return data.to_json.gsub('"', '\"').html_safe
@@ -108,9 +108,9 @@ class EmailListsController < ApplicationController
   def multiple_get_addresses(lists)
     lists = (lists || {}).select{ |k,v| v['selected'].eql?('1') }.map{ |k,v| k.to_i}
     @email_lists = current_user.email_lists.find(lists).sort{ |a, b|
-      section_a = current_user.osm_api.get_section(a.section_id)
-      section_b = current_user.osm_api.get_section(b.section_id)
-      compare = section_a.role <=> section_b.role
+      section_a = Osm::Section.get(current_user.osm_api, a.section_id)
+      section_b = Osm::Section.get(current_user.osm_api, b.section_id)
+      compare = section_a.group_name <=> section_b.group_name
       (compare == 0) ? a.name <=> b.name : compare
     }
 

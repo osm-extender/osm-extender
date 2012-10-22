@@ -58,7 +58,7 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
      permissions.push [hash['permission'], hash['granted']]
   end
 
-  body = '{"apis":[{"apiid":"' + Osm::Api.api_id + '","name":"Test API","permissions":{'
+  body = '{"apis":[{"apiid":"' + Settings.read('OSM API - id') + '","name":"Test API","permissions":{'
   permissions.each do |permission|
     permission[1] = 0 if permission[1].eql?('none')
     permission[1] = 10 if permission[1].eql?('read')
@@ -180,6 +180,26 @@ Given /^an OSM request to get events for section (\d+) will have the events$/ do
 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
 end
+
+Given /^an OSM request to get event (\d+) in section (\d+) will have the fields$/ do |event_id, section_id, table|
+  url = "events.php?action=getEvent&sectionid=#{section_id}&eventid=#{event_id}"
+
+  fields = Array.new
+  table.hashes.each_with_index do |hash, index|
+    field = {
+      'id' => hash['id'],
+      'name' => hash['label'],
+    }
+    fields.push event
+  end
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => {'config' => fields.to_json}.to_json)
+end
+
+Given /^an OSM request to get event (\d+) in section (\d+) will have no fields$/ do |event_id, section_id|
+  url = "events.php?action=getEvent&sectionid=#{section_id}&eventid=#{event_id}"
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => {'config' => [].to_json}.to_json)
+end
+
 
 Given /^an OSM request to get the register structure for term (\d+) and section (\d+) will cover the last (\d+) weeks$/ do |term_id, section_id, weeks|
   weeks = weeks.to_i

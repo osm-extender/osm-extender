@@ -5,7 +5,7 @@ class EmailReminderItemBirthday < EmailReminderItem
     earliest = configuration[:the_last_n_months].months.ago.to_date
     latest = configuration[:the_next_n_months].months.from_now.to_date
 
-    members = user.osm_api.get_members(section_id)
+    members = Osm::Member.get_for_section(user.osm_api, section_id)
     members.each do |member|
       unless member.date_of_birth.nil?
         birthday = next_birthday_for_member(member, earliest)

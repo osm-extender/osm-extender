@@ -1,7 +1,7 @@
 class EmailReminderItemNotepad < EmailReminderItem
 
   def get_data
-    return user.osm_api.get_notepad(section_id)
+    return Osm::Section.get(user.osm_api, section_id).get_notepad(user.osm_api)
   end
 
   def get_fake_data

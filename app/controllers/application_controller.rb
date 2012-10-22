@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :current_role, :current_section, :current_announcements, :has_osm_permission?, :get_section_names, :get_grouping_name
+  helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?, :api_has_osm_permission?, :get_section_names, :get_grouping_name
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -42,22 +42,47 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Check if the user has a given OSM permission
-  # if not redirect them to the osm permissions page and set an instruction flash
-  # @param permission_to the action which is being checked (:read or :write)
+  # Check if the user and API have a given OSM permission
+  # @param permission_to the action which is being checked (:read or :write), this can be an array in which case the user must be able to perform all actions to the object
   # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
-  def has_osm_permission?(permission_to, permission_on)
-    permission_on = [permission_on] unless permission_on.is_a?(Array)
-
-    permission_on.each do |on|
-      osmx_permissions = current_user.osm_api.get_our_api_access(current_section)
-      osmx_can = osmx_permissions.send("can_#{permission_to.to_s}?", on)
-      user_can = current_role.send("can_#{permission_to.to_s}?", on)
-      return false unless (osmx_can && user_can)
+  def has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
+    all_osmx_permissions = Osm::ApiAccess.get_ours(user.osm_api, current_section.id).permissions
+    all_user_permissions = Osm::Model.get_user_permissions(user.osm_api, section.id)
+    [*permission_on].each do |on|
+      osmx_permissions = (all_osmx_permissions[on] || [])
+      user_permissions = (all_user_permissions[on] || [])
+      [*permission_to].each do |to|
+        return false unless (osmx_permissions.include?(to) && user_permissions.include?(to))
+      end
     end
-
     return true
   end
+
+  # Check if the user has a given OSM permission
+  def user_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
+    all_permissions = Osm::Model.get_user_permissions(user.osm_api, section.id)
+    [*permission_on].each do |on|
+      permissions = (all_permissions[on] || [])
+      [*permission_to].each do |to|
+        return false unless permissions.include?(to)
+      end
+    end
+    return true
+  end
+
+  # Check if the API has a given OSM permission
+  def api_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
+    all_permissions = Osm::ApiAccess.get_ours(user.osm_api, section.id).permissions
+    [*permission_on].each do |on|
+      permissions = (all_permissions[on] || [])
+      [*permission_to].each do |to|
+        return false unless permissions.include?(to)
+      end
+    end
+    return true
+  end
+
+
 
   # Ensure the user has a given OSMX permission
   # if not redirect them to the osm permissions page and set an instruction flash
@@ -72,9 +97,9 @@ class ApplicationController < ActionController::Base
 
   # Ensure the current section if it is of a given type
   # if not redirect them to the relevant page and set an instruction flash
-  # @param type a string of symbol representing the type of section to require (may be :beavers, :cubs ... or :youth_section)
+  # @param type a string or symbol representing the type of section to require (may be :beavers, :cubs ... or :youth_section)
   def require_section_type(type)
-    unless current_section.send("#{type}?")
+    if current_section.nil? || !current_section.send("#{type}?")
       flash[:error] = "The current section must be a #{type} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
@@ -82,9 +107,9 @@ class ApplicationController < ActionController::Base
 
   # Forbid the current section if it is of a given type
   # if so redirect them to the relevant page and set an instruction flash
-  # @param type a string of symbol representing the type of section to forbid (may be :beavers, :cubs ... or :youth_section)
+  # @param type a string or symbol representing the type of section to forbid (may be :beavers, :cubs ... or :youth_section)
   def forbid_section_type(type)
-    if current_section.send("#{type}?")
+    if current_section.nil? || current_section.send("#{type}?")
       flash[:error] = "The current section must not be a #{type} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
@@ -136,15 +161,12 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def set_current_role(role)
-    raise ArgumentError unless role.is_a?(Osm::Role)
-    session[:current_role] = role
-  end
-  def current_role
-    session[:current_role]
+  def set_current_section(section)
+    raise ArgumentError unless section.is_a?(Osm::Section)
+    session[:current_section] = section
   end
   def current_section
-    session[:current_role].section
+    session[:current_section]
   end
 
 
@@ -154,9 +176,9 @@ class ApplicationController < ActionController::Base
 
 
   def get_current_section_groupings
-    return @groupings unless @groupings.nil?
+    return @groupings[current_section.id] unless (@groupings.nil? || @groupings[current_section.id].nil?)
     @groupings = {}
-    current_user.osm_api.get_groupings(current_section).each do |grouping|
+    Osm::Grouping.get_for_section(current_user.osm_api, current_section).each do |grouping|
       @groupings[grouping.name] = grouping.id
     end
     return @groupings
@@ -165,17 +187,18 @@ class ApplicationController < ActionController::Base
   def get_all_groupings
     return @groupings unless @groupings.nil?
     @groupings = {}
-    current_user.osm_api.get_roles.each do |role|
-      @groupings[role.section.id] = {}
-      current_user.osm_api.get_groupings(role.section.id).each do |grouping|
-        @groupings[role.section.id][grouping.name] = grouping.id
+    api = current_user.osm_api
+    Osm::Section.get_all(api).each do |section|
+      @groupings[section.id] = {}
+      Osm::Grouping.get_for_section(api, section).each do |grouping|
+        @groupings[section.id][grouping.name] = grouping.id
       end
     end
     return @groupings
   end
 
   def get_section_names
-    @section_names ||= current_user.osm_api.get_roles.inject({}){ |hash, role| hash[role.section.id] = role.long_name ; hash }
+    @section_names ||= Osm::Section.get_all(current_user.osm_api).inject({}){ |hash, section| hash[section.id] = "#{section.group_name} : #{section.name}" ; hash }
   end
 
 
