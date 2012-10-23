@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   authenticates_with_sorcery!
 
   attr_accessible :name, :email_address, :password, :password_confirmation, :startup_section
-  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :can_administer_settings, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :as => :admin
+  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_faqs, :can_administer_settings, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user, :as => :admin
 
   has_many :email_reminders, :dependent => :destroy
   has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
@@ -65,11 +65,10 @@ class User < ActiveRecord::Base
   end
 
   def connect_to_osm(email, password)
-    api = Osm::Api.new
-    result = api.authorize(email, password)
+    result = Osm::Api.authorize(email, password)
 
-    write_attribute(:osm_userid, result['userid'])
-    write_attribute(:osm_secret, result['secret'])
+    write_attribute(:osm_userid, result[:user_id])
+    write_attribute(:osm_secret, result[:secret])
     return save
   end
 

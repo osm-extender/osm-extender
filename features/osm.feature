@@ -56,10 +56,10 @@ Feature: OSM
 	    | permission | granted |
 	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
-	Then I should see "Current section: Section 1"
+	Then I should see "Current section: Section 1 (1st Somewhere)"
 	And I should see "Change Current Section"
-	When I follow "Section 2"
-	Then I should see "Current section: Section 2"
+	When I follow "1st Somewhere : Section 2"
+	Then I should see "Current section: Section 2 (1st Somewhere)"
 
     Scenario: Select between single OSM account
 	Given "alice@example.com" is connected to OSM
@@ -68,7 +68,7 @@ Feature: OSM
 	    | permission | granted |
 	    | member     | read    |
         When I signin as "alice@example.com" with password "P@55word"
-	Then I should see "Current section: Section 1"
+	Then I should see "Current section: Section 1 (1st Somewhere)"
 	And I should not see "Change Current Section"
 
 

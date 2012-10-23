@@ -36,14 +36,14 @@ class ProgrammeCreate
       dates = (programme_start.to_date..programme_end.to_date).step(programme_interval.to_i)
       dates.each do |day|
         meetings.push day
-        user.osm_api.create_evening(section.id, day)
+        Osm::Evening.create(user.osm_api, section.id, day)
       end
 
       # Find what we just added
       updated = 0
-      (user.osm_api.get_terms).each do |term|
+      Osm::Term.get_for_section(user.osm_api, section.id).each do |term|
         unless ((term.start > programme_end) || (term.finish < programme_start)) # Term may contain meetings
-          (user.osm_api.get_programme(term.section_id, term)).each do |programme|
+          Osm::Evening.get_programme(user.osm_api, term.section_id, term).each do |programme|
             if (meetings.include?(programme.meeting_date) && programme.title.eql?('Unnamed meeting') &&
                 programme.notes_for_parents.blank? && programme.games.blank? &&
                 programme.pre_notes.blank? && programme.post_notes.blank? && programme.leaders.blank? &&
@@ -52,7 +52,7 @@ class ProgrammeCreate
               programme.title = evening_title
               programme.start_time = evening_start
               programme.finish_time = evening_end
-              result = user.osm_api.update_evening(programme)
+              result = programme.update(user.osm_api)
               updated += 1
             end
           end
@@ -102,7 +102,7 @@ class ProgrammeCreate
   def terms_exist
     earliest = nil
     latest = nil
-    (user.osm_api.get_terms).sort.each do |term|
+    Osm::Term.get_for_section(user.osm_api, section.id).sort.each do |term|
       unless term.finish < programme_start || term.start > programme_end
         earliest = earliest || term.start
         latest = latest || term.finish

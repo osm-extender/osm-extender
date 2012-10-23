@@ -44,7 +44,7 @@ class EmailReminder < ActiveRecord::Base
     end
 
     if user.connected_to_osm?
-      section = user.osm_api.get_section(section_id)
+      section = Osm::Section.get(user.osm_api, section_id)
       unless section.nil?
         # We now know that the user can access this section
         begin
@@ -103,7 +103,8 @@ class EmailReminder < ActiveRecord::Base
   end
 
   def set_section_name
-    write_attribute :section_name, user.osm_api.get_section(read_attribute(:section_id)).role.long_name
+    section = Osm::Section.get(user.osm_api, read_attribute(:section_id))
+    write_attribute :section_name, "#{section.name} (#{section.group_name})"
   end
 
   def get_addresses

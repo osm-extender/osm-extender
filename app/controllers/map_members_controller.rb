@@ -13,7 +13,7 @@ class MapMembersController < ApplicationController
     address_method = ['address', 'address2'].include?(params[:address]) ? params[:address] : 'address'
     members = Array.new
 
-    current_user.osm_api.get_members(current_section).each do |member|
+    Osm::Member.get_for_section(current_user.osm_api, current_section).each do |member|
       members.push ({
         :grouping_id => member.grouping_id,
         :name => member.name,

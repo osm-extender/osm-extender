@@ -51,11 +51,11 @@ Feature: Reminder Email
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Email reminders"
         And I follow "New reminder"
-	And I select "Section 2 (1st Somewhere)" from "Section"
+	And I select "1st Somewhere : Section 2" from "Section"
         And I select "Tuesday" from "Send on"
         And I press "Create Email reminder"
         Then I should see "successfully created"
-	And "Section 2 (1st Somewhere)" should be selected for "Section"
+	And "1st Somewhere : Section 2" should be selected for "Section"
 	And I should see "now add some items to your reminder"
         And I should see "Tuesday"
 	And I should see "This email reminder has no items yet"
@@ -223,7 +223,7 @@ Feature: Reminder Email
         Then I should see "Item was successfully updated"
         And I should see "With badge stock levels." in the "Configuration" column of the "Due badges" row
 
-
+@focus
     Scenario: Preview the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
 	And an OSM request to get sections will give 1 section
@@ -238,6 +238,8 @@ Feature: Reminder Email
 	    | name    | in how many days |
 	    | Event 1 | 7                |
 	    | Event 2 | 300              |
+	And an OSM request to get event 1 in section 1 will have no fields
+	And an OSM request to get event 2 in section 1 will have no fields
 	And an OSM request to get programme for section 1 term 1 will have 2 programme items
 	And an OSM request to get activity 11 will have tags "global"
 	And an OSM request to get activity 12 will have tags "outdoors"
@@ -295,6 +297,8 @@ Feature: Reminder Email
 	    | name    | in how many days |
 	    | Event 1 | 7                |
 	    | Event 2 | 300              |
+	And an OSM request to get event 1 in section 1 will have no fields
+	And an OSM request to get event 2 in section 1 will have no fields
 	And an OSM request to get programme for section 1 term 1 will have 2 programme items
 	And an OSM request to get activity 11 will have tags "global"
 	And an OSM request to get activity 12 will have tags "outdoors"

@@ -67,6 +67,10 @@
     <%= f.check_box :can_administer_delayed_job %>
     <%= f.label :can_administer_delayed_job %>
   </div>
+  <div class="field">
+    <%= f.check_box :can_become_other_user %>
+    <%= f.label :can_become_other_user %>
+  </div>
   
   <div class="actions"><%= f.submit 'Update' %></div>
 <% end %>

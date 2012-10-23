@@ -4,22 +4,21 @@
 <ol>
   <li>Go to <a href="https://www.onlinescoutmanager.co.uk" target="_blank">https://www.onlinescoutmanager.co.uk</a> and login.</li>
   <li>Using the "Account" drop down menu choose "External Access"</li>
-  <li>Setup "<%= Osm::Api.api_name %>" to have access to your data, the list below shows what permissions are used for what as well as what permissions you have granted.
+  <li>Setup "<%= current_user.osm_api.api_name %>" to have access to your data, the list below shows what permissions are used for what as well as what permissions you have granted.
 </ol>
 
 
-<%- if @osmx_permissions && current_role %>
-  <h2>Current Section - <%= current_role.long_name %></h2>
-  <%= render 'osm_permissions', :api_perms => @osmx_permissions[current_section.id], :role => current_role %>
+<%- if current_section %>
+  <h2>Current Section - <%= "#{current_section.group_name} : #{current_section.name}" %></h2>
+  <%= render 'osm_permissions', :section => current_section %>
+<%- end %>
 
-  <%- unless @other_roles.empty? %>
+<%- unless @other_sections.empty? %>
+  <%- if current_section %>
     <h2>Other Sections</h2>
-    <%- @other_roles.each do |role| %>
-      <h3><%= role.long_name %></h3>
-      <%= render 'osm_permissions', :api_perms => @osmx_permissions[role.section.id], :role => role %>
-    <%- end %>
   <%- end %>
-
-<%- else %>
-  <p>Sorry but an error occured and the current permissions could not be retreived.</p>
+  <%- @other_sections.each do |section| %>
+    <h3><%= "#{section.group_name} : #{section.name}" %></h3>
+    <%= render 'osm_permissions', :section => section %>
+  <%- end %>
 <%- end %>

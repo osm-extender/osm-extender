@@ -51,8 +51,8 @@ class Ability
       can [:destroy, :destroy_multiple], ProgrammeReviewBalancedCache do |item|
         result = false
         if user.connected_to_osm?
-          user.osm_api.get_roles.each do |role|
-            result = true if (role.section.id == item.section_id)
+          Osm::Section.get_all(user.osm_api).each do |section|
+            result = true if (section.id == item.section_id)
           end
         end
         result
@@ -68,6 +68,9 @@ class Ability
         can :resend_activation, User do |user_being_acted_on|
           user_being_acted_on && !user_being_acted_on.activation_token.blank?
         end
+      end
+      if user.can_become_other_user?
+        can [:become], User
       end
 
       # Things FAQ administrators can do

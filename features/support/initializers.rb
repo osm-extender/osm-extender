@@ -6,12 +6,19 @@
 Before do
   Settings.setup
 
-  Osm::Api.configure(
-    :api_id     => Settings.read('OSM API - id'),
-    :api_token  => Settings.read('OSM API - token'),
-    :api_name   => Settings.read('OSM API - name'),
-    :api_site   => :scout,
-  )
+    Osm::configure(
+      :api => {
+        :default_site => :osm,
+        :osm => {
+          :id    => Settings.read('OSM API - id'),
+          :token => Settings.read('OSM API - token'),
+          :name  => Settings.read('OSM API - name'),
+        },
+      },
+      :cache => {
+        :cache          => nil,
+      },
+    )
 
   Recaptcha.configure do |config|
     config.public_key  = Settings.read('ReCAPTCHA - public key')

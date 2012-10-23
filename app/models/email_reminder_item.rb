@@ -38,6 +38,9 @@ class EmailReminderItem < ActiveRecord::Base
   def self.human_name
     raise "The self.human_name method must be overridden"
   end
+  def human_name
+    self.class.human_name
+  end
 
   def self.default_configuration
     raise "The self.default_configuration method must be overridden"

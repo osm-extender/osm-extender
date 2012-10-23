@@ -16,7 +16,7 @@
   <p>This reminder contains the following items.</p>
   <ol>
     <%- @email_reminder.items.each do |item| %>
-      <li><%= item.class.human_name %> (<%= item.human_configuration %>)</li>
+      <li><%= item.human_name %> (<%= item.human_configuration %>)</li>
     <%- end %>
   </ol>
 <%- else %>

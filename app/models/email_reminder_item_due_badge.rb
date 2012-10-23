@@ -1,9 +1,10 @@
 class EmailReminderItemDueBadge < EmailReminderItem
 
   def get_data
+    api = user.osm_api
     return {
-      :due_badges => user.osm_api.get_due_badges(section_id),
-      :badge_stock => configuration[:show_stock] ? user.osm_api.get_badge_stock_levels(section_id) : {}
+      :due_badges => Osm::DueBadges.get(api, section_id),
+      :badge_stock => configuration[:show_stock] ? Osm::Section.get(api, section_id).get_badge_stock(api) : {}
     }
   end
 

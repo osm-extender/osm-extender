@@ -24,8 +24,7 @@ class EmailList < ActiveRecord::Base
     emails = Array.new
     no_emails = Array.new
 
-    members = user.osm_api.get_members(section_id)
-    members.each do |member|
+    Osm::Member.get_for_section(user.osm_api, section_id).each do |member|
       if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
         added_address_for_member = false
         [:email1, :email2, :email3, :email4].each do |emailN|
