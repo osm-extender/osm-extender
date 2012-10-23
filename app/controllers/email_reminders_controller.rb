@@ -90,12 +90,10 @@ class EmailRemindersController < ApplicationController
   private
   def setup_tertiary_menu
     @tertiary_menu_items = nil
-    if current_user.connected_to_osm? && !current_section.waiting?
-      @tertiary_menu_items = [
-        ['List of reminders', email_reminders_path],
-        ['New reminder', new_email_reminder_path],
-      ]
-    end
+    @tertiary_menu_items = [
+      ['List of reminders', email_reminders_path],
+      ['New reminder', new_email_reminder_path],
+    ]
   end
 
   def get_available_items
