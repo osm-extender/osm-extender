@@ -46,21 +46,17 @@ class ApplicationController < ActionController::Base
   # @param permission_to the action which is being checked (:read or :write), this can be an array in which case the user must be able to perform all actions to the object
   # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
   def has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    all_osmx_permissions = Osm::ApiAccess.get_ours(user.osm_api, current_section.id).permissions
-    all_user_permissions = Osm::Model.get_user_permissions(user.osm_api, section.id)
-    [*permission_on].each do |on|
-      osmx_permissions = (all_osmx_permissions[on] || [])
-      user_permissions = (all_user_permissions[on] || [])
-      [*permission_to].each do |to|
-        return false unless (osmx_permissions.include?(to) && user_permissions.include?(to))
-      end
-    end
-    return true
+    user_can = user_has_osm_permission?(permission_to, permission_on, user, section)
+    api_can = api_has_osm_permission?(permission_to, permission_on, user, section)
+    return user_can && api_can
   end
 
   # Check if the user has a given OSM permission
   def user_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    all_permissions = Osm::Model.get_user_permissions(user.osm_api, section.id)
+    permissions_key = [user.id, section.id]
+    @user_osm_permissions ||= {}
+    @user_osm_permissions[permissions_key] ||= Osm::Model.get_user_permissions(user.osm_api, section.id)
+    all_permissions = @user_osm_permissions[permissions_key]
     [*permission_on].each do |on|
       permissions = (all_permissions[on] || [])
       [*permission_to].each do |to|
@@ -72,7 +68,10 @@ class ApplicationController < ActionController::Base
 
   # Check if the API has a given OSM permission
   def api_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    all_permissions = Osm::ApiAccess.get_ours(user.osm_api, section.id).permissions
+    permissions_key = [user.id, section.id]
+    @api_osm_permissions ||= {}
+    @api_osm_permissions[permissions_key] ||= Osm::ApiAccess.get_ours(user.osm_api, section.id).permissions
+    all_permissions = @api_osm_permissions[permissions_key]
     [*permission_on].each do |on|
       permissions = (all_permissions[on] || [])
       [*permission_to].each do |to|
@@ -176,12 +175,13 @@ class ApplicationController < ActionController::Base
 
 
   def get_current_section_groupings
-    return @groupings[current_section.id] unless (@groupings.nil? || @groupings[current_section.id].nil?)
-    @groupings = {}
+    @groupings ||= {}
+    return @groupings[current_section.id] unless @groupings[current_section.id].nil?
+    @groupings[current_section.id] = {}
     Osm::Grouping.get_for_section(current_user.osm_api, current_section).each do |grouping|
-      @groupings[grouping.name] = grouping.id
+      @groupings[current_section.id][grouping.name] = grouping.id
     end
-    return @groupings
+    return @groupings[current_section.id]
   end
 
   def get_all_groupings
