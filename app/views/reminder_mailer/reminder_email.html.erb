@@ -2,7 +2,7 @@
 
 
 <%- @data[:include_items].each do |item| %>
-  <h1><%= item[:item].class.human_name.titleize %></h1>
+  <h1><%= item[:item].human_name.titleize %></h1>
 <%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
   <hr/>
 <%- end %>
@@ -12,7 +12,7 @@
   <h1>Some Errors Occured</h1>
   <p>The following items raised errors whilst being processed:</p>
   <ul><%- @data[:error_items].each do |error| %>
-    <li><%= error[:item].class.human_name.titleize %> - <%= error[:exception].message %></li>
+    <li><%= error[:item].human_name.titleize %> - <%= error[:exception].message %></li>
   <%- end %></ul>
 <%- end %>
 
@@ -20,7 +20,7 @@
   <h1>Excluded Items</h1>
   <p>The following items were configured for this reminder but were excluded as they had no data:</p>
   <ul><%- @data[:exclude_items].each do |item| %>
-    <li><%= item.class.human_name.titleize %></li>
+    <li><%= item.human_name.titleize %></li>
   <%- end %></ul>
 <%- end %>
 

@@ -27,6 +27,6 @@
   <%- end %>
 
   <div class="actions">
-    <%= f.submit "#{@email_reminder_item.persisted? ? 'Update' : 'Create'} #{@email_reminder_item.class.human_name.downcase} item" %>
+    <%= f.submit "#{@email_reminder_item.persisted? ? 'Update' : 'Create'} #{@email_reminder_item.human_name.downcase} item" %>
   </div>
 <% end %>

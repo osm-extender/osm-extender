@@ -8,7 +8,7 @@
     <%= @share.reminder.section_name %> every <%= day_name(@share.reminder.send_on) %>:</p>
     <ul>
       <%- @share.reminder.items.each do |item| %>
-        <li><%= item.class.human_name %></li>
+        <li><%= item.human_name %></li>
       <%- end %>
     </ul>
   </div>
