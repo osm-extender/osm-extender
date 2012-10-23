@@ -103,6 +103,16 @@ class UsersController < ApplicationController
     end
   end
 
+  def become
+    user = User.find(params[:id])
+    if user
+      session[:user_id] = user.id
+      redirect_to my_page_path, :notice => 'Switched user.'
+    else
+      redirect_to(users_path, :error => 'The user was not found.')
+    end
+  end
+
 
   private  
   def sort_column

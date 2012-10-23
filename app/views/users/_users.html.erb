@@ -29,6 +29,9 @@
         <%- if user.locked? && can?(:unlock, user) %>
           <%= link_to 'Unlock user', unlock_user_path(user), :method=>:post %><br/>
         <%- end %>
+        <%- if can? :become, user %>
+          <%= link_to 'Become user', become_user_path(user), :method => :post %><br/>
+        <%- end %>
         <%- if can? :delete, user %>
           <%= link_to 'Delete user', user, data: {:confirm => 'Are you sure?'}, method: :delete %>
         <%- end %>

@@ -69,6 +69,9 @@ class Ability
           user_being_acted_on && !user_being_acted_on.activation_token.blank?
         end
       end
+      if user.can_become_other_user?
+        can [:become], User
+      end
 
       # Things FAQ administrators can do
       if user.can_administer_faqs?
