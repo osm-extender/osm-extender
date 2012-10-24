@@ -223,7 +223,7 @@ Feature: Reminder Email
         Then I should see "Item was successfully updated"
         And I should see "With badge stock levels." in the "Configuration" column of the "Due badges" row
 
-@focus
+
     Scenario: Preview the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
 	And an OSM request to get sections will give 1 section
