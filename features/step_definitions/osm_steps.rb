@@ -330,6 +330,21 @@ Given /^an OSM request to get terms for section (\d+) will have no terms$/ do |s
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
 end
 
+Given /^an OSM request to get terms will have the terms?$/ do |table|
+  terms = Hash.new
+  table.hashes.each do |hash|
+     terms[hash['section_id']] ||= Array.new
+     terms[hash['section_id']].push ({
+      'sectionid' => hash['section_id'],
+      'termid' => hash['term_id'],
+      'name' => hash['name'],
+      'startdate' => hash['start'] || 1.month.ago.to_date.to_s('yyyy-mm-dd'),
+      'enddate' => hash['end'] || 1.month.from_now.to_date.to_s('yyyy-mm-dd'),
+    })
+  end
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => terms.to_json)
+end
+
 Given /^an OSM request to get programme for section (\d+) term (\d+) will have (\d+) programme items?$/ do |section, term, items|
   url = "programme.php?action=getProgramme&sectionid=#{section}&termid=#{term}"
   items = items.to_i
