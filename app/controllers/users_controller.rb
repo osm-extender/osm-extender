@@ -106,7 +106,20 @@ class UsersController < ApplicationController
   def become
     user = User.find(params[:id])
     if user
-      session[:user_id] = user.id
+      current_user = user
+      # Set current section
+      if current_user.connected_to_osm?
+        sections = Osm::Section.get_all(current_user.osm_api)
+        set_current_section sections.first
+        if current_user.startup_section?
+          sections.each do |section|
+            if section.id == current_user.startup_section
+              set_current_section section
+              break
+            end
+          end
+        end
+      end
       redirect_to my_page_path, :notice => 'Switched user.'
     else
       redirect_to(users_path, :error => 'The user was not found.')

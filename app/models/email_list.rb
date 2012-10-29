@@ -28,7 +28,7 @@ class EmailList < ActiveRecord::Base
       if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
         added_address_for_member = false
         [:email1, :email2, :email3, :email4].each do |emailN|
-          email = member.send(emailN)
+          email = member.send(emailN).downcase
           if self.send(emailN) && !email.blank?
           #  collecting this email?  not blank
             emails.push email unless emails.include?(email)

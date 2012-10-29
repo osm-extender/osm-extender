@@ -36,6 +36,7 @@ unless User.where(['id = ?', 1]).size == 1
     u.can_view_statistics = true
     u.can_administer_announcements = true
     u.can_administer_delayed_job = true
+    u.can_become_other_user = true
   end
   puts
 end

@@ -206,3 +206,42 @@ Feature: Email Lists
         And I should see "b2@example.com"
         And I should see "b3@example.com"
         And I should see "b4@example.com"
+
+
+    Scenario: Deduplication of addresses should be case insensitive (single list)
+	Given an OSM request to get members for section 1 in term 1 will have the members
+	    | first_name | last_name | email1         | grouping_id |
+	    | A          | Member    | a1@example.com | 1           |
+	    | B          | Member    | A1@example.com | 1           |
+	    | C          | Member    | a1@example.com | 1           |
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "Email lists"
+        Then I should be on the email_lists page
+        When I check "email_list[email1]"
+        And I select "are" from "email_list[match_type]"
+        And I select "A" from "email_list[match_grouping]"
+        And I press "Get addresses"
+        Then I should see "a1@example.com"
+	And I should not see "A1@example.com"
+
+    Scenario: Deduplication of addresses should be case insensitive (multiple lists)
+	Given "alice@example.com" has a saved email list "Test list" for section "1"
+	And "alice@example.com" has a saved email list "Test list 2" for section "2"
+	And an OSM request to get terms will have the terms
+	    |section_id | term_id | name   |
+	    | 1         | 1       | Term 1 |
+	    | 2         | 2       | Term 2 |
+	And an OSM request to get members for section 1 in term 1 will have the members
+	    | first_name | last_name | email1         | grouping_id |
+	    | A          | Member    | a1@example.com | 1           |
+	And an OSM request to get members for section 2 in term 2 will have the members
+	    | first_name | last_name | email1         | grouping_id |
+	    | A          | Member    | A1@example.com | 21          |
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the email_lists page
+	And I check "email_list_1_selected"
+	And I check "email_list_2_selected"
+	And I press "Get addresses"
+        Then I should see "a1@example.com"
+	And I should not see "A1@example.com"
+
