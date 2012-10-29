@@ -107,6 +107,7 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     if user
       current_user = user
+      session[:user_id] = user.id
       # Set current section
       if current_user.connected_to_osm?
         sections = Osm::Section.get_all(current_user.osm_api)
