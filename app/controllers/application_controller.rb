@@ -197,8 +197,8 @@ class ApplicationController < ActionController::Base
     return @groupings
   end
 
-  def get_section_names
-    @section_names ||= Osm::Section.get_all(current_user.osm_api).inject({}){ |hash, section| hash[section.id] = "#{section.group_name} : #{section.name}" ; hash }
+  def get_section_names(user=current_user)
+    @section_names ||= Osm::Section.get_all(user.osm_api).inject({}){ |hash, section| hash[section.id] = "#{section.group_name} : #{section.name}" ; hash }
   end
 
 
