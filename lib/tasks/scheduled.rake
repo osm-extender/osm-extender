@@ -7,36 +7,6 @@ namespace :scheduled  do
     puts "#{deleted} entries deleted."
   end
 
-  desc "Send the reminder emails"
-  task :send_reminder_emails => :environment do
-    $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
-    reminders = EmailReminder.where(:send_on, Date.today.wday).order('section_id')
-    count = reminders.size
-    count_length = count.to_s.length
-    puts "No emails to send" if count == 0
-    reminders.each_with_index do |reminder, index|
-      puts "Sending #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{reminder.id})"
-      reminder.send_email
-    end
-  end
-
-  desc "Check email lists for changes"
-  task :send_changed_email_lists => :environment do
-    $PROGRAM_NAME = "OSMX #{Rails.env} - Send Changed Email Lists"
-    lists = EmailList.where(:notify_changed => true).order(:section_id)
-    count = lists.size
-    count_length = count.to_s.length
-    puts "No email lists to check" if count == 0
-    lists.each_with_index do |list, index|
-      puts "Checking #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{list.id})"
-      todays_hash = list.get_hash_of_addresses
-      unless todays_hash.eql?(list.last_hash_of_addresses)
-        list.update_attributes(:last_hash_of_adresses => todays_hash)
-        NotifierMailer.email_list_changed(list).deliver
-      end
-    end
-  end
-
   desc "Gather statistics"
   task :statistics => :environment do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Gathering statistics"
@@ -44,6 +14,41 @@ namespace :scheduled  do
     (earliest..Date.yesterday).each do |date|
       Statistics.create_or_retrieve_for_date date
     end
+  end
+
+
+  namespeace :send do
+    desc "Send the reminder emails"
+    task :reminder_emails => :environment do
+      $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
+      reminders = EmailReminder.where(:send_on, Date.today.wday).order('section_id')
+      count = reminders.size
+      count_length = count.to_s.length
+      puts "No emails to send" if count == 0
+      reminders.each_with_index do |reminder, index|
+        puts "Sending #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{reminder.id})"
+        reminder.send_email
+      end
+    end
+  
+    desc "Check email lists for changes"
+    task :changed_email_lists => :environment do
+      $PROGRAM_NAME = "OSMX #{Rails.env} - Send Changed Email Lists"
+      lists = EmailList.where(:notify_changed => true).order(:section_id)
+      count = lists.size
+      count_length = count.to_s.length
+      puts "No email lists to check" if count == 0
+      lists.each_with_index do |list, index|
+        puts "Checking #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{list.id})"
+        todays_hash = list.get_hash_of_addresses
+        unless todays_hash.eql?(list.last_hash_of_addresses)
+          list.update_attributes(:last_hash_of_adresses => todays_hash)
+          NotifierMailer.email_list_changed(list).deliver
+        end
+      end
+    end
+
+    task :all => [:reminder_emails, :changed_email_lists]
   end
 
 
