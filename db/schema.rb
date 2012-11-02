@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121023125648) do
+ActiveRecord::Schema.define(:version => 20121030154717) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message",                           :null => false
@@ -50,10 +50,13 @@ ActiveRecord::Schema.define(:version => 20121023125648) do
     t.boolean  "email4"
     t.boolean  "match_type"
     t.integer  "match_grouping"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
+    t.boolean  "notify_changed",                       :default => false, :null => false
+    t.string   "last_hash_of_addresses", :limit => 64, :default => "",    :null => false
   end
 
+  add_index "email_lists", ["notify_changed"], :name => "index_email_lists_on_notify_changed"
   add_index "email_lists", ["user_id"], :name => "index_email_lists_on_user_id"
 
   create_table "email_reminder_items", :force => true do |t|

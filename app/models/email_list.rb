@@ -1,9 +1,10 @@
 class EmailList < ActiveRecord::Base
-  attr_accessible :user, :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping
+  attr_accessible :user, :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping, :notify_changed, :last_hash_of_addresses
 
   belongs_to :user
 
   validates_presence_of :user
+  validates :notify_changed, :inclusion => {:in => [true, false]}
 
   validates_presence_of :section_id
   validates_numericality_of :section_id, :only_integer=>true, :greater_than_or_equal_to=>0
@@ -18,6 +19,8 @@ class EmailList < ActiveRecord::Base
   validates_presence_of :match_grouping
   validates_numericality_of :match_grouping, :only_integer=>true
   validate :match_grouping_ok
+
+  before_save :set_hash_of_addresses
 
 
   def get_list
@@ -45,10 +48,24 @@ class EmailList < ActiveRecord::Base
     }
   end
 
+  def get_hash_of_addresses
+   return Digest::SHA256.hexdigest(get_list[:emails].sort.inspect)
+  end
 
   private
   def match_grouping_ok
     errors.add(:match_grouping, "Can't be negative") if (match_grouping < 0  &&  ![-2].include?(match_grouping))
+  end
+
+  def set_hash_of_addresses
+    if notify_changed_changed? && !notify_changed_change[0] && notify_changed_change[1]
+      # Turned change notification Off to On
+      write_attribute(:last_hash_of_addresses, get_hash_of_addresses)
+    end
+    if notify_changed_changed? && notify_changed_change[0] && !notify_changed_change[1]
+      # Turned change notification On to Off
+      write_attribute(:last_hash_of_addresses, '')
+    end
   end
 
 end
