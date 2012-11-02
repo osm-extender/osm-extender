@@ -17,7 +17,7 @@ namespace :scheduled  do
   end
 
 
-  namespeace :send do
+  namespace :send do
     desc "Send the reminder emails"
     task :reminder_emails => :environment do
       $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
