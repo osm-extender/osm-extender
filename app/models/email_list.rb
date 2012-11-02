@@ -1,5 +1,5 @@
 class EmailList < ActiveRecord::Base
-  attr_accessible :user, :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping, :notify_changed, :last_hash_of_adresses
+  attr_accessible :user, :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping, :notify_changed, :last_hash_of_addresses
 
   belongs_to :user
 
