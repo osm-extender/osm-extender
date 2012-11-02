@@ -42,7 +42,7 @@ namespace :scheduled  do
         puts "Checking #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{list.id})"
         todays_hash = list.get_hash_of_addresses
         unless todays_hash.eql?(list.last_hash_of_addresses)
-          list.update_attributes(:last_hash_of_adresses => todays_hash)
+          list.update_attributes(:last_hash_of_addresses => todays_hash)
           NotifierMailer.email_list_changed(list).deliver
         end
       end
