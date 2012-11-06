@@ -40,7 +40,7 @@ group :assets do
 end
 
 group :development do
-  gem 'letter_opener', '~> 0.0'       # Don't deliver emails, open them in a new browser window instead
+  gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
   gem 'rack-mini-profiler', '~> 0.1'  # See how long a request takes and why
 end
 
