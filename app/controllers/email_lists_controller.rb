@@ -81,6 +81,16 @@ class EmailListsController < ApplicationController
     end
   end
 
+  def tool
+    case params[:commit]
+      when 'Find address'
+        tool_find_address(params[:find_address])
+      else
+        flash[:error] = 'That was an invalid tool.'
+        redirect_to email_lists_url
+    end
+  end
+
 
   private
   def clean_params(params_in)
@@ -90,6 +100,10 @@ class EmailListsController < ApplicationController
     end
     params[:match_grouping] = params[:match_grouping].to_i
     return params
+  end
+  
+  def clean_lists(lists)
+    (lists || {}).select{ |k,v| v['selected'].eql?('1') }.map{ |k,v| k.to_i}
   end
 
   def get_sections_data
@@ -106,7 +120,7 @@ class EmailListsController < ApplicationController
   end
 
   def multiple_get_addresses(lists)
-    lists = (lists || {}).select{ |k,v| v['selected'].eql?('1') }.map{ |k,v| k.to_i}
+    lists = clean_lists(lists)
     @email_lists = current_user.email_lists.find(lists).sort{ |a, b|
       section_a = Osm::Section.get(current_user.osm_api, a.section_id)
       section_b = Osm::Section.get(current_user.osm_api, b.section_id)
@@ -126,6 +140,33 @@ class EmailListsController < ApplicationController
 
     @section_names = get_section_names
     render 'multiple_get_addresses'
+  end
+
+
+  def tool_find_address(address)
+    address = address.downcase
+    @address = address
+    @found = []
+    Osm::Section.get_all(current_user.osm_api).each do |section|
+      unless section.waiting?
+        Osm::Member.get_for_section(current_user.osm_api, section.id).each do |member|
+          if member.email1.downcase.include?(address) || member.email2.downcase.include?(address) || member.email3.downcase.include?(address) || member.email4.downcase.include?(address)
+            @found.push({
+              :member_name => member.name,
+              :section_name => "#{section.group_name} : #{section.name}",
+            })
+          end
+        end
+      end
+    end
+
+    @found.sort! do |a,b|
+      ret =  a[:member_name] <=> b[:member_name]
+      ret = 1 if a[:section_name] > b[:section_name]
+      ret = -1 if a[:section_name] < b[:section_name]
+      ret
+    end
+    render 'tool_find_address'
   end
 
 end

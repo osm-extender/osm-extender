@@ -26,8 +26,7 @@
     </table>
 
     <div style="text-align: center;">
-      With all selected lists:
-      <%= submit_tag "Get addresses" %>
+      With all selected lists: <%= submit_tag "Get addresses" %>
     </div>
   <%- end %>
 <%- end %>
@@ -37,4 +36,13 @@
 <%= form_for @email_list, :method=>:post, :url=>preview_email_list_path do |f| %>
   <%= render 'form_criteria', :f => f %>
   <%= f.submit 'Get addresses' %>
+<%- end %>
+
+
+<h2>Extra Tools</h2>
+<p>This section contains tools which might be useful when working with email lists which don't quite fit anywehere else, for example finding the member which belongs to a bouncing email address.</p>
+<%= form_tag email_list_tool_path do %>
+  <ul>
+    <li><%= submit_tag "Find address" %><%= text_field_tag :find_address %></li>
+  </ul>
 <%- end %>
