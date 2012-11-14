@@ -21,7 +21,7 @@ namespace :scheduled  do
     desc "Send the reminder emails"
     task :reminder_emails => :environment do
       $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
-      reminders = EmailReminder.where(:send_on, Date.today.wday).order('section_id')
+      reminders = EmailReminder.where(:send_on => Date.today.wday).order('section_id')
       count = reminders.size
       count_length = count.to_s.length
       puts "No emails to send" if count == 0
