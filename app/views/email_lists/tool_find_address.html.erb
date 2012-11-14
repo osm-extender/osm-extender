@@ -1,0 +1,18 @@
+<% provide :title, 'Find Address' %>
+
+<h2>The following members have an email address containing: <%= @address %></h2>
+  <table>
+    <tr>
+      <th>Section</th>
+      <th>Member</th>
+    </tr>
+  
+    <% @found.each do |person| %>
+      <tr>
+        <td><%= person[:section_name] %></td>
+        <td><%= person[:member_name] %></td>
+      </tr>
+    <%- end %>
+  </table>
+  
+  <p>Note that waiting lists are currently not supported for this tool.</p>
