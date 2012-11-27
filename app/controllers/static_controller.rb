@@ -1,11 +1,13 @@
 class StaticController < ApplicationController
-  skip_before_filter :require_login, :only => [:welcome]
+  skip_before_filter :require_login, :only => [:welcome, :help]
   before_filter :require_connected_to_osm, :only => [:osm_permissions]
 
 
   def welcome
   end
 
+  def help
+  end
 
   def my_page
     if current_user.connected_to_osm?

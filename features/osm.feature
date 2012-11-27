@@ -23,9 +23,8 @@ Feature: OSM
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "You need to connect your account to your OSM account."
         And I should see "You have not yet connected your account to your OSM account"
-        When I follow "Connect now"
-        Then I should be on the connect_to_osm page
-        When I fill in "Email" with "alice@example.com"
+        When I go to the connect_to_osm page
+        And I fill in "Email" with "alice@example.com"
         And I fill in "Password" with "password"
         And I press "Connect to OSM"
         Then I should be on the osm_permissions page

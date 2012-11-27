@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121030154717) do
+ActiveRecord::Schema.define(:version => 20121127184552) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message",                           :null => false
@@ -108,36 +108,6 @@ ActiveRecord::Schema.define(:version => 20121030154717) do
   add_index "emailed_announcements", ["announcement_id"], :name => "index_emailed_announcements_on_announcement_id"
   add_index "emailed_announcements", ["user_id"], :name => "index_emailed_announcements_on_user_id"
 
-  create_table "faq_tagings", :force => true do |t|
-    t.integer  "faq_id",                    :null => false
-    t.integer  "tag_id",                    :null => false
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "position",   :default => 0, :null => false
-  end
-
-  add_index "faq_tagings", ["faq_id", "tag_id"], :name => "index_faq_tagings_on_faq_id_and_tag_id", :unique => true
-  add_index "faq_tagings", ["faq_id"], :name => "index_faq_tagings_on_faq_id"
-  add_index "faq_tagings", ["tag_id"], :name => "index_faq_tagings_on_tag_id"
-
-  create_table "faq_tags", :force => true do |t|
-    t.string   "name",                      :null => false
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "position",   :default => 0, :null => false
-  end
-
-  add_index "faq_tags", ["name"], :name => "index_faq_tags_on_name", :unique => true
-
-  create_table "faqs", :force => true do |t|
-    t.string   "question"
-    t.text     "answer"
-    t.boolean  "active",     :default => true
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
-    t.integer  "system_id"
-  end
-
   create_table "hidden_announcements", :force => true do |t|
     t.integer  "user_id",         :null => false
     t.integer  "announcement_id", :null => false
@@ -208,7 +178,6 @@ ActiveRecord::Schema.define(:version => 20121030154717) do
     t.boolean  "can_administer_users",                          :default => false
     t.text     "osm_userid",                      :limit => 6
     t.text     "osm_secret",                      :limit => 32
-    t.boolean  "can_administer_faqs",                           :default => false
     t.boolean  "can_administer_settings",                       :default => false
     t.boolean  "can_view_statistics",                           :default => false
     t.integer  "startup_section",                               :default => 0,     :null => false

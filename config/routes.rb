@@ -39,7 +39,7 @@ OSMExtender::Application.routes.draw do
   get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
 
   resources :faqs
-  get 'help' => 'faqs#list', :as => 'list_faqs'
+  get 'help' => 'static#help', :as => 'help'
   post 'faqs/:tag_id/re_order' => 'faqs#re_order', :as => 're_order_faqs'
   get 'faq_tags' => 'faq_tags#index'
   post 'faq_tags/re_order' => 'faq_tags#re_order', :as => 're_order_faq_tags'

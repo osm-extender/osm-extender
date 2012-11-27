@@ -107,7 +107,7 @@ Feature: Reminder Email
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
-        And I follow "Programme"
+        And I follow "add_email_reminder_item_programme"
         And I fill in "How many weeks into the future?" with "8"
         And I press "Create programme item"
         Then I should see "Item was successfully added"

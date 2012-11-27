@@ -92,13 +92,13 @@ Feature: My Account
         Then I should see "Name can't be blank"
 	And I should be on the update_my_account page
 
-    
+
     Scenario: Change Password
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "aA1&1234"
-	And I fill in "New password confirmation" with "aA1&1234"
+	And I fill in "password1" with "aA1&1234"
+	And I fill in "password2" with "aA1&1234"
 	And I press "Change password"
 	Then I should see "Sucessfully changed your password."
 	And I should be on the my_account page
@@ -112,8 +112,8 @@ Feature: My Account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "a"
-	And I fill in "New password confirmation" with "a"
+	And I fill in "password1" with "a"
+	And I fill in "password2" with "a"
 	And I press "Change password"
 	Then I should see "isn't complex enough"
 	And I should be on the update_my_password page
@@ -122,7 +122,7 @@ Feature: My Account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "aA1&1234"
+	And I fill in "password1" with "aA1&1234"
 	And I press "Change password"
 	Then I should see "Password doesn't match confirmation"
 	And I should be on the update_my_password page
@@ -131,8 +131,8 @@ Feature: My Account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "aA1&1234"
-	And I fill in "New password confirmation" with "abcdefgh"
+	And I fill in "password1" with "aA1&1234"
+	And I fill in "password2" with "abcdefgh"
 	And I press "Change password"
 	Then I should see "Password doesn't match confirmation"
 	And I should be on the update_my_password page
@@ -141,8 +141,8 @@ Feature: My Account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "wrong password"
-	And I fill in "New password" with "aA1&1234"
-	And I fill in "New password confirmation" with "aA1&1234"
+	And I fill in "password1" with "aA1&1234"
+	And I fill in "password2" with "aA1&1234"
 	And I press "Change password"
 	Then I should see "Incorrect current password."
 	And I should be on the update_my_password page
@@ -151,8 +151,8 @@ Feature: My Account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "alice@example.com"
-	And I fill in "New password confirmation" with "alice@example.com"
+	And I fill in "password1" with "alice@example.com"
+	And I fill in "password2" with "alice@example.com"
 	And I press "Change password"
 	Then I should see "Password is not allowed to be your email address"
 	And I should be on the update_my_password page
@@ -161,8 +161,8 @@ Feature: My Account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the change my password page
 	And I fill in "Current password" with "P@55word"
-	And I fill in "New password" with "iceAA%%11"
-	And I fill in "New password confirmation" with "iceAA%%11"
+	And I fill in "password1" with "iceAA%%11"
+	And I fill in "password2" with "iceAA%%11"
 	And I press "Change password"
 	Then I should see "Password is not allowed to contain part of your name"
 	And I should be on the update_my_password page

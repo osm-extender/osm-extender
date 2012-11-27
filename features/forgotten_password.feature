@@ -27,8 +27,8 @@ Feature: Forgotten Password
         And "alice@example.com" should receive an email with subject /Password Reset/
         When I open the email with subject /Password Reset/
         When I click the /reset_password/ link in the email
-        When I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        When I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
         And I press "Reset password"
         Then I should see "Password sucessfully changed."
 	And I should be on the root page
@@ -60,8 +60,8 @@ Feature: Forgotten Password
     Scenario: Reset Password (too easy)
         Given "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
-        And I fill in "Password" with "a"
-        And I fill in "Password confirmation" with "a"
+        And I fill in "password1" with "a"
+        And I fill in "password2" with "a"
         And I press "Reset password"
         Then I should see "isn't complex enough"
 	And I should be on "/password_resets/abc123"
@@ -70,7 +70,7 @@ Feature: Forgotten Password
     Scenario: Reset Password (no confirmation)
         Given "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
-        And I fill in "Password" with "P@55word"
+        And I fill in "password1" with "P@55word"
         And I press "Reset password"
         Then I should see "Password doesn't match confirmation"
 	And I should be on "/password_resets/abc123"
@@ -79,8 +79,8 @@ Feature: Forgotten Password
     Scenario: Reset Password (password is email address)
         Given "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
-        And I fill in "Password" with "alice@example.com"
-        And I fill in "Password confirmation" with "alice@example.com"
+        And I fill in "password1" with "alice@example.com"
+        And I fill in "password2" with "alice@example.com"
         And I press "Reset password"
         Then I should see "Password is not allowed to be your email address"
 	And I should be on "/password_resets/abc123"
@@ -89,8 +89,8 @@ Feature: Forgotten Password
     Scenario: Reset Password (password contains part of name)
         Given "alice@example.com" has password_reset_token "abc123"
         When I go to reset_password token="abc123"
-        And I fill in "Password" with "ali%%12HJ"
-        And I fill in "Password confirmation" with "ali%%12HJ"
+        And I fill in "password1" with "ali%%12HJ"
+        And I fill in "password2" with "ali%%12HJ"
         And I press "Reset password"
         Then I should see "Password is not allowed to contain part of your name"
 	And I should be on "/password_resets/abc123"

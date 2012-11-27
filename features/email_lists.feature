@@ -142,7 +142,7 @@ Feature: Email Lists
 	    | 2       | Term 2 |
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the email_lists page
-	And I select "Section 2" from "email_list[section_id]"
+	And I select "1st Somewhere : Section 2" from "email_list[section_id]"
         And I check "email_list[email1]"
         And I press "Get addresses"
 	And I fill in "Name" with "Test list"
@@ -193,7 +193,7 @@ Feature: Email Lists
         And I go to the email_lists page
 	And I check "email_list_1_selected"
 	And I check "email_list_2_selected"
-	And I press "Get addresses"
+	And I press "selected_get_addresses"
 
 	Then I should see "Test list"
 	And I should see "Test list 2"
@@ -231,7 +231,7 @@ Feature: Email Lists
         When I check "email_list[email1]"
         And I select "are" from "email_list[match_type]"
         And I select "A" from "email_list[match_grouping]"
-        And I press "Get addresses"
+	And I press "Get addresses"
         Then I should see "a1@example.com"
 	And I should not see "A1@example.com"
 
@@ -252,7 +252,7 @@ Feature: Email Lists
         And I go to the email_lists page
 	And I check "email_list_1_selected"
 	And I check "email_list_2_selected"
-	And I press "Get addresses"
+	And I press "selected_get_addresses"
         Then I should see "a1@example.com"
 	And I should not see "A1@example.com"
 
