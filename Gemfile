@@ -49,7 +49,7 @@ end
 
 
 group :staging, :production do
-  gem 'mysql', '~> 2.8'               # Use a mysql database
+  gem 'mysql2', '~> 0.3.11'           # Use a mysql database
   gem 'unicorn', '~> 4.3'             # Use unicorn as the web server
   gem 'memcache-client'               # Using memcache as the cache store
 end
