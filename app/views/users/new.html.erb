@@ -22,12 +22,12 @@
   <div class="field">
     <%= f.label :password %><br/>
     <%= div_for_password_strength_meter %><br/>
-    <%= f.password_field :password %><br/>
+    <%= f.password_field :password, {:id => :password1} %><br/>
     <%= link_to 'Need help picking a good password?', 'https://www.grc.com/haystack.htm', {:target => '_blank'} %>
   </div>
   <div class="field">
     <%= f.label :password_confirmation %><br/>
-    <%= f.password_field :password_confirmation %>
+    <%= f.password_field :password_confirmation, {:id => :password2} %>
   </div>
   <%- unless Settings.read('signup code').blank? %>
     <div class="field">

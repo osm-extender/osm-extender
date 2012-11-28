@@ -20,12 +20,12 @@
   <div class="field">
     <%= label_tag :password %><br/>
     <%= div_for_password_strength_meter %><br/>
-    <%= password_field_tag :password %><br/>
+    <%= password_field_tag :password, nil, {:id => :password1} %><br/>
     <%= link_to 'Need help picking a good password?', 'https://www.grc.com/haystack.htm', {:target => '_blank'} %>
   </div>
   <div class="field">
     <%= label_tag :password_confirmation %><br/>
-    <%= password_field_tag :password_confirmation %>
+    <%= password_field_tag :password_confirmation, nil, {:id => :password2} %>
   </div>
   <%= hidden_field_tag :token, @token %>
   <%= hidden_field_tag :use_token, 1 %>

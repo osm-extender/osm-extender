@@ -42,7 +42,7 @@
       <div id="primary_menu">
         <div id="primary_menu_nav">
           <div class="menu_item"><%= link_to 'Home', root_url %></div>
-          <div class="menu_item"><%= link_to 'Help', list_faqs_path %></div>
+          <div class="menu_item"><%= link_to 'Help', help_path %></div>
           <div class="menu_item"><%= link_to 'Contact us', new_contact_u_path %></div>
         </div>
         <div id="primary_menu_user">
@@ -99,10 +99,10 @@
           <%- end %>
           <div id="secondary_menu_admin">
             <%- if can?(:administer, User) %><div class="menu_item"><%= link_to('Administer users', users_path) %></div><%- end %>
-            <%- if can?(:administer, Faq) %><div class="menu_item"><%= link_to('Administer FAQs', faqs_path) %></div><%- end %>
             <%- if can?(:administer, Announcement) %><div class="menu_item"><%= link_to('Administer announcements', announcements_path) %></div><%- end %>
             <%- if can?(:update, Settings) %><div class="menu_item"><%= link_to('Administer settings', edit_settings_path) %></div><%- end %>
             <%- if current_user.can_administer_delayed_job? %><div class="menu_item"><%= link_to('Administer delayed job', delayed_jobs_path) %></div><%- end %>
+            <br/>
             <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('User statistics', user_statistics_path) %></div><%- end %>
             <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('Reminder email statistics', email_reminders_statistics_path) %></div><%- end %>
           </div><!-- secondary_menu_admin -->

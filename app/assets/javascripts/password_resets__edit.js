@@ -1,3 +1,3 @@
 $(function() {
-    $('#password').keyup(function() { checkPasswordStrength(this.value) });
+    $('#password1').keyup(function() { checkPasswordStrength(this.value) });
 });

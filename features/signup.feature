@@ -29,8 +29,8 @@ Feature: Sign up
 	Then I should not see "Signup code"
         When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Your signup was successful"
@@ -50,8 +50,8 @@ Feature: Sign up
 	Then I should see "Signup code"
         When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
 	And I fill in "Signup code" with "abc123"
         And I press "Sign up"
         Then I should see "Your signup was successful"
@@ -63,8 +63,8 @@ Feature: Sign up
 	Then I should not see "Signup code"
         When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
         And I press "Sign up"
         Then I should see "Your signup was successful"
         Then I should have 1 users
@@ -84,8 +84,8 @@ Feature: Sign up
     Scenario: Signup (no name)
         When I go to the signup page
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Name can't be blank"
@@ -108,8 +108,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "a"
-        And I fill in "Password confirmation" with "a"
+        And I fill in "password1" with "a"
+        And I fill in "password2" with "a"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "isn't complex enough"
@@ -121,7 +121,7 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "aB3$hj37"
+        And I fill in "password1" with "aB3$hj37"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Password doesn't match confirmation"
@@ -133,8 +133,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "somebody@somewhere.com"
-        And I fill in "Password confirmation" with "somebody@somewhere.comm"
+        And I fill in "password1" with "somebody@somewhere.com"
+        And I fill in "password2" with "somebody@somewhere.comm"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Password is not allowed to be your email address"
@@ -145,8 +145,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "Som890%^"
-        And I fill in "Password confirmation" with "Som890%^"
+        And I fill in "password1" with "Som890%^"
+        And I fill in "password2" with "Som890%^"
         And I press "Sign up"
         Then I should see "Password is not allowed to contain part of your name"
 	And I should be on the users page
@@ -156,8 +156,8 @@ Feature: Sign up
     Scenario: Signup (no email)
         When I go to the signup page
         And I fill in "Name" with "Somebody"
-        And I fill in "Password" with "aB3$hj37"
-        And I fill in "Password confirmation" with "aB3$hj37"
+        And I fill in "password1" with "aB3$hj37"
+        And I fill in "password2" with "aB3$hj37"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Email address can't be blank"
@@ -169,8 +169,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "a"
-        And I fill in "Password" with "aB3$hj37"
-        And I fill in "Password confirmation" with "aB3$hj37"
+        And I fill in "password1" with "aB3$hj37"
+        And I fill in "password2" with "aB3$hj37"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Email address does not look like an email address"
@@ -185,8 +185,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "alice@example.com"
-        And I fill in "Password" with "aB3$hj37"
-        And I fill in "Password confirmation" with "aB3$hj37"
+        And I fill in "password1" with "aB3$hj37"
+        And I fill in "password2" with "aB3$hj37"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Email address has already been taken"
@@ -200,8 +200,8 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "ALICE@example.com"
-        And I fill in "Password" with "aB3$hj37"
-        And I fill in "Password confirmation" with "aB3$hj37"
+        And I fill in "password1" with "aB3$hj37"
+        And I fill in "password2" with "aB3$hj37"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Email address has already been taken"
@@ -212,8 +212,8 @@ Feature: Sign up
         When I go to the signup page
         When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Incorrect signup code"
@@ -226,8 +226,8 @@ Feature: Sign up
         When I go to the signup page
         When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
-        And I fill in "Password" with "P@55word"
-        And I fill in "Password confirmation" with "P@55word"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
 	And I fill in "Signup code" with "123abc"
         And I press "Sign up"
         Then I should have 0 users

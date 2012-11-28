@@ -16,13 +16,12 @@ gem 'jquery-ui-rails', '~> 2.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '= 0.1.7'                  # For using the OSM API
-gem 'recaptcha', '~> 0.3'
+gem 'osm', '= 0.1.8'                  # For using the OSM API
+gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails3', '~> 1.3'      # Easily generate HTML emails (also does plain text counterpart)
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
-gem 'seed-fu', '~> 2.2'               # Seed the database when data may change
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
 
 # Jobs in background
@@ -50,9 +49,9 @@ end
 
 
 group :staging, :production do
-  gem 'mysql', '~> 2.8'               # Use a mysql database
+  gem 'mysql2', '~> 0.3.11'           # Use a mysql database
   gem 'unicorn', '~> 4.3'             # Use unicorn as the web server
-  gem 'memcache-client'
+  gem 'memcache-client'               # Using memcache as the cache store
 end
 
 

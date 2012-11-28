@@ -11,7 +11,6 @@ class Ability
     alias_action :create, :read, :update, :delete, :to=>:administer
 
     # Things everyone can do
-    can :list, Faq
 
     unless user
       # Things only non authenticated users can do
@@ -71,13 +70,6 @@ class Ability
       end
       if user.can_become_other_user?
         can [:become], User
-      end
-
-      # Things FAQ administrators can do
-      if user.can_administer_faqs?
-        can [:administer, :re_order], Faq
-        can [:administer, :re_order], FaqTag
-        can :administer, FaqTaging
       end
 
       # Things Announcement administrators can do
