@@ -40,6 +40,18 @@
   <span onClick="changeTextSize(-1);">[-]</span> <span onClick="changeTextSize(1);">[+]</span> Text Size<br/>
   <span onClick="changeRowHeight(-4);">[-]</span> <span onClick="changeRowHeight(4);">[+]</span> Row Height<br/>
   <%- @fields.each do |field| %>
-  <span onClick="changeColumnWidth('<%= field.id %>', -10);">[-]</span> <span onClick="changeColumnWidth('<%= field.id %>', 10);">[+]</span> Width of <%= field.name %><br/>
+    <span onClick="changeColumnWidth('<%= field.id %>', -10);">[-]</span> <span onClick="changeColumnWidth('<%= field.id %>', 10);">[+]</span> Width of <%= field.name %><br/>
   <%- end %>
+  <span onClick="saveCustomSizes('<%= form_authenticity_token.to_s %>');">[Save text and row sizes]</span>
 </div>
+
+
+<script type="text/javascript">
+  <%- if current_user.custom_row_height? %>
+    setRowHeight(<%= current_user.custom_row_height %>);
+  <%- end %>
+  <%- if current_user.custom_text_size? %>
+    setTextSize(<%= current_user.custom_text_size %>);
+  <%- end %>
+</script>
+

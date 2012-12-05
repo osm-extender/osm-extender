@@ -9,4 +9,14 @@ class MyPreferencesController < ApplicationController
     redirect_to my_page_path
   end
 
+  def save_custom_sizes
+    current_user.custom_row_height = params[:row_height]
+    current_user.custom_text_size = params[:text_size]
+
+    render :json => {
+      :saved => current_user.save,
+    }
+
+  end
+
 end

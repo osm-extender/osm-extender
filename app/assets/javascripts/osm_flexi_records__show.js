@@ -1,15 +1,44 @@
+function setTextSize(to) {
+  $('.field_head').css('font-size', to);
+  $('.field_data').css('font-size', to);
+  $('.field_total').css('font-size', to);
+  $('.field_count').css('font-size', to);
+  $('.label').css('font-size', to);
+}
+function setRowHeight(to) {
+  $('.row_head').css('height', to);
+  $('.row_data').css('height', to);
+  $('.row_total').css('height', to);
+  $('.row_count').css('height', to);
+}
+
+function saveCustomSizes(csrfToken) {
+  $.ajax({
+    url: '/my_preferences/save_custom_sizes',
+    type: 'post',
+    dataType: 'json',
+    headers: {'X-CSRF-Token': csrfToken},
+    data: 'text_size=' + parseInt($('.field_head').css('font-size')) + '&row_height=' + parseInt($('.row_head').css('height')),
+    async: false,
+    success: function(data, status, jqXHR) {
+      if (data['saved']) {
+        alert("Your preferences were saved");
+      } else {
+        alert("An error occured and your preferences were not saved");
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      alert(textStatus);
+    }
+  })
+}
+
+
 function changeTextSize(by) {
-  $('.field_head').css('font-size', parseInt($('.field_head').css('font-size')) + by);
-  $('.field_data').css('font-size', parseInt($('.field_data').css('font-size')) + by);
-  $('.field_total').css('font-size', parseInt($('.field_total').css('font-size')) + by);
-  $('.field_count').css('font-size', parseInt($('.field_count').css('font-size')) + by);
-  $('.label').css('font-size', parseInt($('.label').css('font-size')) + by);
+  setTextSize(parseInt($('.field_head').css('font-size')) + by);
 }
 function changeRowHeight(by) {
-  $('.row_head').css('height', parseInt($('.row_head').css('height')) + by);
-  $('.row_data').css('height', parseInt($('.row_data').css('height')) + by);
-  $('.row_total').css('height', parseInt($('.row_total').css('height')) + by);
-  $('.row_count').css('height', parseInt($('.row_count').css('height')) + by);
+  setRowHeight(parseInt($('.row_head').css('height')) + by);
 }
 function changeColumnWidth(field, by) {
   $('.field_' + field).css('width', parseInt($('.field_' + field).css('width')) + by);

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121127184552) do
+ActiveRecord::Schema.define(:version => 20121205130937) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message",                           :null => false
@@ -184,6 +184,8 @@ ActiveRecord::Schema.define(:version => 20121127184552) do
     t.boolean  "can_administer_announcements",                  :default => false
     t.boolean  "can_administer_delayed_job",                    :default => false
     t.boolean  "can_become_other_user",                         :default => false
+    t.integer  "custom_row_height",                             :default => 0
+    t.integer  "custom_text_size",                              :default => 0
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"

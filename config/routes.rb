@@ -3,6 +3,7 @@ OSMExtender::Application.routes.draw do
   get 'index' => 'static#welcome', :as => 'welcome_page'
   get 'my_page' => 'static#my_page', :as => 'my_page'
   get 'osm_permissions' => 'static#osm_permissions', :as => 'osm_permissions'
+  get 'help' => 'static#help', :as => 'help'
 
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
@@ -19,6 +20,7 @@ OSMExtender::Application.routes.draw do
   post 'my_account/delete' => 'my_account#delete', :as => 'delete_my_account'
 
   post 'my_preferences' => 'my_preferences#update', :as => 'update_my_preferences'
+  post 'my_preferences/save_custom_sizes' => 'my_preferences#save_custom_sizes', :as => 'save_custom_sizes'
 
   post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
   get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'
@@ -37,12 +39,6 @@ OSMExtender::Application.routes.draw do
 
   resources :sessions
   get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
-
-  resources :faqs
-  get 'help' => 'static#help', :as => 'help'
-  post 'faqs/:tag_id/re_order' => 'faqs#re_order', :as => 're_order_faqs'
-  get 'faq_tags' => 'faq_tags#index'
-  post 'faq_tags/re_order' => 'faq_tags#re_order', :as => 're_order_faq_tags'
 
   get 'programme_review/balanced' => 'programme_review#balanced', :as => 'programme_review_balanced'
   get 'programme_review/balanced_data' => 'programme_review#balanced_data', :as => 'programme_review_balanced_data'
