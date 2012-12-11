@@ -102,7 +102,7 @@ class ProgrammeCreate
   def terms_exist
     earliest = nil
     latest = nil
-    Osm::Term.get_for_section(user.osm_api, section.id).sort.each do |term|
+    Osm::Term.get_for_section(user.osm_api, section.id, {:no_cache => true}).sort.each do |term|
       unless term.finish < programme_start || term.start > programme_end
         earliest = earliest || term.start
         latest = latest || term.finish
