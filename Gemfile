@@ -11,6 +11,7 @@ gem 'cancan', '~> 1.6'
 
 # Javascript
 gem 'therubyracer', '~> 0.10'
+  gem 'libv8', '~> 3.11.8'
 gem 'jquery-rails', '~> 2.1'
 gem 'jquery-ui-rails', '~> 2.0'
 gem 'client_side_validations', '~> 3.1'
