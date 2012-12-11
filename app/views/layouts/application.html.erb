@@ -83,6 +83,7 @@
             <div id="current_section">
               Current section: <%= "#{current_section.name} (#{current_section.group_name})" %>
             </div>
+            <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Contact details', osm_details_fields_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :flexi) %><div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>

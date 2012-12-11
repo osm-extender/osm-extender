@@ -79,6 +79,9 @@ OSMExtender::Application.routes.draw do
 
   resources :osm_flexi_records, :only => [:index, :show]
 
+  get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
+  post 'osm_details/show' => 'osm_details#show', :as => 'osm_details_show'
+
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 
