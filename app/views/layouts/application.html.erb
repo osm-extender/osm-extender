@@ -15,6 +15,7 @@
 
   <%= stylesheet_link_tag 'jquery.ui.all' %>
   <%= stylesheet_link_tag 'token-input' %>
+  <%= stylesheet_link_tag 'jquery.toastmessage' %>
   <%= stylesheet_link_tag 'application', :media => :all %>
   <%= stylesheet_link_tag 'application__print', :media=>:print %>
   <%= stylesheet_link_tag params[:controller] if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
@@ -26,6 +27,7 @@
   <%= javascript_include_tag :jquery_ujs %>
   <%= javascript_include_tag 'jquery.ui.all' %>
   <%= javascript_include_tag 'jquery.tokeninput' %>
+  <%= javascript_include_tag 'jquery.toastmessage' %>
   <%= javascript_include_tag 'rails.validations' %>
   <%= javascript_include_tag 'rails.validations.custom' %>
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
@@ -156,5 +158,6 @@
 
 
   </div><!-- page -->
+
 </body>
 </html>
