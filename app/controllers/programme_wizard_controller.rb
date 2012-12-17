@@ -2,7 +2,7 @@ class ProgrammeWizardController < ApplicationController
   before_filter { require_section_type :youth_section }
   before_filter :require_connected_to_osm
   before_filter { require_osm_permission :write, :programme }
-  before_filter { flash[:information] = 'This feature is now availible in OSM and so will be removed from here in a few months time.' }
+  before_filter { flash[:information] = 'This feature is now availible in OSM and so will be removed from here during March.' }
 
   def new_programme
     @programme = ProgrammeCreate.new
