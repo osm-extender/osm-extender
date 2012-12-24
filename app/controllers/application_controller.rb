@@ -108,9 +108,11 @@ class ApplicationController < ActionController::Base
   # if so redirect them to the relevant page and set an instruction flash
   # @param type a string or symbol representing the type of section to forbid (may be :beavers, :cubs ... or :youth_section)
   def forbid_section_type(type)
-    if current_section.nil? || current_section.send("#{type}?")
-      flash[:error] = "The current section must not be a #{type} section to do that."
-      redirect_back_or_to(current_user ? my_page_path : signin_path)
+    [*type].each do |t|
+      if current_section.nil? || current_section.send("#{t}?")
+        flash[:error] = "The current section must not be a #{t} section to do that."
+        redirect_back_or_to(current_user ? my_page_path : signin_path)
+      end
     end
   end
 
@@ -210,6 +212,19 @@ class ApplicationController < ActionController::Base
       :beavers=>'lodge',
       :cubs=>'six',
       :scouts=>'patrol',
+      :adults=>'section'
+    }[type] || 'grouping'
+  end
+
+  # Get the section general name (e.g. troop) for a given section type
+  # @param type the type of section (:beavers, :cubs ...)
+  # @returns a string
+  def get_section_general_name(type)
+    {
+      :beavers=>'colony',
+      :cubs=>'pack',
+      :scouts=>'troop',
+      :explorers=>'unit',
       :adults=>'section'
     }[type] || 'grouping'
   end

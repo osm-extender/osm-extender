@@ -17,10 +17,6 @@ module NavigationHelpers
     when /^the page for (.*) (\d+)$/
       self.send("#{$1.downcase}_path".to_sym, $2.to_i)
 
-    when /^edit the FAQ "([^"]*)"$/
-      faq = Faq.find_by_question($1)
-      edit_faq_path faq
-
     when /^reset_password token="([^"]*)"$/
       "/reset_password/#{$1}"
     when /^activate_account token="([^"]*)"$/
@@ -35,6 +31,10 @@ module NavigationHelpers
       method = ($1.eql?('show')) ? '' : "/#{$1}"
       reminder = User.find_by_email_address!($2).email_reminders.first
       "/email_reminders/#{reminder.id}#{method}"
+    when /^the edit shared event "([^"]*)" page$/
+      edit_shared_event_path(SharedEvent.find_by_name($1))
+    when /^the attend shared event "([^"]*)" page$/
+      new_shared_event_attendance_url({:se_id => SharedEvent.find_by_name($1).id})
     when /^"(.+)"$/
       $1
 

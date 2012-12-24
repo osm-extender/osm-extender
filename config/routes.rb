@@ -90,5 +90,12 @@ OSMExtender::Application.routes.draw do
 
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
 
+  resources :shared_events do
+    resources :shared_event_fields, :only => [:create, :update, :destroy], :as => 'fields', :path => 'fields'
+#    resources :shared_event_attendances, :as => 'attendances', :path => 'attendances'
+  end
+  get '/shared_events/:shared_event_id/attend(.:format)' => 'shared_event_attendances#attend'
+  resources :shared_event_attendances
+
   root :to => 'static#welcome'
 end

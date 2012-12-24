@@ -1,0 +1,87 @@
+<% provide :title, "Shared Event (management) - #{@shared_event.name}" %>
+
+
+<h2>Event Details</h2>
+<table>
+  <tr>
+    <th>Name</th>
+    <td><%= @shared_event.name %></td>
+  </tr>
+  <tr>
+    <th>Start date</th>
+    <td><%= @shared_event.start_date %></td>
+  </tr>
+  <tr>
+    <th>Finish date</th>
+    <td><%= @shared_event.finish_date %></td>
+  </tr>
+  <tr>
+    <th>Start time</th>
+    <td><%= @shared_event.start_time %></td>
+  </tr>
+  <tr>
+    <th>Finish time</th>
+    <td><%= @shared_event.finish_time %></td>
+  </tr>
+  <tr>
+    <th>Cost</th>
+    <td><%= @shared_event.cost %></td>
+  </tr>
+  <tr>
+    <th>Location</th>
+    <td><%= @shared_event.location %></td>
+  </tr>
+  <tr>
+    <th>Notes</th>
+    <td><%= @shared_event.notes %></td>
+  </tr>
+  <tr>
+    <th>Extra fields</th>
+    <td>
+      <ul>
+        <%- @shared_event.fields.each do |field| %>
+          <li><%= field.name %></li>
+        <%- end %>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+
+<h2>Sections Attending</h2>
+<ul>
+  <%- @shared_event.attendance.each do |attendance| %>
+    <%- section = Osm::Section.get(attendance.user.osm_api, attendance.section_id) %>
+    <li><%= "#{section.name} (#{section.group_name})" %></li>
+  <%- end %>
+</ul>
+
+
+
+<h2>Attendee details</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Section</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <%- @shared_event.fields.each do |field| %>
+        <th><%= field.name %></th>
+      <%- end %>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @shared_event.get_attendees_data.each do |section_name, attendees| %>
+      <%- attendees.each do |attendee| %>
+        <tr>
+          <td><%= section_name %></td>
+          <td><%= attendee[:first_name] %></td>
+          <td><%= attendee[:last_name] %></td>
+          <%- @shared_event.fields.each do |field| %>
+            <td><%= attendee[field.id] %></td>
+          <%- end %>
+        </tr>
+      <%- end %>
+    <%- end %>
+  </tbody>
+</table>

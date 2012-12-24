@@ -1,0 +1,27 @@
+<% provide :title, 'Shared Events (attendance)' %>
+
+<%- unless @shared_event_attendances.empty? %>
+  <h2>Shared Events Your Section is Attending</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Start Date</th>
+      <th>Actions</th>
+    </tr>
+  
+    <% @shared_event_attendances.each do |attendance| %>
+      <tr>
+        <td><%= attendance.shared_event.name %></td>
+        <td><%= ordinalized_date(attendance.shared_event.start_date, "%a %d of %b %Y") %></td>
+        <td>
+          <%= link_to '[Details]', attendance %>
+          <%= link_to '[Edit]', edit_shared_event_attendance_path(attendance) %>
+          <%= link_to '[Destroy]', attendance, data: {:confirm => 'Are you sure?'}, method: :delete %>
+        </td>
+      </tr>
+    <%- end %>
+  </table>
+
+<%- else %>
+  <p>Your section is not currently attending any shared events.</p>
+<%- end %>

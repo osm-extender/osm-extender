@@ -7,6 +7,9 @@
     <tr><td class="empty"></td><td>Email lists</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
     <tr><td class="empty"></td><td>Email reminders (birthdays)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
     <%- end %>
+    <%- if section.youth_section? %>
+    <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
+    <%- end %>
 
     <%- if section.youth_section? %>
     <tr><td class="title">Badge Records</td><td class="empty" colspan="4"></td></tr>
@@ -30,11 +33,15 @@
     <%- if section.youth_section? %>
     <tr><td class="title">Events</td><td class="empty" colspan="4"></td></tr>
     <tr><td class="empty"></td><td>Email reminders (events)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :events, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :events, current_user, section) %></td></tr>
+    <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read and Write</td><td><%= yes_no api_has_osm_permission?([:read, :write], :events, current_user, section) %></td><td><%= yes_no user_has_osm_permission?([:read, :write], :events, current_user, section) %></td></tr>
     <%- end %>
 
     <%- if !section.waiting? %>
     <tr><td class="title">Flexi-Records</td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>View Flexi Records</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :flexi, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :flexi, current_user, section) %></td></tr>
+    <tr><td class="empty"></td><td>Flexi Records</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :flexi, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :flexi, current_user, section) %></td></tr>
+    <%- end %>
+    <%- if section.youth_section? %>
+    <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :flexi, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :flexi, current_user, section) %></td></tr>
     <%- end %>
 
   <!--  <tr><td class="title">Finances</td><td class="empty" colspan="4"></td></tr> -->

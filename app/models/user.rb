@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   has_many :email_lists, :dependent => :destroy
   has_many :hidden_announcements, :dependent => :destroy
   has_many :emailed_announcements, :dependent => :destroy
+  has_many :shared_event_attendances, :dependent => :destroy
+  has_many :shared_events, :dependent => :destroy
 
   validates_presence_of :name
 

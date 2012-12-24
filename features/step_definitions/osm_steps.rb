@@ -495,10 +495,12 @@ def get_osm_url(description)
   return 'users.php?action=authorise' if description.eql?('authorize')
   return 'api.php?action=getUserRoles' if description.eql?('get roles')
   return 'users.php?action=getAPIAccess' if description.eql?('get_api_access')
+  return 'events.php?action=addEvent&sectionid=1' if description.eql?('create_event')
   return nil
 end
 
 def get_osm_body(description)
   return '{"secret":"abc123","userid":"1234"}' if description.eql?('authorize')
+  return '{"id":1}' if description.eql?('create_event')
   return nil
 end

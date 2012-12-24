@@ -1,0 +1,73 @@
+<% provide :title, "Shared Event (attendance) - #{@shared_event_attendance.shared_event.name}" %>
+
+
+<h2>Event Details</h2>
+<table>
+  <tr>
+    <th>Name</th>
+    <td><%= @shared_event_attendance.shared_event.name %></td>
+  </tr>
+  <tr>
+    <th>Start date</th>
+    <td><%= @shared_event_attendance.shared_event.start_date %></td>
+  </tr>
+  <tr>
+    <th>Finish date</th>
+    <td><%= @shared_event_attendance.shared_event.finish_date %></td>
+  </tr>
+  <tr>
+    <th>Start time</th>
+    <td><%= @shared_event_attendance.shared_event.start_time %></td>
+  </tr>
+  <tr>
+    <th>Finish time</th>
+    <td><%= @shared_event_attendance.shared_event.finish_time %></td>
+  </tr>
+  <tr>
+    <th>Cost</th>
+    <td><%= @shared_event_attendance.shared_event.cost %></td>
+  </tr>
+  <tr>
+    <th>Location</th>
+    <td><%= @shared_event_attendance.shared_event.location %></td>
+  </tr>
+  <tr>
+    <th>Notes</th>
+    <td><%= @shared_event_attendance.shared_event.notes %></td>
+  </tr>
+  <tr>
+    <th>Extra fields</th>
+    <td>
+      <ul>
+        <%- @shared_event_attendance.shared_event.fields.each do |field| %>
+          <li><%= field.name %></li>
+        <%- end %>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+
+<h2>Attendee details</h2>
+<table>
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <%- @shared_event_attendance.shared_event.fields.each do |field| %>
+        <th><%= field.name %></th>
+      <%- end %>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @shared_event_attendance.get_attendees_data.each do |attendee| %>
+      <tr>
+        <td><%= attendee[:first_name] %></td>
+        <td><%= attendee[:last_name] %></td>
+        <%- @shared_event_attendance.shared_event.fields.each do |field| %>
+          <td><%= attendee[field.id] %></td>
+        <%- end %>
+      </tr>
+    <%- end %>
+  </tbody>
+</table>
