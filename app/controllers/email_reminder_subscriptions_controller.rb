@@ -17,7 +17,7 @@ class EmailReminderSubscriptionsController < ApplicationController
     @share.state = @state
     if @share.update_attributes(params)
       flash[:notice] = 'Your subscription was updated.'
-      redirect_to root_url
+      redirect_to root_path
     else
       @states = get_states(@share)
       render :edit

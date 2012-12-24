@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
 
       # prevent session fixation attack
       old_session = {}
-      keys_to_preserve = [:user_id, :return_to_url, :last_action_time, :login_time]
+      keys_to_preserve = [:user_id, :return_to_path, :return_to_url, :last_action_time, :login_time]
       keys_to_preserve.each do |key|
         old_session[key] = session[key] unless session[key].nil?
       end
@@ -53,7 +53,7 @@ class SessionsController < ApplicationController
   def destroy
     logout
     reset_session
-    redirect_to root_url, :notice => 'Sucessfully signed out.'
+    redirect_to root_path, :notice => 'Sucessfully signed out.'
   end
 
 

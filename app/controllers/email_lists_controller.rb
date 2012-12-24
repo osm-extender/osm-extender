@@ -31,7 +31,7 @@ class EmailListsController < ApplicationController
     @email_list = current_user.email_lists.new(clean_params(params[:email_list]))
 
     if @email_list.save
-      redirect_to email_lists_url, notice: 'Email list was successfully saved.'
+      redirect_to email_lists_path, notice: 'Email list was successfully saved.'
     else
       @groupings = get_all_groupings
       @sections_data = get_sections_data
@@ -43,7 +43,7 @@ class EmailListsController < ApplicationController
     @email_list = current_user.email_lists.find(params[:id])
 
     if @email_list.update_attributes(clean_params(params[:email_list]))
-      redirect_to email_lists_url, notice: 'Email list was successfully updated.'
+      redirect_to email_lists_path, notice: 'Email list was successfully updated.'
     else
       @groupings = get_all_groupings
       @sections_data = get_sections_data
@@ -55,7 +55,7 @@ class EmailListsController < ApplicationController
     @email_list = current_user.email_lists.find(params[:id])
     @email_list.destroy
 
-    redirect_to email_lists_url
+    redirect_to email_lists_path
   end
 
 
@@ -77,7 +77,7 @@ class EmailListsController < ApplicationController
         multiple_get_addresses(params[:email_list])
       else
         flash[:error] = 'That was an invalid action.'
-        redirect_to email_lists_url
+        redirect_to email_lists_path
     end
   end
 
@@ -87,7 +87,7 @@ class EmailListsController < ApplicationController
         tool_find_address(params[:find_address])
       else
         flash[:error] = 'That was an invalid tool.'
-        redirect_to email_lists_url
+        redirect_to email_lists_path
     end
   end
 

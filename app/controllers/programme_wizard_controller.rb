@@ -15,7 +15,7 @@ class ProgrammeWizardController < ApplicationController
       created = @programme.create_programme
       flash[:notice] = 'Your programme was created.' if created
       flash[:error] = 'Your programme was not completly created.' if !created
-      redirect_back_or_to root_url
+      redirect_back_or_to root_path
     else
       render 'new_programme'
     end

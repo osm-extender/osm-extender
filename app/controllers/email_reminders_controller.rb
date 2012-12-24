@@ -52,7 +52,7 @@ class EmailRemindersController < ApplicationController
     @email_reminder = current_user.email_reminders.find(params[:id])
     @email_reminder.destroy
 
-    redirect_to email_reminders_url
+    redirect_to email_reminders_path
   end
 
 

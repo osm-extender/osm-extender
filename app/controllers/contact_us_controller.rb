@@ -16,7 +16,7 @@ class ContactUsController < ApplicationController
     recaptcha_ok = current_user || verify_recaptcha(:model=>@contact)
 
     if (recaptcha_ok && contact_valid) && @contact.send_contact
-      redirect_back_or_to root_url, :notice => 'Your message was sent.'
+      redirect_back_or_to root_path, :notice => 'Your message was sent.'
     else
       render :new
     end
