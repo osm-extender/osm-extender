@@ -22,13 +22,13 @@ function saveCustomSizes(csrfToken) {
     async: false,
     success: function(data, status, jqXHR) {
       if (data['saved']) {
-        alert("Your preferences were saved");
+        $().toastmessage('showSuccessToast', "Your preferences were saved");
       } else {
-        alert("An error occured and your preferences were not saved");
+        $().toastmessage('showErrorToast', "An error occured and your preferences were not saved");
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      alert(textStatus);
+      $().toastmessage('showErrorToast', textStatus);
     }
   })
 }
