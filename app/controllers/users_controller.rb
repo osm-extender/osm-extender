@@ -41,9 +41,9 @@ class UsersController < ApplicationController
     if @user.save
       user = login(params[:user][:email_address], params[:user][:password])
       if user
-        redirect_back_or_to root_url, :notice => 'Your signup was successful, you are now signed in.'
+        redirect_back_or_to root_path, :notice => 'Your signup was successful, you are now signed in.'
       else
-        redirect_to root_url, :notice => 'Your signup was successful, please check your email for instructions.'
+        redirect_to root_path, :notice => 'Your signup was successful, please check your email for instructions.'
       end
     else
       @signup_code = params[:signup_code]
@@ -67,7 +67,7 @@ class UsersController < ApplicationController
       redirect_to signin_path
     else
       flash[:error] = 'We were unable to activate your account.'
-      redirect_to root_url
+      redirect_to root_path
     end
   end
 

@@ -57,6 +57,19 @@ class Ability
         result
       end
 
+      can :administer, SharedEvent do |se|
+        se.user == user
+      end
+      can :create, SharedEvent
+
+      can :administer, SharedEventField do |sef|
+        (sef.event.attendance.count == 0) && can?(:administer, sef.event)
+      end
+
+      can :administer, SharedEventAttendance do |sea|
+        sea.user == user
+      end
+      can :create, SharedEventAttendance
 
       can :hide, Announcement
 

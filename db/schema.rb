@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121127184552) do
+ActiveRecord::Schema.define(:version => 20121212121739) do
 
   create_table "announcements", :force => true do |t|
     t.text     "message",                           :null => false
@@ -147,6 +147,56 @@ ActiveRecord::Schema.define(:version => 20121127184552) do
 
   add_index "setting_values", ["key"], :name => "index_setting_values_on_key", :unique => true
 
+  create_table "shared_event_attendances", :force => true do |t|
+    t.integer  "shared_event_id", :null => false
+    t.integer  "user_id",         :null => false
+    t.integer  "section_id",      :null => false
+    t.integer  "event_id",        :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "shared_event_attendances", ["shared_event_id"], :name => "index_shared_event_attendances_on_shared_event_id"
+  add_index "shared_event_attendances", ["user_id"], :name => "index_shared_event_attendances_on_user_id"
+
+  create_table "shared_event_field_data", :force => true do |t|
+    t.integer  "shared_event_field_id",      :null => false
+    t.integer  "shared_event_attendance_id", :null => false
+    t.string   "source_type",                :null => false
+    t.integer  "source_id"
+    t.string   "source_field",               :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+  end
+
+  add_index "shared_event_field_data", ["shared_event_attendance_id"], :name => "index_shared_event_field_data_on_shared_event_attendance_id"
+  add_index "shared_event_field_data", ["shared_event_field_id"], :name => "index_shared_event_field_data_on_shared_event_field_id"
+
+  create_table "shared_event_fields", :force => true do |t|
+    t.integer  "shared_event_id", :null => false
+    t.string   "name",            :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "shared_event_fields", ["shared_event_id"], :name => "index_shared_event_fields_on_shared_event_id"
+
+  create_table "shared_events", :force => true do |t|
+    t.string   "name",        :null => false
+    t.date     "start_date"
+    t.string   "start_time"
+    t.date     "finish_date"
+    t.string   "finish_time"
+    t.string   "cost"
+    t.string   "location"
+    t.text     "notes"
+    t.integer  "user_id",     :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "shared_events", ["user_id"], :name => "index_shared_events_on_user_id"
+
   create_table "statistics", :force => true do |t|
     t.date     "date",                         :null => false
     t.integer  "users"
@@ -184,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20121127184552) do
     t.boolean  "can_administer_announcements",                  :default => false
     t.boolean  "can_administer_delayed_job",                    :default => false
     t.boolean  "can_become_other_user",                         :default => false
+    t.integer  "custom_row_height",                             :default => 0
+    t.integer  "custom_text_size",                              :default => 0
   end
 
   add_index "users", ["activation_token"], :name => "index_users_on_activation_token"

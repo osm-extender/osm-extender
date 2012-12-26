@@ -89,7 +89,7 @@ class MyAccountController < ApplicationController
       logout
       reset_session
       flash[:notice] = 'Your account was deleted.'
-      redirect_to root_url
+      redirect_to root_path
     else
       flash[:error] = 'Sorry something went wrong.'
       redirect_to confirm_delete_my_account_path

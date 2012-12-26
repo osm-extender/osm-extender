@@ -9,8 +9,4 @@ class ApplicationMailer < ActionMailer::Base
     return "#{start} - #{subject}"
   end
 
-  def build_url(path)
-    return Rails.configuration.root_url.to_s + path
-  end
-
 end

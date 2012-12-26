@@ -4,7 +4,7 @@
 Feature: Flexi Records
     As a section leader
     In order to better correct printed flexi records
-    I want to be able to print them to my idea size
+    I want to be able to print them to my ideal size
 
     Background:
 	Given I have no users

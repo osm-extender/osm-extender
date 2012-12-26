@@ -15,7 +15,7 @@
       </tr>
     </thead>
   
-    <tbody id="items" data-update-url="<%= re_order_email_reminder_url %>" data-csrf-token="<%= form_authenticity_token.to_s %>">
+    <tbody id="items" data-update-url="<%= re_order_email_reminder_path %>" data-csrf-token="<%= form_authenticity_token.to_s %>">
       <%- @email_reminder.items.each do |item| %>
         <tr id="email_reminder_item_<%= item.id %>">
           <td><span class="drag_handle">[re-order]</span> <%= item.human_name %></td>

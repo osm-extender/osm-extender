@@ -92,3 +92,19 @@ function graphStepSize(range, targetSteps) {
 function graphGridLines(range, targetSteps) {
   return Math.ceil(range / graphStepSize(range, targetSteps)) + 1; // Add one for the x axis
 }
+
+
+
+$(function() {
+  $( ".datepicker" ).datepicker({
+    showOn: 'both',
+    buttonImageOnly: true,
+    buttonImage: '/assets/icons/calendar-small.png',
+    buttonText: 'Calendar',
+    constrainInput: true,
+    dateFormat: 'yy-mm-dd',
+    changeMonth: true,
+    changeYear: true,
+    onClose: function(dateText, inst) { $(inst.input).change().focusout(); }
+  });
+});

@@ -1,0 +1,65 @@
+<%= form_for @shared_event, :validate=>true do |f| %>
+  <% if @shared_event.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@shared_event.errors.count, "error") %> prohibited this shared event from being saved:</h2>
+
+      <ul>
+      <% @shared_event.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <p>
+    The following information will be used to create events in OSM when sections mark themselves as attending your event.
+    You will be given a link for them to visit in order to mark themselves as attending, they will need their own OSMExtender account in order to do this.
+  </p>
+
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :start_date %><br/>
+    <%= f.text_field :start_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+  </div>
+
+  <div class="field">
+    <%= f.label :finish_date %><br/>
+    <%= f.text_field :finish_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+  </div>
+
+  <div class="field">
+    <%= f.label :start_time %><br/>
+    <%= f.text_field :start_time, :placeholder=>'hh:mm' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :finish_time %><br/>
+    <%= f.text_field :finish_time, :placeholder=>'hh:mm' %>
+  </div>
+
+  <div class="field">
+    <%= f.label :cost %><br />
+    <%= f.text_field :cost %>
+  </div>
+
+  <div class="field">
+    <%= f.label :location %><br />
+    <%= f.text_field :location %>
+  </div>
+
+  <div class="field">
+    <%= f.label :notes %><br />
+    <%= f.text_area :notes, :cols => 60, :rows => 6 %>
+  </div>
+
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

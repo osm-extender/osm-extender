@@ -40,6 +40,15 @@ Master {<img src="https://gemnasium.com/robertgauld/OSMExtender.png" alt="Depend
 [Map members]
  View a map of where the members of your section live in relation to your meeting point.
 
+[Contact details]
+This allows you to view a selection of your members' details in a way which allows you to change text and column sizes to allow for easier reading / filling in of the printed text.
+
+[Flexi records]
+This allows you to view a selection of your flexi records' data in a way which allows you to change text and column sizes to allow for easier reading / filling in of the printed text.
+
+[Shared events]
+These allow several sections to use OSM to manage their attendance at a larger event whilst allowing the event orgabiser to see the details for all attendees accross all sections.
+
 
 == Setting up \OSM Extender
 Please follow the information in the {project's wiki}[https://github.com/robertgauld/OSMExtender/wiki/Running-the-system].

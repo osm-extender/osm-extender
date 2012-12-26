@@ -58,9 +58,6 @@ OSMExtender::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  # Root URL of application (used in sending emails)
-  config.root_url = ''  # You should override this in production_custom.rb
-
   # Which sort of cache to use
   config.cache_store = :memory_store, {
     :size => 32 * (1024 * 1024), #MiB
@@ -68,6 +65,18 @@ OSMExtender::Application.configure do
     :compress_threshold => 1 * (1024 * 1024), #MiB
     :expires_in => 30.minutes,
     :race_condition_ttl => 2.minutes
+  }
+
+  # Mailer URL options (you should override this in production_custom.rb)
+  config.action_mailer.default_url_options = {
+    :protocol => 'https',
+    :host => 'localhost',
+  }
+
+  # Controller URL options (you should override this in production_custom.rb)
+  config.action_controller.default_url_options = {
+    :protocol => 'https',
+    :host => 'localhost',
   }
 
 end

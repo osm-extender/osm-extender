@@ -1,0 +1,58 @@
+<% provide :title, "Contact details for #{current_section.name}" %>
+
+
+<table id="table">
+  <thead>
+    <tr class="row_head">
+      <th class="cell_name field_head">Name</th>
+      <%- @fields.each do |key| %>
+        <th class="cell_<%= key %> field_head"><%= current_section.column_names[key] %></th>
+      <%- end %>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @members.each do |member| %>
+      <tr class="row_data">
+        <td class="cell_name field_data"><%= member.name %></td>
+        <%- @fields.each do |key| %>
+          <td class="cell_<%= key %> field_data"><%= member.send(key) %></td>
+        <%- end %>
+      </tr>
+    <%- end %>
+    <tr class="row_total">
+      <td class="label" colspan="<%= @fields.size - @totals.size %>" style="text-align: right;">Total:</td>
+      <%- @fields.each do |field| %>
+        <td class="cell_<%= field %> field_total"><%= @totals[field] %></td>
+      <%- end %>
+    </tr>
+    <tr class="row_count">
+      <td class="label" colspan="<%= @fields.size - @totals.size %>" style="text-align: right;">Count:</td>
+      <%- @fields.each do |field| %>
+        <td class="cell_<%= field %> field_count""><%= @counts[field] %></td>
+      <%- end %>
+    </tr>
+  </tbody>
+</table>
+
+
+<div id="change_sizes">
+  <h2>Change sizes</h2>
+  <span onClick="changeTextSize(-1);">[-]</span> <span onClick="changeTextSize(1);">[+]</span> Text Size<br/>
+  <span onClick="changeRowHeight(-4);">[-]</span> <span onClick="changeRowHeight(4);">[+]</span> Row Height<br/>
+  <span onClick="changeColumnWidth('name', -10);">[-]</span> <span onClick="changeColumnWidth('name', 10);">[+]</span> Width of Name<br/>
+  <%- @fields.each do |key| %>
+    <span onClick="changeColumnWidth('<%= key %>', -10);">[-]</span> <span onClick="changeColumnWidth('<%= key %>', 10);">[+]</span> Width of <%= current_section.column_names[key] %><br/>
+  <%- end %>
+  <span onClick="saveCustomSizes('<%= form_authenticity_token.to_s %>');">[Save text and row sizes]</span>
+</div>
+
+
+<script type="text/javascript">
+  <%- if current_user.custom_row_height? %>
+    setRowHeight(<%= current_user.custom_row_height %>);
+  <%- end %>
+  <%- if current_user.custom_text_size? %>
+    setTextSize(<%= current_user.custom_text_size %>);
+  <%- end %>
+</script>
+

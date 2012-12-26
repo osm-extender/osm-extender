@@ -15,6 +15,7 @@
 
   <%= stylesheet_link_tag 'jquery.ui.all' %>
   <%= stylesheet_link_tag 'token-input' %>
+  <%= stylesheet_link_tag 'jquery.toastmessage' %>
   <%= stylesheet_link_tag 'application', :media => :all %>
   <%= stylesheet_link_tag 'application__print', :media=>:print %>
   <%= stylesheet_link_tag params[:controller] if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
@@ -26,6 +27,7 @@
   <%= javascript_include_tag :jquery_ujs %>
   <%= javascript_include_tag 'jquery.ui.all' %>
   <%= javascript_include_tag 'jquery.tokeninput' %>
+  <%= javascript_include_tag 'jquery.toastmessage' %>
   <%= javascript_include_tag 'rails.validations' %>
   <%= javascript_include_tag 'rails.validations.custom' %>
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
@@ -41,7 +43,7 @@
     <div id="header">
       <div id="primary_menu">
         <div id="primary_menu_nav">
-          <div class="menu_item"><%= link_to 'Home', root_url %></div>
+          <div class="menu_item"><%= link_to 'Home', root_path %></div>
           <div class="menu_item"><%= link_to 'Help', help_path %></div>
           <div class="menu_item"><%= link_to 'Contact us', new_contact_u_path %></div>
         </div>
@@ -79,15 +81,18 @@
           <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
           <%- if current_user.connected_to_osm? && current_section %>
             <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
+            <div class="menu_item"><%= link_to 'Shared events (management)', shared_events_path %></div>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
             <div id="current_section">
               Current section: <%= "#{current_section.name} (#{current_section.group_name})" %>
             </div>
+            <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Contact details', osm_details_fields_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path %></div><%- end %>
             <%- if !current_section.waiting? && has_osm_permission?(:read, :flexi) %><div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div><%- end %>
+            <%- if current_section.youth_section? && has_osm_permission?([:read, :write], :events) %><div class="menu_item"><%= link_to 'Shared events (attendance)', shared_event_attendances_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:write, :programme) %><div class="menu_item"><%= link_to 'Programme wizard', new_create_programme_path %></div><%- end %>
-            <%- unless current_section.waiting? || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi]) && has_osm_permission?(:write, :programme)) || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi])) %>
+            <%- unless current_section.waiting? || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi, :events]) && has_osm_permission?(:write, [:programme, :events])) || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi])) %>
               <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
                 <p>Some items have hidden from this menu becuase of how your <%= link_to 'OSM Permissions', osm_permissions_path %> are set.</p>
               </div>
@@ -155,5 +160,6 @@
 
 
   </div><!-- page -->
+
 </body>
 </html>

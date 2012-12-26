@@ -1,7 +1,7 @@
 <p><%= @user.name %> you have successfully signed up to OSMExtender, however your account still needs to be activated.</p>
 
 <p>To activate your account go to
-<br/><%= link_to @url, @url %>
+<br/><%= link_to nil, activate_account_url(@user.activation_token) %>
 <br/>This must be done within 1 week.
 </p>
 

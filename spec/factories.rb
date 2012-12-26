@@ -6,17 +6,20 @@ FactoryGirl.define do
     name 'Someone'
   end
 
-  factory :faq do
-    sequence(:question) { |n| "FAQ #{n}" }
-    sequence(:answer) { |n| "This is answer #{n}." }
-    active true
-    tag_tokens "1"
-  end
-
   factory :announcement do
     sequence(:message) { |n| "Message #{n}" }
     start Time.now
     finish 1.week.from_now
+  end
+
+  factory :shared_event do
+    ignore do
+      user_email_address 'alice@example.com'
+    end
+
+    sequence(:name) { |n| "Shared event #{n}" }
+    start_date 1.week.from_now.strftime('%Y-%b-%d')
+    user_id { User.find_by_email_address(user_email_address).id }
   end
 
 end

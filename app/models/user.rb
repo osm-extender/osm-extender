@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   has_many :email_lists, :dependent => :destroy
   has_many :hidden_announcements, :dependent => :destroy
   has_many :emailed_announcements, :dependent => :destroy
+  has_many :shared_event_attendances, :dependent => :destroy
+  has_many :shared_events, :dependent => :destroy
 
   validates_presence_of :name
 
@@ -21,6 +23,8 @@ class User < ActiveRecord::Base
   validate :password_complexity, :password_not_email_address, :password_not_name, :unless => Proc.new { |record| record.send(sorcery_config.password_attribute_name).nil? }
 
   validates_numericality_of :startup_section, :only_integer=>true, :greater_than_or_equal_to=>0
+  validates_numericality_of :custom_row_height, :only_integer=>true, :greater_than_or_equal_to=>0
+  validates_numericality_of :custom_text_size, :only_integer=>true, :greater_than_or_equal_to=>0
 
 
   def change_password!(new_password, new_password_confirmation=new_password)
