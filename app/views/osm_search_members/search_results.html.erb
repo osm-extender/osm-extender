@@ -1,0 +1,15 @@
+<% provide :title, "Search members for \"#{params[:search_for]}\"" %>
+
+
+<ul>
+<%- @found.each_key do |section_id| %>
+  <li>
+    <%= get_section_names[section_id] %>
+    <ul>
+      <%- @found[section_id].each do |member| %>
+        <li><%= member.name %></li>
+      <%- end %>
+    </ul>
+  </li>
+<%- end %>
+</ul>

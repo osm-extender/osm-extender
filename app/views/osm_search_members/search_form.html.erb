@@ -1,0 +1,41 @@
+<% provide :title, 'Search members' %>
+
+
+<%= form_tag osm_search_members_results_path do %>
+
+  <h2>Search fields</h2>
+  <table>
+    <thead>
+      <tr>
+        <td></td>
+        <%- @section_ids.each do |section_id| %>
+          <th>
+            <%= check_box_tag "select_all_s[#{section_id}]", 1, false, {:class => 'select_all_section', :data => {'section-id' => section_id}, :title => '(Un)Select all for this section'} %>
+            <%= label_tag "select_all_s[#{section_id}]", get_section_names[section_id] %>
+          </th>
+        <%- end %>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @field_keys.each do |field_key| %>
+        <tr>
+          <td>
+            <%= check_box_tag "select_all_f[#{field_key}]", 1, false, {:class => 'select_all_field', :data => {'field-id' => field_key}, :title => '(Un)Select all for this field'} %>
+          </td>
+          <%- @section_ids.each do |section_id| %>
+            <td>
+              <%- unless @column_names[section_id][field_key].nil? %>
+                <%= check_box_tag "selected[#{section_id}][#{field_key}]", 1, false, {:class => "section-#{section_id} field-#{field_key}"} %>
+                <%= label_tag "selected[#{section_id}][#{field_key}]", @column_names[section_id][field_key] %>
+              <%- end %>
+            </td>
+          <%- end %>
+        </tr>
+      <%- end %>
+    </tbody>
+  </table>
+
+  <h2>Search for</h2>
+  <%= text_field_tag :search_for, nil, :size => 50 %>
+  <%= submit_tag 'Search' %>
+<%- end %>

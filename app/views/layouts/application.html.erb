@@ -81,6 +81,7 @@
           <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
           <%- if current_user.connected_to_osm? && current_section %>
             <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
+            <div class="menu_item"><%= link_to 'Search members', osm_search_members_form_path %></div>
             <div class="menu_item"><%= link_to 'Shared events (management)', shared_events_path %></div>
             <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
             <div id="current_section">

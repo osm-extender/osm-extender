@@ -25,7 +25,6 @@ OSMExtender::Application.routes.draw do
   post 'email_lists/preview' => 'email_lists#preview', :as => 'preview_email_list'
   get 'email_lists/:id/get_addresses' => 'email_lists#get_addresses', :as => 'email_list_addresses'
   post 'email_lists/multiple' => 'email_lists#multiple', :as => 'multiple_email_list'
-  post 'email_lists/tools' => 'email_lists#tool', :as => 'email_list_tool'
   resources :email_lists
 
   match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
@@ -81,6 +80,9 @@ OSMExtender::Application.routes.draw do
 
   get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
   post 'osm_details/show' => 'osm_details#show', :as => 'osm_details_show'
+
+  get 'osm_search_members' => 'osm_search_members#search_form', :as => 'osm_search_members_form'
+  post 'osm_search_members' => 'osm_search_members#search_results', :as => 'osm_search_members_results'
 
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
