@@ -31,9 +31,6 @@ OSMExtender::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  # Root URL of application (used in sending emails)
-  config.root_url = 'http://localhost:3000'
-
   # Which sort of cache to use
   config.cache_store = :memory_store, {
     :size => 8 * (1024 * 1024), #MiB
@@ -45,6 +42,20 @@ OSMExtender::Application.configure do
 
   # Don't deliver emails, open them in a new window instead
   config.action_mailer.delivery_method = :letter_opener
+
+  # Mailer URL options
+  config.action_mailer.default_url_options = {
+    :protocol => 'http',
+    :host => 'localhost',
+    :port => 3000,
+  }
+
+  # Controller URL options
+  config.action_controller.default_url_options = {
+    :protocol => 'http',
+    :host => 'localhost',
+    :port => 3000,
+  }
 
 end
 

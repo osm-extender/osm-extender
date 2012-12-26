@@ -151,7 +151,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
 	Then I should see "There are no more items you can add"
 	And I should not see "You can add an item"
-
+@focus
     Scenario: Edit reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
         When I signin as "alice@example.com" with password "P@55word"

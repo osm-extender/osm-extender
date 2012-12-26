@@ -10,7 +10,4 @@ ActionDispatch::Callbacks.to_prepare do
       :enable_starttls_auto => true
     }
   end
-
-  ActionMailer::Base.default_url_options[:host] = Rails.configuration.root_url
-
 end

@@ -4,7 +4,6 @@ class UserMailer < ApplicationMailer
 
   def activation_needed(user)
     @user = user
-    @url  = build_url("/activate_account/#{user.activation_token}")
     mail ({
       :subject => build_subject('Activate Your Account'),
       :to => build_email_address
@@ -21,7 +20,6 @@ class UserMailer < ApplicationMailer
 
   def reset_password(user)
     @user = user
-    @url  = build_url("/reset_password/#{user.reset_password_token}")
     mail ({
       :subject => build_subject('Password Reset'),
       :to => build_email_address

@@ -40,11 +40,15 @@ OSMExtender::Application.configure do
   # Allow pass debug_assets=true as a query parameter to load pages with unpackaged assets
   config.assets.allow_debugging = true
 
-  # Root URL of application (used in sending emails)
-  config.root_url = 'http://test'
 
   # Which sort of cache to use
   config.cache_store = :null_store  # Turn off caching
+
+  # Mailer URL options
+  config.action_mailer.default_url_options = {
+    :protocol => 'http',
+    :host => 'test',
+  }
 
 end
 

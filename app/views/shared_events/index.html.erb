@@ -20,7 +20,7 @@
           <%= link_to '[Destroy]', shared_event, data: {:confirm => 'Are you sure?'}, method: :delete %>
         </td>
         <td>
-          <%= dest = new_shared_event_attendance_url({:se_id => shared_event.id}); link_to dest, dest %>
+          <%= link_to nil, new_shared_event_attendance_url({:se_id => shared_event.id}) %>
         </td>
       </tr>
     <%- end %>
