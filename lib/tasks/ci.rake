@@ -16,7 +16,7 @@ namespace :ci do
     # db:seed is run twice to ensure the seeding process plays nicely on a db with existing data
 
     puts "Compiling assets"
-    [assets:precompile].each do |task|
+    ['assets:precompile'].each do |task|
       Rake::Task[task].reenable
       Rake::Task[task].invoke
     end
