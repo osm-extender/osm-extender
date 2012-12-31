@@ -87,11 +87,11 @@ class EmailReminderItemProgramme < EmailReminderItem
   private
   def configuration_is_valid
     config = configuration
-
     unless config[:the_next_n_weeks] > 0
-      errors.add(:the_next_n_weeks, "must be greater than 0")
+      errors.add('How many weeks into the future?', 'Must be greater than 0')
+      config[:the_next_n_weeks] = self.class.default_configuration[:the_next_n_weeks]
     end
-    configuration = config
+    self.configuration = config
   end
 
 end

@@ -1,5 +1,7 @@
 class EmailReminderItemBirthday < EmailReminderItem
 
+  validate :configuration_is_valid
+
   def get_data
     data = []
     earliest = configuration[:the_last_n_months].months.ago.to_date
@@ -84,4 +86,18 @@ class EmailReminderItemBirthday < EmailReminderItem
     mmdd = '0301' if mmdd == '0229' && !Date.parse("#{year}0101").leap?
     return Date.parse("#{year}#{mmdd}")
   end
+
+  def configuration_is_valid
+    config = configuration
+    unless config[:the_last_n_months] > 0
+      errors.add('How many months into the past?', 'Must be greater than 0')
+      config[:the_last_n_months] = self.class.default_configuration[:the_last_n_months]
+    end
+    unless config[:the_next_n_months] > 0
+      errors.add('How many months into the future?', 'Must be greater than 0')
+      config[:the_next_n_months] = self.class.default_configuration[:the_next_n_months]
+    end
+    self.configuration = config
+  end
+
 end
