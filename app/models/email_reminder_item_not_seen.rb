@@ -1,5 +1,7 @@
 class EmailReminderItemNotSeen < EmailReminderItem
 
+  validate :configuration_is_valid
+
   def get_data
     earliest = configuration[:the_last_n_weeks].weeks.ago.to_date
 
@@ -74,6 +76,15 @@ class EmailReminderItemNotSeen < EmailReminderItem
       end
     end
     return true
+  end
+
+  def configuration_is_valid
+    config = configuration
+    unless config[:the_last_n_weeks] > 0
+      errors.add('For how many weeks?', 'Must be greater than 0')
+      config[:the_last_n_weeks] = self.class.default_configuration[:the_last_n_weeks]
+    end
+    self.configuration = config
   end
 
 end

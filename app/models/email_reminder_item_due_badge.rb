@@ -1,5 +1,7 @@
 class EmailReminderItemDueBadge < EmailReminderItem
 
+  validate :configuration_is_valid
+
   def get_data
     api = user.osm_api
     return {
@@ -64,6 +66,17 @@ class EmailReminderItemDueBadge < EmailReminderItem
 
   def human_configuration
     "#{configuration[:show_stock] ? 'With' : 'Without'} badge stock levels."
+  end
+
+
+  private
+  def configuration_is_valid
+    config = configuration
+    unless [true, false].include?(config[:show_stock])
+      errors.add('Show stock level of badges?', 'Invalid option')
+      config[:show_stock] = self.class.default_configuration[:show_stock]
+    end
+    self.configuration = config
   end
 
 end

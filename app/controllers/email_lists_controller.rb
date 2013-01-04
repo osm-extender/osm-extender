@@ -81,16 +81,6 @@ class EmailListsController < ApplicationController
     end
   end
 
-  def tool
-    case params[:commit]
-      when 'Find address'
-        tool_find_address(params[:find_address])
-      else
-        flash[:error] = 'That was an invalid tool.'
-        redirect_to email_lists_path
-    end
-  end
-
 
   private
   def clean_params(params_in)
@@ -140,33 +130,6 @@ class EmailListsController < ApplicationController
 
     @section_names = get_section_names
     render 'multiple_get_addresses'
-  end
-
-
-  def tool_find_address(address)
-    address = address.downcase
-    @address = address
-    @found = []
-    Osm::Section.get_all(current_user.osm_api).each do |section|
-      unless section.waiting?
-        Osm::Member.get_for_section(current_user.osm_api, section.id).each do |member|
-          if member.email1.downcase.include?(address) || member.email2.downcase.include?(address) || member.email3.downcase.include?(address) || member.email4.downcase.include?(address)
-            @found.push({
-              :member_name => member.name,
-              :section_name => "#{section.group_name} : #{section.name}",
-            })
-          end
-        end
-      end
-    end
-
-    @found.sort! do |a,b|
-      ret =  a[:member_name] <=> b[:member_name]
-      ret = 1 if a[:section_name] > b[:section_name]
-      ret = -1 if a[:section_name] < b[:section_name]
-      ret
-    end
-    render 'tool_find_address'
   end
 
 end

@@ -1,5 +1,7 @@
 class EmailReminderItemEvent < EmailReminderItem
 
+  validate :configuration_is_valid
+
   def get_data
     data = []
     events = Osm::Event.get_for_section(user.osm_api, section_id)
@@ -60,6 +62,17 @@ class EmailReminderItemEvent < EmailReminderItem
 
   def human_configuration
     "For the next #{configuration[:the_next_n_months]} months."
+  end
+
+
+  private
+  def configuration_is_valid
+    config = configuration
+    unless config[:the_next_n_months] > 0
+      errors.add('How many months into the future?', 'Must be greater than 0')
+      config[:the_next_n_months] = self.class.default_configuration[:the_next_n_months]
+    end
+    self.configuration = config
   end
 
 end

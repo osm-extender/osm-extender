@@ -208,17 +208,6 @@ Feature: Email Lists
         And I should see "b4@example.com"
 
 
-    Scenario: Find email address
-	Given an OSM request to "get roles" will give 1 roles
-	And an OSM request to get sections will give 1 sections
-        When I signin as "alice@example.com" with password "P@55word"
-        And I go to the email_lists page
-	And I fill in "find_address" with "b1"
-	And I press "Find address"
-        And I should see "B Member"
-        And I should not see "A Member"
-
-
     Scenario: Deduplication of addresses should be case insensitive (single list)
 	Given an OSM request to get members for section 1 in term 1 will have the members
 	    | first_name | last_name | email1         | grouping_id |

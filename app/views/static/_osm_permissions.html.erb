@@ -10,6 +10,7 @@
     <%- if section.youth_section? %>
     <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
     <%- end %>
+    <tr><td class="empty"></td><td>Search members</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
 
     <%- if section.youth_section? %>
     <tr><td class="title">Badge Records</td><td class="empty" colspan="4"></td></tr>

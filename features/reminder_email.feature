@@ -151,7 +151,7 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
 	Then I should see "There are no more items you can add"
 	And I should not see "You can add an item"
-@focus
+
     Scenario: Edit reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
         When I signin as "alice@example.com" with password "P@55word"
@@ -222,6 +222,57 @@ Feature: Reminder Email
         And I press "Update due badges item"
         Then I should see "Item was successfully updated"
         And I should see "With badge stock levels." in the "Configuration" column of the "Due badges" row
+
+
+    Scenario: Edit birthday item in reminder email (invalid configuration)
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a birthday item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Birthdays" row
+        And I fill in "How many months into the past?" with "invalid"
+        And I fill in "How many months into the future?" with "invalid"
+        And I press "Update birthdays item"
+        Then I should not see "Item was successfully updated"
+        And "How many months into the past?" should contain "2"
+        And "How many months into the future?" should contain "1"
+
+    Scenario: Edit event item in reminder email (invalid configuration)
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has an event item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Events" row
+        And I fill in "How many months into the future?" with "invalid"
+        And I press "Update events item"
+        Then I should not see "Item was successfully updated"
+        And "How many months into the future?" should contain "3"
+
+    Scenario: Edit programme item in reminder email (invalid configuration)
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a programme item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Programme" row
+        And I fill in "How many weeks into the future?" with "invalid"
+        And I press "Update programme item"
+        Then I should not see "Item was successfully updated"
+        And "How many weeks into the future?" should contain "4"
+
+    Scenario: Edit not seen item in reminder email (invalid configuration)
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has a not seen item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Members not seen" row
+        And I fill in "For how many weeks?" with "invalid"
+        And I press "Update members not seen item"
+        Then I should not see "Item was successfully updated"
+        And "For how many weeks?" should contain "2"
 
 
     Scenario: Preview the email

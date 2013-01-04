@@ -15,6 +15,12 @@ namespace :ci do
     end
     # db:seed is run twice to ensure the seeding process plays nicely on a db with existing data
 
+    puts "Compiling assets"
+    ['assets:precompile'].each do |task|
+      Rake::Task[task].reenable
+      Rake::Task[task].invoke
+    end
+
     # Run commands
     ["bundle exec cucumber"].each do |cmd|
       puts "Running #{cmd}:"

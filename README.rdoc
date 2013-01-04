@@ -49,6 +49,9 @@ This allows you to view a selection of your flexi records' data in a way which a
 [Shared events]
 These allow several sections to use OSM to manage their attendance at a larger event whilst allowing the event orgabiser to see the details for all attendees accross all sections.
 
+[Search members]
+Alows you to search for members from a selection of your sections where one of a selection of their details include a search term.
+
 
 == Setting up \OSM Extender
 Please follow the information in the {project's wiki}[https://github.com/robertgauld/OSMExtender/wiki/Running-the-system].
