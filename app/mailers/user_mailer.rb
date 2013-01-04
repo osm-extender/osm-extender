@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: Settings.read('user mailer - from')
+  default from: Proc.new { Settings.read('user mailer - from') }
 
 
   def activation_needed(user)

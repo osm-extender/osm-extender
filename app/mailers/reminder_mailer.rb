@@ -1,5 +1,5 @@
 class ReminderMailer < ApplicationMailer
-  default from: Settings.read('reminder mailer - from')
+  default from: Proc.new { Settings.read('reminder mailer - from') }
 
 
   def reminder_email(reminder, data, send_to)

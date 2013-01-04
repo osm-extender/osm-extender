@@ -1,5 +1,5 @@
 class NotifierMailer < ApplicationMailer
-  default from: Settings.read('notifier mailer - from')
+  default from: Proc.new { Settings.read('notifier mailer - from') }
   helper_method :inspect_object
 
   def contact_form_submission(contact, to)
