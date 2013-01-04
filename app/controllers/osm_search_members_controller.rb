@@ -4,7 +4,7 @@ class OsmSearchMembersController < ApplicationController
 
   def search_form
     @column_names = {}
-    @field_keys = []
+    @field_keys = [:first_name, :last_name]
     Osm::Section.get_all(current_user.osm_api).each do |section|
       if api_has_osm_permission?(:read, :member, current_user, section) && user_has_osm_permission?(:read, :member, current_user, section)
         @column_names[section.id] = {:first_name=>'First name', :last_name=>'Last name'}.merge(section.column_names)
