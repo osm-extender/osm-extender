@@ -36,7 +36,7 @@ class NotifierMailer < ApplicationMailer
     @section = Osm::Section.get(@email_list.user.osm_api, @email_list.section_id)
     mail ({
       :subject => build_subject('Email List Changed'),
-      :to => "\"#{@email_list.user.name}\" <#{@email_list.user.email_address}>",
+      :to => @email_list.user.email_address_with_name
     })
   end
 

@@ -90,9 +90,15 @@ class User < ActiveRecord::Base
     Announcement.are_current.ignoring(hidden_announcements.pluck(:announcement_id))
   end
 
+
   def gravatar_id
     return Digest::MD5.hexdigest(read_attribute(:email_address).downcase)
   end
+
+  def email_address_with_name
+    "\"#{name.gsub('"', '')}\" <#{email_address}>"
+  end
+
 
   def self.search(column, text)
     allowed_columns = [:name, :email_address]

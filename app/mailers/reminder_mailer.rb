@@ -18,7 +18,7 @@ class ReminderMailer < ApplicationMailer
 
     mail ({
       :subject => build_subject("Reminder Email for #{@reminder.section_name} Failed"),
-      :to => "\"#{@reminder.user.name}\" <#{@reminder.user.email_address}>",
+      :to => @reminder.user.email_address_with_name
     })
   end
 
