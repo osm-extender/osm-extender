@@ -8,7 +8,7 @@ ActionDispatch::Callbacks.to_prepare do
           :token => Settings.read('OSM API - token'),
           :name  => Settings.read('OSM API - name'),
         },
-        :debug => Rails.env.development?
+        :debug => Rails.env.development? || defined?(IRB)
       },
       :cache => {
         :cache          => Rails.cache,
