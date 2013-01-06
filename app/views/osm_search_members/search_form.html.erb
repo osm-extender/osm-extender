@@ -36,6 +36,6 @@
   </table>
 
   <h2>Search for</h2>
-  <%= text_field_tag :search_for, nil, :size => 50 %>
+  <%= text_field_tag :search_for, params[:search_for], :size => 50 %>
   <%= submit_tag 'Search' %>
 <%- end %>

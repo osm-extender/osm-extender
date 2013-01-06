@@ -15,6 +15,12 @@ class OsmSearchMembersController < ApplicationController
   end
 
   def search_results
+    if params[:selected].nil?
+      flash[:error] = 'You must select some fields to search.'
+      search_form  # Get the data for the form
+      render :action => :search_form and return
+    end
+
     search_for = params[:search_for].downcase
     @found = {}
     params[:selected].keys.map{|i| i.to_i}.each do |section_id|
