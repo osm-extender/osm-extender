@@ -1,5 +1,7 @@
 class NotifierMailer < ApplicationMailer
-  default from: Proc.new { Settings.read('notifier mailer - from') }
+  default from: Proc.new { Settings.read('notifier mailer - from') },
+          'return-path' => Proc.new { Settings.read('notifier mailer - from').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
+
   helper_method :inspect_object
 
   def contact_form_submission(contact, to)
