@@ -60,10 +60,17 @@
             </label>
             <br/>
             <%= radio_button_tag "field_data[#{field.id}][source_type]", 'event' %>
-            <label for="field_data_<%= field.id %>_source_type_event">
-              Create a field in the event called
-              <%= text_field_tag "field_data[#{field.id}][source_event]", field.name %>
-            </label>
+            <label for="field_data_<%= field.id %>_source_type_event">Create a field in the event</label>
+            <ul>
+              <li>
+                <label for="field_data[#{field.id}][source_event_name]">Called</label>
+                <%= text_field_tag "field_data[#{field.id}][source_event_name]", field.name %>
+              </li>
+              <li>
+                <label for="field_data[#{field.id}][source_event_label]">My.SCOUT label</label>
+                <%= text_field_tag "field_data[#{field.id}][source_event_label]", nil, {:placeholder => 'Leave blank to hide from My.SCOUT'} %>
+              </li>
+            </ul>
           </td>
         </tr>
       <%- end %>

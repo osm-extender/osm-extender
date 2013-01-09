@@ -77,11 +77,10 @@ class SharedEventAttendancesController < ApplicationController
 
       if data_source[:source_type] == :event
         # Create event field
-        if event.add_field(current_user.osm_api, data_source[:source_event])
-          event = Osm::Event.get(current_user.osm_api, current_section, event.id, {:no_cache => true})
-          event.fields.each do |k, v|
-            if v == data_source[:source_event]
-              data_parameters[:source_field] = k
+        if event.add_column(current_user.osm_api, data_source[:source_event_name], data_source[:source_event_label])
+          event.columns.each do |column|
+            if column.name == data_source[:source_event_name]
+              data_parameters[:source_field] = column.id
             end
           end
           if data_parameters[:source_field].blank?
