@@ -7,7 +7,7 @@ class OsmDetailsController < ApplicationController
 
   def show
     @fields = []
-    current_section.column_names.keys.each do |key|
+    current_section.column_names.except(:patrol).keys.each do |key|
       @fields.push(key) if params[:fields][key]
     end
     @members = Osm::Member.get_for_section(current_user.osm_api, current_section)
