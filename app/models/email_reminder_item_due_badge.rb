@@ -4,8 +4,12 @@ class EmailReminderItemDueBadge < EmailReminderItem
 
   def get_data
     api = user.osm_api
+    due_badges = Osm::DueBadges.get(api, section_id)
+
+    return nil if due_badges.empty?
+
     return {
-      :due_badges => Osm::DueBadges.get(api, section_id),
+      :due_badges => due_badges,
       :badge_stock => configuration[:show_stock] ? Osm::Section.get(api, section_id).get_badge_stock(api) : {}
     }
   end

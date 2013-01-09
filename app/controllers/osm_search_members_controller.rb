@@ -7,14 +7,21 @@ class OsmSearchMembersController < ApplicationController
     @field_keys = [:first_name, :last_name]
     Osm::Section.get_all(current_user.osm_api).each do |section|
       if api_has_osm_permission?(:read, :member, current_user, section) && user_has_osm_permission?(:read, :member, current_user, section)
-        @column_names[section.id] = {:first_name=>'First name', :last_name=>'Last name'}.merge(section.column_names)
-        @field_keys |= section.column_names.keys
+        section_columns = section.column_names.except(:patrol)
+        @column_names[section.id] = {:first_name=>'First name', :last_name=>'Last name'}.merge(section_columns)
+        @field_keys |= section_columns.keys
       end
     end
     @section_ids = @column_names.keys
   end
 
   def search_results
+    if params[:selected].nil?
+      flash[:error] = 'You must select some fields to search.'
+      search_form  # Get the data for the form
+      render :action => :search_form and return
+    end
+
     search_for = params[:search_for].downcase
     @found = {}
     params[:selected].keys.map{|i| i.to_i}.each do |section_id|

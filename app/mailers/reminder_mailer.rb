@@ -1,5 +1,6 @@
 class ReminderMailer < ApplicationMailer
-  default from: Settings.read('reminder mailer - from')
+  default from: Proc.new { Settings.read('reminder mailer - from') },
+          'return-path' => Proc.new { Settings.read('reminder mailer - from').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
 
 
   def reminder_email(reminder, data, send_to)
@@ -18,7 +19,7 @@ class ReminderMailer < ApplicationMailer
 
     mail ({
       :subject => build_subject("Reminder Email for #{@reminder.section_name} Failed"),
-      :to => "\"#{@reminder.user.name}\" <#{@reminder.user.email_address}>",
+      :to => @reminder.user.email_address_with_name
     })
   end
 

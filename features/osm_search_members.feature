@@ -38,3 +38,13 @@ Feature: Search Members
         And I should see "Section 1"
         And I should see "A1 Member"
         And I should not see "A2 Member"
+
+    Scenario: Perform search without selecting fields
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "Search members"
+        Then I should be on the osm_search_members_form page
+        And I fill in "search_for" with "something"
+        And I press "Search"
+        Then I should be on the osm_search_members_form page
+        And I should see "You must select some fields to search"
+	And "search_for" should contain "something"

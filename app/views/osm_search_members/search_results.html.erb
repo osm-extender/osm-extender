@@ -1,15 +1,19 @@
 <% provide :title, "Search members for \"#{params[:search_for]}\"" %>
 
+<%- if @found.size > 0 %>
+  <ul>
+  <%- @found.each_key do |section_id| %>
+    <li>
+      <%= get_section_names[section_id] %>
+      <ul>
+        <%- @found[section_id].each do |member| %>
+          <li><%= member.name %></li>
+        <%- end %>
+      </ul>
+    </li>
+  <%- end %>
+  </ul>
 
-<ul>
-<%- @found.each_key do |section_id| %>
-  <li>
-    <%= get_section_names[section_id] %>
-    <ul>
-      <%- @found[section_id].each do |member| %>
-        <li><%= member.name %></li>
-      <%- end %>
-    </ul>
-  </li>
+<%- else %>
+  <p>No members matched your search criteria.</p>
 <%- end %>
-</ul>

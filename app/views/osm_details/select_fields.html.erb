@@ -4,7 +4,7 @@
 <h2>Which columns would you like to see?</h2>
 <%= form_tag osm_details_show_path, :method=>:post do %>
 
-  <%- current_section.column_names.each do |key, name| %>
+  <%- current_section.column_names.except(:patrol).each do |key, name| %>
     <%=check_box_tag "fields[#{key}]", 1, current_section.fields[key] %> <%= label_tag "fields[#{key}]", name %><br/>
   <%- end %>
 

@@ -1,12 +1,13 @@
 class UserMailer < ApplicationMailer
-  default from: Settings.read('user mailer - from')
+  default from: Proc.new { Settings.read('user mailer - from') },
+          'return-path' => Proc.new { Settings.read('user mailer - from').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
 
 
   def activation_needed(user)
     @user = user
     mail ({
       :subject => build_subject('Activate Your Account'),
-      :to => build_email_address
+      :to => @user.email_address_with_name
     })
   end
 
@@ -14,7 +15,7 @@ class UserMailer < ApplicationMailer
     @user = user
     mail ({
       :subject => build_subject('Your Account Has Been Activated'),
-      :to => build_email_address
+      :to => @user.email_address_with_name
     })
   end
 
@@ -22,7 +23,7 @@ class UserMailer < ApplicationMailer
     @user = user
     mail ({
       :subject => build_subject('Password Reset'),
-      :to => build_email_address
+      :to => @user.email_address_with_name
     })
   end
 
@@ -31,7 +32,7 @@ class UserMailer < ApplicationMailer
     @announcement = announcement
     mail ({
       :subject => build_subject('Announcement'),
-      :to => build_email_address
+      :to => @user.email_address_with_name
     })
   end
 
@@ -40,19 +41,13 @@ class UserMailer < ApplicationMailer
     @body = body
     mail ({
       :subject => build_subject(subject),
-      :to => build_email_address
+      :to => @user.email_address_with_name
     })
   end
 
   # Patch as Sorcery doesn't allow a class 'between' this and ApplicationMailer
   def self.superclass
     return ApplicationMailer.superclass
-  end
-
-
-  private
-  def build_email_address(address=@user.email_address)
-    return "\"#{@user.name}\" <#{address}>"
   end
 
 end

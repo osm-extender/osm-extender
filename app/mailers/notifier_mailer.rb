@@ -1,5 +1,7 @@
 class NotifierMailer < ApplicationMailer
-  default from: Settings.read('notifier mailer - from')
+  default from: Proc.new { Settings.read('notifier mailer - from') },
+          'return-path' => Proc.new { Settings.read('notifier mailer - from').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
+
   helper_method :inspect_object
 
   def contact_form_submission(contact, to)
@@ -36,7 +38,7 @@ class NotifierMailer < ApplicationMailer
     @section = Osm::Section.get(@email_list.user.osm_api, @email_list.section_id)
     mail ({
       :subject => build_subject('Email List Changed'),
-      :to => "\"#{@email_list.user.name}\" <#{@email_list.user.email_address}>",
+      :to => @email_list.user.email_address_with_name
     })
   end
 
