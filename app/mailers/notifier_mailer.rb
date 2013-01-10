@@ -33,6 +33,15 @@ class NotifierMailer < ApplicationMailer
     })
   end
 
+  def rake_exception(task, exception)
+    @task = task
+    @exception = exception
+    mail ({
+      :subject => build_subject('An Exception Occured in a Rake Task'),
+      :to => Settings.read('notifier mailer - send exception to'),
+    })
+  end
+
   def email_list_changed(email_list)
     @email_list = email_list
     @section = Osm::Section.get(@email_list.user.osm_api, @email_list.section_id)
