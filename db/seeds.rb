@@ -68,26 +68,6 @@ config = [
     :key => 'ReCAPTCHA - private key',
     :description => 'The private key you got from ReCAPTCHA.',
   },{
-    :prompt => 'What is the address of your SMTP server',
-    :key => 'Mail Server - Address',
-    :description => 'The address of the SMTP server to use for outgoing email.',
-  },{
-    :prompt => 'What port on the SMTP server should be used',
-    :key => 'Mail Server - Port',
-    :description => 'The port of the SMTP server to use for outgoing email (this is normally 25).',
-  },{
-    :prompt => 'What is your login domain on the SMTP server',
-    :key => 'Mail Server - Domain',
-    :description => 'The login domain for the SMTP server to use for outgoing email.',
-  },{
-    :prompt => 'What is your username on the SMTP server',
-    :key => 'Mail Server - Username',
-    :description => 'The login username for the SMTP server to use for outgoing email.',
-  },{
-    :prompt => 'What is your password on the SMTP server',
-    :key => 'Mail Server - Password',
-    :description => 'The login password for the SMTP server to use for outgoing email.',
-  },{
     :prompt => 'What signup code would you like to require users to use (if blank then no code will be asked for)',
     :key => 'signup code',
     :description => 'A code which must be supplied to create an account (useful for temporarily limiting signups). If this is blank then no signup code will be required.',
