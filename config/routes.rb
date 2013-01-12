@@ -84,6 +84,8 @@ OSMExtender::Application.routes.draw do
   get 'osm_search_members' => 'osm_search_members#search_form', :as => 'osm_search_members_form'
   post 'osm_search_members' => 'osm_search_members#search_results', :as => 'osm_search_members_results'
 
+  get 'osm_myscout_payments/calculator' => 'osm_myscout_payments#calculator', :as => 'osm_myscout_payments_calculator'
+
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 

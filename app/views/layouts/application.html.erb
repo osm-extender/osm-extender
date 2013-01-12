@@ -91,6 +91,7 @@
             <%- if current_section.youth_section? && has_osm_permission?([:read, :write], :events) %><div class="menu_item"><%= link_to 'Shared events (attendance)', shared_event_attendances_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
             <%- if current_section.youth_section? && has_osm_permission?(:write, :programme) %><div class="menu_item"><%= link_to 'Programme wizard', new_create_programme_path %></div><%- end %>
+            <%- if current_section.youth_section? %><div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div><%- end %>
             <%- unless current_section.waiting? || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi, :events]) && has_osm_permission?(:write, [:programme, :events])) || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi])) %>
               <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
                 <p>Some items have hidden from this menu becuase of how your <%= link_to 'OSM Permissions', osm_permissions_path %> are set.</p>
