@@ -9,7 +9,8 @@ class RemoveMailerSettings < ActiveRecord::Migration
   def up
     setting_keys = ['Mail Server - Address', 'Mail Server - Port', 'Mail Server - Domain', 'Mail Server - Username', 'Mail Server - Password']
     setting_keys.each do |key|
-      SettingValue.find_by_key(key).destroy
+      sv = SettingValue.find_by_key(key)
+      sv.destroy unless sv.nil?
     end
   end
 
