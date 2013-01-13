@@ -435,10 +435,6 @@ Given /^an OSM request to add activity to programme will work$/ do
   FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=addActivityToProgramme', :body => '{"result":0}')
 end
 
-Given /^an OSM request to update evening will work$/ do
-  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=editEvening', :body => '{"result":0,"err":""}')
-end
-
 Given /^an OSM request to get programme for section (\d+) term (\d+) will have the evenings?$/ do |section, term, table|
   evenings = Array.new
   table.hashes.each do |hash|
