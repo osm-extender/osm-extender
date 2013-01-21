@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130112192950) do
+ActiveRecord::Schema.define(:version => 20130121083109) do
 
   create_table "announcements", :force => true do |t|
     t.datetime "emailed_at"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20130112192950) do
   add_index "shared_event_fields", ["shared_event_id"], :name => "index_shared_event_fields_on_shared_event_id"
 
   create_table "shared_events", :force => true do |t|
-    t.string   "name",        :null => false
+    t.string   "name",            :null => false
     t.date     "start_date"
     t.string   "start_time"
     t.date     "finish_date"
@@ -183,9 +183,10 @@ ActiveRecord::Schema.define(:version => 20130112192950) do
     t.string   "cost"
     t.string   "location"
     t.text     "notes"
-    t.integer  "user_id",     :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.integer  "user_id",         :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.date     "confirm_by_date"
   end
 
   add_index "shared_events", ["user_id"], :name => "index_shared_events_on_user_id"

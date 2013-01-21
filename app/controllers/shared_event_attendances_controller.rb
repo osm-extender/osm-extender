@@ -35,6 +35,7 @@ class SharedEventAttendancesController < ApplicationController
       :start => shared_event.start,
       :finish => shared_event.finish,
       :cost => shared_event.cost,
+      :confirm_by_date => shared_event.confirm_by_date,
       :notes => shared_event.notes,
     })
     if event.nil? # Something went wrong

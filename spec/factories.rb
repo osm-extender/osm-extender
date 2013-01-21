@@ -18,7 +18,8 @@ FactoryGirl.define do
     end
 
     sequence(:name) { |n| "Shared event #{n}" }
-    start_date 1.week.from_now.strftime('%Y-%b-%d')
+    start_date 1.week.from_now
+    confirm_by_date 1.day.from_now
     user_id { User.find_by_email_address(user_email_address).id }
   end
 
