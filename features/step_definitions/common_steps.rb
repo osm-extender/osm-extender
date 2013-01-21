@@ -80,3 +80,19 @@ Then /^"([^"]*)" should( not)? be an option for "([^"]*)"(?: within "([^\"]*)")?
     field_labeled(field).first(:xpath, ".//option[text() = '#{value}']").send(expectation, be_present)
   end
 end
+
+Then /^I should get a download with filename "([^\"]*)"(?: and MIME type "([^\"]*)")?$/ do |filename, mime_type|
+  # Taken and adapted from: https://makandracards.com/makandra/931-test-a-download-s-filename-with-cucumber
+  page.driver.response.headers['Content-Disposition'].should == "attachment; filename=\"#{filename}\""
+  if mime_type
+    page.driver.response.headers['Content-Type'].should == mime_type
+  end
+end
+
+Then /^the body should contain "(.*)"$/ do |body|
+  page.driver.response.body.should include(body)
+end
+
+Then /^the body should not contain "(.*)"$/ do |body|
+  page.driver.response.body.should_not include(body)
+end
