@@ -1,0 +1,43 @@
+<% provide :title, 'OSM export' %>
+
+
+<%= form_tag osm_export_do_path do %>
+  <h2>What would you like?</h2>
+  <%- @exports_available.each do |key, value| %>
+    <%- if api_has_osm_permission?(:read, key) && user_has_osm_permission?(:read, key) %>
+      <%= radio_button_tag :export, key, (params[:export] == key), {:disabled => false} %>
+      <%= label_tag "export_#{key}", value %>
+    <%- else %>
+      <%= radio_button_tag :export, key, false, {:disabled => true} %>
+      <%= label_tag "export_#{key}", value %>
+      - You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to this item
+    <%- end %>
+    <br/>
+  <%- end %>
+
+
+  <h2>How would you like it?</h2>
+  <div class="field">
+    <%= hidden_field_tag :include_header, false %>
+    <%= check_box_tag :include_header, true, params[:include_header] %>
+    <%= label_tag :include_header, 'Include header line' %>
+  </div>
+
+  <div class="field">
+    <%= label_tag :column_separator %><br />
+    <%= select_tag :column_separator, options_for_select({'Comma'=>',', 'Tab'=>'TAB'}, params[:column_separator]) %>
+  </div>
+
+  <div class="field">
+    <%= label_tag :quote %><br />
+    <%= select_tag :quote, options_for_select(['"', "'"], params[:quote]) %><br/>
+    <%= hidden_field_tag :force_quotes, false %>
+    <%= check_box_tag :force_quotes, true, params[:force_quotes] %>
+    <%= label_tag :force_quotes %>
+  </div>
+
+
+  <div class="actions">
+    <%= submit_tag 'Export data' %>
+  </div>
+<% end %>

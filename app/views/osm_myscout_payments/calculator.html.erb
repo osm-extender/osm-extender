@@ -1,0 +1,22 @@
+<% provide :title, 'Payments calculator' %>
+
+
+<table>
+  <tr><td colspan="3" style="text-align: center;">Payment of £<input type="text" id="payment_of" placeholder="0.00"/></td></tr>
+
+  <tr>
+    <td></td>
+    <th>Using OSM<br/>(2.95%)</th>
+    <th>Using GoCardless<br/>(1%)</th>
+  </tr>
+  <tr>
+    <td>If you want £<span class="payment_amount"></span> then you'll need to charge</td>
+    <td align="right">£ <span id="charge_osm"></span></td>
+    <td align="right">£ <span id="charge_gc"></span></td>
+  </tr>
+  <tr>
+    <td>If you charge £<span class="payment_amount"></span> then you'll get</td>
+    <td align="right">£ <span id="get_osm"></span></td>
+    <td align="right">£ <span id="get_gc"></span></td>
+  </tr>
+</table>

@@ -46,6 +46,7 @@ Feature: Site Announcements
         And I fill in "Cost" with "£1"
         And I fill in "Location" with "Somewhere"
         And I fill in "Notes" with "Notes here."
+	And I fill in "Confirm by date" with "1999-12-31"
         And I press "Create Shared event"
         Then I should be on the edit shared event "Event name" page
         And I should see "Event name was successfully created."

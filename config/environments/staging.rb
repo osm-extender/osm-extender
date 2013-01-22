@@ -59,6 +59,24 @@ OSMExtender::Application.configure do
     :host => 'localhost',
   }
 
+  # Mail sending options (copy/complete relevant version into staging_custom.rb)
+  # Sendmail
+#  ActionMailer::Base.delivery_method = :sendmail
+#  ActionMailer::Base.sendmail_settings = {
+#    :location => '',
+#  }
+  # SMTP
+#  ActionMailer::Base.delivery_method = :smtp
+#  ActionMailer::Base.smtp_settings = {
+#    :address              => '',
+#    :port                 => '',
+#    :domain               => '',
+#    :user_name            => '',
+#    :password             => '',
+#    :authentication       => 'plain',
+#    :enable_starttls_auto => true
+#  }
+
 end
 
 # Load custom configuration

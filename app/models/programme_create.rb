@@ -32,33 +32,20 @@ class ProgrammeCreate
   def create_programme
     if valid?
       # Populate programme
-      meetings = Array.new
+      done = 0
       dates = (programme_start.to_date..programme_end.to_date).step(programme_interval.to_i)
       dates.each do |day|
-        meetings.push day
-        Osm::Evening.create(user.osm_api, section.id, day)
+        result = Osm::Evening.create(user.osm_api, {
+          :section_id => section.id,
+          :meeting_date => day,
+          :start_time => evening_start,
+          :finish_time => evening_end,
+          :title => evening_title,
+        })
+        done +=1 if result
       end
 
-      # Find what we just added
-      updated = 0
-      Osm::Term.get_for_section(user.osm_api, section.id).each do |term|
-        unless ((term.start > programme_end) || (term.finish < programme_start)) # Term may contain meetings
-          Osm::Evening.get_programme(user.osm_api, term.section_id, term).each do |programme|
-            if (meetings.include?(programme.meeting_date) && programme.title.eql?('Unnamed meeting') &&
-                programme.notes_for_parents.blank? && programme.games.blank? &&
-                programme.pre_notes.blank? && programme.post_notes.blank? && programme.leaders.blank? &&
-                programme.activities.eql?([]) && programme.start_time.nil? && programme.finish_time.nil?
-            ) # This is probably something we just added
-              programme.title = evening_title
-              programme.start_time = evening_start
-              programme.finish_time = evening_end
-              result = programme.update(user.osm_api)
-              updated += 1
-            end
-          end
-        end
-      end
-      return updated == meetings.size
+      return done == dates.size
     end
     return nil
   end

@@ -1,6 +1,6 @@
 $(document).ready(function() {  
-    $('#email_list_section_id').change(function(){
-        var data = sections_data[$(this).attr('value')];
+    $('#email_list_section_id').change(function() {
+        var data = sections_data[$(this).prop('value')];
 
         // Change label text for checkboxes
         $("label[for='email_list_email1']").html(data['fields']['email1']);

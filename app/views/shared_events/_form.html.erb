@@ -54,6 +54,11 @@
   </div>
 
   <div class="field">
+    <%= f.label :confirm_by_date %><br/>
+    <%= f.text_field :confirm_by_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+  </div>
+
+  <div class="field">
     <%= f.label :notes %><br />
     <%= f.text_area :notes, :cols => 60, :rows => 6 %>
   </div>

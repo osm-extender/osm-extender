@@ -11,17 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121212121739) do
+ActiveRecord::Schema.define(:version => 20130121083109) do
 
   create_table "announcements", :force => true do |t|
-    t.text     "message",                           :null => false
-    t.datetime "start",                             :null => false
-    t.datetime "finish",                            :null => false
-    t.boolean  "public",         :default => false, :null => false
-    t.boolean  "prevent_hiding", :default => false, :null => false
     t.datetime "emailed_at"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.text     "message"
+    t.datetime "start"
+    t.datetime "finish"
+    t.boolean  "public"
+    t.boolean  "prevent_hiding"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -41,30 +41,29 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "email_lists", :force => true do |t|
+    t.text     "name"
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "name"
     t.boolean  "email1"
     t.boolean  "email2"
     t.boolean  "email3"
     t.boolean  "email4"
     t.boolean  "match_type"
     t.integer  "match_grouping"
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "notify_changed",                       :default => false, :null => false
     t.string   "last_hash_of_addresses", :limit => 64, :default => "",    :null => false
   end
 
   add_index "email_lists", ["notify_changed"], :name => "index_email_lists_on_notify_changed"
-  add_index "email_lists", ["user_id"], :name => "index_email_lists_on_user_id"
 
   create_table "email_reminder_items", :force => true do |t|
     t.integer  "email_reminder_id"
     t.string   "type"
     t.text     "configuration"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "position",          :default => 0, :null => false
   end
 
@@ -72,13 +71,13 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
   add_index "email_reminder_items", ["type"], :name => "index_email_reminder_items_on_type"
 
   create_table "email_reminder_shares", :force => true do |t|
-    t.integer  "reminder_id",                                         :null => false
-    t.string   "email_address",                                       :null => false
-    t.string   "name",                                                :null => false
-    t.string   "state",         :limit => 16,  :default => "pending", :null => false
-    t.string   "auth_code",     :limit => 128,                        :null => false
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
+    t.integer  "reminder_id",                                        :null => false
+    t.string   "email_address",                                      :null => false
+    t.string   "name",                                               :null => false
+    t.string   "state",         :limit => 16, :default => "pending", :null => false
+    t.string   "auth_code",     :limit => 64,                        :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
   end
 
   add_index "email_reminder_shares", ["auth_code"], :name => "index_email_reminder_shares_on_auth_code"
@@ -89,14 +88,10 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
     t.integer  "user_id"
     t.integer  "section_id"
     t.integer  "send_on"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "section_name", :null => false
   end
-
-  add_index "email_reminders", ["section_id"], :name => "index_email_reminders_on_section_id"
-  add_index "email_reminders", ["send_on"], :name => "index_email_reminders_on_send_on"
-  add_index "email_reminders", ["user_id"], :name => "index_email_reminders_on_user_id"
 
   create_table "emailed_announcements", :force => true do |t|
     t.integer  "announcement_id"
@@ -121,10 +116,10 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
   add_index "hidden_announcements", ["user_id"], :name => "index_hidden_announcements_on_user_id"
 
   create_table "programme_review_balanced_caches", :force => true do |t|
-    t.integer  "term_id",      :null => false
-    t.integer  "section_id",   :null => false
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.integer  "section_id"
+    t.integer  "term_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "last_used_at"
     t.text     "data"
   end
@@ -132,20 +127,18 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "setting_values", :force => true do |t|
-    t.string "key",                                                                                :null => false
-    t.text   "value"
-    t.text   "description", :default => "Ooops, a description of this setting should appear here", :null => false
+    t.text "key",         :limit => 255, :null => false
+    t.text "value"
+    t.text "description",                :null => false
   end
-
-  add_index "setting_values", ["key"], :name => "index_setting_values_on_key", :unique => true
 
   create_table "shared_event_attendances", :force => true do |t|
     t.integer  "shared_event_id", :null => false
@@ -182,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
   add_index "shared_event_fields", ["shared_event_id"], :name => "index_shared_event_fields_on_shared_event_id"
 
   create_table "shared_events", :force => true do |t|
-    t.string   "name",        :null => false
+    t.string   "name",            :null => false
     t.date     "start_date"
     t.string   "start_time"
     t.date     "finish_date"
@@ -190,9 +183,10 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
     t.string   "cost"
     t.string   "location"
     t.text     "notes"
-    t.integer  "user_id",     :null => false
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.integer  "user_id",         :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.date     "confirm_by_date"
   end
 
   add_index "shared_events", ["user_id"], :name => "index_shared_events_on_user_id"
@@ -211,21 +205,21 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
   add_index "statistics", ["date"], :name => "index_statistics_caches_on_date", :unique => true
 
   create_table "users", :force => true do |t|
-    t.string   "email_address",                                                    :null => false
+    t.string   "email_address"
     t.string   "crypted_password"
     t.string   "salt"
-    t.datetime "created_at",                                                       :null => false
-    t.datetime "updated_at",                                                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "activation_state"
     t.string   "activation_token"
     t.datetime "activation_token_expires_at"
     t.string   "reset_password_token"
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
-    t.integer  "failed_logins_count",                           :default => 0
+    t.integer  "failed_logins_count"
     t.datetime "lock_expires_at"
     t.string   "name"
-    t.boolean  "can_administer_users",                          :default => false
+    t.boolean  "can_administer_users"
     t.text     "osm_userid",                      :limit => 6
     t.text     "osm_secret",                      :limit => 32
     t.boolean  "can_administer_settings",                       :default => false
@@ -237,9 +231,5 @@ ActiveRecord::Schema.define(:version => 20121212121739) do
     t.integer  "custom_row_height",                             :default => 0
     t.integer  "custom_text_size",                              :default => 0
   end
-
-  add_index "users", ["activation_token"], :name => "index_users_on_activation_token"
-  add_index "users", ["email_address"], :name => "index_users_on_email_address", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token"
 
 end

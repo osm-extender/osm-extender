@@ -25,12 +25,6 @@ Feature: Programme Wizard
 	    | term_id | name   | start      | end        |
 	    | 1       | Term 1 | 2011-12-31 | 2013-02-01 |
 	And an OSM request to add activity to programme will work
-	And an OSM request to get programme for section 1 term 1 will have the evenings
-	    | evening_id | meeting_date |
-	    | 1          | 2012-01-01   |
-	    | 2          | 2012-05-20   |
-	    | 3          | 2012-10-07   |
-	And an OSM request to update evening will work
 
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Programme wizard"
