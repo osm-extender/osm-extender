@@ -6,7 +6,7 @@
 
 
 $(function() {
-  $("#announcements div a.hide_link").live("click", function() {
+  $("#announcements div a.hide_link").on("click", function() {
     $.ajax({
       type: 'POST',
       headers: {'X-CSRF-Token': $(this).data('csrf-token')},
