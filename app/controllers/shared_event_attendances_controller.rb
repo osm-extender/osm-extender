@@ -22,6 +22,10 @@ class SharedEventAttendancesController < ApplicationController
     @shared_event_attendance = current_user.shared_event_attendances.find(params[:id])
     data_for_form
     @event = Osm::Event.get(current_user.osm_api, current_section, @shared_event_attendance.event_id)
+    if @event.nil?
+      flash[:error] = "The event no longer exists in OSM"
+      redirect_to shared_event_attendances_path
+    end
   end
 
   def create
