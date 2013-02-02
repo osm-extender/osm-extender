@@ -115,7 +115,7 @@ class OsmExportsController < ApplicationController
         'id',
         'first_name',
         'last_name',
-        'grouping',
+        'grouping_label',
         'phone1',
         'phone2',
         'phone3',
