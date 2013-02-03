@@ -12,25 +12,15 @@ class EmailReminderItemProgramme < EmailReminderItem
         programme = Osm::Evening.get_programme(user.osm_api, section_id, term.id)
         programme.each do |programme_item|
           if (programme_item.meeting_date > earliest) && (programme_item.meeting_date < latest)
-            item = {
-              :start_time => programme_item.start_time,
-              :end_time => programme_item.finish_time,
-              :date => programme_item.meeting_date,
-              :title => programme_item.title,
-              :activities => [],
-            }
-            programme_item.activities.each do |activity|
-              item[:activities].push activity.title
-            end
-            data.push item
+            data.push programme_item
           end
         end
       end
     end
 
     return data.sort do |a, b|
-      a[:date] <=> b[:date]
-    end
+      a.meeting_date <=> b.meeting_date
+    end # TODO - replace with just sort after upping osm to 0.1.17 or higher
   end
 
 
@@ -38,22 +28,25 @@ class EmailReminderItemProgramme < EmailReminderItem
     data = []
     dates = (Date.today.to_date..configuration[:the_next_n_weeks].weeks.from_now.to_date).step(7)
     dates.each_with_index do |date, index|
-      item = {
-        :start_time => '20:00',
-        :end_time => '22:00',
-        :date => date,
-        :title => "Week #{index + 1}",
-        :activities => [],
-      }
+      activities = []
       (1 + rand(3)).times do |activity|
-        item[:activities].push Faker::Lorem.words(1 + rand(3)).join(' ')
+        title = Faker::Lorem.words(1 + rand(3)).join(' ')
+        notes = (rand(2) == 1) ? Faker::Lorem.words(1 + rand(7)).join(' ') : ''
+        activities.push Osm::Evening::Activity.new(:title => title, :notes => notes)
       end
+      item = Osm::Evening.new(
+        :start_time => '20:00',
+        :finish_time => '22:00',
+        :meeting_date => date,
+        :title => "Week #{index + 1}",
+        :activities => activities,
+      )
       data.push item
     end
 
     return data.sort do |a, b|
-      a[:date] <=> b[:date]
-    end
+      a.meeting_date <=> b.meeting_date
+    end # TODO - replace with just sort after upping osm to 0.1.17 or higher
   end
 
 
