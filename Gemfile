@@ -42,6 +42,9 @@ end
 group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
   gem 'rack-mini-profiler', '~> 0.1'  # See how long a request takes and why
+  gem 'better_errors', '~> 0.3'       # See nicer exception pages with more useful information
+  gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
+  gem 'meta_request', '0.2.1'         # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 end
 
 group :development, :test do
