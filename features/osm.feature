@@ -101,7 +101,6 @@ Feature: OSM
 	Then I should not see "links to things you can do will appear here"
 	And I should not see "Email reminders"
 	And I should not see "Programme review"
-	And I should not see "Programme wizard"
 	And I should not see "Email lists"
 	And I should not see "OSM permissions"
 	And I should not see "Map members"
@@ -113,7 +112,6 @@ Feature: OSM
 	And I should see "links to more things you can do will appear here"
 	And I should not see "Map members"
 	And I should not see "Programme review"
-	And I should not see "Programme wizard"
 	And I should not see "OSM permissions"
 
     Scenario: Links for connected user
@@ -127,7 +125,6 @@ Feature: OSM
 	Then I should not see "links to things you can do will appear here"
 	And I should see "Email reminders"
 	And I should see "Programme review"
-	And I should see "Programme wizard"
 	And I should see "Email lists"
 	And I should see "OSM permissions"
 	And I should see "Map members"
@@ -144,7 +141,6 @@ Feature: OSM
 	And I should see "Email lists"
 	And I should see "OSM permissions"
 	And I should not see "Programme review"
-	And I should not see "Programme wizard"
 
 
     Scenario: No message and selected links for non youth section
@@ -161,4 +157,3 @@ Feature: OSM
 	And I should see "Email lists"
 	And I should see "OSM permissions"
 	And I should not see "Programme review"
-	And I should not see "Programme wizard"

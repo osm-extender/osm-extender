@@ -30,7 +30,6 @@
     <tr><td class="empty"></td><td>Email reminders (programme)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :programme, current_user, section) %></td></tr>
     <tr><td class="empty"></td><td>Programme review</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :programme, current_user, section) %></td></tr>
     <tr><td class="empty"></td><td>OSM export</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :programme, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Programme wizard</td><td>Read and Write</td><td><%= yes_no api_has_osm_permission?([:read, :write], :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?([:read, :write], :programme, current_user, section) %></td></tr>
     <%- end %>
 
     <%- if section.youth_section? %>
