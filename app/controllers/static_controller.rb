@@ -27,7 +27,11 @@ class StaticController < ApplicationController
 
     @other_sections = Array.new
     Osm::Section.get_all(api, :no_cache => true).each do |section|
-      @other_sections.push section unless section == current_section
+      unless section == current_section
+        @other_sections.push section
+      else
+        current_section = section # Make sure current_section has the latest confrog from OSM
+      end
     end
     @other_sections.sort!
   end
