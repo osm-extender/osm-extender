@@ -77,6 +77,7 @@ class OsmExportsController < ApplicationController
   def clean_params
     params[:column_separator] ||= ','
     params[:quote] ||= '"'
+    params[:term_id] ||= get_current_term_id
     params[:include_header] = params[:include_header] ? params[:include_header].eql?('true') : true
     params[:force_quotes] = params[:force_quotes] ? params[:force_quotes].eql?('true') : false
   end
@@ -127,6 +128,7 @@ class OsmExportsController < ApplicationController
         'first_name',
         'last_name',
         'grouping_label',
+        'age',
         'phone1',
         'phone2',
         'phone3',
@@ -160,7 +162,7 @@ class OsmExportsController < ApplicationController
         'grouping_id',
         'grouping_leader'
       ],
-      :items => Osm::Member.get_for_section(current_user.osm_api, current_section),
+      :items => Osm::Member.get_for_section(current_user.osm_api, current_section, params[:term_id]),
     }
   end
 
@@ -190,13 +192,13 @@ class OsmExportsController < ApplicationController
         'leaders',
         'games',
       ],
-      :items => Osm::Evening.get_programme(current_user.osm_api, current_section, nil), # TODO drop the nil when updating osm to 0.1.17 or higher
+      :items => Osm::Evening.get_programme(current_user.osm_api, current_section, params[:term_id]),
     }
   end
 
   def get_activities_data
     items = []
-    Osm::Evening.get_programme(current_user.osm_api, current_section, nil).each do |meeting| # TODO drop the nil when updating osm to 0.1.17 or higher
+    Osm::Evening.get_programme(current_user.osm_api, current_section, params[:term_id]).each do |meeting|
       meeting.activities.each do |activity|
         items.push [meeting.id, activity.activity_id, activity.title, activity.notes]
       end

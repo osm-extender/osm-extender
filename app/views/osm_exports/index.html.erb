@@ -16,6 +16,13 @@
   <%- end %>
 
 
+  <h2>When would you like it for?</h2>
+  <div class="field">
+    <%= label_tag :term_id, 'Term' %><br />
+    <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+  </div>
+
+
   <h2>How would you like it?</h2>
   <div class="field">
     <%= hidden_field_tag :include_header, false %>
