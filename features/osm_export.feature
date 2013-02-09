@@ -60,8 +60,8 @@ Feature: Export OSM data
         And I choose "Meetings"
         And I press "Export data"
         Then I should get a download with filename "1stSomewhere_Section1_Meetings.csv" and MIME type "text/csv"
-        And the body should contain "1,2013-02-06,19:15,20:30,Weekly Meeting 1,"","","","","""
-	And the body should contain "2,2013-02-07,19:15,20:30,Weekly Meeting 2,"","","","","""
+        And the body should contain "19:15,20:30,Weekly Meeting 1,"","","","","""
+	And the body should contain "19:15,20:30,Weekly Meeting 2,"","","","","""
 
     Scenario: Export programme activities
         When I signin as "alice@example.com" with password "P@55word"
