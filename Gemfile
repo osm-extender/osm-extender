@@ -2,7 +2,6 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 gem 'rails', '~> 3.2'
-gem 'activesupport', '~> 3.2'
 gem 'actionmailer', '~> 3.2'
 
 # Authentication / Authorisation
@@ -27,7 +26,7 @@ gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
 
 # Jobs in background
-gem 'delayed_job_active_record', '~> 0.3'
+gem 'delayed_job_active_record', '~> 0.4'
 gem 'daemons', '~> 1.1'
 gem 'daemon-spawn', '~> 0.4'
 
