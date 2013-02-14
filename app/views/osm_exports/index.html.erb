@@ -3,17 +3,24 @@
 
 <%= form_tag osm_export_do_path do %>
   <h2>What would you like?</h2>
-  <%- @exports_available.each do |key, value| %>
-    <%- if api_has_osm_permission?(:read, key) && user_has_osm_permission?(:read, key) %>
-      <%= radio_button_tag :export, key, (params[:export] == key), {:disabled => false} %>
-      <%= label_tag "export_#{key}", value %>
-    <%- else %>
-      <%= radio_button_tag :export, key, false, {:disabled => true} %>
-      <%= label_tag "export_#{key}", value %>
-      - You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to this item
+  <%- @exports.each do |heading, exports| %>
+    <h3><%= heading %></h3>
+    <%- unless exports[:permission] %>
+      You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to <%= (exports[:items].size > 1) ? 'these items' : 'this item' %>.<br/>
     <%- end %>
-    <br/>
+    <%- exports[:items].each do |item| %>
+      <%= radio_button_tag :export, item[:export], (params[:export] == item[:export]), {:disabled => !exports[:permission]} %>
+      <%= label_tag "export_#{item[:export]}", item[:label] %>
+      <br/>
+    <%- end %>
   <%- end %>
+
+
+  <h2>When would you like it for?</h2>
+  <div class="field">
+    <%= label_tag :term_id, 'Term' %><br />
+    <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+  </div>
 
 
   <h2>How would you like it?</h2>

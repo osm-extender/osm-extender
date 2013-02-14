@@ -18,9 +18,7 @@ class EmailReminderItemProgramme < EmailReminderItem
       end
     end
 
-    return data.sort do |a, b|
-      a.meeting_date <=> b.meeting_date
-    end # TODO - replace with just sort after upping osm to 0.1.17 or higher
+    return data.sort
   end
 
 
@@ -44,9 +42,7 @@ class EmailReminderItemProgramme < EmailReminderItem
       data.push item
     end
 
-    return data.sort do |a, b|
-      a.meeting_date <=> b.meeting_date
-    end # TODO - replace with just sort after upping osm to 0.1.17 or higher
+    return data.sort
   end
 
 

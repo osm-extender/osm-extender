@@ -1,7 +1,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_login
-  helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?, :api_has_osm_permission?, :get_section_names, :get_grouping_name
+  helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
+                :api_has_osm_permission?, :get_section_names, :get_grouping_name,
+                :get_current_section_terms, :get_current_term_id
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -193,6 +195,18 @@ class ApplicationController < ActionController::Base
     @current_announcements ||= (current_user ? current_user.current_announcements : Announcement.are_current.are_public)
   end
 
+  def get_current_section_terms
+    @terms ||= {}
+    Osm::Term.get_for_section(current_user.osm_api, current_section).each do |term|
+      @terms[term.name] = term.id
+    end
+    return @terms
+  end
+
+  def get_current_term_id
+    @current_term_id ||= Osm::Term.get_current_term_for_section(current_user.osm_api, current_section).try(:id)
+    return @current_term_id
+  end
 
   def get_current_section_groupings
     @groupings ||= {}

@@ -3,6 +3,6 @@ The programme for the following <%= pluralize(configuration[:the_next_n_weeks], 
   <li><b><%= programme.title %><%- if programme.meeting_date %> on <%= ordinalized_date(programme.meeting_date, "%a %d of %b") %><%- end %><%- if programme.start_time %> at <%= programme.start_time %><%- if programme.finish_time %> until <%= programme.finish_time %><%- end %><%- end %></b>
       <%- if programme.notes_for_parents? %><br/><i><%= programme.notes_for_parents %></i><%- end %>
 <ul><%- programme.activities.each do |activity| %>
-    <li><%= activity.title %><%= " (#{activity.notes})" if activity.notes? %></li>
+    <li><%= link_to activity.title, "https://www.onlinescoutmanager.co.uk/?l=p#{activity.activity_id}" %>    <%= " (#{activity.notes})" if activity.notes? %></li>
 <%- end %></ul></li>
 <%- end %></ul>

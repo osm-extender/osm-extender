@@ -1,9 +1,13 @@
 <p>This is your reminder email for <%= @reminder.section_name %>.</p>
 
 
-<%- @data[:include_items].each do |item| %>
+<%- @data[:display_items].each do |item| %>
   <h1><%= item[:item].human_name.titleize %></h1>
+<%- unless item[:data].nil? %>
 <%= render "reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
+<%- else %>
+  <p>There is no information to display.</p>
+<%- end %>
   <hr/>
 <%- end %>
 
@@ -16,13 +20,6 @@
   <%- end %></ul>
 <%- end %>
 
-<%- unless @data[:exclude_items].empty? %>
-  <h1>Excluded Items</h1>
-  <p>The following items were configured for this reminder but were excluded as they had no data:</p>
-  <ul><%- @data[:exclude_items].each do |item| %>
-    <li><%= item.human_name.titleize %></li>
-  <%- end %></ul>
-<%- end %>
 
 <%- unless @share.nil? %>
   <h1>This Reminder is Shared With You</h1>

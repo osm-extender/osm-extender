@@ -2,7 +2,6 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 gem 'rails', '~> 3.2'
-gem 'activesupport', '~> 3.2'
 gem 'actionmailer', '~> 3.2'
 
 # Authentication / Authorisation
@@ -13,11 +12,11 @@ gem 'cancan', '~> 1.6'
 gem 'therubyracer', '~> 0.10'
   gem 'libv8', '~> 3.11'
 gem 'jquery-rails', '~> 2.1'
-gem 'jquery-ui-rails', '~> 3.0'
+gem 'jquery-ui-rails', '~> 4.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '= 0.1.16'                 # For using the OSM API
+gem 'osm', '= 0.1.17'                 # For using the OSM API
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
@@ -27,7 +26,7 @@ gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
 
 # Jobs in background
-gem 'delayed_job_active_record', '~> 0.3'
+gem 'delayed_job_active_record', '~> 0.4'
 gem 'daemons', '~> 1.1'
 gem 'daemon-spawn', '~> 0.4'
 
