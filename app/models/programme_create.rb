@@ -35,9 +35,9 @@ class ProgrammeCreate
       done = 0
       dates = (programme_start.to_date..programme_end.to_date).step(programme_interval.to_i)
       dates.each do |day|
-        result = Osm::Evening.create(user.osm_api, {
+        result = Osm::Meeting.create(user.osm_api, {
           :section_id => section.id,
-          :meeting_date => day,
+          :date => day,
           :start_time => evening_start,
           :finish_time => evening_end,
           :title => evening_title,

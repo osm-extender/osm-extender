@@ -9,9 +9,9 @@ class EmailReminderItemProgramme < EmailReminderItem
 
     Osm::Term.get_for_section(user.osm_api, section_id).each do |term|
       if !term.before?(earliest) && !term.after?(latest)
-        programme = Osm::Evening.get_programme(user.osm_api, section_id, term.id)
+        programme = Osm::Meeting.get_for_section(user.osm_api, section_id, term.id)
         programme.each do |programme_item|
-          if (programme_item.meeting_date > earliest) && (programme_item.meeting_date < latest)
+          if (programme_item.date > earliest) && (programme_item.date < latest)
             data.push programme_item
           end
         end
@@ -30,12 +30,12 @@ class EmailReminderItemProgramme < EmailReminderItem
       (1 + rand(3)).times do |activity|
         title = Faker::Lorem.words(1 + rand(3)).join(' ')
         notes = (rand(2) == 1) ? Faker::Lorem.words(1 + rand(7)).join(' ') : ''
-        activities.push Osm::Evening::Activity.new(:title => title, :notes => notes)
+        activities.push Osm::Meeting::Activity.new(:title => title, :notes => notes)
       end
-      item = Osm::Evening.new(
+      item = Osm::Meeting.new(
         :start_time => '20:00',
         :finish_time => '22:00',
-        :meeting_date => date,
+        :date => date,
         :title => "Week #{index + 1}",
         :activities => activities,
       )

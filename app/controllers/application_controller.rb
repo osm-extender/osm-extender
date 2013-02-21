@@ -55,14 +55,13 @@ class ApplicationController < ActionController::Base
 
   # Check if the user has a given OSM permission
   def user_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    permissions_key = [user.id, section.id]
-    @user_osm_permissions ||= {}
-    @user_osm_permissions[permissions_key] ||= Osm::Model.get_user_permissions(user.osm_api, section.id)
-    all_permissions = @user_osm_permissions[permissions_key]
+    permissions = user.osm_api.get_user_permissions
+    permissions = permissions[section.to_i] || {}
     [*permission_on].each do |on|
-      permissions = (all_permissions[on] || [])
       [*permission_to].each do |to|
-        return false unless permissions.include?(to)
+        unless (permissions[on] || []).include?(to)
+          return false
+        end
       end
     end
     return true
@@ -70,17 +69,15 @@ class ApplicationController < ActionController::Base
 
   # Check if the API has a given OSM permission
   def api_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    permissions_key = [user.id, section.id]
-    @api_osm_permissions ||= {}
-    @api_osm_permissions[permissions_key] ||= Osm::ApiAccess.get_ours(user.osm_api, section.id).permissions
-    all_permissions = @api_osm_permissions[permissions_key]
+    permissions = Osm::ApiAccess.get_ours(user.osm_api, section.to_i).permissions
     [*permission_on].each do |on|
-      permissions = (all_permissions[on] || [])
       [*permission_to].each do |to|
-        return false unless permissions.include?(to)
+        unless (permissions[on] || []).include?(to)
+          return false
+        end
+        return true
       end
     end
-    return true
   end
 
 

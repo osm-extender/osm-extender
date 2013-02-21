@@ -34,8 +34,20 @@ class SharedEventAttendance < ActiveRecord::Base
             this_data[field.shared_event_field.id] = members[attend.member_id] ? members[attend.member_id].send(field.source_field) : ''
           end
           if field.source_type.to_sym == :flexi_record
-            flexi_record_datas[field.source_id] ||= Osm::FlexiRecord.get_data(user.osm_api, section_id, field.source_id).inject({}){ |hash, d| hash[d.member_id] = d; hash}
-            this_data[field.shared_event_field.id] = flexi_record_datas[field.source_id][attend.member_id] ? flexi_record_datas[field.source_id][attend.member_id].fields[field.source_field] : ''
+            section = Osm::Section.get(user.osm_api, section_id)
+            record = nil
+            unless section.nil?
+              section.flexi_records.each do |r|
+                if r.id == field.source_id
+                  record = r
+                  break
+                end
+              end
+            end
+            unless record.nil?
+              flexi_record_datas[field.source_id] ||= record.get_data(user.osm_api).inject({}){ |hash, d| hash[d.member_id] = d; hash}
+              this_data[field.shared_event_field.id] = flexi_record_datas[field.source_id][attend.member_id] ? flexi_record_datas[field.source_id][attend.member_id].fields[field.source_field] : ''
+            end
           end
         end
         data.push this_data
