@@ -4,13 +4,13 @@ class EmailReminderItemDueBadge < EmailReminderItem
 
   def get_data
     api = user.osm_api
-    due_badges = Osm::DueBadges.get(api, section_id)
+    due_badges = Osm::Badges.get_due_badges(api, section_id)
 
     return nil if due_badges.empty?
 
     return {
       :due_badges => due_badges,
-      :badge_stock => configuration[:show_stock] ? Osm::Section.get(api, section_id).get_badge_stock(api) : {}
+      :badge_stock => configuration[:show_stock] ? Osm::Badges.get_stock(api, section_id) : {}
     }
   end
 
@@ -40,7 +40,7 @@ class EmailReminderItemDueBadge < EmailReminderItem
     by_member = by_member.select{ |k,v| !v.empty? }
 
     return {
-      :due_badges => Osm::DueBadges.new(:by_member => by_member, :descriptions => descriptions),
+      :due_badges => Osm::Badges::DueBadges.new(:by_member => by_member, :descriptions => descriptions),
       :badge_stock => badge_stock
     }
   end

@@ -16,7 +16,7 @@ gem 'jquery-ui-rails', '~> 4.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '= 0.2.0'                  # For using the OSM API
+gem 'osm', '~> 0.3.0'                 # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
@@ -45,7 +45,7 @@ group :development do
   gem 'rack-mini-profiler', '~> 0.1'  # See how long a request takes and why
   gem 'better_errors', '~> 0.3'       # See nicer exception pages with more useful information
   gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
-  gem 'meta_request', '0.2.1'         # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+  gem 'meta_request', '~> 0.2.2'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 end
 
 group :development, :test do
