@@ -20,14 +20,14 @@ class SharedEventAttendance < ActiveRecord::Base
     members = nil
     flexi_record_datas = {}
     attendance.each do |attend|
-      if attend.fields['attending']
+      if attend.attending == :yes
         this_data = {
-          :first_name => attend.fields['firstname'],
-          :last_name => attend.fields['lastname'],
+          :first_name => attend.first_name,
+          :last_name => attend.last_name,
         }
         shared_event_field_datas.each do |field|
           if field.source_type.to_sym == :event
-            this_data[field.shared_event_field.id] = attend.fields[field.source_field]
+            this_data[field.shared_event_field.id] = attend.fields[field.source_field[2..-1].to_i]
           end
           if field.source_type.to_sym == :contact_details
             members ||= Osm::Member.get_for_section(user.osm_api, section_id).inject({}) { |hash, member| hash[member.id] = member; hash}

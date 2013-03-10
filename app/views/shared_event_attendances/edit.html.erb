@@ -61,7 +61,7 @@
               <%= fv.radio_button :source_type, 'event' %>
               <label for="field_data<%= field.id %>_source_type_event">
                 A field from the event
-                <%= select_tag "field_data[#{field.id}][source_event]", options_for_select(@event.fields.invert, (field.source_type == 'event' ? field.source_field : nil)), {:prompt => 'Pick a field'} %>
+                <%= select_tag "field_data[#{field.id}][source_event]", options_from_collection_for_select(@event.columns, :id, :name, (field.source_type == 'event' ? field.source_field : nil)), {:prompt => 'Pick a field'} %>
               </label>
             </td>
 
