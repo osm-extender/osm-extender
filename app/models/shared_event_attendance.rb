@@ -20,22 +20,34 @@ class SharedEventAttendance < ActiveRecord::Base
     members = nil
     flexi_record_datas = {}
     attendance.each do |attend|
-      if attend.fields['attending']
+      if attend.attending == :yes
         this_data = {
-          :first_name => attend.fields['firstname'],
-          :last_name => attend.fields['lastname'],
+          :first_name => attend.first_name,
+          :last_name => attend.last_name,
         }
         shared_event_field_datas.each do |field|
           if field.source_type.to_sym == :event
-            this_data[field.shared_event_field.id] = attend.fields[field.source_field]
+            this_data[field.shared_event_field.id] = attend.fields[field.source_field[2..-1].to_i]
           end
           if field.source_type.to_sym == :contact_details
             members ||= Osm::Member.get_for_section(user.osm_api, section_id).inject({}) { |hash, member| hash[member.id] = member; hash}
             this_data[field.shared_event_field.id] = members[attend.member_id] ? members[attend.member_id].send(field.source_field) : ''
           end
           if field.source_type.to_sym == :flexi_record
-            flexi_record_datas[field.source_id] ||= Osm::FlexiRecord.get_data(user.osm_api, section_id, field.source_id).inject({}){ |hash, d| hash[d.member_id] = d; hash}
-            this_data[field.shared_event_field.id] = flexi_record_datas[field.source_id][attend.member_id] ? flexi_record_datas[field.source_id][attend.member_id].fields[field.source_field] : ''
+            section = Osm::Section.get(user.osm_api, section_id)
+            record = nil
+            unless section.nil?
+              section.flexi_records.each do |r|
+                if r.id == field.source_id
+                  record = r
+                  break
+                end
+              end
+            end
+            unless record.nil?
+              flexi_record_datas[field.source_id] ||= record.get_data(user.osm_api).inject({}){ |hash, d| hash[d.member_id] = d; hash}
+              this_data[field.shared_event_field.id] = flexi_record_datas[field.source_id][attend.member_id] ? flexi_record_datas[field.source_id][attend.member_id].fields[field.source_field] : ''
+            end
           end
         end
         data.push this_data

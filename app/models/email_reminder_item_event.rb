@@ -13,9 +13,7 @@ class EmailReminderItemEvent < EmailReminderItem
       end
     end
 
-    return data.sort do |a, b|
-      a.start <=> b.start
-    end
+    return data.sort
   end
 
 
@@ -32,9 +30,7 @@ class EmailReminderItemEvent < EmailReminderItem
       })
     end
 
-    return data.sort do |a, b|
-      a.start <=> b.start
-    end
+    return data.sort
   end
 
 

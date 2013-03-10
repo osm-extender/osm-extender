@@ -61,11 +61,7 @@ class OsmExportsController < ApplicationController
     }
     csv_string = CSV.generate(csv_options) do |csv|
       data[:items].each do |item|
-        unless data[:values_at].nil?
-          csv << item.attributes.values_at(*data[:values_at])
-        else
-          csv << item
-        end
+        csv << item
       end
     end
 
@@ -83,6 +79,8 @@ class OsmExportsController < ApplicationController
   end
 
   def get_members_data
+    items = Osm::Member.get_for_section(current_user.osm_api, current_section, params[:term_id])
+    groupings = get_current_section_groupings.invert
     return {
       :headers => [
         'ID',
@@ -123,50 +121,54 @@ class OsmExportsController < ApplicationController
         'Grouping ID',
         'Grouping Leader',
       ],
-      :values_at => [
-        'id',
-        'first_name',
-        'last_name',
-        'grouping_label',
-        'age',
-        'phone1',
-        'phone2',
-        'phone3',
-        'phone4',
-        'email1',
-        'email2',
-        'email3',
-        'email4',
-        'address',
-        'address2',
-        'parents',
-        'notes',
-        'medical',
-        'subs',
-        'religion',
-        'school',
-        'ethnicity',
-        'custom1',
-        'custom2',
-        'custom3',
-        'custom4',
-        'custom5',
-        'custom6',
-        'custom7',
-        'custom8',
-        'custom9',
-        'date_of_birth',
-        'joined',
-        'started',
-        'section_id',
-        'grouping_id',
-        'grouping_leader'
-      ],
-      :items => Osm::Member.get_for_section(current_user.osm_api, current_section, params[:term_id]),
+      :items => items.map { |i|
+        data = i.attributes.values_at(
+          'id',
+          'first_name',
+          'last_name',
+          '', # Will be filled with grouping name later
+          'age',
+          'phone1',
+          'phone2',
+          'phone3',
+          'phone4',
+          'email1',
+          'email2',
+          'email3',
+          'email4',
+          'address',
+          'address2',
+          'parents',
+          'notes',
+          'medical',
+          'subs',
+          'religion',
+          'school',
+          'ethnicity',
+          'custom1',
+          'custom2',
+          'custom3',
+          'custom4',
+          'custom5',
+          'custom6',
+          'custom7',
+          'custom8',
+          'custom9',
+          'date_of_birth',
+          'joined',
+          'started',
+          'section_id',
+          'grouping_id',
+          'grouping_leader'
+        )
+        data[3] = groupings[i.grouping_id] # Grouping name
+        data
+      }
     }
   end
 
   def get_meetings_data
+    items = Osm::Meeting.get_for_section(current_user.osm_api, current_section, params[:term_id])
     return {
       :headers => [
         'ID',
@@ -180,25 +182,26 @@ class OsmExportsController < ApplicationController
         'Leaders',
         'Games',
       ],
-      :values_at => [
-        'id',
-        'meeting_date',
-        'start_time',
-        'finish_time',
-        'title',
-        'notes_for_parents',
-        'pre_notes',
-        'post_notes',
-        'leaders',
-        'games',
-      ],
-      :items => Osm::Evening.get_programme(current_user.osm_api, current_section, params[:term_id]),
+      :items => items.map { |i|
+        i.attributes.values_at(
+          'id',
+          'date',
+          'start_time',
+          'finish_time',
+          'title',
+          'notes_for_parents',
+          'pre_notes',
+          'post_notes',
+          'leaders',
+          'games',
+        )
+      }
     }
   end
 
   def get_activities_data
     items = []
-    Osm::Evening.get_programme(current_user.osm_api, current_section, params[:term_id]).each do |meeting|
+    Osm::Meeting.get_for_section(current_user.osm_api, current_section, params[:term_id]).each do |meeting|
       meeting.activities.each do |activity|
         items.push [meeting.id, activity.activity_id, activity.title, activity.notes]
       end

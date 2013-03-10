@@ -241,8 +241,8 @@ class ProgrammeReview
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
 
-    Osm::Evening.get_programme(@user.osm_api, @section.id, term, {:no_cache => true}).each do |programme|
-      date_key = programme.meeting_date.strftime('%Y_%m')
+    Osm::Meeting.get_for_section(@user.osm_api, @section.id, term, {:no_cache => true}).each do |programme|
+      date_key = programme.date.strftime('%Y_%m')
       zones[:number][date_key] = blank_hash_for(@@zones) if zones[:number][date_key].nil?
       zones[:time][date_key] = blank_hash_for(@@zones) if zones[:time][date_key].nil?
       methods[:number][date_key] = blank_hash_for(@@methods) if methods[:number][date_key].nil?

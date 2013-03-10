@@ -22,6 +22,9 @@ Feature: Export OSM data
 	And an OSM request to get terms for section 1 will have the term
 	    | term_id | name   |
 	    | 1       | Term 1 |
+	And an OSM request to get groupings for section 1 will have the groupings
+	    | grouping_id | name     |
+	    | 1           | Grouping |
 	And an OSM request to get members for section 1 in term 1 will have the members
 	    | first_name | last_name | grouping_id | date_of_birth |
 	    | A          | Member    | 1           | 2000-01-01    |
@@ -40,7 +43,7 @@ Feature: Export OSM data
         And I select "Comma" from "Column separator"
         And I press "Export data"
         Then I should get a download with filename "1stSomewhere_Section1_Members.csv" and MIME type "text/csv"
-        And the body should contain "1,A,Member,"",6/0,"","","","","","","","","","","","","",Male,"","","",,,,,,,,,,2000-01-01,2006-01-01,2006-01-01,1,1,0"
+        And the body should contain "1,A,Member,Grouping,6/0,"","","","","","","","","","","","","",Male,"","","",,,,,,,,,,2000-01-01,2006-01-01,2006-01-01,1,1,0"
         And the body should not contain "First Name, Last Name"
 
     Scenario: Export TSV with headers

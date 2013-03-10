@@ -183,7 +183,7 @@ class SharedEventAttendancesController < ApplicationController
     @flexi_record_fields = []
     current_section.flexi_records.each do |flexi_record|
       @flexi_record_fields.push [flexi_record.name, [
-        *(Osm::FlexiRecord.get_fields(current_user.osm_api, current_section, flexi_record.id).inject([]) { |a, f| a.push [f.name, "#{flexi_record.id}:#{f.id}"] if f.id.match(/\Af_\d+\Z/); a })
+        *(flexi_record.get_columns(current_user.osm_api).inject([]) { |a, f| a.push [f.name, "#{flexi_record.id}:#{f.id}"] if f.id.match(/\Af_\d+\Z/); a })
       ]]
     end
 

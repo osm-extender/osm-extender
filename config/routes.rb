@@ -73,9 +73,6 @@ OSMExtender::Application.routes.draw do
   get 'settings' => 'settings#edit', :as => 'edit_settings'
   put 'settings' => 'settings#update', :as => 'update_settings'
 
-  get 'create_programme' => 'programme_wizard#new_programme', :as => 'new_create_programme'
-  post 'create_programme' => 'programme_wizard#create_programme'
-
   resources :osm_flexi_records, :only => [:index, :show]
 
   get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
