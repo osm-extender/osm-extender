@@ -1,4 +1,13 @@
 The following events are happening in the next <%= pluralize(configuration[:the_next_n_months], 'month') %>:
-<ul><%- data.each do |event| %>
-  <li><%= event.name %><%- if event.start %> on <%= ordinalized_date(event.start, "%a %d of %b %Y at %H:%M") %><%- end %></li>
+<ul><%- data[:events].each do |event| %>
+  <li><%= event.name %><%- if event.start %> on <%= ordinalized_date(event.start, "%a %d of %b %Y at %H:%M") %><%- end %>
+  <%- if configuration[:include_attendance] %>
+    <%- attendance = data[:attendance][event.id] %>
+    <ul>
+      <%- [:yes, :no, :invited, :shown].each do |i| %>
+        <% if attendance[i][:total] > 0 %><li><%= i.to_s.titleize %>: <%= attendance[i][:total] %> (<%= attendance[i][:members] %> members and <%= attendance[i][:leaders] %> leaders)</li><% end %>
+      <%- end %>
+    </ul>
+  <%- end %>
+  </li>
 <%- end %></ul>

@@ -100,7 +100,7 @@ Feature: Reminder Email
         And I fill in "How many months into the future?" with "6"
         And I press "Create events item"
         Then I should see "Item was successfully added"
-        And I should see "For the next 6 months." in the "Configuration" column of the "Events" row
+        And I should see "For the next 6 months, without attendance breakdown." in the "Configuration" column of the "Events" row
 
     Scenario: Add programme item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -182,10 +182,11 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Events" row
+	And I check "Include attendance breakdown?"
         And I fill in "How many months into the future?" with "6"
         And I press "Update events item"
         Then I should see "Item was successfully updated"
-        And I should see "For the next 6 months." in the "Configuration" column of the "Events" row
+        And I should see "For the next 6 months, with attendance breakdown." in the "Configuration" column of the "Events" row
 
     Scenario: Edit programme item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
