@@ -29,6 +29,7 @@ Given /^"([^"]*)" has an? (.*) item in (?:her|his|their) "(.*)" email reminder f
     'not seen' => EmailReminderItemNotSeen,
     'due badges' => EmailReminderItemDueBadge,
     'notepad' => EmailReminderItemNotepad,
+    'advised absences' => EmailReminderItemAdvisedAbsence,
   }
   user = User.find_by_email_address(email_address)
   er = nil
@@ -46,6 +47,7 @@ Given /^"([^"]*)" has a reminder email for section (\d*) on "([^"]*)" with all i
   step "\"#{email_address}\" has an event item in her \"#{day}\" email reminder for section #{section_id}"
   step "\"#{email_address}\" has a programme item in her \"#{day}\" email reminder for section #{section_id}"
   step "\"#{email_address}\" has a not seen item in her \"#{day}\" email reminder for section #{section_id}"
+  step "\"#{email_address}\" has an advised absences item in her \"#{day}\" email reminder for section #{section_id}"
   step "\"#{email_address}\" has a due badges item in her \"#{day}\" email reminder for section #{section_id}"
   step "\"#{email_address}\" has a notepad item in her \"#{day}\" email reminder for section #{section_id}"
 end

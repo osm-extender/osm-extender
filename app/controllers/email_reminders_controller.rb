@@ -110,6 +110,9 @@ class EmailRemindersController < ApplicationController
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen')
       items.push ({:type => EmailReminderItemNotSeen, :as_link => has_osm_permission?(:read, :register)})
     end
+    unless @email_reminder.has_an_item_of_type?('EmailReminderItemAdvisedAbsence')
+      items.push ({:type => EmailReminderItemAdvisedAbsence, :as_link => has_osm_permission?(:read, :register)})
+    end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
       items.push ({:type => EmailReminderItemDueBadge, :as_link => has_osm_permission?(:read, :badge)})
     end

@@ -19,11 +19,12 @@ Master {<img src="https://gemnasium.com/robertgauld/OSMExtender.png" alt="Depend
 Allows you to keep upto date by having information emailed to you on a day of your choosing each week, you can choose from:
 - Who's due badges (and have you got enough)
 - Who hasn't been for the last few weeks
+- Who's said they won't be present
 - What events are coming up and how many people are going
 - What's the programme for the next few weeks
 - Who's got a birthday around now
 - The contents of your section's notepad
-Email reminders may be shared with other users, regardless of wether they use OSMX or not.
+Email reminders may be shared with other users, regardless of whether they use OSMX or not.
 
 
 [Email lists]
@@ -33,20 +34,22 @@ Easily create a list of any selection of your email addresses for each member wh
 [Programme review]
 Pulls in your activities, looks at the tags and shows you how well you're balancing your programme using a graph, table of totals and a score. It takes the duration your section has a member (e.g. 2 and a half years for Cubs) and goes upto that far back and upto that far into the future.
 
-[Programme wizard]
-Allows you to easily add a number of meetings to your programme, you specify the start date, end date, interval between meetings, start time, end time and meeting title, OSMX does the rest.
 
 [Map members]
 View a map of where the members of your section live in relation to your meeting point.
 
+
 [Contact details]
 This allows you to view a selection of your members' details in a way which allows you to change text and column sizes to allow for easier reading / filling in of the printed text.
+
 
 [Flexi records]
 This allows you to view a selection of your flexi records' data in a way which allows you to change text and column sizes to allow for easier reading / filling in of the printed text.
 
+
 [Shared events]
 These allow several sections to use OSM to manage their attendance at a larger event whilst allowing the event orgabiser to see the details for all attendees accross all sections.
+
 
 [Search members]
 Alows you to search for members from a selection of your sections where one of a selection of their details include a search term.

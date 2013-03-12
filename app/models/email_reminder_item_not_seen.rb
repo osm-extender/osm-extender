@@ -4,6 +4,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
   def get_data
     earliest = configuration[:the_last_n_weeks].weeks.ago.to_date
+    latest = Date.today
 
     api = user.osm_api
     register_structure = Osm::Register.get_structure(api, section_id)
@@ -13,7 +14,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
     register_structure.each do |row|
       unless /\A[0-9]{4}-[0-2][0-9]-[0-3][0-9]\Z/.match(row.name).nil?
         date = Date.strptime(row.name, '%Y-%m-%d')
-        dates_to_check.push date if (date > earliest)
+        dates_to_check.push date if (date >= earliest) && (date <= latest)
       end
     end
 

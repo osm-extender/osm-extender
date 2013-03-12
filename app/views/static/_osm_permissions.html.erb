@@ -23,6 +23,7 @@
     <%- if section.youth_section? %>
     <tr><td class="title">Attendance Register</td><td class="empty" colspan="4"></td></tr>
     <tr><td class="empty"></td><td>Email reminders (not seen)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :register, current_user, section) %><td><%= yes_no user_has_osm_permission?(:read, :register, current_user, section) %></td></td></tr>
+    <tr><td class="empty"></td><td>Email reminders (advised absences)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :register, current_user, section) %><td><%= yes_no user_has_osm_permission?(:read, :register, current_user, section) %></td></td></tr>
     <%- end %>
 
     <%- if section.youth_section? %>
