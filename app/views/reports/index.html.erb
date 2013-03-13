@@ -1,0 +1,10 @@
+<% provide :title, 'Reports' %>
+
+<p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
+
+<h2>Test</h2>
+<%- if @allowed_reports.include?(:test) %>
+  <p>Some form here.</p>
+<%- else %>
+  This report allows you to do something, however you need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use it.
+<%- end %>
