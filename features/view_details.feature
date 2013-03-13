@@ -26,7 +26,7 @@ Feature: View contact details
 	    | A          | Member    | a1@example.com | a2@example.com | a3@example.com | a4@example.com | 1           |
 
 
-    Scenario: Show flexi records
+    Scenario: Show details
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Contact details"
         Then I should be on the osm_details_fields page
@@ -47,13 +47,37 @@ Feature: View contact details
         And I uncheck "fields_school"
         And I press "Show details"
         Then I should be on the osm_details_show page
-        Then I should see "a1@example.com"
-        Then I should see "a2@example.com"
-        Then I should not see "a3@example.com"
-        Then I should not see "a4@example.com"
+        And I should see "a1@example.com"
+        And I should see "a2@example.com"
+        And I should not see "a3@example.com"
+        And I should not see "a4@example.com"
 
 
-    Scenario: Show flexi records (not signed in)
+    Scenario: Show details (not signed in)
 	When I go to the osm_details_fields page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+
+
+    Scenario: Show details without selecting any fields
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "Contact details"
+        Then I should be on the osm_details_fields page
+        When I uncheck "fields[email1]"
+        And I uncheck "fields[email2]"
+        And I uncheck "fields[email3]"
+        And I uncheck "fields[email4]"
+        And I uncheck "fields[phone1]"
+        And I uncheck "fields[phone2]"
+        And I uncheck "fields[phone3]"
+        And I uncheck "fields[phone4]"
+        And I uncheck "fields[address]"
+        And I uncheck "fields[address2]"
+        And I uncheck "fields[subs]"
+        And I uncheck "fields[medical]"
+        And I uncheck "fields[ethnicity]"
+        And I uncheck "fields[religion]"
+        And I uncheck "fields[school]"
+        And I press "Show details"
+        Then I should be on the osm_details_fields page
+        And I should see "You must select some fields to view."

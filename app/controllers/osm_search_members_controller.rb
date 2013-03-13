@@ -18,8 +18,7 @@ class OsmSearchMembersController < ApplicationController
   def search_results
     if params[:selected].nil?
       flash[:error] = 'You must select some fields to search.'
-      search_form  # Get the data for the form
-      render :action => :search_form and return
+      redirect_to osm_search_members_form_path(:search_for => params[:search_for]) and return
     end
 
     search_for = params[:search_for].downcase
