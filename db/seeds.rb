@@ -8,9 +8,9 @@ puts
 # Method to prompt user for data
 # param question - the question to ask the user
 # param test_answer - the answer provided by the user in the test environment
-def self.prompt(question, test_answer)
+def self.prompt(question, test_answer=nil)
   return test_answer if Rails.env.test?
-  STDOUT.puts question
+  STDOUT.puts "#{question}?"
   STDOUT.print "> "
   STDIN.gets.strip
 end
@@ -35,6 +35,7 @@ config = [
     :prompt => 'What email address should user related mails be sent from',
     :key => 'user mailer - from',
     :description => 'Which email address user account messages should claim to be from.',
+    :test_value => 'user-mailer@example.com',
   },{
     :prompt => 'What email address should reminder mails be sent from',
     :key => 'reminder mailer - from',
@@ -88,9 +89,10 @@ config = [
 config.each do |setting|
   sv = SettingValue.find_or_create_by_key(setting[:key])
   sv.description = setting[:description]
-  sv.value = setting[:value] || prompt(setting[:prompt], '') unless sv.persisted?
+  sv.value = prompt(setting[:prompt], (setting[:test_value] || sv.value))
   sv.save!
 end
+Settings.reread_settings
 puts
 
 
@@ -115,7 +117,6 @@ unless User.count >= 1
   )
   puts
 end
-
 
 
 #SeedFu.seed(fixture_paths, filter) # Both argumants optional - github.com/mbleigh/seed-fu
