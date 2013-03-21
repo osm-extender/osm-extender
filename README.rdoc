@@ -1,5 +1,5 @@
 ==Build State
-This project uses continuous integration to help ensure that a quality product is delivered.
+This project uses continuous integration to help ensure that a quality product is delivered. It is tested using ruby 1.9.3 other versions may work but are not guarenteed (since they aren't tested).
 Travis CI monitors two branches (versions) of the code - Master (which is what gets released)
 and Staging (which is what is currently being debugged ready for moving to master).
 
