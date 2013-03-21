@@ -59,6 +59,7 @@ OSMExtender::Application.routes.draw do
     resources :email_reminder_item_due_badges, :as => 'item_due_badges', :path => 'item_due_badges'
     resources :email_reminder_item_events, :as => 'item_events', :path => 'item_events'
     resources :email_reminder_item_not_seens, :as => 'item_not_seens', :path => 'item_not_seen'
+    resources :email_reminder_item_advised_absences, :as => 'item_advised_absences', :path => 'item_advised_absence'
     resources :email_reminder_item_programmes, :as => 'item_programmes', :path => 'item_programme'
     resources :email_reminder_item_notepads, :as => 'item_notepads', :path => 'item_notepad'
   end

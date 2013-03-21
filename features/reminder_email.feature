@@ -100,7 +100,7 @@ Feature: Reminder Email
         And I fill in "How many months into the future?" with "6"
         And I press "Create events item"
         Then I should see "Item was successfully added"
-        And I should see "For the next 6 months." in the "Configuration" column of the "Events" row
+        And I should see "For the next 6 months, without attendance breakdown." in the "Configuration" column of the "Events" row
 
     Scenario: Add programme item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -123,6 +123,17 @@ Feature: Reminder Email
         And I press "Create members not seen item"
         Then I should see "Item was successfully added"
         And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
+
+    Scenario: Add advised absences item to reminder email
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "Advised absences"
+        And I fill in "For how many weeks?" with "1"
+        And I press "Create advised absences item"
+        Then I should see "Item was successfully added"
+        And I should see "For the next 1 week." in the "Configuration" column of the "Advised absences" row
 
     Scenario: Add due badge item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -182,10 +193,11 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Events" row
+	And I check "Include attendance breakdown?"
         And I fill in "How many months into the future?" with "6"
         And I press "Update events item"
         Then I should see "Item was successfully updated"
-        And I should see "For the next 6 months." in the "Configuration" column of the "Events" row
+        And I should see "For the next 6 months, with attendance breakdown." in the "Configuration" column of the "Events" row
 
     Scenario: Edit programme item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -210,6 +222,18 @@ Feature: Reminder Email
         And I press "Update members not seen item"
         Then I should see "Item was successfully updated"
         And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
+
+    Scenario: Edit advised absences item in reminder email
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has an advised absences item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Advised absence" row
+        And I fill in "For how many weeks?" with "1"
+        And I press "Update advised absences item"
+        Then I should see "Item was successfully updated"
+        And I should see "For the next 1 week." in the "Configuration" column of the "Advised absences" row
 
     Scenario: Edit due badges item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -274,6 +298,18 @@ Feature: Reminder Email
         Then I should not see "Item was successfully updated"
         And "For how many weeks?" should contain "2"
 
+    Scenario: Edit advised absences item in reminder email (invalid configuration)
+        Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
+        And "alice@example.com" has an advised absences item in her "Tuesday" email reminder for section 1
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the list of email_reminders
+        And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
+        And I follow "[Edit]" in the "Actions" column of the "Advised absences" row
+        And I fill in "For how many weeks?" with "invalid"
+        And I press "Update advised absences item"
+        Then I should not see "Item was successfully updated"
+        And "For how many weeks?" should contain "2"
+
 
     Scenario: Preview the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
@@ -317,6 +353,7 @@ Feature: Reminder Email
         And I should see "Events"
         And I should see "Programme"
         And I should see "Members Not Seen"
+	And I should see "Advised Absence"
 
     Scenario: Sample the email
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
@@ -331,6 +368,7 @@ Feature: Reminder Email
         And I should see "Events"
         And I should see "Programme"
         And I should see "Members Not Seen"
+	And I should see "Advised Absence"
 
 
     @send_email

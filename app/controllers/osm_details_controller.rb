@@ -6,6 +6,11 @@ class OsmDetailsController < ApplicationController
   end
 
   def show
+    if params[:fields].nil?
+      flash[:error] = 'You must select some fields to view.'
+      redirect_to osm_details_fields_path and return
+    end
+
     @fields = []
     current_section.column_names.except(:patrol).keys.each do |key|
       @fields.push(key) if params[:fields][key]
