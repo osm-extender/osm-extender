@@ -23,7 +23,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
       not_seen.push ({
         :first_name => row.first_name,
         :last_name => row.last_name,
-      }) if not_seen_member_in?(row, dates_to_check)
+      }) if not_seen_member_in?(row.attendance, dates_to_check)
     end
     return not_seen
   end
@@ -68,11 +68,10 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
 
   private
-  def not_seen_member_in?(member, dates_to_check)
+  def not_seen_member_in?(attendance, dates_to_check)
     return false if dates_to_check.empty?
     dates_to_check.each do |date|
-      was_there = member.attendance[date]
-      if was_there.eql?('Yes') || was_there.eql?('No') # Allowed absences are OK
+      if [:yes, :advised_absent].include?(attendance[date]) # Allowed absences are OK
         return false
       end
     end
