@@ -2,9 +2,12 @@
 
 <p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
 
-<h2>Test</h2>
-<%- if @allowed_reports.include?(:test) %>
-  <p>Some form here.</p>
+<h2>Due Badges</h2>
+<%- if has_osm_permission?(:read, :badge) %>
+  <%= form_tag due_badges_report_path, :method=>:get do %>  
+    <%=check_box_tag :check_stock, 1, true %> <%= label_tag :check_stock, 'Check badge stock?' %><br/>
+    <%= submit_tag 'Show due badges' %>
+  <%- end %>
 <%- else %>
-  This report allows you to do something, however you need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use it.
+  This report allows you to see which members are due which badges and whether you have enough of them. However you need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use it.
 <%- end %>

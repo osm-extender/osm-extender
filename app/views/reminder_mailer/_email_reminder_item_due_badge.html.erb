@@ -13,5 +13,5 @@
 
 <h2>You need to have the following badges</h2>
 <ul><%- badge_totals.each do |badge, total| %>
-  <li><%= badge_names[badge] %> x <%= badge_totals[badge] %><%- if configuration[:show_stock] %> <%= pos_neg(((badge_stock[badge] || 0) >= badge_totals[badge]), "(you have #{(badge_stock[badge] || 0)})") %><%- end %></li>
+  <li><%= badge_names[badge] %> x <%= total %><%- if configuration[:show_stock] %> <%= pos_neg(((badge_stock[badge] || 0) >= total), "(you have #{(badge_stock[badge] || 0)})") %><%- end %></li>
 <%- end %></ul>
