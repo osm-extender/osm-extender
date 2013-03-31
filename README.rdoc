@@ -29,6 +29,7 @@ Email reminders may be shared with other users, regardless of whether they use O
 ===Reports
 Allow you to easily make sense of the data in OSM.
 - Who's due badges (and have you got enough)
+- List which badges have been awarded during a time period
 
 ===Email lists
 Easily create a list of any selection of your email addresses for each member who  matches a criteria (e.g. Parent 1 Email and Parent 2 email for all members not in the leader's six). The lists are savable and you should be able to simply copy-paste the list into your email client or mailing list manager.

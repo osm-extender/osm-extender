@@ -89,6 +89,7 @@ OSMExtender::Application.routes.draw do
 
   get 'reports' => 'reports#index', :as => 'reports'
   get 'reports/due_badges' => 'reports#due_badges', :as => 'due_badges_report'
+  get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
 
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'

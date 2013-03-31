@@ -1,0 +1,50 @@
+<% provide :title, 'Awarded Badges Report' %>
+
+<p>
+  A total of <%= pluralize(@member_totals.values.sum, 'badge') %> were awarded
+  between <%= ordinalized_date(@start, "%a %d of %b %Y") %> and <%= ordinalized_date(@finish, "%a %d of %b %Y") %>.
+</p>
+
+<p>Due to how OSM's API works if several stages of the same staged badge have been awarded to  a member you'll see only the highest level.</p>
+
+<%- unless @by_member.count == 0 %>
+
+  <h2>Grouped by Member</h2>
+    <ul>
+      <%- @by_member.each do |member_name, badges| %>
+        <li><%= member_name %> (<%= pluralize(@member_totals[member_name], 'badge') %>):
+          <%- @badge_types.each do |type, label| %>
+            <ul>
+              <%- if badges[type].count > 0 %>
+                <li><%= label %><ul>
+                  <%- badges[type].each do |badge| %>
+                    <li><%= @badge_names[badge] %></li>
+                  <%- end %>
+                </ul>
+              <%- end %>
+            </ul>
+          <%- end %>
+        </li>
+      <%- end %>
+    </ul>
+
+  <h2>Grouped by Badge</h2>
+    <ul>
+      <%- @badge_types.each do |type, label| %>
+        <li><%= label %> (<%= @badge_totals[type].values.sum %> awarded):
+          <ul>
+            <%- @by_badge[type].each do |badge, members| %>
+              <li><%= @badge_names[badge] %> (<%= pluralize(@badge_totals[type][badge], 'member') %>):
+                <ul>
+                  <%- members.each do |member| %>
+                    <li><%= member %></li>
+                  <%- end %>
+                </ul>
+              </li>
+            <%- end %>
+          </ul>
+        </li>
+      <%- end %>
+    </ul>
+
+<%- end %>
