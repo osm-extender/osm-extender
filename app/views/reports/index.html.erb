@@ -24,3 +24,16 @@
 <%- else %>
   You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
 <%- end %>
+
+<h2>Missing Badge Requirements</h2>
+<p>
+  This report allows you to see which badge requirements are stopping a member from gaining badges they've already started.
+  Due to the amount of data this report needs to slurp from OSM it will take a while to run.
+</p>
+<%- if has_osm_permission?(:read, :badge) %>
+  <%= form_tag missing_badge_requirements_report_path, :method=>:get do %>  
+    <%= submit_tag 'Show missing badge requirements' %>
+  <%- end %>
+<%- else %>
+  You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+<%- end %>
