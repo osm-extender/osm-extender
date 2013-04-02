@@ -16,6 +16,9 @@
     <%- if section.youth_section? %>
     <tr><td class="title">Badge Records</td><td class="empty" colspan="4"></td></tr>
     <tr><td class="empty"></td><td>Email reminders (due badges)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
+    <tr><td class="empty"></td><td>Reports (due badges)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
+    <tr><td class="empty"></td><td>Reports (awarded badges)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
+    <tr><td class="empty"></td><td>Reports (missing badge requirements)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
     <%- end %>
 
 <!--    <tr><td class="title">Administration</td><td class="empty" colspan="4"></td></tr> --> <!-- :user -->
