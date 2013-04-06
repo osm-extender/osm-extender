@@ -1,6 +1,9 @@
 class StatisticsController < ApplicationController
   before_filter { require_osmx_permission :view_statistics }
 
+  def index
+  end
+
   def users
     respond_to do |format|
       format.html # users.html.erb
