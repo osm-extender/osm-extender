@@ -117,7 +117,7 @@ class ReportsController < ApplicationController
             badge_key = staged_badge.osm_key
             badge_key_level = "#{badge_key}_#{data.awarded}"
             @badge_names[badge_key_level] ||= "#{staged_badge.name} (Level #{data.awarded})"
-            @by_member[name][:staged] ||= []
+            @by_member[name] ||= { :core => [],  :staged => [],   :challenge => [],  :activity => [] }
             unless @by_member[name][:staged].include?(badge_key_level)
               @by_member[name][:staged].push badge_key_level
               @by_badge[:staged][badge_key] ||= []
