@@ -1,55 +1,22 @@
-  <table>
-    <tr><th>OSM&nbsp;Permission</th><th>Site&nbsp;Action</th><th>Requires</th><th>Granted<br/>(to OSMX)</th><th>Granted<br/>(to your OSM user)</th></tr>
+<table>
+  <tr>
+    <th>OSM&nbsp;Permission</th>
+    <th>OSM&nbsp;Extender&nbsp;Features<br/>Using Permission</th>
+    <th>Require</th>
+    <th>Granted<br/>(to OSMX)</th>
+    <th>Granted<br/>(to your OSM user)</th>
+  </tr>
 
-    <tr><td class="title"><%= section.youth_section? ? 'Scout Details' : 'Contact Details' %></td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>Contact details</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
-    <%- if !section.waiting? %>
-    <tr><td class="empty"></td><td>Email lists</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Email reminders (birthdays)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
-    <%- end %>
-    <%- if section.youth_section? %>
-    <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
-    <%- end %>
-    <tr><td class="empty"></td><td>Search members</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>OSM export</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :member, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :member, current_user, section) %></td></tr>
-
-    <%- if section.youth_section? %>
-    <tr><td class="title">Badge Records</td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>Email reminders (due badges)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Reports (due badges)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Reports (awarded badges)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Reports (missing badge requirements)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :badge, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :badge, current_user, section) %></td></tr>
-    <%- end %>
-
-<!--    <tr><td class="title">Administration</td><td class="empty" colspan="4"></td></tr> --> <!-- :user -->
-
-    <%- if section.youth_section? %>
-    <tr><td class="title">Attendance Register</td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>Email reminders (not seen)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :register, current_user, section) %><td><%= yes_no user_has_osm_permission?(:read, :register, current_user, section) %></td></td></tr>
-    <tr><td class="empty"></td><td>Email reminders (advised absences)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :register, current_user, section) %><td><%= yes_no user_has_osm_permission?(:read, :register, current_user, section) %></td></td></tr>
-    <%- end %>
-
-    <%- if section.youth_section? %>
-    <tr><td class="title">Programme</td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>Email reminders (programme)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :programme, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Programme review</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :programme, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>OSM export</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :programme, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :programme, current_user, section) %></td></tr>
-    <%- end %>
-
-    <%- if section.youth_section? %>
-    <tr><td class="title">Events</td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>Email reminders (events)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :events, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :events, current_user, section) %></td></tr>
-    <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read and Write</td><td><%= yes_no api_has_osm_permission?([:read, :write], :events, current_user, section) %></td><td><%= yes_no user_has_osm_permission?([:read, :write], :events, current_user, section) %></td></tr>
-    <%- end %>
-
-    <%- if !section.waiting? %>
-    <tr><td class="title">Flexi-Records</td><td class="empty" colspan="4"></td></tr>
-    <tr><td class="empty"></td><td>Flexi Records</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :flexi, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :flexi, current_user, section) %></td></tr>
-    <%- end %>
-    <%- if section.youth_section? %>
-    <tr><td class="empty"></td><td>Shared Events (attendance)</td><td>Read</td><td><%= yes_no api_has_osm_permission?(:read, :flexi, current_user, section) %></td><td><%= yes_no user_has_osm_permission?(:read, :flexi, current_user, section) %></td></tr>
-    <%- end %>
-
-  <!--  <tr><td class="title">Finances</td><td class="empty" colspan="4"></td></tr> -->
-  </table>
+  <%- if section.youth_section? %>
+    <%= render 'osm_permissions_youth', :section => section %>
+  <%- end %>
   
+  <%- if section.adults? %>
+    <%= render 'osm_permissions_adults', :section => section %>
+  <%- end %>
+  
+  <%- if section.waiting? %>
+    <%= render 'osm_permissions_waiting', :section => section %>
+  <%- end %>
+
+</table>

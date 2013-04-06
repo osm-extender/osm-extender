@@ -70,18 +70,20 @@ Feature: OSM
 	Then I should see "Current section: Section 1 (1st Somewhere)"
 	And I should not see "Change Current Section"
 
-
+@focus
     Scenario: View OSM Permissions
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
+	    | events     | write   |
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "OSM permissions"
         Then I should be on the osm_permissions page
-	And the "Granted" column of the "Email lists" row I should see "yes"
-	And the "Granted" column of the "Programme review" row I should see "NO"
+	And in the "(to OSMX)" column of the row with id "badge" I should see "No permissions"
+	And in the "(to OSMX)" column of the row with id "member" I should see "Read"
+	And in the "(to OSMX)" column of the row with id "events" I should see "Read and Write"
 
     Scenario: View OSM Permissions (not connected to OSM)
         When I signin as "alice@example.com" with password "P@55word"

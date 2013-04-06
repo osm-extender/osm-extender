@@ -3,7 +3,8 @@ class ApplicationController < ActionController::Base
   before_filter :require_login
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
                 :api_has_osm_permission?, :get_section_names, :get_grouping_name,
-                :get_current_section_terms, :get_current_term_id
+                :get_current_section_terms, :get_current_term_id,
+                :osm_user_permission_human_friendly, :osm_api_permission_human_friendly
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -31,6 +32,27 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  # Get a human friendly description of how a permission is set for a user in OSM
+  def osm_user_permission_human_friendly(permission_on, user=current_user, section=current_section)
+    permissions = user.osm_api.get_user_permissions
+    permissions = permissions[section.to_i] || {}
+    permissions = (permissions[permission_on] || [])
+    return 'Administer' if permissions.include?(:administer)
+    return 'Read and Write' if permissions.include?(:write)
+    return 'Read' if permissions.include?(:read)
+    return 'No permissions'
+  end
+
+  # Get a human friendly description of how a permission is set for the api in OSM
+  def osm_api_permission_human_friendly(permission_on, user=current_user, section=current_section)
+    permissions = Osm::ApiAccess.get_ours(user.osm_api, section.to_i).permissions
+    permissions = permissions[permission_on] || []
+    return 'Administer' if permissions.include?(:administer)
+    return 'Read and Write' if permissions.include?(:write)
+    return 'Read' if permissions.include?(:read)
+    return 'No permissions'
+  end
 
   # Ensure the user has a given OSM permission
   # if not redirect them to the osm permissions page and set an instruction flash
