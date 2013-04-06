@@ -17,7 +17,8 @@ Feature: Statistics
 
     Scenario: Get user statistics
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "User statistics"
+        And I follow "Statistics"
+	And I follow "User statistics"
         Then I should be on the user_statistics page
 
     Scenario: Get user statistics (not signed in)
@@ -35,6 +36,7 @@ Feature: Statistics
 
     Scenario: Get reminder email statistics
         When I signin as "alice@example.com" with password "P@55word"
+	And I follow "Statistics"
         And I follow "Reminder email statistics"
         Then I should be on the email_reminders_statistics page
 

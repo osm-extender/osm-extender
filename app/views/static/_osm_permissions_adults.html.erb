@@ -1,0 +1,85 @@
+  <tr id="member">
+    <td>Contact Details</td>
+    <td><ul>
+      <li>Contact Details</li>
+      <li>Email Lists</li>
+      <li>Email Reminders (birthdays)</li>
+      <!-- <li>Shared Events (attendance)</li> -->
+      <li>Search Members</li>
+      <li>OSM Export</li>
+    </ul></td>
+    <td>Read</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :member, current_user, section), osm_api_permission_human_friendly(:member, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :member, current_user, section), osm_user_permission_human_friendly(:member, current_user, section) %></td>
+  </tr>
+
+  <!--
+  <tr id="badge">
+    <td>Badge Records</td>
+    <td>Feature(s)</td>
+    <td>Read or Read/Write</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :badge, current_user, section), osm_api_permission_human_friendly(:badge, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :badge, current_user, section), osm_user_permission_human_friendly(:badge, current_user, section) %></td>
+  </tr>
+  -->
+
+  <!--
+  <tr id="user">
+    <td>Administration</td>
+    <td>Feature(s)</td>
+    <td>Read or Read/Write</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :user, current_user, section), osm_api_permission_human_friendly(:user, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :user, current_user, section), osm_user_permission_human_friendly(:user, current_user, section) %></td>
+  </tr>
+  -->
+
+  <!--
+  <tr id="register">
+    <td>Attendance Register</td>
+    <td>Feature(s)</td>
+    <td>Read or Read/Write</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :register, current_user, section), osm_api_permission_human_friendly(:register, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :register, current_user, section), osm_user_permission_human_friendly(:register, current_user, section) %></td>
+  </tr>
+  -->
+
+  <!--
+  <tr id="programme">
+    <td>Programme</td>
+    <td>Feature(s)</td>
+    <td>Read or Read/Write</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :programme, current_user, section), osm_api_permission_human_friendly(:programme, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :programme, current_user, section), osm_user_permission_human_friendly(:programme, current_user, section) %></td>
+  </tr>
+  -->
+
+  <!--
+  <tr id="events">
+    <td>Events</td>
+    <td>Feature(s)</td>
+    <td>Read or Read/Write</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
+  </tr>
+  -->
+
+  <tr id="flexi">
+    <td>Flexi-Records</td>
+    <td><ul>
+      <li>Flexi Records</li>
+      <!-- <li>Shared Events (attendance)</li> -->
+    </ul></td>
+    <td>Read</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :flexi, current_user, section), osm_api_permission_human_friendly(:flexi, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :flexi, current_user, section), osm_user_permission_human_friendly(:flexi, current_user, section) %></td>
+  </tr>
+
+  <!--
+  <tr id="finance">
+    <td>Finances</td>
+    <td>Feature(s)</td>
+    <td>Read or Read/Write</td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :finance, current_user, section), osm_api_permission_human_friendly(:finance, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :finance, current_user, section), osm_user_permission_human_friendly(:finance, current_user, section) %></td>
+  </tr>
+  -->

@@ -37,6 +37,17 @@ Then /^I should have (\d+) (.+)(?:s| records)$/ do |count, model_name|
   Kernel.const_get(model_name.gsub(' ', '_').camelize).count.should == count.to_i
 end
 
+Then /^(?:in )?the "([^\"]*)" column of the row with id "([^\"]*)" (.*)$/ do |column_title, row_id, action|
+  col_number = 4
+  all(:xpath, "//*[(th|td)/descendant-or-self::*[contains(text(), '#{column_title}')]]/th").each do |element|
+    col_number += 1
+    break if element.has_content?(column_title)
+  end
+  within :xpath, "//tr[@id=\"#{row_id}\"]/td[#{col_number}]" do
+    step action
+  end
+end
+
 Then /^the "([^\"]*)" column of the "([^\"]*)" row (.*)$/ do |column_title, row_title, action|
   col_number = 0
   all(:xpath, "//*[(th|td)/descendant-or-self::*[contains(text(), '#{column_title}')]]/th").each do |element|

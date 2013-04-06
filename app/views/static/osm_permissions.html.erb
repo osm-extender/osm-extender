@@ -14,9 +14,7 @@
 <%- end %>
 
 <%- unless @other_sections.empty? %>
-  <%- if current_section %>
-    <h2>Other Sections</h2>
-  <%- end %>
+  <h2>Other Sections</h2>
   <%- @other_sections.each do |section| %>
     <h3><%= "#{section.group_name} : #{section.name}" %></h3>
     <%= render 'osm_permissions', :section => section %>

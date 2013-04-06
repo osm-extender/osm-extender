@@ -43,7 +43,7 @@ Feature: Site Announcements
         And I fill in "Finish date" with "2000-01-02"
         And I fill in "Start time" with "01:00"
         And I fill in "Finish time" with "02:00"
-        And I fill in "Cost" with "£1"
+        And I fill in "Cost" with "1.23"
         And I fill in "Location" with "Somewhere"
         And I fill in "Notes" with "Notes here."
 	And I fill in "Confirm by date" with "1999-12-31"

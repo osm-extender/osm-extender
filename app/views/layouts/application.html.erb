@@ -81,8 +81,7 @@
             <%- if can?(:administer, Announcement) %><div class="menu_item"><%= link_to('Administer announcements', announcements_path) %></div><%- end %>
             <%- if can?(:update, Settings) %><div class="menu_item"><%= link_to('Administer settings', edit_settings_path) %></div><%- end %>
             <%- if current_user.can_administer_delayed_job? %><div class="menu_item"><%= link_to('Administer delayed job', delayed_jobs_path) %></div><%- end %>
-            <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('User statistics', user_statistics_path) %></div><%- end %>
-            <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('Reminder email statistics', email_reminders_statistics_path) %></div><%- end %>
+            <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('Statistics', statistics_path) %></div><%- end %>
           </div><!-- secondary_menu_admin -->
           <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
           <%- if current_user.connected_to_osm? && current_section %>
@@ -100,6 +99,7 @@
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
             <div class="menu_item"><%= link_to 'OSM export', osm_export_path %></div>
             <%- if current_section.youth_section? %><div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div><%- end %>
+            <%- if current_section.youth_section? %><div class="menu_item"><%= link_to 'Reports', reports_path %></div><%- end %>
             <%- unless current_section.waiting? || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi, :events, :programme]) && has_osm_permission?(:write, [:events])) || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi])) %>
               <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
                 <p>Some items have hidden from this menu becuase of how your <%= link_to 'OSM Permissions', osm_permissions_path %> are set.</p>

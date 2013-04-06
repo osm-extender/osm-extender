@@ -87,9 +87,15 @@ OSMExtender::Application.routes.draw do
 
   get 'osm_myscout_payments/calculator' => 'osm_myscout_payments#calculator', :as => 'osm_myscout_payments_calculator'
 
+  get 'reports' => 'reports#index', :as => 'reports'
+  get 'reports/due_badges' => 'reports#due_badges', :as => 'due_badges_report'
+  get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
+  get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'
+
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 
+  get 'statistics' => 'statistics#index', :as => 'statistics'
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
 

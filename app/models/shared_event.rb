@@ -12,6 +12,7 @@ class SharedEvent < ActiveRecord::Base
   validates :start_date, :date_format => true
   validates :finish_date, :date_format => {:allow_blank => true}
   validates :confirm_by_date, :date_format => true
+  validates_format_of :cost, :with => /\A(?:\d+\.\d{2}|TBC)\Z/, :message => 'should be either "TBC" or a number like "1.23"'
 
 
   def get_attendees_data
