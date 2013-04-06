@@ -172,19 +172,23 @@ class ReportsController < ApplicationController
           @badge_requirement_labels[type][badge.osm_key][requirement.field] = requirement.name
         end
         badge.get_data_for_section(current_user.osm_api, current_section).each do |data|
-          unless ['nightsaway', 'hikes'].include?(badge.osm_key)
-            badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key
+          if data.started?
             @member_names[data.member_id] = "#{data[:first_name]} #{data[:last_name]}"
-            if data.started?
-              @badge_data_by_member[data.member_id] ||= {}
-              @badge_data_by_badge[type][badge_key] ||= {}
-              @badge_data_by_member[data.member_id][type] ||= []
-              @badge_data_by_member[data.member_id][type].push data
-              requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])} # Get requirements for only the started level
-              requirements.each do |requirement|
-                if data.requirements[requirement.field].blank? || data.requirements[requirement.field][0].downcase.eql?('x')
-                  @badge_data_by_badge[type][badge_key][requirement.field] ||= []
-                  @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
+            @badge_data_by_member[data.member_id] ||= {}
+            @badge_data_by_member[data.member_id][type] ||= []
+            unless ['nightsaway', 'hikes'].include?(badge.osm_key)
+              if badge.osm_key.eql?('adventure')
+                @badge_data_by_member[data.member_id][type].push "Adventure - completed #{data.gained_in_sections['a']} of #{badge.needed_from_section['a']}"
+              else
+                badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key
+                @badge_data_by_badge[type][badge_key] ||= {}
+                @badge_data_by_member[data.member_id][type].push data
+                requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])} # Get requirements for only the started level
+                requirements.each do |requirement|
+                  if data.requirements[requirement.field].blank? || data.requirements[requirement.field][0].downcase.eql?('x')
+                    @badge_data_by_badge[type][badge_key][requirement.field] ||= []
+                    @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
+                  end
                 end
               end
             end
