@@ -16,7 +16,7 @@ gem 'jquery-ui-rails', '~> 4.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '~> 0.6.1'                 # For using the OSM API
+gem 'osm', '~> 0.6.2'                 # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
@@ -37,7 +37,7 @@ gem 'daemon-spawn', '~> 0.4'
 group :assets do
   gem 'sass-rails', '~> 3.2.0'
   gem 'coffee-rails', '~> 3.2.0'
-  gem 'uglifier', '~> 1.3'
+  gem 'uglifier', '~> 2.0.1'
 end
 
 group :development do
