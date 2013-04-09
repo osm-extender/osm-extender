@@ -1,50 +1,72 @@
 <% provide :title, 'OSM export' %>
 
 
-<%= form_tag osm_export_do_path do %>
-  <h2>What would you like?</h2>
-  <%- @exports.each do |heading, exports| %>
-    <h3><%= heading %></h3>
-    <%- unless exports[:permission] %>
-      You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to <%= (exports[:items].size > 1) ? 'these items' : 'this item' %>.<br/>
-    <%- end %>
-    <%- exports[:items].each do |item| %>
-      <%= radio_button_tag :export, item[:export], (params[:export] == item[:export]), {:disabled => !exports[:permission]} %>
-      <%= label_tag "export_#{item[:export]}", item[:label] %>
-      <br/>
-    <%- end %>
+<h2>Members</h2>
+<%- if has_osm_permission?(:read, :member) %>
+  <%= form_tag osm_export_members_path, {:id => 'members'} do %>
+    <div>
+      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+        <h3>File options</h3>
+        <%= render "file_options" %>
+      </div>
+      <div style="display: inline-block; vertical-align: top;">
+        <h3>Export options</h3>
+        <div class="field">
+          <%= label_tag :term_id, 'Term' %><br />
+          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+        </div>
+        <div class="actions">
+          <%= submit_tag 'Export members' %>
+        </div>
+      </div>
+    </div>
+  <%- end %>
+<%- else %>
+  You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to be able to export this data.
+<%- end %>
+
+
+<h2>Programme</h2>
+<%- if has_osm_permission?(:read, :programme) %>
+  <h3>Meetings</h3>
+  <%= form_tag osm_export_programme_meetings_path, {:id => 'programme_meetings'} do %>
+    <div>
+      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+        <h4>File options</h4>
+        <%= render "file_options" %>
+      </div>
+      <div style="display: inline-block; vertical-align: top;">
+        <h4>Export options</h4>
+        <div class="field">
+          <%= label_tag :term_id, 'Term' %><br />
+          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+        </div>
+        <div class="actions">
+          <%= submit_tag 'Export programme meetings' %>
+        </div>
+      </div>
+    </div>
   <%- end %>
 
-
-  <h2>When would you like it for?</h2>
-  <div class="field">
-    <%= label_tag :term_id, 'Term' %><br />
-    <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
-  </div>
-
-
-  <h2>How would you like it?</h2>
-  <div class="field">
-    <%= hidden_field_tag :include_header, false %>
-    <%= check_box_tag :include_header, true, params[:include_header] %>
-    <%= label_tag :include_header, 'Include header line' %>
-  </div>
-
-  <div class="field">
-    <%= label_tag :column_separator %><br />
-    <%= select_tag :column_separator, options_for_select({'Comma'=>',', 'Tab'=>'TAB'}, params[:column_separator]) %>
-  </div>
-
-  <div class="field">
-    <%= label_tag :quote %><br />
-    <%= select_tag :quote, options_for_select(['"', "'"], params[:quote]) %><br/>
-    <%= hidden_field_tag :force_quotes, false %>
-    <%= check_box_tag :force_quotes, true, params[:force_quotes] %>
-    <%= label_tag :force_quotes %>
-  </div>
-
-
-  <div class="actions">
-    <%= submit_tag 'Export data' %>
-  </div>
-<% end %>
+  <h3>Activities</h3>
+  <%= form_tag osm_export_programme_activities_path, {:id => 'programme_activities'} do %>
+    <div>
+      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+        <h4>File options</h4>
+        <%= render "file_options" %>
+      </div>
+      <div style="display: inline-block; vertical-align: top;">
+        <h4>Export options</h4>
+        <div class="field">
+          <%= label_tag :term_id, 'Term' %><br />
+          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+        </div>
+        <div class="actions">
+          <%= submit_tag 'Export programme activities' %>
+        </div>
+      </div>
+    </div>
+  <%- end %>
+<%- else %>
+  You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to be able to export this data.
+<%- end %>

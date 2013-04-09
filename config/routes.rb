@@ -83,7 +83,9 @@ OSMExtender::Application.routes.draw do
   post 'osm_search_members' => 'osm_search_members#search_results', :as => 'osm_search_members_results'
 
   get 'osm_export' => 'osm_exports#index', :as => 'osm_export'
-  post 'osm_export' => 'osm_exports#export', :as => 'osm_export_do'
+  post 'osm_export/members' => 'osm_exports#members', :as => 'osm_export_members'
+  post 'osm_export/programme_activities' => 'osm_exports#programme_activities', :as => 'osm_export_programme_activities'
+  post 'osm_export/programme_meetings' => 'osm_exports#programme_meetings', :as => 'osm_export_programme_meetings'
 
   get 'osm_myscout_payments/calculator' => 'osm_myscout_payments#calculator', :as => 'osm_myscout_payments_calculator'
 
