@@ -144,27 +144,26 @@ class ReportsController < ApplicationController
     @badge_data_by_member = {}
     @badge_data_by_badge = {}
     @member_names = {}
-    @badge_names = {}
+    @badge_names = {:core => {}, :staged => {}, :activity => {}, :challenge => {}}
     @badge_requirement_labels = {}
 
-    @badge_types = {:core => 'Core', :challenge => 'Challenge', :staged => 'Staged Activity'}
-    @badge_types[:activity] = 'Activity' unless skip_activity_badges
+    @badge_types = {}
+    @badge_types[:core] = 'Core' if params[:include_core].eql?('1')
+    @badge_types[:challenge] = 'Challenge' if params[:include_challenge].eql?('1')
+    @badge_types[:staged] = 'Staged Activity and Partnership' if params[:include_staged].eql?('1')
+    @badge_types[:activity] = 'Activity' if !skip_activity_badges && params[:include_activity].eql?('1')
 
-    badges = {
-      :core => Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section),
-      :staged => Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section),
-      :challenge => Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section),
-    }
-    unless skip_activity_badges
-      badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section)
-    end
+    badges = {}
+    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
+    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:staged)
+    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:challenge)
+    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:activity)
 
     badge_data = {}
     badges.each do |type, bs|
       badge_data[type] = []
       @badge_requirement_labels[type] = {}
       @badge_data_by_badge[type] = {}
-      @badge_names[type] = {}
       bs.each do |badge|
         @badge_requirement_labels[type][badge.osm_key] = {}
         @badge_names[type][badge.osm_key] = badge.name
@@ -176,19 +175,19 @@ class ReportsController < ApplicationController
             @member_names[data.member_id] = "#{data[:first_name]} #{data[:last_name]}"
             @badge_data_by_member[data.member_id] ||= {}
             @badge_data_by_member[data.member_id][type] ||= []
-            unless ['nightsaway', 'hikes'].include?(badge.osm_key)
-              if badge.osm_key.eql?('adventure')
-                @badge_data_by_member[data.member_id][type].push "Adventure - completed #{data.gained_in_sections['a']} of #{badge.needed_from_section['a']}"
-              else
-                badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key
-                @badge_data_by_badge[type][badge_key] ||= {}
-                @badge_data_by_member[data.member_id][type].push data
-                requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])} # Get requirements for only the started level
-                requirements.each do |requirement|
-                  if data.requirements[requirement.field].blank? || data.requirements[requirement.field][0].downcase.eql?('x')
-                    @badge_data_by_badge[type][badge_key][requirement.field] ||= []
-                    @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
-                  end
+            if badge.osm_key.eql?('adventure')
+              @badge_data_by_member[data.member_id][type].push "Adventure - completed #{data.gained_in_sections['a']} of #{badge.needed_from_section['a']}"
+            elsif ['nightsaway', 'hikes'].include?(badge.osm_key)
+              @badge_data_by_member[data.member_id][type].push "#{badge.name} - completed #{data.requirements['y_01']} of #{data.started}"
+            else
+              badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key
+              @badge_data_by_badge[type][badge_key] ||= {}
+              @badge_data_by_member[data.member_id][type].push data
+              requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])} # Get requirements for only the started level
+              requirements.each do |requirement|
+                if data.requirements[requirement.field].blank? || data.requirements[requirement.field][0].downcase.eql?('x')
+                  @badge_data_by_badge[type][badge_key][requirement.field] ||= []
+                  @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
                 end
               end
             end
