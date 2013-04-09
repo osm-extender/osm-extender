@@ -12,6 +12,45 @@ class OsmExportsController < ApplicationController
 
   def index
     params[:term_id] ||= get_current_term_id
+    @flexi_records = Hash[current_section.flexi_records.sort.map{ |f| [f.name, f.id] } ]
+  end
+
+  def flexi_record
+    require_osm_permission :read, :flexi
+    flexi_record = nil
+    flexi_record_id = params[:flexi_record_id].to_i
+
+    current_section.flexi_records.each do |record|
+      flexi_record = record if record.id == flexi_record_id
+      break
+    end
+    render_not_found(nil) if flexi_record.nil? # Record isn't accessible by this user
+
+    custom_fields = []
+    system_fields = []
+    flexi_record.get_columns(current_user.osm_api).each do |field|
+      field.name = 'Date of Birth' if field.id.eql?('dob')
+      if field.id.match(/\Af_\d+\Z/)
+        custom_fields.push field
+      else
+        system_fields.push field
+      end
+    end
+    fields = [*system_fields, *custom_fields]
+    records = flexi_record.get_data(current_user.osm_api).map{ |r| [
+      r.member_id,
+      *r.fields.values_at(*fields.map{ |f| f.id })
+    ]}
+
+    csv_options = {
+      :col_sep => get_column_separator,
+      :write_headers => params[:file_options][:include_header],
+      :force_quotes => params[:file_options][:force_quotes],
+      :quote_char => params[:file_options][:quote] || '"',
+      :skip_blanks => true,
+      :headers => ['Member ID', *fields.map{ |f| f.name }]
+    }
+    send_csv(flexi_record.name, csv_options, records)
   end
 
   def members

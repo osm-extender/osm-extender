@@ -113,3 +113,7 @@ end
 Then /^the body should not contain "(.*)"$/ do |body|
   page.driver.response.body.should_not include(body)
 end
+
+Then /^show me the body$/ do
+  puts page.driver.response.body
+end

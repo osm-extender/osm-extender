@@ -80,3 +80,18 @@ Feature: Export OSM data
         And the body should contain "1,12,Activity 12,"""
         And the body should contain "2,21,Activity 21,"""
         And the body should contain "2,22,Activity 22,"""
+
+    Scenario: Export Flexi Record
+	Given an OSM request to get_flexi_record_fields for section "1" flexi "101" will have the fields
+	    | id         | name       |
+	    | f_01       | Custom     |
+	And an OSM request to get_flexi_record_data for section "1" flexi "101" term "1" will have the data
+	    | firstname | lastname | f_01 |
+	    | John      | Smith    | A    |
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "OSM export"
+        And I check "Include header line" in the "flexi_record" form
+        And I press "Export flexi record" in the "flexi_record" form
+        Then I should get a download with filename "1stSomewhere_Section1_Flexi1.csv" and MIME type "text/csv"
+        And the body should contain "Member ID,First name,Last name,Custom"
+        And the body should contain "0,John,Smith,A"
