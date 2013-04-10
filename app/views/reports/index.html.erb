@@ -35,6 +35,8 @@
     <%=check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
     <%- if (current_section.subscription_level > 1) # Bronze does not include activity badges %>
       <%=check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
+    <%- else %>
+      You need at least a silver subscription in OSM to include activity badges</br>
     <%- end %>
     <%=check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
     <%=check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>

@@ -27,7 +27,6 @@ class ReportsController < ApplicationController
 
   def awarded_badges
     require_osm_permission(:read, :badge)
-    skip_activity_badges = (current_section.subscription_level < 2) # Bronze does not include activity badges
 
     (@start, @finish) = [Osm.parse_date(params[:start]), Osm.parse_date(params[:finish])].sort
     if @start.nil? || @finish.nil?
@@ -35,27 +34,21 @@ class ReportsController < ApplicationController
       redirect_back_or_to reports_path
     end
 
-    if skip_activity_badges
-      flash[:information] = 'Activity badges have been excluded since the section does not have a silver subscription in OSM.'
-    end
-
     terms = Osm::Term.get_for_section(current_user.osm_api, current_section)
     terms = terms.select{ |t| !(t.finish < @start) || t.start > @finish }
 
-    @badge_types = []
-    @badge_types.push [:core, 'Core']
-    @badge_types.push [:challenge, 'Challenge']
-    @badge_types.push [:activity, 'Activity'] unless skip_activity_badges
-    @badge_types.push [:staged, 'Staged Activity']
-
-    badges = {
-      :core => Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section),
-      :staged => Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section),
-      :challenge => Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section),
+    @badge_types = {
+      :core => 'Core',
+      :challenge => 'Challenge',
+      :staged => 'Staged Activity and Partnership',
     }
-    unless skip_activity_badges
-      badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section)
-    end
+    @badge_types[:activity] = 'Activity' unless (current_section.subscription_level < 2) # Bronze does not include activity badges
+
+    badges = {}
+    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
+    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:staged)
+    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:challenge)
+    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:activity)
 
     @badge_names = {}
     badges.each do |type, bs|
@@ -71,13 +64,10 @@ class ReportsController < ApplicationController
 
     terms.each do |term|
       # For each term get the summaries and process them
-      summaries = {
-        :core => Osm::CoreBadge.get_summary_for_section(current_user.osm_api, current_section, term),
-        :challenge => Osm::ChallengeBadge.get_summary_for_section(current_user.osm_api, current_section, term),
-      }
-      unless skip_activity_badges
-        summaries[:activity] = Osm::ActivityBadge.get_summary_for_section(current_user.osm_api, current_section, term)
-      end
+      summaries = {}
+      summaries[:core] = Osm::CoreBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:core)
+      summaries[:challenge] = Osm::ChallengeBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:challenge)
+      summaries[:activity] = Osm::ActivityBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:activity)
       summaries.each do |type, summary|
         summary.each do |member|
           member.each do |badge_key, value|
@@ -108,38 +98,36 @@ class ReportsController < ApplicationController
         end
       end # summary in summaries
 
-      staged_badges = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section)
-      staged_badges.each do |staged_badge|
-        staged_badge.get_data_for_section(current_user.osm_api, current_section).each do |data|
-          if data.awarded_date?
-            # It has been awarded
-            name = "#{data[:first_name]} #{data[:last_name]}"
-            badge_key = staged_badge.osm_key
-            badge_key_level = "#{badge_key}_#{data.awarded}"
-            @badge_names[badge_key_level] ||= "#{staged_badge.name} (Level #{data.awarded})"
-            @by_member[name] ||= { :core => [],  :staged => [],   :challenge => [],  :activity => [] }
-            unless @by_member[name][:staged].include?(badge_key_level)
-              @by_member[name][:staged].push badge_key_level
-              @by_badge[:staged][badge_key] ||= []
-              @by_badge[:staged][badge_key].push "#{name} (Level #{data.awarded})"
-              @member_totals[name] ||= 0
-              @member_totals[name] += 1
-              @badge_totals[:staged][badge_key] ||= 0
-              @badge_totals[:staged][badge_key] += 1
+      if @badge_types.keys.include?(:staged)
+        staged_badges = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section)
+        staged_badges.each do |staged_badge|
+          staged_badge.get_data_for_section(current_user.osm_api, current_section).each do |data|
+            if data.awarded_date?
+              # It has been awarded
+              name = "#{data[:first_name]} #{data[:last_name]}"
+              badge_key = staged_badge.osm_key
+              badge_key_level = "#{badge_key}_#{data.awarded}"
+              @badge_names[badge_key_level] ||= "#{staged_badge.name} (Level #{data.awarded})"
+              @by_member[name] ||= { :core => [],  :staged => [],   :challenge => [],  :activity => [] }
+              unless @by_member[name][:staged].include?(badge_key_level)
+                @by_member[name][:staged].push badge_key_level
+                @by_badge[:staged][badge_key] ||= []
+                @by_badge[:staged][badge_key].push "#{name} (Level #{data.awarded})"
+                @member_totals[name] ||= 0
+                @member_totals[name] += 1
+                @badge_totals[:staged][badge_key] ||= 0
+                @badge_totals[:staged][badge_key] += 1
+              end
             end
-          end
-        end # each data row for badge
-      end # staged_badge in staged_badges
+          end # each data row for badge
+        end # staged_badge in staged_badges
+      end # doing staged badges
     end # term in terms
   end
 
 
   def missing_badge_requirements
     require_osm_permission(:read, :badge)
-    skip_activity_badges = (current_section.subscription_level < 2) # Bronze does not include activity badges
-    if skip_activity_badges
-      flash[:information] = 'Activity badges have been excluded since the section does not have a silver subscription in OSM.'
-    end
 
     @badge_data_by_member = {}
     @badge_data_by_badge = {}
@@ -151,7 +139,9 @@ class ReportsController < ApplicationController
     @badge_types[:core] = 'Core' if params[:include_core].eql?('1')
     @badge_types[:challenge] = 'Challenge' if params[:include_challenge].eql?('1')
     @badge_types[:staged] = 'Staged Activity and Partnership' if params[:include_staged].eql?('1')
-    @badge_types[:activity] = 'Activity' if !skip_activity_badges && params[:include_activity].eql?('1')
+    if params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+      @badge_types[:activity] = 'Activity'
+    end
 
     badges = {}
     badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
