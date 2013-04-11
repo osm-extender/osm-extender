@@ -3,8 +3,12 @@ class OsmExportsController < ApplicationController
 
   before_filter {
     params[:file_options] ||= {}
+    # Set defaults
+    params[:file_options][:include_header] ||= '1'
+    params[:file_options][:force_quotes] ||= '0'
     params[:file_options][:column_separator] ||= ','
     params[:file_options][:quote] ||= '"'
+    # Convert to Boolean
     params[:file_options][:include_header] = params[:file_options][:include_header].eql?('1')
     params[:file_options][:force_quotes] = params[:file_options][:force_quotes].eql?('1')
   }
