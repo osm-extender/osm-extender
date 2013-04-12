@@ -2,6 +2,7 @@
 
 <h2>Reminder details</h2>
 <%= render 'form' %>
+<p>Please save any changes made here before editing the items in the reminder.</p>
 
 <h2>Items</h2>
 <%- unless @email_reminder.items.empty? %>
@@ -35,7 +36,7 @@
 <br/>
 
 <%- unless @available_items.empty? %>
-  <p>You can add an item by using the links below.</p>
+  <p>You can add items by using the links below.</p>
   <ul>
     <%- @available_items.each do |item| %>
       <%- if item[:as_link] %>
