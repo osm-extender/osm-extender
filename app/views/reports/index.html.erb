@@ -28,10 +28,18 @@
 <h2>Missing Badge Requirements</h2>
 <p>
   This report allows you to see which badge requirements are stopping a member from gaining badges they've already started.
-  Due to the amount of data this report needs to slurp from OSM it will take a while to run.
+  Due to the amount of data this report needs to slurp from OSM it may take a while to run.
 </p>
 <%- if has_osm_permission?(:read, :badge) %>
-  <%= form_tag missing_badge_requirements_report_path, :method=>:get do %>  
+  <%= form_tag missing_badge_requirements_report_path, :method=>:get do %>
+    <%=check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
+    <%- if (current_section.subscription_level > 1) # Bronze does not include activity badges %>
+      <%=check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
+    <%- else %>
+      You need at least a silver subscription in OSM to include activity badges</br>
+    <%- end %>
+    <%=check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
+    <%=check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>
     <%= submit_tag 'Show missing badge requirements' %>
   <%- end %>
 <%- else %>

@@ -8,9 +8,9 @@ class ProgrammeReviewController < ApplicationController
     @zones = ProgrammeReview.zones[current_section.type]
     @cached_terms = ProgrammeReviewBalancedCache.for_section(current_section)
     
-    @terms = {}
+    @term_names = {}
     Osm::Term.get_for_section(current_user.osm_api, current_section).each do |term|
-      @terms[term.id] = term
+      @term_names[term.id] = term.name
     end
   end
 

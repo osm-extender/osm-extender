@@ -29,8 +29,6 @@ Feature: Flexi Records
     Scenario: Show a flexi record
 	Given an OSM request to get_flexi_record_fields for section "1" flexi "101" will have the fields
 	    | id         | name       |
-	    | firstname  | First name |
-	    | lastname   | Last name  |
 	    | f_01       | Custom 1   |
 	    | f_02       | Custom 2   |
 	And an OSM request to get_flexi_record_data for section "1" flexi "101" term "1" will have the data

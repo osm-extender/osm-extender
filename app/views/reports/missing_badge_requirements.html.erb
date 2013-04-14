@@ -1,5 +1,12 @@
 <% provide :title, 'Missing Badge Requirements Report' %>
 
+<p>
+  The following badge types are included in this report:<ul>
+    <%- @badge_types.values.each do |label| %>
+      <li><%= label %></li>
+    <%- end %>
+  </ul>
+</p>
 
 <h2>Grouped by Member</h2>
 <ul>
@@ -52,11 +59,15 @@
             </ul>
           </li>
         <%- end %>
-        <%- unless badges[:staged].nil? %>
-          <li>
-            Staged Activity:
-            <ul>
-            <%- badges[:staged].each do |data| %>
+      <%- end %>
+      <%- unless badges[:staged].nil? %>
+        <li>
+          Staged Activity:
+          <ul>
+          <%- badges[:staged].each do |data| %>
+            <%- if data.is_a?(String) %>
+              <li><%= data %></li>
+            <%- else %>
               <li>
                 <%- stage = "abcde"[data.started] %>
                 <%= data.badge.name %> (need to do <%= data.badge.needed_from_section[stage] - data.gained_in_sections[stage] %>):
@@ -71,9 +82,9 @@
                 </ul>
               </li>
             <%- end %>
-            </ul>
-          </li>
-        <%- end %>
+          <%- end %>
+          </ul>
+        </li>
       <%- end %>
       </ul>
     </li>

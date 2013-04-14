@@ -1,0 +1,18 @@
+<div class="field">
+  <%= hidden_field_tag "file_options[include_header]", 0 %>
+  <%= check_box_tag "file_options[include_header]", 1, params[:file_options][:include_header] %>
+  <%= label_tag "file_options[include_header]", 'Include header line' %>
+</div>
+
+<div class="field">
+  <%= label_tag "file_options[column_separator]", 'Column separator' %><br />
+  <%= select_tag "file_options[column_separator]", options_for_select({'Comma'=>',', 'Tab'=>'TAB', 'Pipe' =>'PIPE'}, params[:file_options][:column_separator]) %>
+</div>
+
+<div class="field">
+  <%= label_tag "file_options[quote]", 'Quote' %><br />
+  <%= select_tag "file_options[quote]", options_for_select(['"', "'"], params[:file_options][:quote]) %><br/>
+  <%= hidden_field_tag "file_options[force_quotes]", 0 %>
+  <%= check_box_tag "file_options[force_quotes]", 1, params[:file_options][:force_quotes] %>
+  <%= label_tag "file_options[force_quotes]", 'Force quotes' %>
+</div>

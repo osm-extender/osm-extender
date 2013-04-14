@@ -103,7 +103,7 @@ end
 Given /^an OSM request to get_flexi_record_data for section "(\d+)" flexi "(\d+)" term "(\d+)" will have the data$/ do |section, flexi, term, table|
   data = Array.new
   table.hashes.each_with_index do |hash, index|
-    data.push(hash.reverse_merge({
+    data.push ({
       'scoutid' => index.to_s,
       'dob' => '',
       'patrolid' => '1',
@@ -111,7 +111,7 @@ Given /^an OSM request to get_flexi_record_data for section "(\d+)" flexi "(\d+)
       'completed' => '',
       'age' => '',
       'patrol' => 'Patrol Name'
-    }))
+    }.merge(hash))
   end
 
   body = {

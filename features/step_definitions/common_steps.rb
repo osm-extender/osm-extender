@@ -24,6 +24,12 @@ When /^(.*) in the "([^\"]*)" column of the "([^\"]*)" row$/ do |action, column_
   end
 end
 
+When /^(.*) in the "([^\"]*)" form$/ do |action, form_id|
+  within :xpath, "//form[@id=\"#{form_id}\"]" do
+    step action
+  end
+end
+
 When /^(?:|I )post to (.+)$/ do |page_name|
   page.driver.post(path_to(page_name), { :params => {} })
   5.times do
@@ -106,4 +112,8 @@ end
 
 Then /^the body should not contain "(.*)"$/ do |body|
   page.driver.response.body.should_not include(body)
+end
+
+Then /^show me the body$/ do
+  puts page.driver.response.body
 end

@@ -4,11 +4,7 @@ class OsmFlexiRecordsController < ApplicationController
   before_filter { require_osm_permission :read, :flexi }
 
   def index
-    @records = []
-    current_section.flexi_records.each do |record|
-      @records.push record
-    end
-    @records.sort!
+    @records = current_section.flexi_records.sort
   end
 
   def show

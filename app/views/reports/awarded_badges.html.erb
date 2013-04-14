@@ -7,6 +7,11 @@
 
 <p>Due to how OSM's API works if several stages of the same staged badge have been awarded to  a member you'll see only the highest level.</p>
 
+<%- if current_section.subscription_level < 2 %>
+  <p>Activity badges have been excluded as the section does not have a silver (or higher) subscription in OSM.</p>
+<%- end %>
+
+
 <%- unless @by_member.count == 0 %>
 
   <h2>Grouped by Member</h2>
