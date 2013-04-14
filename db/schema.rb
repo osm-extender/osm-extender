@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130121083109) do
+ActiveRecord::Schema.define(:version => 20130414150558) do
 
   create_table "announcements", :force => true do |t|
     t.datetime "emailed_at"
@@ -122,6 +122,9 @@ ActiveRecord::Schema.define(:version => 20130121083109) do
     t.datetime "updated_at"
     t.datetime "last_used_at"
     t.text     "data"
+    t.string   "term_name",    :null => false
+    t.date     "term_start",   :null => false
+    t.date     "term_finish",  :null => false
   end
 
   create_table "sessions", :force => true do |t|

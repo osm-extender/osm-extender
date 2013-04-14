@@ -1,10 +1,13 @@
 class ProgrammeReviewBalancedCache < ActiveRecord::Base
-  attr_accessible :term_id, :section_id, :data, :last_used_at
+  attr_accessible :term_id, :section_id, :term_name, :term_start, :term_finish, :data, :last_used_at
 
   serialize :data, Hash
 
   validates_presence_of :term_id
-  validates_presence_of :section_id
+  validates_presence_of :term_name
+  validates_presence_of :term_start
+  validates_presence_of :term_finish
+  validates_presence_of :section_id  
   validates_presence_of :data
   validates_presence_of :last_used_at
 
