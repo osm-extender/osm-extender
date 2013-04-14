@@ -173,9 +173,23 @@ class ReportsController < ApplicationController
               badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key
               @badge_data_by_badge[type][badge_key] ||= {}
               @badge_data_by_member[data.member_id][type].push data
-              requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])} # Get requirements for only the started level
+              if badge.type.eql?(:staged)
+                # Get requirements for only the started level
+                requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])}
+              else
+                requirements = badge.requirements
+              end
               requirements.each do |requirement|
-                if data.requirements[requirement.field].blank? || data.requirements[requirement.field][0].downcase.eql?('x')
+                value = data.requirements[requirement.field]
+                not_met = true
+                if requirement.field[0].eql?('y')
+                  # It's a count column
+                  not_met = (value < 3) if badge.osm_key.eql?('adventure')
+                  not_met = (value < 6) if badge.osm_key.eql?('community')
+                else
+                  not_met = value.blank? || value[0].downcase.eql?('x')
+                end
+                if not_met
                   @badge_data_by_badge[type][badge_key][requirement.field] ||= []
                   @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
                 end
