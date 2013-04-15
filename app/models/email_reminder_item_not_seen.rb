@@ -71,7 +71,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
   def not_seen_member_in?(attendance, dates_to_check)
     return false if dates_to_check.empty?
     dates_to_check.each do |date|
-      if [:yes, :advised_absent].include?(attendance[date]) # Allowed absences are OK
+      if attendance[date].eql?(:unadvised_absent) # Advised absences are OK
         return false
       end
     end
