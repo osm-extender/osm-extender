@@ -26,7 +26,7 @@ class EmailReminderItemAdvisedAbsence < EmailReminderItem
     register.each do |row|
       data[(row.grouping_id == -2) ? :total_leaders : :total_members] += 1
       dates_to_check.each do |date|
-        if row.attendance[date].eql?('No')
+        if row.attendance[date].eql?(:advised_absent)
           data[:dates][date] ||= []
           data[:dates][date].push({
             :first_name => row.first_name,
