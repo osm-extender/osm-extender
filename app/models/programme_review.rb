@@ -123,6 +123,9 @@ class ProgrammeReview
         if term.past?
           cached_term_data = ProgrammeReviewBalancedCache.create({
             :term_id => term.id,
+            :term_name => term.name,
+            :term_start => term.start,
+            :term_finish => term.finish,
             :section_id => term.section_id,
             :data => data,
             :last_used_at => Time.now,

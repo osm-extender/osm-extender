@@ -43,7 +43,7 @@
           <tr><th></th><th>Term</th><th>Created at</th><th>Actions</th></tr>
           <%- @cached_terms.each do |cached_term| %>
             <tr>
-              <td><%= check_box_tag "term_ids[]", cached_term.id %></td>
+              <td><%= check_box_tag "ids[]", cached_term.id %></td>
               <td><%= "#{cached_term.term_name} (#{ordinalized_date(cached_term.term_start, "%d %b %Y")} - #{ordinalized_date(cached_term.term_finish, "%d %b %Y")})" %></td>
               <td><%= cached_term.created_at.strftime('%d %b %Y %H:%M:%S %Z') %> (<%= distance_of_time_in_words_to_now(cached_term.created_at) %> ago)</td>
               <td><%= link_to '[Delete]', cached_term, data: {:confirm => 'Are you sure?'}, method: :delete %></td>
