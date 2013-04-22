@@ -9,7 +9,7 @@ class SharedEventAttendance < ActiveRecord::Base
   validates_presence_of :shared_event
   validates_numericality_of :section_id, :only_integer=>true, :greater_than=>0
   validates_numericality_of :event_id, :only_integer=>true, :greater_than=>0
-  validates_uniqueness_of :shared_event_id, :scope => :user_id
+  validates_uniqueness_of :shared_event_id, :scope => [:user_id, :section_id]
   validate :all_fields_have_data, :if => Proc.new { |record| record .persisted? }
 
 
