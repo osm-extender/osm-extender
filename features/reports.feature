@@ -36,6 +36,6 @@ Feature: Report OSM data
 	    | Bob   | 5         |       |
 	When I signin as "alice@example.com" with password "P@55word"
 	And I go to the reports page
-	And I check "Check badge stock?"
+	And I uncheck "Check badge stock?"
 	And I press "Show due badges"
 	Then I should be on the due_badges_report page
