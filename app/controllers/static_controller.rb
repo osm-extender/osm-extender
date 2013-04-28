@@ -30,7 +30,7 @@ class StaticController < ApplicationController
       unless section == current_section
         @other_sections.push section
       else
-        current_section = section # Make sure current_section has the latest confrog from OSM
+        set_current_section = section # Make sure current_section has the latest config from OSM
       end
     end
     @other_sections.sort!
