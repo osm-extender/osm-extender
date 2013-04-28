@@ -69,7 +69,7 @@
               <li><%= data %></li>
             <%- else %>
               <li>
-                <%- stage = "abcde"[data.started] %>
+                <%- stage = "abcde"[data.started - 1] %>
                 <%= data.badge.name %> (need to do <%= data.badge.needed_from_section[stage] - data.gained_in_sections[stage] %>):
                 <ul>
                   <%- data.requirements.each do |r_key, r_value| %>
