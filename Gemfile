@@ -56,7 +56,7 @@ end
 group :staging, :production do
   gem 'mysql2', '~> 0.3.11'           # Use a mysql database
   gem 'unicorn', '~> 4.3'             # Use unicorn as the web server
-  gem 'memcache-client'               # Using memcache as the cache store
+  gem 'dalli', '~> 2.6'               # Using memcache as the cache store
 end
 
 
