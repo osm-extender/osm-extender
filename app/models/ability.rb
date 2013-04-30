@@ -57,7 +57,7 @@ class Ability
         result
       end
 
-      can :administer, SharedEvent do |se|
+      can [:administer, :export], SharedEvent do |se|
         se.user == user
       end
       can :create, SharedEvent

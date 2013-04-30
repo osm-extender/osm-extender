@@ -91,6 +91,7 @@
       <th>Section</th>
       <th>First name</th>
       <th>Last name</th>
+      <th>Leader</th>
       <%- @shared_event.fields.each do |field| %>
         <th><%= field.name %></th>
       <%- end %>
@@ -103,6 +104,7 @@
           <td><%= section_name %></td>
           <td><%= attendee[:first_name] %></td>
           <td><%= attendee[:last_name] %></td>
+          <td><%= attendee[:leader] ? 'Yes' : 'No' %></td>
           <%- @shared_event.fields.each do |field| %>
             <td><%= attendee[field.id] %></td>
           <%- end %>
@@ -111,3 +113,5 @@
     <%- end %>
   </tbody>
 </table>
+<%= link_to '[Export as CSV]', shared_event_export_path(@shared_event, :format => :csv) %><br/>
+<%= link_to '[Export as TSV]', shared_event_export_path(@shared_event, :format => :tsv) %><br/>

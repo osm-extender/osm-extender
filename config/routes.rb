@@ -107,6 +107,7 @@ OSMExtender::Application.routes.draw do
   resources :shared_events do
     resources :shared_event_fields, :only => [:create, :update, :destroy], :as => 'fields', :path => 'fields'
 #    resources :shared_event_attendances, :as => 'attendances', :path => 'attendances'
+    get 'export' => 'shared_events#export', :as => 'export', :path => 'export', :constraints => {:format => /tsv|csv/}
   end
   get '/shared_events/:shared_event_id/attend(.:format)' => 'shared_event_attendances#attend'
   resources :shared_event_attendances

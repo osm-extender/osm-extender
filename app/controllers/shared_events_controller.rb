@@ -48,4 +48,33 @@ class SharedEventsController < ApplicationController
     redirect_to shared_events_path
   end
 
+  def export
+    shared_event = current_user.shared_events.find(params[:shared_event_id])
+    fields = shared_event.fields
+    data = []
+    shared_event.get_attendees_data.each do |section_name, attendees|
+      attendees.each do |attendee|
+        data.push attendee.merge(
+          :section_name => section_name,
+          :leader => (attendee[:leader] ? 'Yes' : 'No'),
+        )
+      end
+    end
+
+    options = {
+      :col_sep => {'csv' => ',', 'tsv' => "\t"}[params[:format]],
+      :write_headers => true,
+      :force_quotes => true,
+      :quote_char => '"',
+      :skip_blanks => true,
+      :headers => ['Section', 'First name', 'Last name', 'Leader', *fields.map{ |f| f.name }],
+    }
+    csv_string = CSV.generate(options) do |csv|
+      data.each do |item|
+        csv << item.values_at(:section_name, :first_name, :last_name, :leader, *fields.map{ |f| f.id })
+      end
+    end
+    send_data csv_string, :filename => "#{shared_event.name}.#{params[:format]}", :type => "text/#{params[:format]}", :disposition => 'attachment'
+  end
+
 end
