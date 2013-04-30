@@ -53,12 +53,25 @@
 
 
 <h2>Sections Attending</h2>
-<ul>
-  <%- @shared_event.attendance.each do |attendance| %>
-    <%- section = Osm::Section.get(attendance.user.osm_api, attendance.section_id) %>
-    <li><%= "#{section.name} (#{section.group_name})" %></li>
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Total</th>
+    <th>Members</th>
+    <th>Leaders</th>
+  </tr>
+  <%- @attendees_data.each do |section_name, attendance| %>
+    <%- total = attendance.size %>
+    <%- leaders = attendance.select{|a| a[:leader]}.size %>
+    <%- members = total - leaders %>
+    <tr>
+      <td><%= section_name %></td>
+      <td><%= total %></td>
+      <td><%= members %></td>
+      <td><%= leaders %></td>
+    </tr>
   <%- end %>
-</ul>
+</table>
 
 
 
@@ -75,7 +88,7 @@
     </tr>
   </thead>
   <tbody>
-    <%- @shared_event.get_attendees_data.each do |section_name, attendees| %>
+    <%- @attendees_data.each do |section_name, attendees| %>
       <%- attendees.each do |attendee| %>
         <tr>
           <td><%= section_name %></td>

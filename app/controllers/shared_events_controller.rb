@@ -7,6 +7,7 @@ class SharedEventsController < ApplicationController
 
   def show
     @shared_event = current_user.shared_events.find(params[:id])
+    @attendees_data = @shared_event.get_attendees_data
   end
 
   def new
