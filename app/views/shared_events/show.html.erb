@@ -60,10 +60,13 @@
     <th>Members</th>
     <th>Leaders</th>
   </tr>
+  <%- total_total = 0 %>
+  <%- total_leaders = 0 %>
+  <%- total_members = 0 %>
   <%- @attendees_data.each do |section_name, attendance| %>
-    <%- total = attendance.size %>
-    <%- leaders = attendance.select{|a| a[:leader]}.size %>
-    <%- members = total - leaders %>
+    <%- total = attendance.size; total_total += total %>
+    <%- leaders = attendance.select{|a| a[:leader]}.size; total_leaders += leaders %>
+    <%- members = (total - leaders); total_members += members %>
     <tr>
       <td><%= section_name %></td>
       <td><%= total %></td>
@@ -71,6 +74,12 @@
       <td><%= leaders %></td>
     </tr>
   <%- end %>
+  <tr>
+    <td style="text-align: right;">TOTAL</td>
+    <td><%= total_total %></td>
+    <td><%= total_members %></td>
+    <td><%= total_leaders %></td>
+  </tr>
 </table>
 
 
