@@ -53,12 +53,34 @@
 
 
 <h2>Sections Attending</h2>
-<ul>
-  <%- @shared_event.attendance.each do |attendance| %>
-    <%- section = Osm::Section.get(attendance.user.osm_api, attendance.section_id) %>
-    <li><%= "#{section.name} (#{section.group_name})" %></li>
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Total</th>
+    <th>Members</th>
+    <th>Leaders</th>
+  </tr>
+  <%- total_total = 0 %>
+  <%- total_leaders = 0 %>
+  <%- total_members = 0 %>
+  <%- @attendees_data.each do |section_name, attendance| %>
+    <%- total = attendance.size; total_total += total %>
+    <%- leaders = attendance.select{|a| a[:leader]}.size; total_leaders += leaders %>
+    <%- members = (total - leaders); total_members += members %>
+    <tr>
+      <td><%= section_name %></td>
+      <td><%= total %></td>
+      <td><%= members %></td>
+      <td><%= leaders %></td>
+    </tr>
   <%- end %>
-</ul>
+  <tr>
+    <td style="text-align: right;">TOTAL</td>
+    <td><%= total_total %></td>
+    <td><%= total_members %></td>
+    <td><%= total_leaders %></td>
+  </tr>
+</table>
 
 
 
@@ -69,18 +91,20 @@
       <th>Section</th>
       <th>First name</th>
       <th>Last name</th>
+      <th>Leader</th>
       <%- @shared_event.fields.each do |field| %>
         <th><%= field.name %></th>
       <%- end %>
     </tr>
   </thead>
   <tbody>
-    <%- @shared_event.get_attendees_data.each do |section_name, attendees| %>
+    <%- @attendees_data.each do |section_name, attendees| %>
       <%- attendees.each do |attendee| %>
         <tr>
           <td><%= section_name %></td>
           <td><%= attendee[:first_name] %></td>
           <td><%= attendee[:last_name] %></td>
+          <td><%= attendee[:leader] ? 'Yes' : 'No' %></td>
           <%- @shared_event.fields.each do |field| %>
             <td><%= attendee[field.id] %></td>
           <%- end %>
@@ -89,3 +113,5 @@
     <%- end %>
   </tbody>
 </table>
+<%= link_to '[Export as CSV]', shared_event_export_path(@shared_event, :format => :csv) %><br/>
+<%= link_to '[Export as TSV]', shared_event_export_path(@shared_event, :format => :tsv) %><br/>

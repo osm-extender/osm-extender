@@ -24,6 +24,7 @@ class SharedEventAttendance < ActiveRecord::Base
         this_data = {
           :first_name => attend.first_name,
           :last_name => attend.last_name,
+          :leader => (attend.grouping_id == -2),
         }
         shared_event_field_datas.each do |field|
           if field.source_type.to_sym == :event
