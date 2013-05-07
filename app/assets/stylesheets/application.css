@@ -316,3 +316,9 @@ div.dialog h1 {
   color: #777;
   cursor: move;
 }
+
+
+
+.page-break {
+  display: none;
+}
