@@ -132,7 +132,6 @@ GEM
       rack-contrib
       railties
     mime-types (1.23)
-    minitest (4.7.4)
     multi_json (1.7.3)
     multi_xml (0.5.3)
     multipart-post (1.2.0)
@@ -274,7 +273,6 @@ DEPENDENCIES
   letter_opener (~> 1.0)
   libv8 (~> 3.11)
   meta_request (~> 0.2.2)
-  minitest (~> 4.0)
   mysql2 (~> 0.3.11)
   nokogiri (~> 1.5)
   osm (~> 1.0)
