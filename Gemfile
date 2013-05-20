@@ -37,7 +37,7 @@ gem 'daemon-spawn', '~> 0.4'
 group :assets do
   gem 'sass-rails', '~> 3.2.0'
   gem 'coffee-rails', '~> 3.2.0'
-  gem 'uglifier', '~> 2.0.1'
+  gem 'uglifier', '~> 2.0'
 end
 
 group :development do
@@ -66,8 +66,7 @@ group :test do
   gem 'cucumber-rails', '~> 1.3'
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 1.2'
-  gem 'database_cleaner', '~> 0.8'
-  gem 'minitest', '~> 4.0'
+  gem 'database_cleaner', '~> 1.0'
   gem 'fakeweb', '~> 1.3'
   gem 'timecop', '~> 0.5'
   gem 'simplecov', '~> 0.6', :require => false

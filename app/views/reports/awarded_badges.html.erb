@@ -33,7 +33,7 @@
       <%- end %>
     </ul>
 
-  <h2>Grouped by Badge</h2>
+  <h2 class="page-break-before">Grouped by Badge</h2>
     <ul>
       <%- @badge_types.each do |type, label| %>
         <li><%= label %> (<%= @badge_totals[type].values.sum %> awarded):

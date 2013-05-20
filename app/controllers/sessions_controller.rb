@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :require_login
+  skip_before_filter :require_login, :only => [:new, :create, :destroy]
 
   def new
   end
@@ -58,15 +58,14 @@ class SessionsController < ApplicationController
 
 
   def change_section
+    require_connected_to_osm
     section_id = params[:section_id].to_i
 
     # Check user has access to section then change current section
-    if current_user.connected_to_osm?
-      Osm::Section.get_all(current_user.osm_api).each do |section|
-        if section_id == section.id
-          set_current_section section
-          break
-        end
+    Osm::Section.get_all(current_user.osm_api).each do |section|
+      if section_id == section.id
+        set_current_section section
+        break
       end
     end
     

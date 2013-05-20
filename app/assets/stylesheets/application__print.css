@@ -1,3 +1,12 @@
 #header {
     display:       none;
 }
+
+.page-break {
+    display: block;
+    page-break-before: always;
+}
+.page-break-before {
+    display: block;
+    page-break-before: always;
+}
