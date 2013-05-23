@@ -53,15 +53,13 @@
   </tr>
   -->
 
-  <!--
   <tr id="events">
     <td>Events</td>
-    <td>Feature(s)</td>
-    <td>Read or Read/Write</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
+    <td>Shared Events (attendance)</td>
+    <td>Read and Write</td>
+    <td><%= pos_neg api_has_osm_permission?([:read, :write], :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?([:read, :write], :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
   </tr>
-  -->
 
   <tr id="flexi">
     <td>Flexi-Records</td>

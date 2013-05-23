@@ -117,40 +117,20 @@ class ApplicationController < ActionController::Base
 
   # Ensure the current section is of a given type
   # if not redirect them to the relevant page and set an instruction flash
-  # @param type a string or symbol representing the type of section to require (may be :beavers, :cubs ... or :youth_section)
+  # @param type a Symbol representing the type of section to require (may be :beavers, :cubs ... or an Array of allowable types)
   def require_section_type(type)
-    if current_section.nil? || !current_section.send("#{type}?")
+    if current_section.nil? || ![*type].include?(current_section.type)
       flash[:error] = "The current section must be a #{type} section to do that."
-      redirect_back_or_to(current_user ? my_page_path : signin_path)
-    end
-  end
-
-  # Ensure the current section is a youth section
-  # if not redirect them to the relevant page and set an instruction flash
-  def require_youth_section
-    if current_section.nil? || !current_section.youth_section?
-      flash[:error] = "The current section must be a youth section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
   end
 
   # Forbid the current section if it is of a given type
   # if so redirect them to the relevant page and set an instruction flash
-  # @param type a string or symbol representing the type of section to forbid (may be :beavers, :cubs ... or :youth_section)
+  # @param type a Symbol representing the type of section to forbid (may be :beavers, :cubs ... or an Array ot them)
   def forbid_section_type(type)
-    [*type].each do |t|
-      if current_section.nil? || current_section.send("#{t}?")
-        flash[:error] = "The current section must not be a #{t} section to do that."
-        redirect_back_or_to(current_user ? my_page_path : signin_path)
-      end
-    end
-  end
-
-  # Ensure the current section is not a youth section
-  # if not redirect them to the relevant page and set an instruction flash
-  def forbid_youth_section
-    if current_section.nil? || current_section.youth_section?
-      flash[:error] = "The current section must not be a youth section to do that."
+    if current_section.nil? || [*type].include?(current_section.type)
+      flash[:error] = "The current section must not be a #{t} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
   end
