@@ -1,6 +1,6 @@
 The following events are happening in the next <%= pluralize(configuration[:the_next_n_months], 'month') %>:
 <ul><%- data[:events].each do |event| %>
-  <li><%= event.name %><%- if event.start %> on <%= ordinalized_date(event.start, "%a %d of %b %Y at %H:%M") %><%- end %>
+  <li><%= event.name %><%- if event.start %> on <%= ordinalized_date(event.start, (event.start.hour.eql?(0) ? "%a %d of %b %Y" : "%a %d of %b %Y at %H:%M")) %><%- end %> (book by <%= ordinalized_date(event.confirm_by_date, "%d of %b") %>)
   <%- if configuration[:include_attendance] %>
     <%- attendance = data[:attendance][event.id] %>
     <ul>

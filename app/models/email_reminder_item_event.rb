@@ -42,11 +42,13 @@ class EmailReminderItemEvent < EmailReminderItem
 
     (1 + rand(3)).times do |i|
       start_datetime = rand(configuration[:the_next_n_months].months / 1.day).days.from_now.to_datetime
-      end_datetime = start_datetime + 2.days - 6.hours
+      confirm_date = (start_datetime - (rand(12) + 2).days).to_date
+      end_datetime = start_datetime + rand(2).days + 18.hours
       events.push Osm::Event.new({
         :name => Faker::Lorem.words(2 + rand(3)).join(' '),
         :start => start_datetime,
         :end => end_datetime,
+        :confirm_by_date => confirm_date,
         :id => i,
       })
       attendance[i] = {
