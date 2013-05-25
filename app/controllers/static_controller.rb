@@ -27,6 +27,7 @@ class StaticController < ApplicationController
 
     @other_sections = Array.new
     Osm::Section.get_all(api, :no_cache => true).each do |section|
+      Osm::Model.cache_delete(api, ['api_access', api.user_id, section.id]) # Clear cached API permissions
       unless section == current_section
         @other_sections.push section
       else
