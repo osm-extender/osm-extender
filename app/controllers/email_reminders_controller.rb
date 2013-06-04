@@ -102,7 +102,7 @@ class EmailRemindersController < ApplicationController
       items.push ({:type => EmailReminderItemBirthday, :as_link => has_osm_permission?(:read, :member, current_user, section_id)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent')
-      items.push ({:type => EmailReminderItemEvent, :as_link => has_osm_permission?(:read, :programme, current_user, section_id)})
+      items.push ({:type => EmailReminderItemEvent, :as_link => has_osm_permission?(:read, :events, current_user, section_id)})
     end
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme')
       items.push ({:type => EmailReminderItemProgramme, :as_link => has_osm_permission?(:read, :programme, current_user, section_id)})
