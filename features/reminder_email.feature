@@ -25,6 +25,7 @@ Feature: Reminder Email
 	    | programme  | read    |
 	    | register   | read    |
 	    | badge      | read    |
+	    | events     | read    |
 	And no emails have been sent
 
 
