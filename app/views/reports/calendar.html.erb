@@ -1,0 +1,58 @@
+<% provide :title, 'Calendar' %>
+
+<p>This calendar includes the following:
+  <ul>
+    <%- Osm::Section.get_all(current_user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section| %>
+      <%- if params['events'][section.id.to_s].eql?('1') || params['programme'][section.id.to_s].eql?('1') %>
+        <li>
+          <%= get_section_names[section.id] %>
+            <%- if params['programme'][section.id.to_s].eql?('1') %>
+              <%- if params['events'][section.id.to_s].eql?('1') %>
+                (Programme and Events)
+              <%- else %>
+                (Programme)
+              <%- end %>
+            <%- else %>
+              <%- if params['events'][section.id.to_s].eql?('1') %>
+                (Events)
+              <%- end %>
+            <%- end %>
+        </li>
+      <%- end %>
+    <%- end %>
+  </ul>
+  Between <%= ordinalized_date(@start, "%a %d of %b %Y") %> and <%= ordinalized_date(@finish, "%a %d of %b %Y") %>.
+</p>
+
+<br/>
+
+<table>
+  <thead>
+    <tr>
+      <th>When</th>
+      <th>Section</th>
+      <th>Type</th>
+      <th>What</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @items.each do |item| %>
+      <%- if item.is_a?(Osm::Event) %>
+        <tr>
+          <td><%= ordinalized_date(item.start, (item.start.hour.eql?(0) ? "%a %d of %b %Y" : "%a %d of %b %Y at %H:%M")) %></td>
+          <td><%= get_section_names[item.section_id] %></td>
+          <td>Event</td>
+          <td><%= item.name %></td>
+        </tr>
+      <%- end %>
+      <%- if item.is_a?(Osm::Meeting) %>
+        <tr>
+          <td><%= ordinalized_date(item.date, "%a %d of %b %Y") %> <%= "at #{item.start_time}" if item.start_time %></td>
+          <td><%= get_section_names[item.section_id] %></td>
+          <td>Programme</td>
+          <td><%= item.title %></td>
+        </tr>
+      <%- end %>
+    <%- end %>
+  </tbody>
+</table>

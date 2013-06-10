@@ -1,47 +1,95 @@
-<% provide :title, 'Reports' %>
+  <% provide :title, 'Reports' %>
+  
+  <p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
 
-<p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
 
-<h2>Awarded Badges</h2>
-<p>This report allows you to see which badges were awarded to which members during a provided time period.</p>
-<%- if has_osm_permission?(:read, :badge) %>
-  <%= form_tag awarded_badges_report_path, :method=>:get do %>  
-    Between <%= text_field_tag :start, (1.year.ago + 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
-    and <%= text_field_tag :finish, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
-    <br/><%= submit_tag 'Show awarded badges' %>
-  <%- end %>
-<%- else %>
-  You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
-<%- end %>
-
-<h2>Due Badges</h2>
-<p>This report allows you to see which members are due which badges and whether you have enough of them.</p>
-<%- if has_osm_permission?(:read, :badge) %>
-  <%= form_tag due_badges_report_path, :method=>:get do %>  
-    <%=check_box_tag :check_stock, 1, true %> <%= label_tag :check_stock, 'Check badge stock?' %><br/>
-    <%= submit_tag 'Show due badges' %>
-  <%- end %>
-<%- else %>
-  You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
-<%- end %>
-
-<h2>Missing Badge Requirements</h2>
-<p>
-  This report allows you to see which badge requirements are stopping a member from gaining badges they've already started.
-  Due to the amount of data this report needs to slurp from OSM it may take a while to run.
-</p>
-<%- if has_osm_permission?(:read, :badge) %>
-  <%= form_tag missing_badge_requirements_report_path, :method=>:get do %>
-    <%=check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
-    <%- if (current_section.subscription_level > 1) # Bronze does not include activity badges %>
-      <%=check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
-    <%- else %>
-      You need at least a silver subscription in OSM to include activity badges</br>
+<%- if current_section.youth_section? %>
+  <h2>Awarded Badges</h2>
+  <p>This report allows you to see which badges were awarded to which members during a provided time period.</p>
+  <%- if has_osm_permission?(:read, :badge) %>
+    <%= form_tag awarded_badges_report_path, :method=>:get do %>  
+      Between <%= text_field_tag :start, (1.year.ago + 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      and <%= text_field_tag :finish, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      <br/><%= submit_tag 'Show awarded badges' %>
     <%- end %>
-    <%=check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
-    <%=check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>
-    <%= submit_tag 'Show missing badge requirements' %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
   <%- end %>
-<%- else %>
-  You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+<%- end %>
+
+
+<%- if current_section.youth_section? || current_section.adults? %>
+  <h2>Calendar</h2>
+  <p>This report allows you to get a list of events and/or the programme for a number of sections.</p>
+  <%- if has_osm_permission?(:read, [:events, :programme]) %>
+    <%= form_tag calendar_report_path, :method=>:get do %>
+      <table>
+        <tr>
+          <th>Section</th>
+          <th>
+            <%= check_box_tag :select_all_programme, 1, true, {:title => '(Un)Select all sections'} %>
+            <%= label_tag :select_all_programme, "Include<br/>programme?".html_safe %>
+          </th>
+          <th>
+            <%= check_box_tag :select_all_events, 1, true, {:title => '(Un)Select all sections'} %>
+            <%= label_tag :select_all_events, "Include<br/>events?".html_safe %>
+          </th>
+        </tr>
+        <%- @sections.select{ |s| s.youth_section? || s.adults? }.each do |section| %>
+          <tr>
+            <td>
+              <%= check_box_tag "select_all_s[#{section.id}]", 1, true, {:class => 'select_all_section', :data => {'section-id' => section.id}, :title => '(Un)Select all for this section'} %>
+              <%= label_tag "select_all_s[#{section.id}]", get_section_names[section.id] %>
+            </td>
+            <td style="text-align: center;"><%= check_box_tag "programme[#{section.id}]", 1, true, {:class => "section-#{section.id} field-programme"} %></td>
+            <td style="text-align: center;"><%= check_box_tag "events[#{section.id}]", 1, true, {:class => "section-#{section.id} field-events"} %></td>
+          </tr>
+        <%- end %>
+      </table>
+      Between <%= text_field_tag :calendar_start, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      and <%= text_field_tag :calendar_finish, (1.year.from_now - 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      <br/>
+      <%= submit_tag 'Show calendar' %>
+    <%- end %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+  <%- end %>
+<%- end %>
+
+
+<%- if current_section.youth_section? %>
+  <h2>Due Badges</h2>
+  <p>This report allows you to see which members are due which badges and whether you have enough of them.</p>
+  <%- if has_osm_permission?(:read, :badge) %>
+    <%= form_tag due_badges_report_path, :method=>:get do %>  
+      <%= check_box_tag :check_stock, 1, true %> <%= label_tag :check_stock, 'Check badge stock?' %><br/>
+      <%= submit_tag 'Show due badges' %>
+    <%- end %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+  <%- end %>
+<%- end %>
+
+
+<%- if current_section.youth_section? %>
+  <h2>Missing Badge Requirements</h2>
+  <p>
+    This report allows you to see which badge requirements are stopping a member from gaining badges they've already started.
+    Due to the amount of data this report needs to slurp from OSM it may take a while to run.
+  </p>
+  <%- if has_osm_permission?(:read, :badge) %>
+    <%= form_tag missing_badge_requirements_report_path, :method=>:get do %>
+      <%=check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
+      <%- if (current_section.subscription_level > 1) # Bronze does not include activity badges %>
+        <%=check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
+      <%- else %>
+        You need at least a silver subscription in OSM to include activity badges</br>
+      <%- end %>
+      <%=check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
+      <%=check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>
+      <%= submit_tag 'Show missing badge requirements' %>
+    <%- end %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+  <%- end %>
 <%- end %>

@@ -99,7 +99,7 @@
             <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
             <div class="menu_item"><%= link_to 'OSM export', osm_export_path %></div>
             <%- if current_section.youth_section? %><div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div><%- end %>
-            <%- if current_section.youth_section? %><div class="menu_item"><%= link_to 'Reports', reports_path %></div><%- end %>
+            <%- unless current_section.waiting? %><div class="menu_item"><%= link_to 'Reports', reports_path %></div><%- end %>
             <%- unless  current_section.waiting? \
                         || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi, :events, :programme]) && has_osm_permission?(:write, [:events])) \
                         || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi]) && has_osm_permission?([:read, :write], :events))

@@ -91,6 +91,7 @@ OSMExtender::Application.routes.draw do
   get 'osm_myscout_payments/calculator' => 'osm_myscout_payments#calculator', :as => 'osm_myscout_payments_calculator'
 
   get 'reports' => 'reports#index', :as => 'reports'
+  get 'reports/calendar' => 'reports#calendar', :as => 'calendar_report'
   get 'reports/due_badges' => 'reports#due_badges', :as => 'due_badges_report'
   get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
   get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'

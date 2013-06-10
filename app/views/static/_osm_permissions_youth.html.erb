@@ -3,8 +3,8 @@
     <td><ul>
       <li>Contact Details</li>
       <li>Email Lists</li>
-      <li>Email Reminders (birthdays)</li>
-      <li>Shared Events (attendance)</li>
+      <li>Email Reminders (Birthdays)</li>
+      <li>Shared Events (Attendance)</li>
       <li>Search Members</li>
       <li>OSM Export</li>
     </ul></td>
@@ -16,7 +16,7 @@
   <tr id="badge">
     <td>Badge Records</td>
     <td><ul>
-      <li>Email Reminders (due badges)</li>
+      <li>Email Reminders (Due badges)</li>
       <li>Reports:<ul>
         <li>Awarded badges</li>
         <li>Due badges</li>
@@ -58,6 +58,7 @@
       <li>Email reminders (Programme)</li>
       <li>Programme review</li>
       <li>OSM export</li>
+      <li>Reports (Calendar)</li>
     </ul></td>
     <td>Read</td>
     <td><%= pos_neg api_has_osm_permission?(:read, :programme, current_user, section), osm_api_permission_human_friendly(:programme, current_user, section) %></td>
@@ -66,7 +67,10 @@
 
   <tr id="events">
     <td rowspan="2">Events</td>
-    <td>Email Reminders (events)</td>
+    <td><ul>
+      <li>Email Reminders (Events)</li>
+      <li>Reports (Calendar)</li>
+    </ul></td>
     <td>Read</td>
     <td rowspan="2"><%= pos_neg api_has_osm_permission?([:read, :write], :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
     <td rowspan="2"><%= pos_neg user_has_osm_permission?([:read, :write], :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
