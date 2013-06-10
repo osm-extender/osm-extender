@@ -1,8 +1,11 @@
 class ReportsController < ApplicationController
   before_filter :require_connected_to_osm
-  before_filter { require_section_type :youth_section }
+  before_filter ({:only => [:due_badges, :awarded_badges, :missing_badge_requirements]}) { require_section_type Constants::YOUTH_SECTIONS }
+  before_filter ({:only => [:calendar]}) { require_section_type Constants::YOUTH_AND_ADULT_SECTIONS }
+
 
   def index
+    @sections = Osm::Section.get_all(current_user.osm_api)
   end
 
 
@@ -22,6 +25,40 @@ class ReportsController < ApplicationController
         @by_badge[badge].push member_id
       end
     end
+  end
+
+
+  def calendar
+    require_osm_permission(:read, [:events, :programme])
+    (@start, @finish) = [Osm.parse_date(params[:calendar_start]), Osm.parse_date(params[:calendar_finish])].sort
+    @items = []
+    Osm::Section.get_all(current_user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section|
+      if params['events'][section.id.to_s].eql?('1')
+        Osm::Event.get_for_section(current_user.osm_api, section).each do |event|
+          unless event.start.nil?
+            event_date = event.finish.nil? ? event.start : event.finish
+            unless (event_date < @start) || (event_date > @finish)
+              @items.push [event_date, event]
+            end
+          end
+        end
+      end
+
+      if params['programme'][section.id.to_s].eql?('1')
+        Osm::Term.get_for_section(current_user.osm_api, section).each do |term|
+          unless term.before?(@start) || term.after?(@finish)
+            Osm::Meeting.get_for_section(current_user.osm_api, section, term).each do |meeting|
+              unless (meeting.date < @start) || (meeting.date > @finish)
+                @items.push [meeting.date, meeting]
+              end
+            end
+          end
+        end
+      end
+    end
+    
+    @items.sort!{ |i1, i2| i1 <=> i2 }
+    @items.map!{ |i| i[1]}
   end
 
 
@@ -187,7 +224,7 @@ class ReportsController < ApplicationController
                   not_met = (value < 3) if badge.osm_key.eql?('adventure')
                   not_met = (value < 6) if badge.osm_key.eql?('community')
                 else
-                  not_met = value.blank? || value[0].downcase.eql?('x')
+                  not_met = value.blank? || value[0].to_s.downcase.eql?('x')
                 end
                 if not_met
                   @badge_data_by_badge[type][badge_key][requirement.field] ||= []

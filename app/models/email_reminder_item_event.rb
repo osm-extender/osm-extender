@@ -20,6 +20,7 @@ class EmailReminderItemEvent < EmailReminderItem
           :no => {:leaders=>0, :members=>0, :total=>0},
           :invited => {:leaders=>0, :members=>0, :total=>0},
           :shown => {:leaders=>0, :members=>0, :total=>0},
+          :reserved => {:leaders=>0, :members=>0, :total=>0},
         }
         e.get_attendance(user.osm_api, section_id).each do |a|
           h[a.attending][a.grouping_id == -2 ? :leaders : :members] += 1
@@ -42,11 +43,13 @@ class EmailReminderItemEvent < EmailReminderItem
 
     (1 + rand(3)).times do |i|
       start_datetime = rand(configuration[:the_next_n_months].months / 1.day).days.from_now.to_datetime
-      end_datetime = start_datetime + 2.days - 6.hours
+      confirm_date = (start_datetime - (rand(12) + 2).days).to_date
+      end_datetime = start_datetime + rand(2).days + 18.hours
       events.push Osm::Event.new({
         :name => Faker::Lorem.words(2 + rand(3)).join(' '),
         :start => start_datetime,
         :end => end_datetime,
+        :confirm_by_date => confirm_date,
         :id => i,
       })
       attendance[i] = {
@@ -54,6 +57,7 @@ class EmailReminderItemEvent < EmailReminderItem
         :no => {:leaders=>rand(2), :members=>rand(10)},
         :invited => {:leaders=>rand(2), :members=>rand(5)},
         :shown => {:leaders=>rand(2), :members=>rand(5)},
+        :reserved => {:leaders=>rand(2), :members=>rand(3)},
       }
       attendance[i].keys.each do |k|
         attendance[i][k][:total] = attendance[i][k][:leaders] + attendance[i][k][:members]

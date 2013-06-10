@@ -153,6 +153,7 @@ Feature: OSM
 	    | member     | read    |
 	    | programme  | write   |
 	    | flexi      | read    |
+            | events     | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "Some items have hidden from this menu"
 	And I should see "Email reminders"

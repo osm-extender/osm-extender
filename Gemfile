@@ -16,7 +16,7 @@ gem 'jquery-ui-rails', '~> 4.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '~> 1.0'                   # For using the OSM API
+gem 'osm', '~> 1.0', '>= 1.0.5'       # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
