@@ -187,7 +187,7 @@ class ReportsController < ApplicationController
                   not_met = (value < 3) if badge.osm_key.eql?('adventure')
                   not_met = (value < 6) if badge.osm_key.eql?('community')
                 else
-                  not_met = value.blank? || value[0].downcase.eql?('x')
+                  not_met = value.blank? || value[0].to_s.downcase.eql?('x')
                 end
                 if not_met
                   @badge_data_by_badge[type][badge_key][requirement.field] ||= []
