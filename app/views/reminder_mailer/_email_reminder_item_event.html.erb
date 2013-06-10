@@ -4,7 +4,7 @@ The following events are happening in the next <%= pluralize(configuration[:the_
   <%- if configuration[:include_attendance] %>
     <%- attendance = data[:attendance][event.id] %>
     <ul>
-      <%- [:yes, :no, :invited, :shown].each do |i| %>
+      <%- [:yes, :no, :invited, :shown, :reserved].each do |i| %>
         <% if attendance[i][:total] > 0 %><li><%= i.to_s.titleize %>: <%= attendance[i][:total] %> (<%= attendance[i][:members] %> members and <%= attendance[i][:leaders] %> leaders)</li><% end %>
       <%- end %>
     </ul>

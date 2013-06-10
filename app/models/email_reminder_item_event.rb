@@ -20,6 +20,7 @@ class EmailReminderItemEvent < EmailReminderItem
           :no => {:leaders=>0, :members=>0, :total=>0},
           :invited => {:leaders=>0, :members=>0, :total=>0},
           :shown => {:leaders=>0, :members=>0, :total=>0},
+          :reserved => {:leaders=>0, :members=>0, :total=>0},
         }
         e.get_attendance(user.osm_api, section_id).each do |a|
           h[a.attending][a.grouping_id == -2 ? :leaders : :members] += 1
@@ -56,6 +57,7 @@ class EmailReminderItemEvent < EmailReminderItem
         :no => {:leaders=>rand(2), :members=>rand(10)},
         :invited => {:leaders=>rand(2), :members=>rand(5)},
         :shown => {:leaders=>rand(2), :members=>rand(5)},
+        :reserved => {:leaders=>rand(2), :members=>rand(3)},
       }
       attendance[i].keys.each do |k|
         attendance[i][k][:total] = attendance[i][k][:leaders] + attendance[i][k][:members]
