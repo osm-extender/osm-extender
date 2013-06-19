@@ -31,34 +31,52 @@ class ReportsController < ApplicationController
   def calendar
     require_osm_permission(:read, [:events, :programme])
     (@start, @finish) = [Osm.parse_date(params[:calendar_start]), Osm.parse_date(params[:calendar_finish])].sort
-    @items = []
-    Osm::Section.get_all(current_user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section|
-      if params['events'][section.id.to_s].eql?('1')
-        Osm::Event.get_for_section(current_user.osm_api, section).each do |event|
-          unless event.start.nil?
-            event_date = event.finish.nil? ? event.start : event.finish
-            unless (event_date < @start) || (event_date > @finish)
-              @items.push [event_date, event]
-            end
-          end
-        end
-      end
+    @items = Report.calendar(current_user, params)
 
-      if params['programme'][section.id.to_s].eql?('1')
-        Osm::Term.get_for_section(current_user.osm_api, section).each do |term|
-          unless term.before?(@start) || term.after?(@finish)
-            Osm::Meeting.get_for_section(current_user.osm_api, section, term).each do |meeting|
-              unless (meeting.date < @start) || (meeting.date > @finish)
-                @items.push [meeting.date, meeting]
-              end
-            end
+    respond_to do |format|
+      format.html do
+        @export_params = {
+          :programme => params[:programme],
+          :events => params[:events],
+          :calendar_start => params[:calendar_start],
+          :calendar_finish => params[:calendar_finish],
+        }
+      end # html
+      format.csv do
+        options = {
+          :col_sep => ',',
+          :write_headers => true,
+          :force_quotes => true,
+          :quote_char => '"',
+          :skip_blanks => true,
+          :headers => ['When', 'Section', 'Type', 'What'],
+        }
+        csv_string = CSV.generate(options) do |csv|
+          @items.each do |item|
+            csv << [item.start.strftime(item.start.hour.eql?(0) ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S'), get_section_names[item.section_id], 'Event', item.name] if item.is_a?(Osm::Event)
+            csv << [item.date.strftime('%Y-%m-%d')+(item.start_time ? " #{item.start_time}:00" : ''), get_section_names[item.section_id], 'Programme', item.title] if item.is_a?(Osm::Meeting)
           end
         end
-      end
+        send_data csv_string, :filename => 'calendar.csv', :type => "text/csv", :disposition => 'attachment'
+      end # csv
+      format.tsv do
+        options = {
+          :col_sep => "\t",
+          :write_headers => true,
+          :force_quotes => true,
+          :quote_char => '"',
+          :skip_blanks => true,
+          :headers => ['When', 'Section', 'Type', 'What'],
+        }
+        csv_string = CSV.generate(options) do |csv|
+          @items.each do |item|
+            csv << [item.start.strftime(item.start.hour.eql?(0) ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S'), get_section_names[item.section_id], 'Event', item.name] if item.is_a?(Osm::Event)
+            csv << [item.date.strftime('%Y-%m-%d')+(item.start_time ? " #{item.start_time}:00" : ''), get_section_names[item.section_id], 'Programme', item.title] if item.is_a?(Osm::Meeting)
+          end
+        end
+        send_data csv_string, :filename => 'calendar.tsv', :type => "text/tsv", :disposition => 'attachment'
+      end # tsv
     end
-    
-    @items.sort!{ |i1, i2| i1 <=> i2 }
-    @items.map!{ |i| i[1]}
   end
 
 
