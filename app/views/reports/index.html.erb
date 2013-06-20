@@ -41,8 +41,8 @@
               <%= check_box_tag "select_all_s[#{section.id}]", 1, true, {:class => 'select_all_section', :data => {'section-id' => section.id}, :title => '(Un)Select all for this section'} %>
               <%= label_tag "select_all_s[#{section.id}]", get_section_names[section.id] %>
             </td>
-            <td style="text-align: center;"><%= check_box_tag "programme[#{section.id}]", 1, true, {:class => "section-#{section.id} field-programme"} %></td>
-            <td style="text-align: center;"><%= check_box_tag "events[#{section.id}]", 1, true, {:class => "section-#{section.id} field-events"} %></td>
+            <td style="text-align: center;"><%= check_box_tag("programme[#{section.id}]", 1, true, {:class => "section-#{section.id} field-programme"}) if has_osm_permission?(:read, :programme, current_user, section) %></td>
+            <td style="text-align: center;"><%= check_box_tag("events[#{section.id}]", 1, true, {:class => "section-#{section.id} field-events"}) if has_osm_permission?(:read, :events, current_user, section) %></td>
           </tr>
         <%- end %>
       </table>

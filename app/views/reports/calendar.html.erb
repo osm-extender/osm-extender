@@ -57,5 +57,5 @@
   </tbody>
 </table>
 
-<%= link_to '[Export as CSV]', calendar_report_path(@export_params.merge(:format => :csv)) %><br/>
-<%= link_to '[Export as TSV]', calendar_report_path(@export_params.merge(:format => :tsv)) %><br/>
+<%= link_to '[Export as CSV]', calendar_report_path(@options.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', calendar_report_path(@options.merge(:format => :tsv)) %><br/>

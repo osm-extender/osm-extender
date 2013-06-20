@@ -29,19 +29,24 @@ class ReportsController < ApplicationController
 
 
   def calendar
-    require_osm_permission(:read, [:events, :programme])
+    params[:programme].each do |section, selected|
+      require_osm_permission(:read, :programme, current_user, section.to_i) if selected.eql?('1')
+    end
+    params[:events].each do |section, selected|
+      require_osm_permission(:read, :events, current_user, section.to_i) if selected.eql?('1')
+    end
+
     (@start, @finish) = [Osm.parse_date(params[:calendar_start]), Osm.parse_date(params[:calendar_finish])].sort
-    @items = Report.calendar(current_user, params)
+    @options = {
+      :programme => params[:programme],
+      :events => params[:events],
+      :start => @start,
+      :finish => @finish,
+    }
+    @items = Report.calendar(current_user, @options)
 
     respond_to do |format|
-      format.html do
-        @export_params = {
-          :programme => params[:programme],
-          :events => params[:events],
-          :calendar_start => params[:calendar_start],
-          :calendar_finish => params[:calendar_finish],
-        }
-      end # html
+      format.html # html
       format.csv do
         options = {
           :col_sep => ',',

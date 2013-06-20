@@ -58,8 +58,8 @@ class ApplicationController < ActionController::Base
   # if not redirect them to the osm permissions page and set an instruction flash
   # @param permission_to the action which is being checked (:read or :write)
   # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
-  def require_osm_permission(permission_to, permission_on)
-    unless has_osm_permission?(permission_to, permission_on)
+  def require_osm_permission(permission_to, permission_on, user=current_user, section=current_section)
+    unless has_osm_permission?(permission_to, permission_on, user, section)
       # Send user to the osm permissions page
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
       redirect_back_or_to(current_user ? osm_permissions_path : signin_path)
