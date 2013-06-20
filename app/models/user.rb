@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
+  audited :except => [:crypted_password, :salt, :activation_token, :reset_password_token]
 
   attr_accessible :name, :email_address, :password, :password_confirmation, :startup_section
   attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_administer_settings, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user, :as => :admin

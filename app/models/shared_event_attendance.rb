@@ -1,4 +1,7 @@
 class SharedEventAttendance < ActiveRecord::Base
+  audited :associated_with => :shared_event
+  has_associated_audits
+
   belongs_to :shared_event
   belongs_to :user
   has_many :shared_event_field_datas, :dependent => :destroy, :autosave => true

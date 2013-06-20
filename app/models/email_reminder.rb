@@ -1,4 +1,7 @@
 class EmailReminder < ActiveRecord::Base
+  audited
+  has_associated_audits
+
   attr_accessible :user, :section_id, :send_on
 
   belongs_to :user

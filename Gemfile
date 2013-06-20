@@ -25,6 +25,7 @@ gem 'premailer-rails', '~> 1.3'       # Easily generate HTML emails (also does p
   gem 'nokogiri', '~> 1.5'            # Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
+gem "audited-activerecord", "~> 3.0"  # Auditing of changes made to data
 
 # Jobs in background
 gem 'delayed_job_active_record', '~> 0.4'

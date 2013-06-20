@@ -1,4 +1,5 @@
 class Announcement < ActiveRecord::Base
+  audited
 
   attr_accessible :start, :finish, :message, :prevent_hiding, :public
 
