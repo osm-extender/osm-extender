@@ -18,7 +18,8 @@ class SharedEventAttendance < ActiveRecord::Base
 
   def get_attendees_data
     data = []
-    event = Osm::Event.get(user.osm_api, section_id, event_id)
+    section = Osm::Section.get(user.osm_api, section_id)
+    event = Osm::Event.get(user.osm_api, section, event_id)
     attendance = event.get_attendance(user.osm_api)
     members = nil
     flexi_record_datas = {}
@@ -27,7 +28,7 @@ class SharedEventAttendance < ActiveRecord::Base
         this_data = {
           :first_name => attend.first_name,
           :last_name => attend.last_name,
-          :leader => (attend.grouping_id == -2),
+          :adult => ((attend.grouping_id == -2) || section.adults?),
         }
         shared_event_field_datas.each do |field|
           if field.source_type.to_sym == :event
@@ -38,7 +39,6 @@ class SharedEventAttendance < ActiveRecord::Base
             this_data[field.shared_event_field.id] = members[attend.member_id] ? members[attend.member_id].send(field.source_field) : ''
           end
           if field.source_type.to_sym == :flexi_record
-            section = Osm::Section.get(user.osm_api, section_id)
             record = nil
             unless section.nil?
               section.flexi_records.each do |r|
