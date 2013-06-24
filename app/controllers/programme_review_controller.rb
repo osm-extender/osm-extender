@@ -12,6 +12,7 @@ class ProgrammeReviewController < ApplicationController
   def balanced_data
     data = ProgrammeReview.new(current_user, current_section).balanced
     render :json => data
+    log_usage(:action => 'balanced')
   end
 
 end

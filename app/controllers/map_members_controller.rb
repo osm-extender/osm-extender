@@ -25,6 +25,7 @@ class MapMembersController < ApplicationController
       :members => members,
       :groupings => get_current_section_groupings.invert
     }
+    log_usage
   end
 
 end

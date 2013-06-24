@@ -8,6 +8,7 @@ Feature: Flexi Records
 
     Background:
 	Given I have no users
+        And I have no usage log records
         And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
@@ -25,6 +26,7 @@ Feature: Flexi Records
         Then I should be on the osm_flexi_records page
         And I should see "Flexi 1"
         And I should see "Flexi 2"
+        And I should have 1 usage log record
 
     Scenario: Show a flexi record
 	Given an OSM request to get_flexi_record_fields for section "1" flexi "101" will have the fields
@@ -52,14 +54,20 @@ Feature: Flexi Records
 	And I should see "1" in the "Custom 2" column of the "John" row
 	And I should see "xA" in the "Custom 1" column of the "Jane" row
 	And I should see "2" in the "Custom 2" column of the "Jane" row
+        And I should have 2 usage log records
+        And I should have the following usage log
+            | user              | controller                | action |
+            | alice@example.com | OsmFlexiRecordsController | show   |
 
 
     Scenario: Show flexi records (not signed in)
 	When I go to the osm_flexi_records page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+        And I should have 0 usage log records
 
     Scenario: Show a flexi record (not signed in)
 	When I go to the page for osm_flexi_record 1
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+        And I should have 0 usage log records

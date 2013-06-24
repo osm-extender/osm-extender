@@ -25,6 +25,7 @@ class ReportsController < ApplicationController
         @by_badge[badge].push member_id
       end
     end
+    log_usage
   end
 
 
@@ -82,6 +83,8 @@ class ReportsController < ApplicationController
         send_data csv_string, :filename => 'calendar.tsv', :type => "text/tsv", :disposition => 'attachment'
       end # tsv
     end
+
+    log_usage(:extra_details => @options, :section_id => nil)
   end
 
 
@@ -183,6 +186,7 @@ class ReportsController < ApplicationController
         end # staged_badge in staged_badges
       end # doing staged badges
     end # term in terms
+    log_usage(:extra_details => {:start => @start, :finish => @finish})
   end
 
 
@@ -271,6 +275,7 @@ class ReportsController < ApplicationController
     end
     @badge_names[:staged].merge!(new_badge_names)
 
+    log_usage
   end
 
 end

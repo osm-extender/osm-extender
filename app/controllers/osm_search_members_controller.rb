@@ -44,6 +44,7 @@ class OsmSearchMembersController < ApplicationController
         end
       end
     end
+    log_usage
   end
 
 end
