@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130619172931) do
+ActiveRecord::Schema.define(:version => 20130622084219) do
 
   create_table "announcements", :force => true do |t|
     t.datetime "emailed_at"
@@ -227,6 +227,22 @@ ActiveRecord::Schema.define(:version => 20130619172931) do
   end
 
   add_index "statistics", ["date"], :name => "index_statistics_caches_on_date", :unique => true
+
+  create_table "usage_logs", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "section_id"
+    t.string   "controller",    :null => false
+    t.string   "action",        :null => false
+    t.string   "sub_action"
+    t.string   "result"
+    t.text     "extra_details"
+    t.datetime "at",            :null => false
+  end
+
+  add_index "usage_logs", ["action"], :name => "index_usage_logs_on_action"
+  add_index "usage_logs", ["at"], :name => "index_usage_logs_on_at"
+  add_index "usage_logs", ["section_id"], :name => "index_usage_logs_on_section_id"
+  add_index "usage_logs", ["user_id"], :name => "index_usage_logs_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email_address"

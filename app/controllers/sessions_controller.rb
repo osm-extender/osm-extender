@@ -35,15 +35,19 @@ class SessionsController < ApplicationController
           end
         end
       end
-      
-      redirect_back_or_to my_page_path, :notice => 'Sucessfully signed in.'
+
+      log_usage(:result => 'success', :section_id => nil)
+      redirect_back_or_to my_page_path, :notice => 'Successfully signed in.'
     else
       user = User.find_by_email_address(params[:email_address].downcase)
       if user && user.activation_state.eql?('pending')
+        log_usage(:result => 'not activated', :user => user, :section_id => nil)
         flash[:error] = 'You have not yet activated your account.'
       elsif user && !user.lock_expires_at.nil?
+        log_usage(:result => 'locked', :user => user, :section_id => nil)
         flash[:error] = 'The account was locked.'
       else
+        log_usage(:result => 'incorrect password', :user => user, :section_id => nil) if user
         flash[:error] = 'Email address or password was invalid.'
       end
       render :new

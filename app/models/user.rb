@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :emailed_announcements, :dependent => :destroy
   has_many :shared_event_attendances, :dependent => :destroy
   has_many :shared_events, :dependent => :destroy
+  has_many :usage_log
 
   validates_presence_of :name
 
