@@ -1,7 +1,8 @@
-  <% provide :title, 'Reports' %>
+<% provide :title, 'Reports' %>
   
-  <p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
+<p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
 
+<hr/>
 
 <%- if current_section.youth_section? %>
   <h2>Awarded Badges</h2>
@@ -17,6 +18,7 @@
   <%- end %>
 <%- end %>
 
+<hr/>
 
 <%- if current_section.youth_section? || current_section.adults? %>
   <h2>Calendar</h2>
@@ -56,6 +58,7 @@
   <%- end %>
 <%- end %>
 
+<hr/>
 
 <%- if current_section.youth_section? %>
   <h2>Due Badges</h2>
@@ -70,6 +73,37 @@
   <%- end %>
 <%- end %>
 
+<hr/>
+
+<%- if current_section.youth_section? || current_section.adults? %>
+  <h2>Event Attendance</h2>
+  <p>This report allows you to get a table showing the attendance status of each member for a selection of your future events.</p>
+  <%- if has_osm_permission?(:read, :events) %>
+    <%= form_tag event_attendance_report_path, :method=>:get do %> 
+      <div>
+        <div style="display: inline-block; vertical-align: top;">
+          <h3>For which <%= get_grouping_name(current_section.type).pluralize(@groupings.count) %></h3>
+            <%- @groupings.each do |grouping| %>
+              <%= check_box_tag("groupings[#{grouping[1]}]", 1, (grouping[1] >= 0)) %>
+              <%= label_tag "groupings[#{grouping[1]}]", grouping[0] %><br/>
+            <%- end %>
+        </div>
+        <div style="display: inline-block; vertical-align: top; margin-left: 25px;">
+          <h3>For which <%= 'event'.pluralize(@future_events.count) %></h3>
+            <%- @future_events.each do |event| %>
+              <%= check_box_tag("events[#{event.id}]", 1, true) %>
+              <%= label_tag "events[#{event.id}]", event.name %></br>
+            <%- end %>
+        </div>
+      </div>
+      <%= submit_tag 'Show event attendance' %>
+    <%- end %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+  <%- end %>
+<%- end %>
+
+<hr/>
 
 <%- if current_section.youth_section? %>
   <h2>Missing Badge Requirements</h2>
@@ -79,14 +113,14 @@
   </p>
   <%- if has_osm_permission?(:read, :badge) %>
     <%= form_tag missing_badge_requirements_report_path, :method=>:get do %>
-      <%=check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
+      <%= check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
       <%- if (current_section.subscription_level > 1) # Bronze does not include activity badges %>
-        <%=check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
+        <%= check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
       <%- else %>
         You need at least a silver subscription in OSM to include activity badges</br>
       <%- end %>
-      <%=check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
-      <%=check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>
+      <%= check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
+      <%= check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>
       <%= submit_tag 'Show missing badge requirements' %>
     <%- end %>
   <%- else %>

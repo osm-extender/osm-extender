@@ -69,7 +69,10 @@
     <td rowspan="2">Events</td>
     <td><ul>
       <li>Email Reminders (Events)</li>
-      <li>Reports (Calendar)</li>
+      <li>Reports:<ul>
+        <li>Calendar</li>
+        <li>Event attendance</li>
+      </li>
     </ul></td>
     <td>Read</td>
     <td rowspan="2"><%= pos_neg api_has_osm_permission?([:read, :write], :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>

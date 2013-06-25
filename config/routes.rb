@@ -92,6 +92,7 @@ OSMExtender::Application.routes.draw do
 
   get 'reports' => 'reports#index', :as => 'reports'
   get 'reports/calendar' => 'reports#calendar', :as => 'calendar_report'
+  get 'reports/event_attendance' => 'reports#event_attendance', :as => 'event_attendance_report'
   get 'reports/due_badges' => 'reports#due_badges', :as => 'due_badges_report'
   get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
   get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'

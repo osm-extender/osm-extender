@@ -1,15 +1,25 @@
 class ReportsController < ApplicationController
   before_filter :require_connected_to_osm
-  before_filter ({:only => [:due_badges, :awarded_badges, :missing_badge_requirements]}) { require_section_type Constants::YOUTH_SECTIONS }
-  before_filter ({:only => [:calendar]}) { require_section_type Constants::YOUTH_AND_ADULT_SECTIONS }
 
 
   def index
     @sections = Osm::Section.get_all(current_user.osm_api)
+    if has_osm_permission?(:read, :member)
+      @groupings = get_current_section_groupings.sort do |a,b|
+        result = 1 if a[1] == -2
+        result = -1 if b[1] == -2
+        result = (a[0] <=> b[0]) if result.nil?
+        result
+      end
+    end
+    if has_osm_permission?(:read, :events)
+      @future_events = Osm::Event.get_for_section(current_user.osm_api, current_section).select{ |e| e.start >= Date.today }
+    end
   end
 
 
   def due_badges
+    require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
     due_badges = Osm::Badges.get_due_badges(current_user.osm_api, current_section)
     @check_stock = params[:check_stock].eql?('1')
@@ -29,7 +39,64 @@ class ReportsController < ApplicationController
   end
 
 
+  def event_attendance
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    require_osm_permission(:read, :events)
+    selected_groupings = params['groupings'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i}
+    @grouping_names = get_current_section_groupings.invert.to_a.select{ |g| selected_groupings.include?(g[0]) }.sort do |a,b|
+      result = 1 if a[0] == -2
+      result = -1 if b[0] == -2
+      result = (a[1] <=> b[1]) if result.nil?
+      result
+    end
+
+    data = Report.event_attendance(current_user, current_section, params['events'].to_a.select{|i| i[1].eql?('1')}.map{|i| i[0].to_i}, selected_groupings)
+    @event_names = data[:event_names]
+    @row_groups = data[:row_groups]
+    @member_totals = data[:member_totals]
+    @event_totals = data[:event_totals]
+
+    respond_to do |format|
+      format.html do
+        @options = {
+          :groupings => params[:groupings],
+          :events => params[:events],
+        }
+      end # html
+      format.csv do
+        send_sv_file({:col_sep => ',', :headers => ['Name', *@event_names]}, 'event_attendance.csv', 'text/csv') do |csv|
+          @row_groups.values.each do |group|
+            group.each do |row|
+              row = row[1]
+              csv << ["#{row[0].first_name} #{row[0].last_name}", *row.map{ |i| i.attending}]
+            end
+          end
+        end
+      end # csv
+      format.tsv do
+        send_sv_file({:col_sep => "\t", :headers => ['Name', *@event_names]}, 'event_attendance.tsv', 'text/tsv') do |csv|
+          @row_groups.values.each do |group|
+            group.each do |row|
+              row = row[1]
+              csv << ["#{row[0].first_name} #{row[0].last_name}", *row.map{ |i| i.attending}]
+            end
+          end
+        end
+      end # tsv
+    end
+
+    log_usage(
+      :sub_action => request.format.to_s,
+      :extra_details => {
+        :groupings => selected_groupings,
+        :events => params['events'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i},
+      }
+    )
+  end
+
+
   def calendar
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     params[:programme].each do |section, selected|
       require_osm_permission(:read, :programme, current_user, section.to_i) if selected.eql?('1')
     end
@@ -41,54 +108,37 @@ class ReportsController < ApplicationController
     @options = {
       :programme => params[:programme],
       :events => params[:events],
-      :start => @start,
-      :finish => @finish,
+      :calendar_start => @start,
+      :calendar_finish => @finish,
     }
     @items = Report.calendar(current_user, @options)
 
     respond_to do |format|
       format.html # html
       format.csv do
-        options = {
-          :col_sep => ',',
-          :write_headers => true,
-          :force_quotes => true,
-          :quote_char => '"',
-          :skip_blanks => true,
-          :headers => ['When', 'Section', 'Type', 'What'],
-        }
-        csv_string = CSV.generate(options) do |csv|
+        send_sv_file({:col_sep => ',', :headers => ['When', 'Section', 'Type', 'What']}, 'calendar.csv', 'text/csv') do |csv|
           @items.each do |item|
             csv << [item.start.strftime(item.start.hour.eql?(0) ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S'), get_section_names[item.section_id], 'Event', item.name] if item.is_a?(Osm::Event)
             csv << [item.date.strftime('%Y-%m-%d')+(item.start_time ? " #{item.start_time}:00" : ''), get_section_names[item.section_id], 'Programme', item.title] if item.is_a?(Osm::Meeting)
           end
         end
-        send_data csv_string, :filename => 'calendar.csv', :type => "text/csv", :disposition => 'attachment'
       end # csv
       format.tsv do
-        options = {
-          :col_sep => "\t",
-          :write_headers => true,
-          :force_quotes => true,
-          :quote_char => '"',
-          :skip_blanks => true,
-          :headers => ['When', 'Section', 'Type', 'What'],
-        }
-        csv_string = CSV.generate(options) do |csv|
+        send_sv_file({:col_sep => "\t", :headers => ['When', 'Section', 'Type', 'What']}, 'calendar.tsv', 'text/tsv') do |csv|
           @items.each do |item|
             csv << [item.start.strftime(item.start.hour.eql?(0) ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S'), get_section_names[item.section_id], 'Event', item.name] if item.is_a?(Osm::Event)
             csv << [item.date.strftime('%Y-%m-%d')+(item.start_time ? " #{item.start_time}:00" : ''), get_section_names[item.section_id], 'Programme', item.title] if item.is_a?(Osm::Meeting)
           end
         end
-        send_data csv_string, :filename => 'calendar.tsv', :type => "text/tsv", :disposition => 'attachment'
       end # tsv
     end
 
-    log_usage(:extra_details => @options, :section_id => nil)
+    log_usage(:sub_action => request.format.to_s, :extra_details => @options, :section_id => nil)
   end
 
 
   def awarded_badges
+    require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
 
     (@start, @finish) = [Osm.parse_date(params[:start]), Osm.parse_date(params[:finish])].sort
@@ -191,6 +241,7 @@ class ReportsController < ApplicationController
 
 
   def missing_badge_requirements
+    require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
 
     @badge_data_by_member = {}
@@ -276,6 +327,20 @@ class ReportsController < ApplicationController
     @badge_names[:staged].merge!(new_badge_names)
 
     log_usage
+  end
+
+
+  private
+  def send_sv_file(options={}, file_name, mime_type, &generate_data)
+    options.reverse_merge!({
+      :col_sep => ',',
+      :write_headers => !!options[:headers],
+      :force_quotes => true,
+      :quote_char => '"',
+      :skip_blanks => true,
+    })
+    csv_string = CSV.generate(options, &generate_data)
+    send_data csv_string, :filename => file_name, :type => mime_type, :disposition => 'attachment'
   end
 
 end
