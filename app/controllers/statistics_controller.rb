@@ -18,6 +18,12 @@ class StatisticsController < ApplicationController
     end
   end
 
+  def sections
+    respond_to do |format|
+      format.html # sections.html.erb
+      format.json { render json: Statistics.sections }
+    end
+  end
 
   private
   def users_data
