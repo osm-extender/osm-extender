@@ -30,7 +30,7 @@ class EmailReminderItemEvent < EmailReminderItem
       end
     end
 
-    return {
+    return events.empty? ? nil : {
       :events => events.sort,
       :attendance => attendance,
     }

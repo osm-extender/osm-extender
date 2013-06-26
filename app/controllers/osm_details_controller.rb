@@ -32,6 +32,7 @@ class OsmDetailsController < ApplicationController
         @counts[field] += 1 unless (value.blank? || value[0].eql?('x'))
       end
     end
+    log_usage
   end
 
 end

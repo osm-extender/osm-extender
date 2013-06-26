@@ -28,9 +28,9 @@ class StatisticsController < ApplicationController
       cache = Statistics.create_or_retrieve_for_date(date)
       users.push ({
         :date => date,
-        :total => cache.users
+        :total => cache['users']
       })
-      users_max = cache.users if cache.users > users_max
+      users_max = cache['users'] if cache['users'] > users_max
     end
 
     return {
@@ -48,14 +48,14 @@ class StatisticsController < ApplicationController
       cache = Statistics.create_or_retrieve_for_date(date)
       number.push ({
         :date => date,
-        :total => cache.email_reminders
+        :total => cache['email_reminders']
       })
-      number_max = cache.email_reminders if cache.email_reminders > number_max
+      number_max = cache['email_reminders'] if cache['email_reminders'] > number_max
     end
 
     todays_data = Statistics.create_or_retrieve_for_date(Date.today)
 
-    by_day = [todays_data.email_reminders_by_day, todays_data.email_reminder_shares_by_day]
+    by_day = [todays_data['email_reminders_by_day'], todays_data['email_reminder_shares_by_day']]
     by_day_max = 0
     (0..6).each do |i|
       count = by_day[0][i] + by_day[1][i]['pending'] + by_day[1][i]['subscribed'] + by_day[1][i]['unsubscribed']
@@ -64,7 +64,7 @@ class StatisticsController < ApplicationController
 
     items = Hash.new
     items_max = 0
-    todays_data.email_reminders_by_type.each do |key, value|
+    todays_data['email_reminders_by_type'].each do |key, value|
       items_max = value if value > items_max
       items[Kernel.const_get(key).human_name] = value
     end

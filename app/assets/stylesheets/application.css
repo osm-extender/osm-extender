@@ -12,6 +12,14 @@ body {
     margin-bottom:      3ex;
 }
 
+hr {
+    width:              75%;
+    margin-top:         15px;
+    margin-bottom:      15px;
+    margin-left:        auto;
+    margin-right:       auto;
+}
+
 a {
     color:              blue;
 }

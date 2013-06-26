@@ -50,6 +50,7 @@ class OsmExportsController < ApplicationController
     ]}
 
     send_csv(flexi_record.name, headers, records)
+    log_usage(:extra_details => {:flexi_record_id => flexi_record_id})
   end
 
 
@@ -144,6 +145,7 @@ class OsmExportsController < ApplicationController
     }
 
     send_csv('Members', headers, members)
+    log_usage(:extra_details => {:term_id => params[:term_id].to_i})
   end
 
 
@@ -165,6 +167,7 @@ class OsmExportsController < ApplicationController
     end
 
     send_csv('Programme Activities', headers, data)
+    log_usage(:extra_details => {:term_id => params[:term_id].to_i})
   end
 
   def programme_meetings
@@ -199,6 +202,7 @@ class OsmExportsController < ApplicationController
     }
 
     send_csv('Programme Meetings', headers, data)
+    log_usage(:extra_details => {:term_id => params[:term_id].to_i})
   end
 
 

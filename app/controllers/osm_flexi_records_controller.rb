@@ -53,6 +53,7 @@ class OsmFlexiRecordsController < ApplicationController
       end
     end
 
+    log_usage(:extra_details => {:id => params[:id]})
   end
 
 end

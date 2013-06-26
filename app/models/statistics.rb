@@ -47,7 +47,8 @@ class Statistics < ActiveRecord::Base
 
     data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', date + 1]).group(:type).count
 
-    return (date < Date.today) ? create(data) : new(data) # Create (and save) only if date is in the past
+    record = (date < Date.today) ? create(data) : new(data) # Create (and save) only if date is in the past
+    record.attributes.deep_dup
   end
 
 end

@@ -4,7 +4,7 @@ Given /^I have the following (.+) records?$/ do |factory, table|
   end
 end
 
-Given /^I have no (.+)(?:s| records)$/ do |model_name|
+Given /^I have no (.+?)(?:s| records)$/ do |model_name|
   Kernel.const_get(model_name.gsub(' ', '_').camelize).delete_all
 end
 
@@ -39,7 +39,17 @@ When /^(?:|I )post to (.+)$/ do |page_name|
 end
 
 
-Then /^I should have (\d+) (.+)(?:s| records)$/ do |count, model_name|
+Then /^I should have the following (.+?)(?:s?| records?)$/ do |model_name, table|
+  table.hashes.each do |hash|
+    if hash.keys.include?('user')
+      user = User.find_by_email_address(hash.delete('user'))
+      hash['user_id'] = user.id
+    end
+    Kernel.const_get(model_name.gsub(' ', '_').camelize).where(hash).count.should >= 1
+  end
+end
+
+Then /^I should have (\d+) (.+?)(?:s?| records?)$/ do |count, model_name|
   Kernel.const_get(model_name.gsub(' ', '_').camelize).count.should == count.to_i
 end
 

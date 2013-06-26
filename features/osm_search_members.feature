@@ -8,6 +8,7 @@ Feature: Search Members
 
     Background:
 	Given I have no users
+        And I have no usage log records
         And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
@@ -38,6 +39,10 @@ Feature: Search Members
         And I should see "Section 1"
         And I should see "A1 Member"
         And I should not see "A2 Member"
+        And I should have 2 usage log
+        And I should have the following usage log
+            | user              | controller                 | action         |
+            | alice@example.com | OsmSearchMembersController | search_results |
 
     Scenario: Perform search without selecting fields
         When I signin as "alice@example.com" with password "P@55word"
@@ -48,3 +53,4 @@ Feature: Search Members
         Then I should be on the osm_search_members_form page
         And I should see "You must select some fields to search"
 	And "search_for" should contain "something"
+        And I should have 1 usage log records

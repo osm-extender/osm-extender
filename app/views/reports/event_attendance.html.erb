@@ -1,0 +1,62 @@
+<% provide :title, 'Event Attendance' %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Member</th>
+      <%- @event_names.each do |event_name| %>
+        <th><%= event_name %></th>
+      <%- end %>
+      <th style="font-size: 70%;">#<br/>Invited</th>
+      <th style="font-size: 70%;">#<br/>Yes</th>
+      <th style="font-size: 70%;">#<br/>Reserved</th>
+      <th style="font-size: 70%;">#<br/>No</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @grouping_names.each do |grouping_id, grouping_name| %>
+      <%- rows = @row_groups[grouping_id] %>
+      <%- unless grouping_id == 0 %>
+        <tr>
+          <th>
+            <%= grouping_name %>
+            <%= get_grouping_name(current_section.type).titleize unless grouping_id == -2 %>
+          </th>
+          <%- @event_names.count.times do %>
+            <td></td>
+          <%- end %>
+        </tr>
+      <%- end %>
+      <%- unless rows.count == 0 %>
+        <%- rows.values.each do |row| %>
+          <tr>
+            <td><%= row[0].first_name %> <%= row[0].last_name %></td>
+            <%- row.each do |cell| %>
+              <td class="event_attendance_<%= cell.attending || 'unknown' %>"><%= cell.attending.to_s.titleize %></td>
+            <%- end %>
+            <%- [:invited, :yes, :reserved, :no].each do |total_type| %>
+              <td><%= @member_totals[row[0].member_id][total_type] %></td>
+            <%- end %>
+          </tr>
+        <%- end %>
+      <%- end %>
+    <%- end %>
+    <tr>
+      <th>TOTALS</th>
+      <%- @event_names.count.times do %>
+        <td></td>
+      <%- end %>
+    </tr>
+    <%- [:invited, :yes, :reserved, :no].each do |total_type| %>
+      <tr>
+        <td><%= total_type.to_s.titleize %></td>
+        <%- @event_totals[total_type].each do |total| %>
+          <td><%= total %></td>
+        <%- end %>
+      </tr>
+    <%- end %>
+  </tbody>
+</table>
+
+<%= link_to '[Export as CSV]', event_attendance_report_path(@options.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', event_attendance_report_path(@options.merge(:format => :tsv)) %><br/>

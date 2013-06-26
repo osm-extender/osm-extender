@@ -56,7 +56,7 @@ class SharedEventsController < ApplicationController
       attendees.each do |attendee|
         data.push attendee.merge(
           :section_name => section_name,
-          :leader => (attendee[:leader] ? 'Yes' : 'No'),
+          :leader => (attendee[:adult] ? 'Yes' : 'No'),
         )
       end
     end
@@ -67,7 +67,7 @@ class SharedEventsController < ApplicationController
       :force_quotes => true,
       :quote_char => '"',
       :skip_blanks => true,
-      :headers => ['Section', 'First name', 'Last name', 'Leader', *fields.map{ |f| f.name }],
+      :headers => ['Section', 'First name', 'Last name', 'Adult', *fields.map{ |f| f.name }],
     }
     csv_string = CSV.generate(options) do |csv|
       data.each do |item|

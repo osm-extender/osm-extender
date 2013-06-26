@@ -9,11 +9,11 @@
   </tr>
   <tr>
     <th>Start date</th>
-    <td><%= @shared_event.start_date %></td>
+    <td><%= ordinalized_date(@shared_event.start_date, "%a %d %b %Y") if @shared_event.start_date %></td>
   </tr>
   <tr>
     <th>Finish date</th>
-    <td><%= @shared_event.finish_date %></td>
+    <td><%= ordinalized_date(@shared_event.finish_date, "%a %d %b %Y") if @shared_event.finish_date %></td>
   </tr>
   <tr>
     <th>Start time</th>
@@ -25,7 +25,7 @@
   </tr>
   <tr>
     <th>Cost</th>
-    <td>£ <%= @shared_event.cost %></td>
+    <td><%= @shared_event.cost %></td>
   </tr>
   <tr>
     <th>Location</th>
@@ -57,28 +57,28 @@
   <tr>
     <th>Section</th>
     <th>Total</th>
-    <th>Members</th>
-    <th>Leaders</th>
+    <th>Youth</th>
+    <th>Adults</th>
   </tr>
   <%- total_total = 0 %>
-  <%- total_leaders = 0 %>
-  <%- total_members = 0 %>
+  <%- total_adults = 0 %>
+  <%- total_youths = 0 %>
   <%- @attendees_data.each do |section_name, attendance| %>
     <%- total = attendance.size; total_total += total %>
-    <%- leaders = attendance.select{|a| a[:leader]}.size; total_leaders += leaders %>
-    <%- members = (total - leaders); total_members += members %>
+    <%- adults = attendance.select{|a| a[:adult]}.size; total_adults += adults %>
+    <%- youths = (total - adults); total_youths += youths %>
     <tr>
       <td><%= section_name %></td>
       <td><%= total %></td>
-      <td><%= members %></td>
-      <td><%= leaders %></td>
+      <td><%= youths %></td>
+      <td><%= adults %></td>
     </tr>
   <%- end %>
   <tr>
     <td style="text-align: right;">TOTAL</td>
     <td><%= total_total %></td>
-    <td><%= total_members %></td>
-    <td><%= total_leaders %></td>
+    <td><%= total_youths %></td>
+    <td><%= total_adults %></td>
   </tr>
 </table>
 
@@ -91,7 +91,7 @@
       <th>Section</th>
       <th>First name</th>
       <th>Last name</th>
-      <th>Leader</th>
+      <th>Adult</th>
       <%- @shared_event.fields.each do |field| %>
         <th><%= field.name %></th>
       <%- end %>
@@ -104,7 +104,7 @@
           <td><%= section_name %></td>
           <td><%= attendee[:first_name] %></td>
           <td><%= attendee[:last_name] %></td>
-          <td><%= attendee[:leader] ? 'Yes' : 'No' %></td>
+          <td><%= attendee[:adult] ? 'Yes' : 'No' %></td>
           <%- @shared_event.fields.each do |field| %>
             <td><%= attendee[field.id] %></td>
           <%- end %>

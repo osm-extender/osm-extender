@@ -10,6 +10,8 @@
 #   * human_configuration - to return a string containing a user friendly version of the configuration (e.g. "From 1 week ago to 3 weeks time")
 
 class EmailReminderItem < ActiveRecord::Base
+  audited :associated_with => :email_reminder
+
   attr_accessible :email_reminder, :configuration, :position
 
   belongs_to :email_reminder

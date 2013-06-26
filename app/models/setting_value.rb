@@ -1,4 +1,6 @@
 class SettingValue < ActiveRecord::Base
+  audited
+
   attr_accessible :key, :value, :description
 
   validates_presence_of :key

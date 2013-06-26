@@ -70,7 +70,7 @@ Feature: OSM
 	Then I should see "Current section: Section 1 (1st Somewhere)"
 	And I should not see "Change Current Section"
 
-@focus
+
     Scenario: View OSM Permissions
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role

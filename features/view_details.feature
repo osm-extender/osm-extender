@@ -8,6 +8,7 @@ Feature: View contact details
 
     Background:
 	Given I have no users
+        And I have no usage log records
         And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
@@ -51,12 +52,17 @@ Feature: View contact details
         And I should see "a2@example.com"
         And I should not see "a3@example.com"
         And I should not see "a4@example.com"
+        And I should have 2 usage log records
+        And I should have the following usage log
+            | user              | controller           | action |
+            | alice@example.com | OsmDetailsController | show   |
 
 
     Scenario: Show details (not signed in)
 	When I go to the osm_details_fields page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+        And I should have 0 usage log records
 
 
     Scenario: Show details without selecting any fields
@@ -81,3 +87,4 @@ Feature: View contact details
         And I press "Show details"
         Then I should be on the osm_details_fields page
         And I should see "You must select some fields to view."
+        And I should have 1 usage log records

@@ -1,4 +1,7 @@
 class SharedEvent < ActiveRecord::Base
+  audited
+  has_associated_audits
+
   belongs_to :user
   has_many :attendance, :dependent => :destroy, :class_name => SharedEventAttendance
   has_many :fields, :dependent => :destroy, :class_name => SharedEventField

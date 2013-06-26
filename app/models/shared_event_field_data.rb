@@ -1,4 +1,6 @@
 class SharedEventFieldData < ActiveRecord::Base
+  audited :associated_with => :shared_event_attendance
+
   belongs_to :shared_event_field
   belongs_to :shared_event_attendance
 

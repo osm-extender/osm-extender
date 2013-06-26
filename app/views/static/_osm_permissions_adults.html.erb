@@ -53,7 +53,10 @@
 
   <tr id="events">
     <td rowspan="2">Events</td>
-    <td>Reports (Calendar)</td>
+    <td>Reports:<ul>
+      <li>Calendar</li>
+      <li>Event attendance</li>
+    </ul></td>
     <td>Read</td>
     <td rowspan=2><%= pos_neg api_has_osm_permission?([:read, :write], :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
     <td rowspan=2><%= pos_neg user_has_osm_permission?([:read, :write], :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>

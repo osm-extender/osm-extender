@@ -1,12 +1,16 @@
 #header {
-    display:       none;
+    display:            none;
+}
+
+thead {
+    display:            table-header-group;
 }
 
 .page-break {
-    display: block;
-    page-break-before: always;
+    display:            block;
+    page-break-before:  always;
 }
 .page-break-before {
-    display: block;
-    page-break-before: always;
+    display:            block;
+    page-break-before:  always;
 }

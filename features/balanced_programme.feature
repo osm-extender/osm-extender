@@ -8,6 +8,7 @@ Feature: Balanced Programme
 
     Background:
 	Given I have no users
+        And I have no usage log records
         And I have the following user records
 	    | email_address     | name  |
 	    | alice@example.com | Alice |
@@ -31,22 +32,30 @@ Feature: Balanced Programme
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Programme review"
         Then I should be on the programme_review_balanced page
+        And I should have 1 usage log records
+
 
     Scenario: Get balanced programme data
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the programme_review_balanced_data page
         Then I should be on the programme_review_balanced_data page
+        And I should have 2 usage log records
+        And I should have the following usage log
+            | user              | controller                | action   |
+            | alice@example.com | ProgrammeReviewController | balanced |
 
 
     Scenario: Get balanced programme (not signed in)
 	When I go to the programme_review_balanced page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+        And I should have 0 usage log records
 
     Scenario: Get balanced programme data (not signed in)
 	When I go to the programme_review_balanced_data page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
+        And I should have 0 usage log records
 
 
     Scenario: Get balanced programme (incorrect OSM permission)
@@ -57,6 +66,7 @@ Feature: Balanced Programme
 	And I go to the programme_review_balanced page
 	Then I should see "You do not have the correct OSM permissions"
 	And I should be on the osm_permissions page
+        And I should have 1 usage log record
 
     Scenario: Get balanced programme data (incorrect OSM permission)
 	Given an OSM request to get_api_access for section "1" will have the permissions
@@ -66,3 +76,4 @@ Feature: Balanced Programme
 	And I go to the programme_review_balanced_data page
 	Then I should see "You do not have the correct OSM permissions"
 	And I should be on the osm_permissions page
+        And I should have 1 usage log record
