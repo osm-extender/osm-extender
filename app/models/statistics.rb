@@ -61,10 +61,12 @@ class Statistics < ActiveRecord::Base
     User.where("osm_userid IS NOT NULL").each do |user|
       Osm::Section.get_all(user.osm_api).each do |section|
         unless section_ids_seen.include?(section.id)
-          section_ids_seen.push section.id
-          total += 1
-          section_types[section.type] += 1
-          subscription_levels[section.subscription_level] += 1 if Constants::YOUTH_SECTIONS.include?(section.type)
+          if Constants::YOUTH_AND_ADULT_SECTIONS.include?(section.type)
+            section_ids_seen.push section.id
+            total += 1
+            section_types[section.type] += 1
+            subscription_levels[section.subscription_level] += 1 if Constants::YOUTH_SECTIONS.include?(section.type)
+          end
         end
       end
     end
