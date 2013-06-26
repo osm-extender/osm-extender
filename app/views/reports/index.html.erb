@@ -78,7 +78,7 @@
 <%- if current_section.youth_section? || current_section.adults? %>
   <h2>Event Attendance</h2>
   <p>This report allows you to get a table showing the attendance status of each member for a selection of your future events.</p>
-  <%- if has_osm_permission?(:read, :events) %>
+  <%- if has_osm_permission?(:read, [:events, :member]) %>
     <%= form_tag event_attendance_report_path, :method=>:get do %> 
       <div>
         <div style="display: inline-block; vertical-align: top;">
