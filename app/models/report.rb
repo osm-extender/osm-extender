@@ -28,7 +28,7 @@ class Report
         end
       end
       
-      items.sort!{ |i1, i2| i1 <=> i2 }
+      items.sort!{ |i1, i2| i1[0] <=> i2[0] }
       items.map{ |i| i[1]}
     end
   end
