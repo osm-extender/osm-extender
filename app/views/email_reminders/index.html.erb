@@ -14,7 +14,7 @@
     <%- @my_reminders.each do |email_reminder| %>
       <tr>
         <td><%= email_reminder.section_name %></td>
-        <td><%= day_name(email_reminder.send_on) %></td>
+        <td><%= Date::DAYNAMES[email_reminder.send_on] %></td>
         <td>
           <%- confirm_send = (email_reminder.shares.size > 0) ? {data: {:confirm => 'This will send the email only to you, continue?'}} : nil %>
           <%= link_to '[Show]', email_reminder %>
@@ -55,7 +55,7 @@
     <tr>
       <td><%= email_reminder.user.name %></td>
       <td><%= email_reminder.section_name %></td>
-      <td><%= day_name(email_reminder.send_on) %></td>
+      <td><%= Date::DAYNAMES[email_reminder.send_on] %></td>
       <td><%= email_reminder_share.state.to_s.capitalize %></td>
       <td>
         <%= link_to '[Edit subscription]', edit_email_reminder_subscription_path(:id => email_reminder_share.id, :auth_code => email_reminder_share.auth_code) %>

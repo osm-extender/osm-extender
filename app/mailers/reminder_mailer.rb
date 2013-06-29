@@ -35,7 +35,7 @@ class ReminderMailer < ApplicationMailer
   def subscribed(share)
     @share = share
     mail ({
-      :subject => build_subject("Subscribed to reminder for #{@share.reminder.section_name} on #{%w{Sunday Monday Tuesday Wednesday Thursday Friday Saturday}[@share.reminder.send_on]}"),
+      :subject => build_subject("Subscribed to reminder for #{@share.reminder.section_name} on #{Date::DAYNAMES[@share.reminder.send_on]}"),
       :to => "\"#{@share.name}\" <#{@share.email_address}>",
     })
   end
@@ -43,7 +43,7 @@ class ReminderMailer < ApplicationMailer
   def unsubscribed(share)
     @share = share
     mail ({
-      :subject => build_subject("Unsubscribed from reminder for #{@share.reminder.section_name} on #{%w{Sunday Monday Tuesday Wednesday Thursday Friday Saturday}[@share.reminder.send_on]}"),
+      :subject => build_subject("Unsubscribed from reminder for #{@share.reminder.section_name} on #{Date::DAYNAMES[@share.reminder.send_on]}"),
       :to => "\"#{@share.name}\" <#{@share.email_address}>",
     })
   end

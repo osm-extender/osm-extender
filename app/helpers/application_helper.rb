@@ -33,13 +33,6 @@ module ApplicationHelper
     end
   end
 
-  # Get the name of a day of the week (0-Sunday .. 6-Saturday)
-  # @param dow day of the week (0 to 6)
-  # @returns a string containing the day name
-  def day_name(dow)
-    return %w{Sunday Monday Tuesday Wednesday Thursday Friday Saturday}[dow]
-  end
-
   # Get the date in the chosen format with the day of the month ordinalized
   # @param date the time to display in the format
   # @param format_string the format string to pass to the strftime methods, after replacing %d with the ordinalized day of the month
