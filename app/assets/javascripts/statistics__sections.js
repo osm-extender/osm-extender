@@ -10,7 +10,7 @@ function drawCharts() {
     dataType:"json",
     async: false,
     success: function(data, status, jqXHR) {
-      $("#section_total").html("There are a total of " + data["total"] + " sections.");
+      $("#section_total").html("The users of OSM Extender have access to " + data["total"] + " unique sections.");
 
       var section_types_chart = new google.visualization.PieChart(document.getElementById('section_types_chart'));
       var section_subscriptions_chart = new google.visualization.PieChart(document.getElementById('section_subscriptions_chart'));
