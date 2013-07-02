@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130622084219) do
+ActiveRecord::Schema.define(:version => 20130702075913) do
 
   create_table "announcements", :force => true do |t|
     t.datetime "emailed_at"
@@ -231,12 +231,14 @@ ActiveRecord::Schema.define(:version => 20130622084219) do
   create_table "usage_logs", :force => true do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "controller",    :null => false
-    t.string   "action",        :null => false
+    t.string   "controller",     :null => false
+    t.string   "action",         :null => false
     t.string   "sub_action"
     t.string   "result"
     t.text     "extra_details"
-    t.datetime "at",            :null => false
+    t.datetime "at",             :null => false
+    t.integer  "at_day_of_week", :null => false
+    t.integer  "at_hour",        :null => false
   end
 
   add_index "usage_logs", ["action"], :name => "index_usage_logs_on_action"
