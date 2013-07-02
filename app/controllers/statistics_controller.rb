@@ -39,9 +39,46 @@ class StatisticsController < ApplicationController
       users_max = cache['users'] if cache['users'] > users_max
     end
 
+    weekly_signins_last_week_hash = UsageLog.where('at >= ?', 6.days.ago.to_date).where(:controller => 'SessionsController', :action => 'create', :result => 'success').count(:group => [:at_day_of_week, :at_hour])
+    weekly_signins_last_4_weeks_hash = UsageLog.where('at >= ? AND at < ?', 29.days.ago.to_date, Date.today).where(:controller => 'SessionsController', :action => 'create', :result => 'success').count(:group => [:at_day_of_week, :at_hour])
+    weekly_signins_label = []
+    weekly_signins_last_week = []
+    weekly_signins_last_4_weeks = []
+    (0..6).each do |dow|
+      day_name = Date::DAYNAMES[dow][0..2]
+      (0..23).each do |hour|
+        weekly_signins_label.push "#{day_name} #{hour.to_s.rjust(2, '0')}-#{(hour+1).to_s.rjust(2, '0')}"
+        weekly_signins_last_week.push(weekly_signins_last_week_hash[[dow, hour]] || 0)
+        weekly_signins_last_4_weeks.push((weekly_signins_last_4_weeks_hash[[dow, hour]] || 0) / 4.0)
+      end
+    end
+    signins = []
+    signins_hash = UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').count(:user_id, :distinct => true, :group => 'DATE(at)')
+    earliest_signin = UsageLog.minimum(:at).to_date
+    (earliest_signin..Date.today).each do |date|
+      value = signins_hash[date.strftime('%Y-%m-%d')]
+      signins.push({
+        :date => date,
+        :total => (value ? value : 0),
+      })
+    end
+
     return {
-      :data => users,
-      :max_value => users_max
+      'users' => {
+        'data' => users,
+        'max_value' => users_max
+      },
+      'weekly_signins' => {
+        'label' => weekly_signins_label,
+        'last_week' => weekly_signins_last_week,
+        'last_4_weeks' => weekly_signins_last_4_weeks,
+        'max_value' => [weekly_signins_last_week.max, weekly_signins_last_4_weeks.max].max,
+        'count' => weekly_signins_label.count,
+      },
+      'signins' => {
+        'data' => signins,
+        'max_value' => signins_hash.values.max,
+      }
     }
   end
 
