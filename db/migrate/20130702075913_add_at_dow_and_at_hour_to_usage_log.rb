@@ -21,7 +21,7 @@ class AddAtDowAndAtHourToUsageLog < ActiveRecord::Migration
     UsageLog.all.each do |record|
       record.at_hour = record.at.utc.hour
       record.at_day_of_week = record.at.utc.wday
-      record.save
+      record.delete unless record.save
     end
 
     # Add in null constraints

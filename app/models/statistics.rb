@@ -1,9 +1,10 @@
 class Statistics < ActiveRecord::Base
-  attr_accessible :date, :users, :email_reminders, :email_reminders_by_day, :email_reminder_shares_by_day, :email_reminders_by_type
+  attr_accessible :date, :users, :email_reminders, :email_reminders_by_day, :email_reminder_shares_by_day, :email_reminders_by_type, :usage
 
   serialize :email_reminders_by_day, Array
   serialize :email_reminder_shares_by_day, Array
   serialize :email_reminders_by_type, Hash
+  serialize :usage, Hash
 
   validates_presence_of :date
   validates_uniqueness_of :date
@@ -23,29 +24,14 @@ class Statistics < ActiveRecord::Base
     data = Hash.new
     data[:date] = date
 
-
     # Users
     data[:users] = User.where(['created_at < ?', date + 1]).count
 
-
     # Email Reminders
-    data[:email_reminders] = EmailReminder.where(['created_at < ?', date + 1]).count
+    get_email_reminders_data(data)
 
-    by_day = Array.new(7, 0)
-    shared_by_day = Array.new(7)
-    (0..6).each do |i|
-      shared_by_day[i] = {"pending"=>0, "subscribed"=>0, "unsubscribed"=>0}
-    end
-    EmailReminder.where(['created_at < ?', date + 1]).each do |reminder|
-      by_day[reminder.send_on] += 1
-      reminder.shares.where(['created_at < ?', date + 1]).group(:state).count.each do |state, count|
-        shared_by_day[reminder.send_on][state] += count
-      end
-    end
-    data[:email_reminders_by_day] = by_day
-    data[:email_reminder_shares_by_day] = shared_by_day
-
-    data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', date + 1]).group(:type).count
+    # Usage
+    data[:usage] = get_usage_data(date)
 
     record = (date < Date.today) ? create(data) : new(data) # Create (and save) only if date is in the past
     record.attributes.deep_dup
@@ -75,6 +61,57 @@ class Statistics < ActiveRecord::Base
       :section_types => section_types,
       :subscription_levels => subscription_levels,
       :total => total,
+    }
+  end
+
+  private
+  def self.get_email_reminders_data(data)
+    data[:email_reminders] = EmailReminder.where(['created_at < ?', data[:date] + 1]).count
+
+    by_day = Array.new(7, 0)
+    shared_by_day = Array.new(7)
+    (0..6).each do |i|
+      shared_by_day[i] = {"pending"=>0, "subscribed"=>0, "unsubscribed"=>0}
+    end
+    EmailReminder.where(['created_at < ?', data[:date] + 1]).each do |reminder|
+      by_day[reminder.send_on] += 1
+      reminder.shares.where(['created_at < ?', data[:date] + 1]).group(:state).count.each do |state, count|
+        shared_by_day[reminder.send_on][state] += count
+      end
+    end
+    data[:email_reminders_by_day] = by_day
+    data[:email_reminder_shares_by_day] = shared_by_day
+
+    data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', data[:date] + 1]).group(:type).count
+  end
+
+  def self.get_usage_data(date)
+    nonunique = {}
+    unique_usersection = {}
+    unique_all = {}
+    UsageLog.where(['DATE(at) = ?', date]).
+    group(:controller, :action).count.each do |(controller, action), count|
+      key = "#{controller}|#{action}"
+      nonunique[key] ||= 0
+      nonunique[key] += count
+    end
+    UsageLog.where(['DATE(at) = ?', date]).
+    group(:controller, :action, :user_id, :section_id).count.each do |(controller, action), count|
+      key = "#{controller}|#{action}"
+      unique_usersection[key] ||= 0
+      unique_usersection[key] += 1
+    end
+    UsageLog.where(['DATE(at) = ?', date]).
+    group(:controller, :action, :user_id, :section_id, :extra_details).count.each do |(controller, action), count|
+      key = "#{controller}|#{action}"
+      unique_all[key] ||= 0
+      unique_all[key] += 1
+    end
+
+    return {
+      'unique_all' => unique_all,
+      'unique_usersection' => unique_usersection,
+      'nonunique' => nonunique,
     }
   end
 

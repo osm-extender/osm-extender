@@ -1,3 +1,6 @@
+# Move getting usage stats to model
+#  Generate past usage stats in migration too
+
 class StatisticsController < ApplicationController
   before_filter { require_osmx_permission :view_statistics }
 
@@ -24,6 +27,14 @@ class StatisticsController < ApplicationController
       format.json { render json: Statistics.sections }
     end
   end
+
+  def usage
+    respond_to do |format|
+      format.html # usage.html.erb
+      format.json { render json: usage_data }
+    end
+  end
+
 
   private
   def users_data
@@ -125,6 +136,35 @@ class StatisticsController < ApplicationController
         :data => items,
         :max_value => items_max
       }
+    }
+  end
+
+  def usage_data
+    nonunique = []
+    unique_usersection = []
+    unique_all = []
+
+    earliest = UsageLog.where(['DATE(at) > ?', 1.year.ago.to_date]).minimum(:at).to_date
+    (earliest..Date.today).each do |date|
+      cache = Statistics.create_or_retrieve_for_date(date)
+      nonunique.push(cache['usage']['nonunique'].merge({:date => date}))
+      unique_usersection.push(cache['usage']['unique_usersection'].merge({:date => date}))
+      unique_all.push(cache['usage']['unique_all'].merge({:date => date}))
+    end
+
+    return {
+      :unique_all => {
+        :data => unique_all,
+        :max_value => unique_all.map{|i| i.except(:date).values.max }.select{ |i| !i.nil? }.max,
+      },
+      :unique_usersection => {
+        :data => unique_usersection,
+        :max_value => unique_usersection.map{|i| i.except(:date).values.max }.select{ |i| !i.nil? }.max,
+      },
+      :nonunique => {
+        :data => nonunique,
+        :max_value => nonunique.map{|i| i.except(:date).values.max }.select{ |i| !i.nil? }.max,
+      },
     }
   end
 
