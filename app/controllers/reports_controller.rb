@@ -158,10 +158,10 @@ class ReportsController < ApplicationController
     @badge_types[:activity] = 'Activity' unless (current_section.subscription_level < 2) # Bronze does not include activity badges
 
     badges = {}
-    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
-    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:staged)
-    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:challenge)
-    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:activity)
+    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:core)
+    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:staged)
+    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:challenge)
+    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:activity)
 
     @badge_names = {}
     badges.each do |type, bs|
@@ -178,9 +178,9 @@ class ReportsController < ApplicationController
     terms.each do |term|
       # For each term get the summaries and process them
       summaries = {}
-      summaries[:core] = Osm::CoreBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:core)
-      summaries[:challenge] = Osm::ChallengeBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:challenge)
-      summaries[:activity] = Osm::ActivityBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:activity)
+      summaries[:core] = Osm::CoreBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.has_key?(:core)
+      summaries[:challenge] = Osm::ChallengeBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.has_key?(:challenge)
+      summaries[:activity] = Osm::ActivityBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.has_key?(:activity)
       summaries.each do |type, summary|
         summary.each do |member|
           member.each do |badge_key, value|
@@ -211,7 +211,7 @@ class ReportsController < ApplicationController
         end
       end # summary in summaries
 
-      if @badge_types.keys.include?(:staged)
+      if @badge_types.has_key?(:staged)
         staged_badges = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section)
         staged_badges.each do |staged_badge|
           staged_badge.get_data_for_section(current_user.osm_api, current_section).each do |data|
@@ -259,10 +259,10 @@ class ReportsController < ApplicationController
     end
 
     badges = {}
-    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
-    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:staged)
-    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:challenge)
-    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:activity)
+    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:core)
+    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:staged)
+    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:challenge)
+    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:activity)
 
     badge_data = {}
     badges.each do |type, bs|
