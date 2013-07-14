@@ -2,8 +2,14 @@
     display:            none;
 }
 
-thead {
+table thead {
     display:            table-header-group;
+}
+table tbody{
+    display:            table-row-group;
+}
+table tfoot{
+    display:            table-footer-group;
 }
 
 .page-break {
