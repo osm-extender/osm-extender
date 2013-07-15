@@ -240,6 +240,42 @@ class ReportsController < ApplicationController
   end
 
 
+  def badge_completion_matrix
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    require_osm_permission(:read, :events)
+
+    @options = {
+      :include_core => params[:include_core].eql?('1'),
+      :include_challenge => params[:include_challenge].eql?('1'),
+      :include_staged => params[:include_staged].eql?('1'),
+      :include_activity => params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+    }
+    (@names, @matrix) = Report.badge_completion_matrix(current_user, current_section, @options)
+
+    respond_to do |format|
+      format.html # html
+      format.csv do
+        send_sv_file({:col_sep => ',', :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@names]}, 'BadgeCompletionMatrix.csv', 'text/csv') do |csv|
+          @matrix.each do |item|
+            csv << [item.start.strftime(item.start.hour.eql?(0) ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S'), get_section_names[item.section_id], 'Event', item.name] if item.is_a?(Osm::Event)
+            csv << [item.date.strftime('%Y-%m-%d')+(item.start_time ? " #{item.start_time}:00" : ''), get_section_names[item.section_id], 'Programme', item.title] if item.is_a?(Osm::Meeting)
+          end
+        end
+      end # csv
+      format.tsv do
+        send_sv_file({:col_sep => "\t", :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@names]}, 'BadgeCompletionMatrix.tsv', 'text/tsv') do |csv|
+          @matrix.each do |item|
+            csv << [item.start.strftime(item.start.hour.eql?(0) ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S'), get_section_names[item.section_id], 'Event', item.name] if item.is_a?(Osm::Event)
+            csv << [item.date.strftime('%Y-%m-%d')+(item.start_time ? " #{item.start_time}:00" : ''), get_section_names[item.section_id], 'Programme', item.title] if item.is_a?(Osm::Meeting)
+          end
+        end
+      end # tsv
+    end
+
+    log_usage(:sub_action => request.format.to_s, :extra_details => @options)
+  end
+
+
   def missing_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)

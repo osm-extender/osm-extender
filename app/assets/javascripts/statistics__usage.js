@@ -70,6 +70,7 @@ function drawChart(data, options, chart) {
   data_table.addColumn({type: 'number', label: 'Due badges report'});
   data_table.addColumn({type: 'number', label: 'Event attendance report'});
   data_table.addColumn({type: 'number', label: 'Missing badge requirements'});
+  data_table.addColumn({type: 'number', label: 'Badge Completion Matrix'});
 
   var our_data = data['data'];
   for(data_row in our_data) {
@@ -88,6 +89,7 @@ function drawChart(data, options, chart) {
     row[11] = our_data[data_row]['ReportsController|due_badges'] || 0;
     row[12] = our_data[data_row]['ReportsController|event_attendance'] || 0;
     row[13] = our_data[data_row]['ReportsController|missing_badge_requirements'] || 0;
+    row[14] = our_data[data_row]['ReportsController|badge_completion_matrix'] || 0;
     data_table.addRow(row);
   }
 

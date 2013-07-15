@@ -1,0 +1,54 @@
+<% provide :title, 'Badge Completion Matrix' %>
+
+<p>Due to how OSM stores the awarding of staged activity badges all previous stages of a badge are assumed to have also been awarded.</p>
+<p>In most browsers you'll need to turn on the "Print background images & colours" option in order to print this matrix in a meaningful way, otherwise you'll get a page without the cells coloured in.</p>
+
+<table>
+  <tr><th colspan="2"</th>Key</th></tr>
+  <tr><td class="met_yes">&nbsp;&nbsp;&nbsp;</td><td>This requirement has been met</td></tr>
+  <tr><td class="met_no">&nbsp;&nbsp;&nbsp;</td><td>Not met &amp; Needed</td></tr>
+  <tr><td class="met_not_needed">&nbsp;&nbsp;&nbsp;</td><td>Not met &amp; Not needed</td></tr>
+  <tr><td class="met_awarded">&nbsp;&nbsp;&nbsp;</td><td>The badge has been awarded</td></tr>
+  <tr><td class="met_not_started">&nbsp;&nbsp;&nbsp;</td><td>The badge has not been started</td></tr>
+</table>
+
+<br/>
+
+<div id="data_table">
+  <table class="jquery-thead">
+    <thead style="display: table-header-group;">
+      <tr>
+        <th style="vertical-align: bottom;">Badge type</th>
+        <th style="vertical-align: bottom;">Badge name</th>
+        <th style="vertical-align: bottom;" colspan="2">Requirement</th>
+        <%- @names.each do |name| %>
+          <th style="vertical-align: bottom; font-size: 80%;"><%- name.split(' ').first.split('').each do |c| %><%= c %><br/><%- end %></th>
+        <%- end %>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @matrix.each do |row| %>
+        <tr>
+          <%- row[0..3].each do |cell| %>
+            <td><%= cell %></td>
+          <%- end %>
+          <%- row[4..-1].each do |cell| %>
+            <td class="met_<%= cell %>">&nbsp;</td>
+          <%- end %>
+        <tr>
+      <%- end %>
+    </tbody>
+  </table>
+</div>
+
+
+<%= link_to '[Export as CSV]', badge_completion_matrix_report_path(@options.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', badge_completion_matrix_report_path(@options.merge(:format => :tsv)) %><br/>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#data_table').thead();
+  });
+</script>

@@ -20,6 +20,31 @@
 
 <hr/>
 
+<%- if current_section.youth_section? %>
+  <h2>Badge Completion Matrix</h2>
+  <p>
+    This report allows you to see at a glance how well each member is doing at gaining each badge.
+    Due to the amount of data this report needs to slurp from OSM it may take a while to run.
+  </p>
+  <%- if has_osm_permission?(:read, :badge) %>
+    <%= form_tag badge_completion_matrix_report_path, :method=>:get do %>
+      <%= check_box_tag :include_core, 1, false %> <%= label_tag :include_core, 'Include core badges?' %><br/>
+      <%- if (current_section.subscription_level > 1) # Bronze does not include activity badges %>
+        <%= check_box_tag :include_activity, 1, true %> <%= label_tag :include_activity, 'Include activity badges?' %><br/>
+      <%- else %>
+        You need at least a silver subscription in OSM to include activity badges</br>
+      <%- end %>
+      <%= check_box_tag :include_challenge, 1, true %> <%= label_tag :include_challenge, 'Include challenge badges?' %><br/>
+      <%= check_box_tag :include_staged, 1, true %> <%= label_tag :include_staged, 'Include staged activity and Partnership badges?' %><br/>
+      <%= submit_tag 'Show badge completion matrix' %>
+    <%- end %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+  <%- end %>
+<%- end %>
+
+<hr/>
+
 <%- if current_section.youth_section? || current_section.adults? %>
   <h2>Calendar</h2>
   <p>This report allows you to get a list of events and/or the programme for a number of sections.</p>
