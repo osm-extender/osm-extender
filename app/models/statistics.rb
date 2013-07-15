@@ -53,7 +53,8 @@ class Statistics < ActiveRecord::Base
             total += 1
             section_types[section.type] += 1
             if Constants::YOUTH_SECTIONS.include?(section.type)
-              subscription_levels[section.subscription_level] += 1
+              subscription_level = (section.subscription_level > 3) ? 3 : section.subscription_level
+              subscription_levels[subscription_level] += 1
               {'Badges'=>:myscout_badges, 'Events'=>:myscout_events, 'Payments'=>:myscout_payments, 'Programme'=>:myscout_programme, 'GoCardless'=>:gocardless}.each do |addon, method|
                 addons[addon] += 1 if section.try(method)
               end
