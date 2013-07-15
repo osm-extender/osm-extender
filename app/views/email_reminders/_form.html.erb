@@ -18,15 +18,7 @@
 
   <div class="field">
     <%= f.label :send_on %><br />
-    <select id="email_reminder_send_on" name="email_reminder[send_on]">
-      <option value="0"<%- if @email_reminder.send_on == 0 %> selected<%- end %>>Sunday</option>
-      <option value="1"<%- if @email_reminder.send_on == 1 %> selected<%- end %>>Monday</option>
-      <option value="2"<%- if @email_reminder.send_on == 2 %> selected<%- end %>>Tuesday</option>
-      <option value="3"<%- if @email_reminder.send_on == 3 %> selected<%- end %>>Wednesday</option>
-      <option value="4"<%- if @email_reminder.send_on == 4 %> selected<%- end %>>Thursday</option>
-      <option value="5"<%- if @email_reminder.send_on == 5 %> selected<%- end %>>Friday</option>
-      <option value="6"<%- if @email_reminder.send_on == 6 %> selected<%- end %>>Saturday</option>
-    </select>
+    <%= f.select :send_on, options_for_select(Date::DAYNAMES.each_with_index.to_a, @email_reminder.send_on) %>
   </div>
 
   <div class="actions">

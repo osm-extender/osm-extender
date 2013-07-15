@@ -1,7 +1,72 @@
 class Report
 
+  def self.badge_completion_matrix(user, section, params)
+    Rails.cache.fetch("user#{user.id}-report-badge_completion_matrix-data-#{params.inspect}", :expires_in => 10.minutes) do
+      matrix = []
+      names = []
+      member_ids = []
+  
+      badges = []
+      badges += Osm::CoreBadge.get_badges_for_section(user.osm_api, section) if params[:include_core]
+      badges += Osm::StagedBadge.get_badges_for_section(user.osm_api, section) if params[:include_staged]
+      badges += Osm::ChallengeBadge.get_badges_for_section(user.osm_api, section) if params[:include_challenge]
+      badges += Osm::ActivityBadge.get_badges_for_section(user.osm_api, section) if params[:include_activity]
+  
+      unless badges.first.nil?
+        data = badges.first.get_data_for_section(user.osm_api, section)
+        names = data.map{ |i| "#{i.first_name} #{i.last_name}" }
+        member_ids = data.map{ |i| i.member_id }
+      end
+  
+      badges.each do |badge|
+        unless ['nightsaway', 'hikes', 'adventure'].include?(badge.osm_key)
+          completion_data = badge.get_data_for_section(user.osm_api, section)
+          completion_data.sort!{ |a,b| member_ids.find_index(a.member_id) <=> member_ids.find_index(b.member_id) }
+          badge.requirements.each do |requirement|
+            requirement_group = requirement.field.split('_').first
+            unless requirement_group.eql?('y')
+              met_data = completion_data.map do |i|
+                met = :not_started
+                if badge.type.eql?(:staged) && i.awarded?
+                  met = :awarded if requirement_group <= 'abcde'[i.awarded - 1]
+                else
+                  met = :awarded if i.awarded?
+                end
+                if i.started?
+                  unless badge.type.eql?(:staged) && (requirement_group > 'abcde'[i.started - 1])
+                    value = i.requirements[requirement.field]
+                    if value.blank? || value.to_s[0].downcase.eql?('x')
+                      if (i.total_gained < badge.total_needed) || (i.gained_in_sections[requirement_group] < (badge.needed_from_section[requirement_group] || 0))
+                        met = :no
+                      else
+                        met = :not_needed
+                      end
+                    else
+                      met = :yes
+                    end
+                  end
+                end
+                met
+              end
+  
+              matrix.push ([
+                badge.type,
+                badge.name,
+                (badge.type.eql?(:staged) ? 'abcde'.index(requirement_group)+1 : requirement_group),
+                requirement.name,
+                *met_data,
+              ])
+            end
+          end # each badge.requirement
+        end
+      end # each badge
+  
+      [names, matrix]
+    end
+  end
+
   def self.calendar(user, params)
-    Rails.cache.fetch("user#{user.id}-report-calendar-data-#{params.inspect}", :expires_in => 5.minutes) do
+    Rails.cache.fetch("user#{user.id}-report-calendar-data-#{params.inspect}", :expires_in => 10.minutes) do
       items = []
       Osm::Section.get_all(user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section|
         if params[:events][section.id.to_s].eql?('1')
@@ -35,7 +100,7 @@ class Report
 
 
   def self.event_attendance(user, section, events, groupings)
-    Rails.cache.fetch("user#{user.id}-report-event_attendance-data-#{user.id}-#{section.id}-#{events.inspect}-#{groupings.inspect}", :expires_in => 5.minutes) do
+    Rails.cache.fetch("user#{user.id}-report-event_attendance-data-#{user.id}-#{section.id}-#{events.inspect}-#{groupings.inspect}", :expires_in => 10.minutes) do
       event_names = []
       row_groups = {}
       member_totals = {}

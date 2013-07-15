@@ -5,7 +5,7 @@
 
   <div style="display: inline-block; text-align: left; vertical-align: top; padding-right: 10%;">
     <p>This email reminder will send you the following details for<br/>
-    <%= @share.reminder.section_name %> every <%= day_name(@share.reminder.send_on) %>:</p>
+    <%= @share.reminder.section_name %> every <%= Date::DAYNAMES[@share.reminder.send_on] %>:</p>
     <ul>
       <%- @share.reminder.items.each do |item| %>
         <li><%= item.human_name %></li>

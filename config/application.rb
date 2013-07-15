@@ -51,14 +51,10 @@ module OSMExtender
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '35'
+    config.assets.version = '41'
 
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']
-
-    # Add 'special' assets
-    config.assets.paths << Rails.root.join('vendor', 'jquery-tokeninput', 'src')
-    config.assets.paths << Rails.root.join('vendor', 'jquery-tokeninput', 'styles')
 
     # Allow mailer views to access helpers in application_helpers
     config.to_prepare do

@@ -59,11 +59,13 @@ table.right {
     margin-right: 0px;
 }
 
-table, th, td {
+table, td {
     border:             2px solid green;
 }
 
 th {
+    border:             2px solid white;
+    border-bottom-color: green;
     background-color:   green;
     color:              white;
     font-size:          120%;

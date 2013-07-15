@@ -8,7 +8,7 @@
 
 <p>
   <b>Send on:</b>
-  <%= day_name(@email_reminder.send_on) %>
+  <%= Date::DAYNAMES[@email_reminder.send_on] %>
 </p>
 
 <h2>Items</h2>

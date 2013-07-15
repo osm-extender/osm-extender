@@ -1,4 +1,4 @@
-Thank you <%= @share.name %>, you are now unsubscribed from the reminder email for <%= @share.reminder.section_name %> on <%= day_name(@share.reminder.send_on) %>.
+Thank you <%= @share.name %>, you are now unsubscribed from the reminder email for <%= @share.reminder.section_name %> on <%= Date::DAYNAMES[@share.reminder.send_on] %>.
 
 Should you wish to resubscribe to the email then please use the following link, just as long as <%= @share.reminder.user.name %> is still sharing it with you.
 <%= edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %>

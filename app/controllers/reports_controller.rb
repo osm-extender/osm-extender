@@ -158,10 +158,10 @@ class ReportsController < ApplicationController
     @badge_types[:activity] = 'Activity' unless (current_section.subscription_level < 2) # Bronze does not include activity badges
 
     badges = {}
-    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
-    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:staged)
-    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:challenge)
-    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:activity)
+    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:core)
+    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:staged)
+    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:challenge)
+    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:activity)
 
     @badge_names = {}
     badges.each do |type, bs|
@@ -178,9 +178,9 @@ class ReportsController < ApplicationController
     terms.each do |term|
       # For each term get the summaries and process them
       summaries = {}
-      summaries[:core] = Osm::CoreBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:core)
-      summaries[:challenge] = Osm::ChallengeBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:challenge)
-      summaries[:activity] = Osm::ActivityBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.keys.include?(:activity)
+      summaries[:core] = Osm::CoreBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.has_key?(:core)
+      summaries[:challenge] = Osm::ChallengeBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.has_key?(:challenge)
+      summaries[:activity] = Osm::ActivityBadge.get_summary_for_section(current_user.osm_api, current_section, term) if @badge_types.has_key?(:activity)
       summaries.each do |type, summary|
         summary.each do |member|
           member.each do |badge_key, value|
@@ -211,7 +211,7 @@ class ReportsController < ApplicationController
         end
       end # summary in summaries
 
-      if @badge_types.keys.include?(:staged)
+      if @badge_types.has_key?(:staged)
         staged_badges = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section)
         staged_badges.each do |staged_badge|
           staged_badge.get_data_for_section(current_user.osm_api, current_section).each do |data|
@@ -240,6 +240,40 @@ class ReportsController < ApplicationController
   end
 
 
+  def badge_completion_matrix
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    require_osm_permission(:read, :events)
+
+    options = {
+      :include_core => params[:include_core].eql?('1'),
+      :include_challenge => params[:include_challenge].eql?('1'),
+      :include_staged => params[:include_staged].eql?('1'),
+      :include_activity => params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+    }
+    (@names, @matrix) = Report.badge_completion_matrix(current_user, current_section, options)
+
+    respond_to do |format|
+      format.html # html
+      format.csv do
+        send_sv_file({:col_sep => ',', :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@names]}, 'BadgeCompletionMatrix.csv', 'text/csv') do |csv|
+          @matrix.each do |item|
+            csv << item
+          end
+        end
+      end # csv
+      format.tsv do
+        send_sv_file({:col_sep => "\t", :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@names]}, 'BadgeCompletionMatrix.tsv', 'text/tsv') do |csv|
+          @matrix.each do |item|
+            csv << item
+          end
+        end
+      end # tsv
+    end
+
+    log_usage(:sub_action => request.format.to_s, :extra_details => @options)
+  end
+
+
   def missing_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
@@ -259,10 +293,10 @@ class ReportsController < ApplicationController
     end
 
     badges = {}
-    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:core)
-    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:staged)
-    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:challenge)
-    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.keys.include?(:activity)
+    badges[:core] = Osm::CoreBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:core)
+    badges[:staged] = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:staged)
+    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:challenge)
+    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(current_user.osm_api, current_section) if @badge_types.has_key?(:activity)
 
     badge_data = {}
     badges.each do |type, bs|

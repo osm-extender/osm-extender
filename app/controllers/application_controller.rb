@@ -262,7 +262,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Create a UsageLog item setting the following values:
-  #  * :at => Time.now (not overridable)
+  #  * :at => set by model
   #  * :user => current_user
   #  * :section_id => current_section.id (if current_section is not nil)
   #  * :controller => self.class.name
@@ -271,9 +271,8 @@ class ApplicationController < ActionController::Base
   # @returns Boolean
   def log_usage(attributes={})
     attributes.reverse_merge!(:user => current_user, :controller => self.class.name, :action => action_name)
-    attributes[:section_id] = current_section.id if (!attributes.keys.include?(:section_id) && current_section)
-    attributes[:at] = Time.now
-    UsageLog.create(attributes)
+    attributes[:section_id] = current_section.id if (!attributes.has_key?(:section_id) && current_section)
+    UsageLog.create!(attributes)
   end
 
 end

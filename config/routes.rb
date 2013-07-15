@@ -96,6 +96,7 @@ OSMExtender::Application.routes.draw do
   get 'reports/due_badges' => 'reports#due_badges', :as => 'due_badges_report'
   get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
   get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'
+  get 'reports/badge_completion_matrix' => 'reports#badge_completion_matrix', :as => 'badge_completion_matrix_report'
 
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
@@ -104,6 +105,7 @@ OSMExtender::Application.routes.draw do
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
   get 'statistics/sections' => 'statistics#sections', :as => 'sections_statistics'
+  get 'statistics/usage' => 'statistics#usage', :as => 'usage_statistics'
 
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
 

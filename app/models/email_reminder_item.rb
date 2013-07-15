@@ -85,7 +85,7 @@ class EmailReminderItem < ActiveRecord::Base
     default = self.class.default_configuration
 
     # Ensure only keys in the default_configuration exist in configuration
-    config.select {|k,v| default.keys.include?(k) && default[k] != v}
+    config.select {|k,v| default.has_key?(k) && default[k] != v}
 
     # Make any type conversions required
     config.each_key do |key|
@@ -109,7 +109,7 @@ class EmailReminderItem < ActiveRecord::Base
   def configuration
     default = self.class.default_configuration
     config = read_attribute(:configuration)
-    config.select {|k,v| default.keys.include?(k)}
+    config.select {|k,v| default.has_key?(k)}
     return default.merge(config)
   end
 
