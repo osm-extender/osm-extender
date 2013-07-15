@@ -42,6 +42,7 @@ class Statistics < ActiveRecord::Base
     section_ids_seen = []
     section_types = {:beavers=>0, :cubs=>0, :scouts=>0, :explorers=>0, :adults=>0, :waiting=>0}
     subscription_levels = {1=>0, 2=>0, 3=>0}
+    addons = {'Badges'=>0, 'Events'=>0, 'Payments'=>0, 'Programme'=>0, 'GoCardless'=>0}
     total = 0
 
     User.where("osm_userid IS NOT NULL").each do |user|
@@ -51,7 +52,12 @@ class Statistics < ActiveRecord::Base
             section_ids_seen.push section.id
             total += 1
             section_types[section.type] += 1
-            subscription_levels[section.subscription_level] += 1 if Constants::YOUTH_SECTIONS.include?(section.type)
+            if Constants::YOUTH_SECTIONS.include?(section.type)
+              subscription_levels[section.subscription_level] += 1
+              {'Badges'=>:myscout_badges, 'Events'=>:myscout_events, 'Payments'=>:myscout_payments, 'Programme'=>:myscout_programme, 'GoCardless'=>:gocardless}.each do |addon, method|
+                addons[addon] += 1 if section.try(method)
+              end
+            end
           end
         end
       end
@@ -61,6 +67,10 @@ class Statistics < ActiveRecord::Base
       :section_types => section_types,
       :subscription_levels => subscription_levels,
       :total => total,
+      :addons => {
+        :data => addons,
+        :max_value => addons.values.max,
+      },
     }
   end
 
