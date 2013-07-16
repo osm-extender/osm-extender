@@ -89,7 +89,6 @@ class EmailRemindersController < ApplicationController
 
   private
   def setup_tertiary_menu
-    @tertiary_menu_items = nil
     @tertiary_menu_items = [
       ['List of reminders', email_reminders_path],
       ['New reminder', new_email_reminder_path],
