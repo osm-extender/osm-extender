@@ -115,13 +115,17 @@
         </div>
         <div style="display: inline-block; vertical-align: top; margin-left: 25px;">
           <h3>For which <%= 'event'.pluralize(@future_events.count) %></h3>
-            <%- @future_events.each do |event| %>
-              <%= check_box_tag("events[#{event.id}]", 1, true) %>
-              <%= label_tag "events[#{event.id}]", event.name %></br>
+            <%- unless @future_events.empty? %>
+              <%- @future_events.each do |event| %>
+                <%= check_box_tag("events[#{event.id}]", 1, true) %>
+                <%= label_tag "events[#{event.id}]", event.name %></br>
+              <%- end %>
+            <%- else %>
+              <p>You must add some future events to OSM in order to use this report.</p>
             <%- end %>
         </div>
       </div>
-      <%= submit_tag 'Show event attendance' %>
+      <%= submit_tag 'Show event attendance', :disabled => @future_events.empty? %>
     <%- end %>
   <%- else %>
     You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.

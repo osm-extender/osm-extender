@@ -15,7 +15,7 @@
   </thead>
   <tbody>
     <%- @grouping_names.each do |grouping_id, grouping_name| %>
-      <%- rows = @row_groups[grouping_id] %>
+      <%- rows = @row_groups[grouping_id] || [] %>
       <%- unless grouping_id == 0 %>
         <tr>
           <th>
