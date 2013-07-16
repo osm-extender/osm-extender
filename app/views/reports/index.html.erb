@@ -2,9 +2,19 @@
   
 <p>There are a number of reports generated from your section's OSM data that you can use, these are listed below.</p>
 
+<ul>
+  <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Awarded Badges', '#AwardedBadges' %></li><%- end %>
+  <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Badge Completion Matrix', '#BadgeCompletionMatrix' %></li><%- end %>
+                                                                              <li><%= link_to 'Calendar', '#Calendar' %></li>
+  <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Due Badges', '#DueBadges' %></li><%- end %>
+  <%- if Constants::YOUTH_AND_ADULT_SECTIONS.include?(current_section.type) %><li><%= link_to 'Event Attendance', '#EventAttendance' %></li><%- end %>
+  <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Missing Badge Requirements', '#MissingBadgeRequirements' %></li><%- end %>
+</ul>
+
 <hr/>
 
 <%- if current_section.youth_section? %>
+  <a name="AwardedBadges"/>
   <h2>Awarded Badges</h2>
   <p>This report allows you to see which badges were awarded to which members during a provided time period.</p>
   <%- if has_osm_permission?(:read, :badge) %>
@@ -21,6 +31,7 @@
 <hr/>
 
 <%- if current_section.youth_section? %>
+  <a name="BadgeCompletionMatrix"/>
   <h2>Badge Completion Matrix</h2>
   <p>
     This report allows you to see at a glance how well each member is doing at gaining each badge.
@@ -45,10 +56,9 @@
 
 <hr/>
 
-<%- if current_section.youth_section? || current_section.adults? %>
+  <a name="Calendar"/>
   <h2>Calendar</h2>
   <p>This report allows you to get a list of events and/or the programme for a number of sections.</p>
-  <%- if has_osm_permission?(:read, [:events, :programme]) %>
     <%= form_tag calendar_report_path, :method=>:get do %>
       <table>
         <tr>
@@ -78,14 +88,11 @@
       <br/>
       <%= submit_tag 'Show calendar' %>
     <%- end %>
-  <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
-  <%- end %>
-<%- end %>
 
 <hr/>
 
 <%- if current_section.youth_section? %>
+  <a name="DueBadges"/>
   <h2>Due Badges</h2>
   <p>This report allows you to see which members are due which badges and whether you have enough of them.</p>
   <%- if has_osm_permission?(:read, :badge) %>
@@ -101,6 +108,7 @@
 <hr/>
 
 <%- if current_section.youth_section? || current_section.adults? %>
+  <a name="EventAttendance"/>
   <h2>Event Attendance</h2>
   <p>This report allows you to get a table showing the attendance status of each member for a selection of your future events.</p>
   <%- if has_osm_permission?(:read, [:events, :member]) %>
@@ -135,6 +143,7 @@
 <hr/>
 
 <%- if current_section.youth_section? %>
+  <a name="MissingBadgeRequirements"/>
   <h2>Missing Badge Requirements</h2>
   <p>
     This report allows you to see which badge requirements are stopping a member from gaining badges they've already started.
