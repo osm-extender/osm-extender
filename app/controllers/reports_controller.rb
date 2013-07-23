@@ -371,6 +371,88 @@ class ReportsController < ApplicationController
   end
 
 
+  def planned_badge_requirements
+    require_section_type Constants::YOUTH_SECTIONS
+    require_osm_permission(:read, :badge)
+
+    (@start, @finish) = [Osm.parse_date(params[:planned_badges_start]), Osm.parse_date(params[:planned_badges_finish])].sort
+    if @start.nil? || @finish.nil?
+      flash[:errror] = 'You failed to provide at least one of the dates.'
+      redirect_back_or_to reports_path
+    end
+
+    badge_by_type = {
+      :activity => Osm::ActivityBadge,
+      :staged => Osm::StagedBadge,
+      :challenge => Osm::ChallengeBadge,
+      :core => Osm::CoreBadge,
+    }
+    badges = {}
+    badge_data = {}
+
+    @all_links = []
+    @links_by_meeting = {}
+    @earnt_badges = {}
+    terms = Osm::Term.get_for_section(current_user.osm_api, current_section)
+    terms = terms.select{ |t| !(t.finish < @start) || t.start > @finish }
+    terms.each do |term|
+      Osm::Meeting.get_for_section(current_user.osm_api, current_section, term).each do |meeting|
+        meeting.badge_links.each do |badge_link|
+          @links_by_meeting[meeting] ||= []
+          @links_by_meeting[meeting].push badge_link.label unless @links_by_meeting[meeting].include?(badge_link.label)
+          @all_links.push badge_link.label unless @all_links.include?(badge_link.label)
+          # Complete badge requirements which will be met
+          unless badge_link.badge_type.eql?(:activity) && (current_section.subscription_level < 2) # Silver or higher required for activity badges
+            if current_section.type == badge_link.badge_section # No point trying to complete badges for a different section
+              badge_key = "#{badge_link.badge_section}|#{badge_link.badge_type}|#{badge_link.badge_key}"
+              badge = badges[badge_key]
+              if badge.nil?
+                badge_class = badge_by_type[badge_link.badge_type]
+                badge = badge_class.get_badges_for_section(current_user.osm_api, current_section).select{ |b| b.osm_key == badge_link.badge_key }.first unless badge_class.nil?
+                badges[badge_key] = badge
+              end
+              unless badge.nil?
+                badge_data[badge] ||= badge.get_data_for_section(current_user.osm_api, current_section)
+                badge_data[badge].each do |data|
+                  data.requirements[badge_link.requirement_key] = 'YES'
+                end
+              end
+            end
+          end
+        end # badge links for meetings
+      end # meetings for section
+    end # terms in date range
+    
+    # Get list of finished badges
+    badge_data.each do |badge, datas|
+      badge_name = "#{badge.type.to_s.titleize} - #{badge.name}"
+      datas.each do |data|
+        member_name = "#{data.first_name} #{data.last_name}"
+        unless badge.type.eql?(:staged)
+          # 'Normal' Badge
+          unless data.awarded?
+            if (data.total_gained >= badge.total_needed) && (data.sections_gained >= badge.sections_needed)
+              @earnt_badges[badge_name] ||= []
+              @earnt_badges[badge_name].push member_name
+            end
+          end
+        else
+          # Staged badge
+          (data.awarded..5).each do |stage|
+            group = 'abcde'[stage - 1]
+            if data.gained_in_sections[group] >= badge.needed_from_section[group]
+              @earnt_badges["#{badge_name} (#{stage})"] ||= []
+              @earnt_badges["#{badge_name} (#{stage})"].push member_name
+            end
+          end
+        end
+      end
+    end
+
+    log_usage
+  end
+
+
   private
   def send_sv_file(options={}, file_name, mime_type, &generate_data)
     options.reverse_merge!({
