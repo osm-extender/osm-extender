@@ -97,6 +97,7 @@ OSMExtender::Application.routes.draw do
   get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
   get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'
   get 'reports/badge_completion_matrix' => 'reports#badge_completion_matrix', :as => 'badge_completion_matrix_report'
+  get 'reports/planned_badge_requirements' => 'reports#planned_badge_requirements', :as => 'planned_badge_requirements_report'
 
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'

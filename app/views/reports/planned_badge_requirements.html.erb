@@ -1,0 +1,41 @@
+<% provide :title, 'Planned Badges Report' %>
+
+<p>You are planning to meet the following badge requirements between <%= ordinalized_date(@start, "%a %d of %b %Y") %> and <%= ordinalized_date(@finish, "%a %d of %b %Y") %>.</p>
+<ul>
+  <%- @all_links.each do |link| %>
+    <li><%= link %></li>
+  <%- end %>
+</ul>
+
+
+<h2>By Meeting</h2>
+<ul>
+  <%- @links_by_meeting.each do |meeting, links| %>
+    <li><%= meeting.title %> on <%= ordinalized_date(meeting.date, "%a %d of %b %Y") %>
+      <ul>
+        <%- links.each do |link| %>
+          <li><%= link %></li>
+        <%- end %>
+      </ul>
+    </li>
+  <%- end %>
+</ul>
+
+
+<h2>Badges Completed</h2>
+<p>
+  The following badges will be completed if everyone turns up all the time.
+  The process of working this out is fairly dumb, it doesn;t take account of related badge requirements unless they are also included in the programme.
+  <%- unless (current_section.subscription_level > 1) %><b>Activity badges have been excluded as you need at least a Silver subscription in OSM to use them.</b><%- end %>
+</p>
+<ul>
+  <%- @earnt_badges.sort.each do |badge_name, member_names| %>
+    <li><%= badge_name %> (x <%= member_names.count %>):
+      <ul>
+        <%- member_names.each do |member_name| %>
+          <li><%= member_name %></li>
+        <%- end %>
+      </ul>
+    </li>
+  <%- end %>
+</ul>

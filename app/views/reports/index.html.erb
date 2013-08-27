@@ -9,6 +9,7 @@
   <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Due Badges', '#DueBadges' %></li><%- end %>
   <%- if Constants::YOUTH_AND_ADULT_SECTIONS.include?(current_section.type) %><li><%= link_to 'Event Attendance', '#EventAttendance' %></li><%- end %>
   <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Missing Badge Requirements', '#MissingBadgeRequirements' %></li><%- end %>
+  <%- if Constants::YOUTH_SECTIONS.include?(current_section.type) %>          <li><%= link_to 'Planned Badge Requirements', '#PlannedBadgeRequirements' %></li><%- end %>
 </ul>
 
 <hr/>
@@ -116,9 +117,13 @@
       <div>
         <div style="display: inline-block; vertical-align: top;">
           <h3>For which <%= get_grouping_name(current_section.type).pluralize(@groupings.count) %></h3>
-            <%- @groupings.each do |grouping| %>
-              <%= check_box_tag("groupings[#{grouping[1]}]", 1, (grouping[1] >= 0)) %>
-              <%= label_tag "groupings[#{grouping[1]}]", grouping[0] %><br/>
+            <%- unless @groupings.empty? %>
+              <%- @groupings.each do |grouping| %>
+                <%= check_box_tag("groupings[#{grouping[1]}]", 1, (grouping[1] >= 0)) %>
+                <%= label_tag "groupings[#{grouping[1]}]", grouping[0] %><br/>
+              <%- end %>
+            <%- else %>
+              <p>You must setup some <%= get_grouping_name(current_section.type).pluralize %> in OSM to use this report.</p>
             <%- end %>
         </div>
         <div style="display: inline-block; vertical-align: top; margin-left: 25px;">
@@ -163,5 +168,26 @@
     <%- end %>
   <%- else %>
     You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+  <%- end %>
+<%- end %>
+
+
+<hr/>
+
+<%- if current_section.youth_section? %>
+  <a name="PlannedBadgeRequirements"/>
+  <h2>Planned Badge Requirements</h2>
+  <p>
+    This report allows you to see which badge requirements you are planning on covering between two dates.
+  </p>
+  <%- if has_osm_permission?(:read, :badge) %>
+    <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
+      Between <%= text_field_tag :planned_badges_start, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      and <%= text_field_tag :planned_badges_finish, 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      <br/><%= submit_tag 'Show planned badge requirements' %>
+    <%- end %>
+  <%- else %>
+    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    Due to the amount of data this report needs to slurp from OSM it may take a while to run.
   <%- end %>
 <%- end %>

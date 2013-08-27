@@ -2,8 +2,8 @@
  * This manifest file will include application wide style sheets
  * Stylesheets (or manifests) for specific controllers should be
  * called <controller>.css(.scss), for example projects.css.
- *= require_self
  *= require scaffolds
+ *= require_self
 */
 
 *{margin:0px;}
@@ -20,12 +20,13 @@ hr {
     margin-right:       auto;
 }
 
-a {
-    color:              blue;
+a, a:link, a:visited {
+    color:              #000000;
 }
 
 a:hover {
-    color:              green;
+    color:              #ffffff;
+    background-color:   #000000;
 }
 
 p {
