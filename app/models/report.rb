@@ -100,13 +100,13 @@ class Report
 
 
   def self.event_attendance(user, section, events, groupings)
-    Rails.cache.fetch("user#{user.id}-report-event_attendance-data-#{user.id}-#{section.id}-#{events.inspect}-#{groupings.inspect}", :expires_in => 10.minutes) do
+    Rails.cache.fetch("3user#{user.id}-report-event_attendance-data-#{user.id}-#{section.id}-#{events.inspect}-#{groupings.inspect}", :expires_in => 10.minutes) do
       event_names = []
       row_groups = {}
       member_totals = {}
       event_totals = {:yes=>[], :no=>[], :invited=>[], :shown=>[], :reserved=>[]}
-      events.each do |event_id|
-        event = Osm::Event.get(user.osm_api, section, event_id.to_i)
+      all_events = Osm::Event.get_for_section(user.osm_api, section)
+      all_events.select{|e| events.include?(e.id)}.sort.each do |event|
         this_event_totals = {:yes=>0, :no=>0, :invited=>0, :shown=>0, :reserved=>0}
         event.get_attendance(user.osm_api).each do |attendance|
           if groupings.include?(attendance.grouping_id)
