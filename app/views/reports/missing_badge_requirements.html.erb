@@ -40,7 +40,7 @@
                           <ul>
 <%- end %>
                             <%- data.requirements.each do |r_key, r_value| %>
-                              <%- if r_key[0].eql?(section) && (r_value.blank? || r_value[0].downcase.eql?('x')) %>
+                              <%- if r_key[0].eql?(section) && (r_value.blank? || r_value.to_s[0].downcase.eql?('x')) %>
                                 <li>
                                   <%= @badge_requirement_labels[type][data.badge.osm_key][r_key] %>
                                 </li>
