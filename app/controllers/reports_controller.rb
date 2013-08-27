@@ -43,11 +43,18 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     require_osm_permission(:read, :events)
 
-    if params['events'].nil? || params['events'].empty?
-      flash[:error] = 'You must select some events to get the attendance for.'
+    unless params['events'].is_a?(Hash)
+      flash[:error] = 'You must select at least one event to get the attendance for.'
       redirect_to reports_path
       return
     end
+
+    unless params['groupings'].is_a?(Hash)
+      flash[:error] = "You must select at least one #{get_grouping_name(current_section.type)} to get the attendance for."
+      redirect_to reports_path
+      return
+    end
+
 
     selected_groupings = params['groupings'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i}
     @grouping_names = get_current_section_groupings.invert.to_a.select{ |g| selected_groupings.include?(g[0]) }.sort do |a,b|

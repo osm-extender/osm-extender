@@ -117,9 +117,13 @@
       <div>
         <div style="display: inline-block; vertical-align: top;">
           <h3>For which <%= get_grouping_name(current_section.type).pluralize(@groupings.count) %></h3>
-            <%- @groupings.each do |grouping| %>
-              <%= check_box_tag("groupings[#{grouping[1]}]", 1, (grouping[1] >= 0)) %>
-              <%= label_tag "groupings[#{grouping[1]}]", grouping[0] %><br/>
+            <%- unless @groupings.empty? %>
+              <%- @groupings.each do |grouping| %>
+                <%= check_box_tag("groupings[#{grouping[1]}]", 1, (grouping[1] >= 0)) %>
+                <%= label_tag "groupings[#{grouping[1]}]", grouping[0] %><br/>
+              <%- end %>
+            <%- else %>
+              <p>You must setup some <%= get_grouping_name(current_section.type).pluralize %> in OSM to use this report.</p>
             <%- end %>
         </div>
         <div style="display: inline-block; vertical-align: top; margin-left: 25px;">
