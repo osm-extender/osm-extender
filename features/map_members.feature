@@ -66,7 +66,7 @@ Feature: Map Members
         When I signin as "alice@example.com" with password "P@55word"
 	And I go to the map_members page
 	Then I should see "You do not have the correct OSM permissions"
-	And I should be on the osm_permissions page
+	And I should be on the check_osm_setup page
         And I should have 1 usage log records
 
     Scenario: Get data (incorrect OSM permission)
@@ -76,5 +76,5 @@ Feature: Map Members
         When I signin as "alice@example.com" with password "P@55word"
 	And I go to the map_members_data page
 	Then I should see "You do not have the correct OSM permissions"
-	And I should be on the osm_permissions page
+	And I should be on the check_osm_setup page
         And I should have 1 usage log records

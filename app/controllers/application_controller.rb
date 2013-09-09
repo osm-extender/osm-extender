@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
     unless has_osm_permission?(permission_to, permission_on, user, section)
       # Send user to the osm permissions page
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
-      redirect_back_or_to(current_user ? osm_permissions_path : signin_path)
+      redirect_back_or_to(current_user ? check_osm_setup_path : signin_path)
     end
   end
 

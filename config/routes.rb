@@ -2,7 +2,7 @@ OSMExtender::Application.routes.draw do
 
   get 'index' => 'static#welcome', :as => 'welcome_page'
   get 'my_page' => 'static#my_page', :as => 'my_page'
-  get 'osm_permissions' => 'static#osm_permissions', :as => 'osm_permissions'
+  get 'check_osm_setup' => 'static#check_osm_setup', :as => 'check_osm_setup'
   get 'help' => 'static#help', :as => 'help'
 
   get 'signin' => 'sessions#new', :as => 'signin'

@@ -25,7 +25,7 @@
       <br/><%= submit_tag 'Show awarded badges' %>
     <%- end %>
   <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
   <%- end %>
 <%- end %>
 
@@ -51,7 +51,7 @@
       <%= submit_tag 'Show badge completion matrix' %>
     <%- end %>
   <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
   <%- end %>
 <%- end %>
 
@@ -102,7 +102,7 @@
       <%= submit_tag 'Show due badges' %>
     <%- end %>
   <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
   <%- end %>
 <%- end %>
 
@@ -141,7 +141,7 @@
       <%= submit_tag 'Show event attendance', :disabled => @future_events.empty? %>
     <%- end %>
   <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
   <%- end %>
 <%- end %>
 
@@ -167,7 +167,7 @@
       <%= submit_tag 'Show missing badge requirements' %>
     <%- end %>
   <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
   <%- end %>
 <%- end %>
 
@@ -187,7 +187,7 @@
       <br/><%= submit_tag 'Show planned badge requirements' %>
     <%- end %>
   <%- else %>
-    You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> in order to use this report.
+    You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
     Due to the amount of data this report needs to slurp from OSM it may take a while to run.
   <%- end %>
 <%- end %>
