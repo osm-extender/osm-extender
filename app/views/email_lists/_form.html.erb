@@ -17,6 +17,7 @@
   </div>
 
   <div class="field">
+    <%= hidden_field_tag 'email_list[notify_changed]', 0 %>
     <%= f.check_box :notify_changed, {}, true, false %>
     <%= f.label :notify_changed, 'Notify me when an address changes (checks each night)' %>
   </div>

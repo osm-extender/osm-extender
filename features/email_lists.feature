@@ -162,6 +162,12 @@ Feature: Email Lists
         Given I have the following user records
 	    | email_address     | name  |
 	    | bob@example.com   | Bob   |
+        And "bob@example.com" is an activated user account
+	And "bob@example.com" is connected to OSM
+        And an OSM request to get terms will have the terms
+            |section_id | term_id | name   |
+            | 1         | 1       | Term 1 |
+            | 2         | 2       | Term 2 |
 	And "alice@example.com" has a saved email list "Test list" for section "1"
 	And "alice@example.com" has a saved email list "Test list 2" for section "2"
 	And "bob@example.com" has a saved email list "Test list 3" for section "1"
@@ -178,11 +184,13 @@ Feature: Email Lists
 	And I follow "[Edit]" in the "Actions" column of the "Test list" row
 	Then the "email_list[email1]" checkbox should be checked
 	When I uncheck "email_list[email1]"
+        And I uncheck "email_list[notify_changed]"
 	And I press "Update Email list"
 	Then I should see "Email list was successfully updated"
 	And I should be on the email_lists page
 	When I follow "[Edit]" in the "Actions" column of the "Test list" row
 	Then the "email_list[email1]" checkbox should not be checked
+        And the "email_list[notify_changed]" checkbox should not be checked
 
 
     Scenario: View multiple saved searches
@@ -225,12 +233,12 @@ Feature: Email Lists
 	And I should not see "A1@example.com"
 
     Scenario: Deduplication of addresses should be case insensitive (multiple lists)
-	Given "alice@example.com" has a saved email list "Test list" for section "1"
-	And "alice@example.com" has a saved email list "Test list 2" for section "2"
-	And an OSM request to get terms will have the terms
+	Given an OSM request to get terms will have the terms
 	    |section_id | term_id | name   |
 	    | 1         | 1       | Term 1 |
 	    | 2         | 2       | Term 2 |
+	And "alice@example.com" has a saved email list "Test list" for section "1"
+	And "alice@example.com" has a saved email list "Test list 2" for section "2"
 	And an OSM request to get members for section 1 in term 1 will have the members
 	    | first_name | last_name | email1         | grouping_id |
 	    | A          | Member    | a1@example.com | 1           |

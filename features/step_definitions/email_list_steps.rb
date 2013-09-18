@@ -8,6 +8,7 @@ Given /^"([^"]*)" has a saved email list "([^"]*)" for section "(\d*)"$/ do |ema
     :email3 => true,
     :email4 => true,
     :match_type => true,
-    :match_grouping => 0
+    :match_grouping => 0,
+    :notify_changed => true,
   })
 end
