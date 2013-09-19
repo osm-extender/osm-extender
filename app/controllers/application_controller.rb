@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
     unless has_osm_permission?(permission_to, permission_on, user, section)
       # Send user to the osm permissions page
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
-      redirect_back_or_to(current_user ? osm_permissions_path : signin_path)
+      redirect_back_or_to(current_user ? check_osm_setup_path : signin_path)
     end
   end
 
@@ -145,6 +145,24 @@ class ApplicationController < ActionController::Base
   rescue_from Osm::Error do |exception|
     log_error(exception)
     render :template => "error/osm", :status => 503, :locals => {:exception => exception}
+  end
+
+  rescue_from Osm::Error::NoCurrentTerm do |exception|
+    unless current_user.nil? || !current_user.connected_to_osm? || exception.section_id.nil?
+      api = current_user.osm_api
+      section = Osm::Section.get(api, exception.section_id)
+      next_term = nil
+      last_term = nil
+      terms = Osm::Term.get_for_section(api, section)
+      terms.each do |term|
+        last_term = term if term.past? && (last_term.nil? || term.finish > last_term.finish)
+        next_term = term if term.future? && (next_term.nil? || term.start < next_term.start)
+      end
+      render :template => "error/no_current_term", :status => 503, :locals => {:last_term => last_term, :next_term => next_term, :section => section}
+      Osm::Model.cache_delete(api, ['terms', api.user_id]) # Clear cached terms ready for a retry
+    else
+      render :template => "error/osm", :status => 503, :locals => {:exception => exception}
+    end
   end
 
 

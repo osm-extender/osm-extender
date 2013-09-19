@@ -42,7 +42,7 @@
       <%- if item[:as_link] %>
         <li><%= link_to item[:type].human_name, self.send("new_#{item[:type].name.underscore}_path", @email_reminder), {:id => "add_#{item[:type].name.underscore}"} %>
       <%- else %>
-        <li><%= item[:type].human_name %> - You need to fix your <%= link_to 'OSM permissions', osm_permissions_path %> to have access to this item
+        <li><%= item[:type].human_name %> - You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to have access to this item
       <%- end %>
     <%- end %>
   </ul>

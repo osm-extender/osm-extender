@@ -20,6 +20,9 @@ Feature: OSM
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
+        And an OSM request to get terms for section 1 will have the term
+            | term_id | name   |
+            | 1       | Term 1 |
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "You need to connect your account to your OSM account."
         And I should see "You have not yet connected your account to your OSM account"
@@ -27,7 +30,7 @@ Feature: OSM
         And I fill in "Email" with "alice@example.com"
         And I fill in "Password" with "password"
         And I press "Connect to OSM"
-        Then I should be on the osm_permissions page
+        Then I should be on the check_osm_setup page
         And I should see "Sucessfully connected to your OSM account"
 	And I should see "Please use OSM to allow us access to your data"
         And "alice@example.com" should be connected to OSM
@@ -71,29 +74,32 @@ Feature: OSM
 	And I should not see "Change Current Section"
 
 
-    Scenario: View OSM Permissions
+    Scenario: View Check OSM Setup
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
 	    | events     | write   |
+        And an OSM request to get terms for section 1 will have the term
+            | term_id | name   |
+            | 1       | Term 1 |
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "OSM permissions"
-        Then I should be on the osm_permissions page
+        And I follow "Check OSM setup"
+        Then I should be on the check_osm_setup page
 	And in the "(to OSMX)" column of the row with id "badge" I should see "No permissions"
 	And in the "(to OSMX)" column of the row with id "member" I should see "Read"
 	And in the "(to OSMX)" column of the row with id "events" I should see "Read and Write"
 
-    Scenario: View OSM Permissions (not connected to OSM)
+    Scenario: Check OSM Setup (not connected to OSM)
         When I signin as "alice@example.com" with password "P@55word"
-        And I go to the osm_permissions page
+        And I go to the check_osm_setup page
 	Then I should see "You must connect to your OSM account first"
 	And I should be on the connect_to_osm page
 
 
-    Scenario: View OSM Permissions (not signed in)
-        When I go to the osm permissions page
+    Scenario: Check OSM Setup (not signed in)
+        When I go to the check_osm_setup page
 	Then I should see "You must be signed in"
 	And I should be on the signin page
 
@@ -104,7 +110,7 @@ Feature: OSM
 	And I should not see "Email reminders"
 	And I should not see "Programme review"
 	And I should not see "Email lists"
-	And I should not see "OSM permissions"
+	And I should not see "Check OSM setup"
 	And I should not see "Map members"
 
     Scenario: Message but no links for non connected user
@@ -114,7 +120,7 @@ Feature: OSM
 	And I should see "links to more things you can do will appear here"
 	And I should not see "Map members"
 	And I should not see "Programme review"
-	And I should not see "OSM permissions"
+	And I should not see "Check OSM setup"
 
     Scenario: Links for connected user
 	Given "alice@example.com" is connected to OSM
@@ -128,7 +134,7 @@ Feature: OSM
 	And I should see "Email reminders"
 	And I should see "Programme review"
 	And I should see "Email lists"
-	And I should see "OSM permissions"
+	And I should see "Check OSM setup"
 	And I should see "Map members"
 
     Scenario: Message and selected links for connected user without permissions
@@ -141,7 +147,7 @@ Feature: OSM
 	Then I should see "Some items have hidden from this menu"
 	And I should see "Email reminders"
 	And I should see "Email lists"
-	And I should see "OSM permissions"
+	And I should see "Check OSM setup"
 	And I should not see "Programme review"
 
 
@@ -158,5 +164,5 @@ Feature: OSM
 	Then I should not see "Some items have hidden from this menu"
 	And I should see "Email reminders"
 	And I should see "Email lists"
-	And I should see "OSM permissions"
+	And I should see "Check OSM setup"
 	And I should not see "Programme review"

@@ -1,0 +1,10 @@
+<%- unless @term_problems[section.id].empty? %>
+  <p>The following problems were found:</p>
+  <ul>
+    <%- @term_problems[section.id].each do |problem| %>
+      <li><%= problem %></li>
+    <%- end %>
+  </ul>
+<%- else %>
+  <p>No problems were found.</p>
+<%- end %>

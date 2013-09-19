@@ -1,0 +1,48 @@
+<% provide :title, "Check OSM Setup" %>
+
+<p>To change what this site is able to do with your data in OSM you need change our access rights in OSM, to do this:</p>
+<ol>
+  <li>Go to <a href="https://www.onlinescoutmanager.co.uk" target="_blank">https://www.onlinescoutmanager.co.uk</a> and login.</li>
+  <li>Change to the section you want to change permissions for.</li>
+  <li>Using the "Account" drop down menu choose "External Access".</li>
+  <li>Setup "<%= current_user.osm_api.api_name %>" to have access to your data, the list below shows what permissions are used for what as well as what permissions you have granted.
+</ol>
+
+
+<hr style="width: 50%;"/>
+<center>
+  <%- if current_section %>
+    | <%= link_to "#{current_section.group_name} : #{current_section.name}", "##{current_section.id}" %>
+  <%- end %>
+  <%- @other_sections.each do |section| %>
+    | <%= link_to "#{section.group_name} : #{section.name}", "##{section.id}" %>
+  <%- end %>
+  |
+</center>
+<hr style="width: 50%;"/>
+
+
+<%- if current_section %>
+  <a name="<%= current_section.id %>"/>
+  <h2>Current Section - <%= "#{current_section.group_name} : #{current_section.name}" %></h2>
+  <h4>Permissions</h4>
+  <%= render 'osm_permissions', :section => current_section %>
+  <%- unless current_section.waiting? %>
+    <h4>Terms</h4>
+    <%= render 'osm_terms', :section => current_section %>
+  <%- end %>
+<%- end %>
+
+<%- unless @other_sections.empty? %>
+  <h2>Other Sections</h2>
+  <%- @other_sections.each do |section| %>
+    <a name="<%= section.id %>"/>
+    <h3><%= "#{section.group_name} : #{section.name}" %></h3>
+    <h4>Permissions</h4>
+    <%= render 'osm_permissions', :section => section %>
+    <%- unless section.waiting? %>
+      <h4>Terms</h4>
+      <%= render 'osm_terms', :section => section %>
+    <%- end %>
+  <%- end %>
+<%- end %>

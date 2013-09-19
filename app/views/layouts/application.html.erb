@@ -89,7 +89,7 @@
             <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
             <div class="menu_item"><%= link_to 'Search members', osm_search_members_form_path %></div>
             <div class="menu_item"><%= link_to 'Shared events (management)', shared_events_path %></div>
-            <div class="menu_item"><%= link_to 'OSM permissions', osm_permissions_path %></div>
+            <div class="menu_item"><%= link_to 'Check OSM setup', check_osm_setup_path %></div>
             <div id="current_section">
               Current section: <%= "#{current_section.name} (#{current_section.group_name})" %>
             </div>
@@ -106,7 +106,7 @@
                         || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi]) && has_osm_permission?([:read, :write], :events))
             %>
               <div style="margin: 0px 10% 0px, 10%; text-align: center; font-weight: bold;">
-                <p>Some items have hidden from this menu because of how your <%= link_to 'OSM Permissions', osm_permissions_path %> are set.</p>
+                <p>Some items have hidden from this menu because of how your <%= link_to 'OSM Permissions', check_osm_setup_path %> are set.</p>
               </div>
             <%- end %>
           <%- else %>

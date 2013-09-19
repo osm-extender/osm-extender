@@ -65,7 +65,7 @@ Feature: Balanced Programme
         When I signin as "alice@example.com" with password "P@55word"
 	And I go to the programme_review_balanced page
 	Then I should see "You do not have the correct OSM permissions"
-	And I should be on the osm_permissions page
+	And I should be on the check_osm_setup page
         And I should have 1 usage log record
 
     Scenario: Get balanced programme data (incorrect OSM permission)
@@ -75,5 +75,5 @@ Feature: Balanced Programme
         When I signin as "alice@example.com" with password "P@55word"
 	And I go to the programme_review_balanced_data page
 	Then I should see "You do not have the correct OSM permissions"
-	And I should be on the osm_permissions page
+	And I should be on the check_osm_setup page
         And I should have 1 usage log record

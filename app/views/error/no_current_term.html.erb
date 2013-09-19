@@ -1,0 +1,42 @@
+<% provide :head_title, "No Current Term Error" %>
+<% provide :hide_secondary_menu, true %>
+
+<div class="dialog">
+    <h1>We need to know what the current term is for that</h1>
+
+    <p>
+      Whilst trying to do the action you requested we needed to tell OSM which term to give us the data for, since today is not in a term we didn't know what term's data to ask for.
+      Please follow the actions at the end of this page to correct the issue before retryng.
+    </p>
+
+    <p>
+      <%- unless last_term.nil? %>
+        Your last term (<%= last_term.name %>) ended on <%= ordinalized_date(last_term.finish, "%d of %b %Y") %>.
+      <%- end %>
+      <%- unless next_term.nil? %>
+        Your next term (<%= next_term.name %>) doesn't start until <%= ordinalized_date(next_term.start, "%d of %b %Y") %>.
+      <%- end %>
+    </p>
+
+    <ul style="text-align: left;">
+      <li>Login to <%= link_to 'OSM', 'https://www.onlinescoutmanager.co.uk' %>.</li>
+      <li>Make sure you are using the <%= section.group_name %>: <%= section.name %> section.</li>
+      <li>From the term selector choose "Configure terms".</li>
+      <%- if next_term.nil? && last_term.nil? %>
+      <li>Add some terms.</li>
+      <%- elsif next_term.nil? %>
+      <li>Add a term after <%= last_term.name %> or change its finish date.</li>
+      <%- elsif last_term.nil? %>
+      <li>Add a term before <%= next_term.name %> or change its start date.</li>
+      <%- else %>
+      <li>
+        Remove the gap between <%= last_term.name %> and <%= next_term.name %> by either:
+        <ul>
+          <li>Making <%= last_term.name %> finish on <%= ordinalized_date((next_term.start - 1), "%d of %b %Y") %></li>
+          <li>Making <%= next_term.name %> start on <%= ordinalized_date((last_term.finish + 1), "%d of %b %Y") %></li>
+          <li>Changing the finish date of <%= last_term.name %> and the start date of <%= next_term.name %> so there is no gap between them.</li>
+        </ul>
+      </li>
+      <%- end %>
+    </ul>
+</div>

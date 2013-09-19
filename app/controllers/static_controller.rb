@@ -1,6 +1,6 @@
 class StaticController < ApplicationController
   skip_before_filter :require_login, :only => [:welcome, :help]
-  before_filter :require_connected_to_osm, :only => [:osm_permissions]
+  before_filter :require_connected_to_osm, :only => [:check_osm_setup]
 
 
   def welcome
@@ -21,12 +21,13 @@ class StaticController < ApplicationController
   end
 
 
-  def osm_permissions
+  def check_osm_setup
     api = current_user.osm_api
-    Osm::Model.cache_delete(api, ['permissions', api.user_id]) # Clear cached user permissions
+    sections = Osm::Section.get_all(api, :no_cache => true)
 
+    Osm::Model.cache_delete(api, ['permissions', api.user_id]) # Clear cached user permissions
     @other_sections = Array.new
-    Osm::Section.get_all(api, :no_cache => true).each do |section|
+    sections.each do |section|
       Osm::Model.cache_delete(api, ['api_access', api.user_id, section.id]) # Clear cached API permissions
       unless section == current_section
         @other_sections.push section
@@ -35,6 +36,28 @@ class StaticController < ApplicationController
       end
     end
     @other_sections.sort!
+
+    Osm::Term.get_all(api, :no_cache => true) # Load into cache
+    @term_problems = {}
+    sections.each do |section|
+      next if section.waiting?
+      @term_problems[section.id] = []
+      terms = Osm::Term.get_for_section(api, section).sort
+      @term_problems[section.id].push "Has no terms." if terms.empty?
+      terms[0..-2].each_with_index do |a, b|
+        b = terms[b + 1]
+        if (a.finish + 1.day) < b.start
+          # FOUND A GAP
+          size = (b.start - a.finish).numerator
+          @term_problems[section.id].push "There is a gap of #{size} #{'day'.pluralize(size)} between #{a.name} and #{b.name}."
+        end
+        if b.start < a.finish
+          # FOUND AN OVERLAP
+          size = (a.finish - b.start).numerator
+          @term_problems[section.id].push "#{b.name} overlaps #{a.name} by #{size} #{'day'.pluralize(size)}."
+        end
+      end
+    end
   end
 
 end

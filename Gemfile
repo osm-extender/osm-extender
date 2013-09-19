@@ -10,13 +10,13 @@ gem 'cancan', '~> 1.6'
 
 # Javascript
 gem 'therubyracer', '~> 0.10'
-  gem 'libv8', '~> 3.11'
+  gem 'libv8', '~> 3.11', '< 3.16.14'
 gem 'jquery-rails', '~> 3.0'
 gem 'jquery-ui-rails', '~> 4.0'
 gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '~> 1.0', '>= 1.0.5'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.1'       # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 2.1'             # Format FAQ Answers, Announcements etc.
