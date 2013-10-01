@@ -110,7 +110,14 @@ class ReportsController < ApplicationController
 
 
   def calendar
-    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    unless params[:programme].is_a?(Hash) || params[:events].is_a?(Hash)
+      flash[:error] = 'You must select something to show on the calendar'
+      redirect_to reports_path
+      return
+    end
+    params[:programme] ||= {}
+    params[:events] ||= {}
+
     params[:programme].each do |section, selected|
       require_osm_permission(:read, :programme, current_user, section.to_i) if selected.eql?('1')
     end
