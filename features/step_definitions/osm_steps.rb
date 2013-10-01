@@ -1,11 +1,11 @@
 Given /^an OSM request to "([^"]*)" will work$/ do |description|
   url = get_osm_url(description)
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => get_osm_body(description)) unless url.nil?
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => get_osm_body(description), :content_type => 'application/json') unless url.nil?
 end
 
 Given /^an OSM request to "([^"]*)" will not work$/ do |description|
   url = get_osm_url(description)
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => '{"error":"A simulated OSM API error occured"}') unless url.nil?
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => '{"error":"A simulated OSM API error occured"}', :content_type => 'application/json') unless url.nil?
 end
 
 Given /^"([^"]*)" is connected to OSM$/ do |email|
@@ -26,7 +26,7 @@ Given /^an OSM request to "get roles" will give (\d+) (?:(beaver|cub|scout|explo
   end
   body[-1] = ']'
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getUserRoles", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getUserRoles", :body => body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get sections will give (\d+) sections?$/ do |sections|
@@ -47,7 +47,7 @@ Given /^an OSM request to get sections will give (\d+) sections?$/ do |sections|
     }
   end
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json, :content_type => 'application/json')
 end
 
 
@@ -69,7 +69,7 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
   body += '}]}'
 
   url = get_osm_url('get_api_access')
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body) unless url.nil?
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body, :content_type => 'application/json') unless url.nil?
 end
 
 Given /^an OSM request to get_flexi_record_fields for section "(\d+)" flexi "(\d+)" will have the fields$/ do |section, flexi, table|
@@ -97,7 +97,7 @@ Given /^an OSM request to get_flexi_record_fields for section "(\d+)" flexi "(\d
     ]
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/extras.php?action=getExtra&sectionid=#{section}&extraid=#{flexi}", :body => body.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/extras.php?action=getExtra&sectionid=#{section}&extraid=#{flexi}", :body => body.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get_flexi_record_data for section "(\d+)" flexi "(\d+)" term "(\d+)" will have the data$/ do |section, flexi, term, table|
@@ -120,16 +120,20 @@ Given /^an OSM request to get_flexi_record_data for section "(\d+)" flexi "(\d+)
     'items' => data,
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/extras.php?action=getExtraRecords&sectionid=#{section}&extraid=#{flexi}&termid=#{term}&section=cubs", :body => body.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/extras.php?action=getExtraRecords&sectionid=#{section}&extraid=#{flexi}&termid=#{term}&section=cubs", :body => body.to_json, :content_type => 'application/json')
 end
 
 
 Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members?$/ do |section_id, term_id, table|
   url = "users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}"
+  summary_url = "ext/members/contact/?action=getListOfMembers&sort=patrolid&sectionid=#{section_id}&termid=#{term_id}&section=cubs"
 
   members = Array.new
-  table.hashes.each do |hash|
-     members.push ({
+  members_summary = Array.new
+  table.hashes.each_with_index do |hash, index|
+    id = index + 1
+    members.push ({
+      'scoutid' => id,
       :first_name => hash['first_name'] || 'A',
       :last_name => hash['last_name'] || 'Member',
       :email1 => hash['email1'],
@@ -138,7 +142,11 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
       :email4 => hash['email4'],
       :grouping_id => hash['grouping_id'],
       :date_of_birth => hash['date_of_birth'].blank? ? 9.years.ago.strftime("%y-%m-%d") : hash['date_of_birth']
-     })
+    })
+    members_summary.push ({
+      'scoutid' => id,
+      'pic' => hash.has_key?('pic') ? hash['pic'] : (index%2 == 1),
+    })
   end
 
   body = '{"identifier":"scoutid","items":['
@@ -147,8 +155,10 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
   end
   body[-1] = ']'
   body += '}'
+  summary_body = {'items' => members_summary}.to_json
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body, :content_type => 'application/json')
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{summary_url}", :body => summary_body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get events for section (\d+) will have the events$/ do |section_id, table|
@@ -178,7 +188,7 @@ Given /^an OSM request to get events for section (\d+) will have the events$/ do
     "items" => events
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get event (\d+) in section (\d+) will have the fields$/ do |event_id, section_id, table|
@@ -192,12 +202,12 @@ Given /^an OSM request to get event (\d+) in section (\d+) will have the fields$
     }
     fields.push event
   end
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => {'config' => fields.to_json}.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => {'config' => fields.to_json}.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get event (\d+) in section (\d+) will have no fields$/ do |event_id, section_id|
   url = "events.php?action=getEvent&sectionid=#{section_id}&eventid=#{event_id}"
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => {'config' => [].to_json}.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => {'config' => [].to_json}.to_json, :content_type => 'application/json')
 end
 
 
@@ -225,7 +235,7 @@ Given /^an OSM request to get the register structure for term (\d+) and section 
     {"rows"=>rows}
   ]
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get the register for term (\d+) and section (\d+) will have the following members and attendance$/ do |term_id, section_id, table|
@@ -258,7 +268,7 @@ Given /^an OSM request to get the register for term (\d+) and section (\d+) will
     'items' => rows
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get due badges for section (\d+) and term (\d+) will result in the following being due their "([^"]*)" badge$/ do |section_id, term_id, badge_name, table|
@@ -283,7 +293,7 @@ Given /^an OSM request to get due badges for section (\d+) and term (\d+) will r
     'description' => {badge_symbol => {'name'=>badge_name, 'section'=>'section_type', 'type'=>'core','badge'=>badge_symbol}}
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get groupings for section (\d+) will have the groupings?$/ do |section_id, table|
@@ -301,7 +311,7 @@ Given /^an OSM request to get groupings for section (\d+) will have the grouping
   body[-1] = ']'
   body += '}'
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do |section_id, table|
@@ -322,12 +332,12 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
   body[-1] = ']'
   body += '}'
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get terms for section (\d+) will have no terms$/ do |section_id|
   body = '{"' + section_id + '":[]}'
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get terms will have the terms?$/ do |table|
@@ -342,7 +352,7 @@ Given /^an OSM request to get terms will have the terms?$/ do |table|
       'enddate' => hash['end'] || 1.month.from_now.to_date.to_s('yyyy-mm-dd'),
     })
   end
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => terms.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => terms.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get programme for section (\d+) term (\d+) will have (\d+) programme items?$/ do |section, term, items|
@@ -386,7 +396,7 @@ Given /^an OSM request to get programme for section (\d+) term (\d+) will have (
     'activities' => activity
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get activity (\d+) will have tags "(.+)"$/ do |activity_id, tags|
@@ -424,15 +434,15 @@ Given /^an OSM request to get activity (\d+) will have tags "(.+)"$/ do |activit
     'tags' => tags.split(', ')
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get the notepad for section (\d+) will give "(.+)"$/ do |section_id, notepad|
-  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => notepad}.to_json)
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => notepad}.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to add activity to programme will work$/ do
-  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=addActivityToProgramme', :body => '{"result":0}')
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/programme.php?action=addActivityToProgramme', :body => '{"result":0}', :content_type => 'application/json')
 end
 
 Given /^an OSM request to get programme for section (\d+) term (\d+) will have the evenings?$/ do |section, term, table|
@@ -473,7 +483,7 @@ Given /^an OSM request to get programme for section (\d+) term (\d+) will have t
     'activities' => activities
   }
 
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json)
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body.to_json, :content_type => 'application/json')
 end
 
 Then /^"([^"]*)" should be connected to OSM$/ do |email|

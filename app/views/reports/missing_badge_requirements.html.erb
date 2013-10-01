@@ -73,7 +73,7 @@
                 <%= data.badge.name %> (need to do <%= data.badge.needed_from_section[stage] - data.gained_in_sections[stage] %>):
                 <ul>
                   <%- data.requirements.each do |r_key, r_value| %>
-                    <%- if r_key[0].eql?(stage) && (r_value.blank? || r_value[0].downcase.eql?('x')) %>
+                    <%- if r_key[0].eql?(stage) && (r_value.blank? || r_value.to_s[0].downcase.eql?('x')) %>
                       <li>
                         <%= @badge_requirement_labels[:staged][data.badge.osm_key][r_key] %>
                       </li>
