@@ -396,10 +396,10 @@ class ReportsController < ApplicationController
     end
 
     badge_by_type = {
-      :activity => Osm::ActivityBadge,
-      :staged => Osm::StagedBadge,
-      :challenge => Osm::ChallengeBadge,
-      :core => Osm::CoreBadge,
+      'activity' => Osm::ActivityBadge,
+      'staged' => Osm::StagedBadge,
+      'challenge' => Osm::ChallengeBadge,
+      'core' => Osm::CoreBadge,
     }
     badges = {}
     badge_data = {}
@@ -408,32 +408,33 @@ class ReportsController < ApplicationController
     @links_by_meeting = {}
     @earnt_badges = {}
     terms = Osm::Term.get_for_section(current_user.osm_api, current_section)
-    terms = terms.select{ |t| !(t.finish < @start) || t.start > @finish }
+    terms = terms.select{ |t| !(t.finish < @start) && !(t.start > @finish) }
     terms.each do |term|
       Osm::Meeting.get_for_section(current_user.osm_api, current_section, term).each do |meeting|
         if (meeting.date >= @start) && (meeting.date <= @finish)
-          meeting.badge_links.each do |badge_link|
-            if current_section.type == badge_link.badge_section # No point reporting badges for a different section
-              @links_by_meeting[meeting] ||= []
-              @links_by_meeting[meeting].push badge_link.label unless @links_by_meeting[meeting].include?(badge_link.label)
-              @all_links.push badge_link.label unless @all_links.include?(badge_link.label)
-              # Complete badge requirements which will be met
-              unless badge_link.badge_type.eql?(:activity) && (current_section.subscription_level < 2) # Silver or higher required for activity badges
-                badge_key = "#{badge_link.badge_section}|#{badge_link.badge_type}|#{badge_link.badge_key}"
-                badge = badges[badge_key]
-                if badge.nil?
-                  badge_class = badge_by_type[badge_link.badge_type]
-                  badge = badge_class.get_badges_for_section(current_user.osm_api, current_section).select{ |b| b.osm_key == badge_link.badge_key }.first unless badge_class.nil?
-                  badges[badge_key] = badge
-                end
-                unless badge.nil?
-                  badge_data[badge] ||= badge.get_data_for_section(current_user.osm_api, current_section)
-                  badge_data[badge].each do |data|
-                    data.requirements[badge_link.requirement_key] = 'YES'
-                  end
+          badge_links = meeting.get_badge_requirements(current_user.osm_api)
+          badge_links.select!{ |l| l['section'] == current_section.type.to_s} # No point reporting badges for a different section
+          badge_links.each do |badge_link|
+            badge_name = "#{badge_link['badgeName']} #{badge_link['badgetype']} badge - #{badge_link['name']}"
+            @links_by_meeting[meeting] ||= []
+            @links_by_meeting[meeting].push badge_name unless @links_by_meeting[meeting].include?(badge_name)
+            @all_links.push badge_name unless @all_links.include?(badge_name)
+            # Complete badge requirements which will be met
+            unless badge_link['badgetype'].eql?('activity') && (current_section.subscription_level < 2) # Silver or higher required for activity badges
+              badge_key = "#{badge_link['section']}|#{badge_link['badgetype']}|#{badge_link['badge']}"
+              badge = badges[badge_key]
+              if badge.nil?
+                badge_class = badge_by_type[badge_link['badgetype']]
+                badge = badge_class.get_badges_for_section(current_user.osm_api, current_section).select{ |b| b.osm_key == badge_link['badge'] }.first unless badge_class.nil?
+                badges[badge_key] = badge
+              end
+              unless badge.nil?
+                badge_data[badge] ||= badge.get_data_for_section(current_user.osm_api, current_section)
+                badge_data[badge].each do |data|
+                  data.requirements[badge_link['columnname']] = 'YES'
                 end
               end
-            end # for correct section type only
+            end
           end # badge links for each meeting in date range
         end
       end # meetings for section
