@@ -60,7 +60,7 @@ class Ability
       can [:administer, :export], SharedEvent do |se|
         se.user == user
       end
-      can :create, SharedEvent
+      can :create, SharedEvent if (Date.today < Date.new(2013, 11, 25))
 
       can :administer, SharedEventField do |sef|
         (sef.event.attendance.count == 0) && can?(:administer, sef.event)

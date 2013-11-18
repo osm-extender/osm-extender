@@ -34,25 +34,6 @@ Feature: Site Announcements
             | events     | write   |
 
 
-    Scenario: Create an event
-        When I signin as "alice@example.com" with password "P@55word"
-        And I follow "Shared events (management)"
-        And I follow "create one"
-        And I fill in "Name" with "Event name"
-        And I fill in "Start date" with "2000-01-01"
-        And I fill in "Finish date" with "2000-01-02"
-        And I fill in "Start time" with "01:00"
-        And I fill in "Finish time" with "02:00"
-        And I fill in "Cost" with "1.23"
-        And I fill in "Location" with "Somewhere"
-        And I fill in "Notes" with "Notes here."
-	And I fill in "Confirm by date" with "1999-12-31"
-        And I press "Create Shared event"
-        Then I should be on the edit shared event "Event name" page
-        And I should see "Event name was successfully created."
-        And I should see "You MUST add any extra fields you need BEFORE other sections use the event."
-        And I should have 1 shared_events
-
     Scenario: Edit an event
         Given I have the following shared_event records
 	    | name       | user_email_address |

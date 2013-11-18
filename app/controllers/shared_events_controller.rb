@@ -11,6 +11,9 @@ class SharedEventsController < ApplicationController
   end
 
   def new
+    unless (Date.today < Date.new(2013, 11, 25))
+      redirect_to shared_events_path, error: "You can no longer create new shared events" and return
+    end
     @shared_event = current_user.shared_events.new
   end
 
