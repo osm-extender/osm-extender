@@ -29,7 +29,11 @@ class OsmExportsController < ApplicationController
       flexi_record = record if record.id == flexi_record_id
       break
     end
-    render_not_found(nil) if flexi_record.nil? # Record isn't accessible by this user
+    if flexi_record.nil? # Record isn't accessible by this user
+      flash[:error] = "You don't have access to that flexi record."
+      redirect_back_or_to osm_export_path
+      return
+    end
 
     custom_fields = []
     system_fields = []
