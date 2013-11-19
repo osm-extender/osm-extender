@@ -97,9 +97,9 @@ class ApplicationController < ActionController::Base
         unless (permissions[on] || []).include?(to)
           return false
         end
-        return true
       end
     end
+    return true
   end
 
 
