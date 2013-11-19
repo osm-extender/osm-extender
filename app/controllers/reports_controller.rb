@@ -4,6 +4,7 @@ class ReportsController < ApplicationController
 
   def index
     @sections = Osm::Section.get_all(current_user.osm_api)
+
     if has_osm_permission?(:read, :member)
       @groupings = get_current_section_groupings.sort do |a,b|
         result = 1 if a[1] == -2
@@ -11,7 +12,10 @@ class ReportsController < ApplicationController
         result = (a[0] <=> b[0]) if result.nil?
         result
       end
+    else
+      @groupings = []
     end
+
     if has_osm_permission?(:read, :events)
       @future_events = Osm::Event.get_for_section(current_user.osm_api, current_section).select{ |e| e.start >= Date.today }
     end
