@@ -26,8 +26,8 @@
     <%- end %>
   </table>
 
-  <%= link_to 'create a shared event', new_shared_event_path %>
+  <%= link_to('create a shared event', new_shared_event_path) if (Date.today < Date.new(2013, 11, 25)) %>
 
 <%- else %>
-  <p>You do not currently have any shared events setup, <%= link_to 'create one', new_shared_event_path %>.</p>
+  <p>You do not currently have any shared events setup, <%= link_to('create one', new_shared_event_path) if (Date.today < Date.new(2013, 11, 25)) %>.</p>
 <%- end %>

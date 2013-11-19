@@ -150,16 +150,17 @@ Feature: OSM
 	And I should see "Check OSM setup"
 	And I should not see "Programme review"
 
-
+@focus
     Scenario: No message and selected links for non youth section
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 adult role
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | read    |
-	    | programme  | write   |
+	    | programme  | read    |
 	    | flexi      | read    |
-            | events     | read    |
+            | events     | write   |
+	    | badge      | read    |
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should not see "Some items have hidden from this menu"
 	And I should see "Email reminders"

@@ -26,14 +26,16 @@ class Report
             requirement_group = requirement.field.split('_').first
             unless requirement_group.eql?('y')
               met_data = completion_data.map do |i|
-                met = :not_started
+                met = nil
                 if badge.type.eql?(:staged) && i.awarded?
-                  met = :awarded if requirement_group <= 'abcde'[i.awarded - 1]
+                  met = :awarded if requirement_group <= ' abcde'[i.awarded]
+                  met ||= :completed if requirement_group.eql?(' abcde'[i.completed])
                 else
                   met = :awarded if i.awarded?
+                  met ||= :completed if i.completed?
                 end
                 if i.started?
-                  unless badge.type.eql?(:staged) && (requirement_group > 'abcde'[i.started - 1])
+                  unless badge.type.eql?(:staged) && !requirement_group.eql?(' abcde'[i.started])
                     value = i.requirements[requirement.field]
                     if value.blank? || value.to_s[0].downcase.eql?('x')
                       if (i.total_gained < badge.total_needed) || (i.gained_in_sections[requirement_group] < (badge.needed_from_section[requirement_group] || 0))
@@ -45,8 +47,8 @@ class Report
                       met = :yes
                     end
                   end
-                end
-                met
+                end #started?
+                met || :not_started
               end
   
               matrix.push ([
