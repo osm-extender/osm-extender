@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
-gem 'rails', '~> 3.2', '>= 3.2.15'
-gem 'actionmailer', '~> 3.2', '>= 3.2.15'
+gem 'rails', '~> 3.2', '>= 3.2.16'
+gem 'actionmailer', '~> 3.2', '>= 3.2.16'
 
 # Authentication / Authorisation
 gem 'sorcery', '~> 0.7'
