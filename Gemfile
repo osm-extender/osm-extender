@@ -5,7 +5,7 @@ gem 'rails', '~> 3.2', '>= 3.2.16'
 gem 'actionmailer', '~> 3.2', '>= 3.2.16'
 
 # Authentication / Authorisation
-gem 'sorcery', '~> 0.8'
+gem 'sorcery', '~> 0.8', '>= 0.8.5'
 gem 'cancan', '~> 1.6'
 
 # Javascript
