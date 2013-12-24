@@ -166,24 +166,23 @@ Rails.application.config.sorcery.configure do |config|
     # Unlock token attribute name
     # Default: `:unlock_token`
     #
-    # user.unlock_token_attribute_name =
+    # user.unlock_token_attribute_name = 
 
     # Unlock token mailer method
     # Default: `:send_unlock_token_email`
     #
-    # user.unlock_token_email_method_name =
+    user.unlock_token_email_method_name = :locked
 
     # when true sorcery will not automatically
     # send email with unlock token
     # Default: `false`
     #
     # user.unlock_token_mailer_disabled = true
-    user.unlock_token_mailer_disabled = true
 
     # Unlock token mailer class
     # Default: `nil`
     # 
-    # user.unlock_token_mailer = UserMailer
+    user.unlock_token_mailer = UserMailer
 
                                                                   
     # -- activity logging --                                      

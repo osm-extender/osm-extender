@@ -1,0 +1,6 @@
+<p><%= @user.name %> your accout has been locked due to <%= @user.failed_logins_count %> consecutive failed logins.</p>
+
+<p>To unlock your account you can:<ul>
+<li>Wait until <%= @user.lock_expires_at.in_time_zone('Europe/London').strftime('%l:%M %p').strip %> (<%= distance_of_time_in_words_to_now(@user.lock_expires_at) %>).</li>
+<li>Go to <%= link_to nil, unlock_account_url(@user.unlock_token) %>.</li>
+</ul></p>
