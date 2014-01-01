@@ -27,6 +27,14 @@ class UserMailer < ApplicationMailer
     })
   end
 
+  def locked(user)
+    @user = user
+    mail ({
+      :subject => build_subject('Account Locked'),
+      :to => @user.email_address_with_name
+    })
+  end
+
   def announcement(user, announcement)
     @user = user
     @announcement = announcement

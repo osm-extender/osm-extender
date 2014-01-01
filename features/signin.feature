@@ -110,3 +110,18 @@ Feature: Sign in
 	And I should have the following usage log
 	    | user              | controller         | action | result  |
 	    | alice@example.com | SessionsController | create | success |
+
+    Scenario: User should be unlocked after following link in email
+        Given no emails have been sent
+        When I signin as "alice@example.com" with password "wrong"
+        Then I should see "Email address or password was invalid."
+        When I signin as "alice@example.com" with password "wrong"
+        Then I should see "Email address or password was invalid."
+        When I signin as "alice@example.com" with password "wrong"
+        Then "alice@example.com" should be a locked user account
+        And "alice@example.com" should receive an email with subject /Account Locked/
+        And there should be 1 email
+        When I open the email with subject /Account Locked/
+        And I click the /unlock_account/ link in the email
+        Then I should see "Your account was successfully unlocked."
+        And I should be on the signin page

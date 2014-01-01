@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130705080420) do
+ActiveRecord::Schema.define(:version => 20131222215234) do
 
   create_table "announcements", :force => true do |t|
     t.datetime "emailed_at"
@@ -268,6 +268,9 @@ ActiveRecord::Schema.define(:version => 20130705080420) do
     t.boolean  "can_become_other_user",                         :default => false
     t.integer  "custom_row_height",                             :default => 0
     t.integer  "custom_text_size",                              :default => 0
+    t.string   "unlock_token"
   end
+
+  add_index "users", ["unlock_token"], :name => "index_users_on_unlock_token"
 
 end

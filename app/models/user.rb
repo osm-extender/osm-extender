@@ -38,23 +38,7 @@ class User < ActiveRecord::Base
     end
     return false
   end
-  
 
-  def unlock
-    send("#{sorcery_config.lock_expires_at_attribute_name}=", nil)
-    save!
-  end
-  def lock
-    send("#{sorcery_config.lock_expires_at_attribute_name}=", sorcery_config.login_lock_time_period.from_now)
-    save!
-  end
-  def lock_until(expires)
-    send("#{sorcery_config.lock_expires_at_attribute_name}=", expires)
-    save!
-  end
-  def lock_for(seconds)
-    lock_until(seconds.from_now)
-  end
   
   def locked?
     return false if send(sorcery_config.lock_expires_at_attribute_name).nil?

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  skip_before_filter :require_login, :only => [:new, :create, :activate_account]
-  load_and_authorize_resource :except => [:activate_account]
+  skip_before_filter :require_login, :only => [:new, :create, :activate_account, :unlock_account]
+  load_and_authorize_resource :except => [:activate_account, :unlock_account]
   helper_method :sort_column, :sort_direction
 
   def index
@@ -71,6 +71,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def unlock_account
+    user = User.load_from_unlock_token(params[:token].to_s)
+
+    if user && user.unlock!
+      flash[:notice] = 'Your account was successfully unlocked.'
+      redirect_to signin_path
+    else
+      flash[:error] = 'We were unable to unlock your account.'
+      redirect_to root_path
+    end
+  end
+
   def reset_password
     user = User.find(params[:id])
 
@@ -96,7 +108,7 @@ class UsersController < ApplicationController
 
   def unlock
     user = User.find(params[:id])
-    if user.unlock
+    if user.unlock!
       redirect_to users_path, :notice => 'The user was unlocked.'
     else
       render :action => :edit

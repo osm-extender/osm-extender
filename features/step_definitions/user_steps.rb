@@ -24,13 +24,13 @@ end
 
 Given /^"([^"]*)" has been a locked user account$/ do |email|
     user = User.find_by_email_address(email)
-    user.lock_expires_at = Time.now.utc - 1
+    user.lock_expires_at = 1.hour.ago
     user.save!
 end
 
 Given /^"([^"]*)" is a locked user account$/ do |email|
     user = User.find_by_email_address(email)
-    user.lock
+    user.lock_expires_at = 1.hour.from_now
     user.save!
 end
 
