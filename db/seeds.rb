@@ -69,21 +69,9 @@ config = [
     :key => 'ReCAPTCHA - private key',
     :description => 'The private key you got from ReCAPTCHA.',
   },{
-    :prompt => 'What signup code would you like to require users to use (if blank then no code will be asked for)',
-    :key => 'signup code',
-    :description => 'A code which must be supplied to create an account (useful for temporarily limiting signups). If this is blank then no signup code will be required.',
-  },{
     :prompt => 'For how long should the settings read from the database be used without being reloaded',
     :key => 'maximum settings age',
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",
-  },{
-    :prompt => 'Who is hosting this instance of OSMX',
-    :key => 'hosted by - name',
-    :description => "The name displayed in the banner for who is hosting this instance of OSMX (Leave blank to not have the Hosted by text)",
-  },{
-    :prompt => 'Where should the hosted by link go to',
-    :key => 'hosted by - link',
-    :description => "What url should the Hosted by text link to (leave blank for no link)",
   }
 ]
 config.each do |setting|

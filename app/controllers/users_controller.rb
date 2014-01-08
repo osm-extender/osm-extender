@@ -25,18 +25,9 @@ class UsersController < ApplicationController
   end
 
   def new
-    @signup_code = params[:signup_code]
   end
   
   def create
-    signup_code = Settings.read('signup code')
-    unless signup_code.blank?
-      unless signup_code.eql?(params[:signup_code])
-        flash[:error] = 'Incorrect signup code.'
-        render :action => :new and return
-      end
-    end
-
     @user = User.new(params[:user])
     if @user.save
       user = login(params[:user][:email_address], params[:user][:password])
