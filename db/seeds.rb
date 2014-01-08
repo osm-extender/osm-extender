@@ -49,18 +49,6 @@ config = [
     :key => 'notifier mailer - send exception to',
     :description => 'Which email address should exceptions be sent to. If this is blank then this email will not be sent.',
   },{
-    :prompt => 'What is the OSM API ID to use',
-    :key => 'OSM API - id',
-    :description => 'The ID you got from Ed at OSM.',
-  },{
-    :prompt => 'What is the OSM API token to use',
-    :key => 'OSM API - token',
-    :description => 'The token you got from Ed at OSM.',
-  },{
-    :prompt => 'What is the name displayed on OSM\'s External Access tab for this API',
-    :key => 'OSM API - name',
-    :description => "The name your API has on OSM's External Access tab.",
-  },{
     :prompt => 'What is the public key to use with ReCAPTCHA',
     :key => 'ReCAPTCHA - public key',
     :description => 'The public key you got from ReCAPTCHA.',

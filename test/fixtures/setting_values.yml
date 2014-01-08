@@ -30,21 +30,6 @@ reminder_failure_to:
   value: reminder-mailer-failed@example.com
   description: Which email address to send debugging information from failed email reminder messages to. If this is blank then this email will not be sent.
 
-osm_id:
-  key: OSM API - id
-  value: 12
-  description: The ID you got from Ed at OSM
-
-osm_token:
-  key: OSM API - token
-  value: 1234567890
-  description: The token you got from Ed at OSM
-
-osm_name:
-  key: OSM API - name
-  value: Robert Gauld's API
-  description: The name your API has on OSM's External Access tab
-
 recaptcha_public:
   key: ReCAPTCHA - public key
   value: 11223344556677889900
@@ -94,3 +79,4 @@ test_setting:
   key: test
   value: a1b2c3d4
   description: A test value.
+

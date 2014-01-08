@@ -7,4 +7,5 @@ tmp/
 config/database.yml
 config/environments/*_custom.rb
 config/unicorn.conf
+config/initializers/osm.rb
 doc/app

@@ -10,9 +10,9 @@ Before do
       :api => {
         :default_site => :osm,
         :osm => {
-          :id    => Settings.read('OSM API - id'),
-          :token => Settings.read('OSM API - token'),
-          :name  => Settings.read('OSM API - name'),
+          :id    => 12,
+          :token => '1234567890',
+          :name  => 'Test API',
         },
       },
       :cache => {
