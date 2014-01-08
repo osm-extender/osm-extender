@@ -49,14 +49,6 @@ config = [
     :key => 'notifier mailer - send exception to',
     :description => 'Which email address should exceptions be sent to. If this is blank then this email will not be sent.',
   },{
-    :prompt => 'What is the public key to use with ReCAPTCHA',
-    :key => 'ReCAPTCHA - public key',
-    :description => 'The public key you got from ReCAPTCHA.',
-  },{
-    :prompt => 'What is the private key to use with ReCAPTCHA',
-    :key => 'ReCAPTCHA - private key',
-    :description => 'The private key you got from ReCAPTCHA.',
-  },{
     :prompt => 'For how long should the settings read from the database be used without being reloaded',
     :key => 'maximum settings age',
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",

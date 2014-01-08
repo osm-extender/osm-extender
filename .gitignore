@@ -8,4 +8,5 @@ config/database.yml
 config/environments/*_custom.rb
 config/unicorn.conf
 config/initializers/osm.rb
+config/initializers/recaptcha.rb
 doc/app
