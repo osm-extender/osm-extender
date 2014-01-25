@@ -18,29 +18,6 @@ end
 
 
 #
-# Setting Values
-#
-puts "Configuring OSMX"
-puts "----------------"
-config = [
-  {
-    :prompt => 'For how long should the settings read from the database be used without being reloaded',
-    :key => 'maximum settings age',
-    :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",
-  }
-]
-config.each do |setting|
-  sv = SettingValue.find_or_create_by_key(setting[:key])
-  sv.description = setting[:description]
-  sv.value = prompt(setting[:prompt], (setting[:test_value] || sv.value))
-  sv.save!
-end
-Settings.reread_settings
-puts
-
-
-
-#
 # First User
 #
 unless User.count >= 1

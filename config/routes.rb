@@ -72,9 +72,6 @@ OSMExtender::Application.routes.draw do
   get 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#edit', :as => 'edit_email_reminder_subscription'
   post 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#change', :as => 'change_email_reminder_subscription'
 
-  get 'settings' => 'settings#edit', :as => 'edit_settings'
-  put 'settings' => 'settings#update', :as => 'update_settings'
-
   resources :osm_flexi_records, :only => [:index, :show]
 
   get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
