@@ -62,15 +62,9 @@
         <%= image_tag 'banner.png', :width => 750, :height => 130, :alt=>'Banner image for OSMExtender' %>
         <div>
           <div style="float: left;">Adding functionallity to the <a href="https://www.onlinescoutmanager.co.uk" target="_blank">Online Scout Manager</a></div>
-          <%- unless Settings.read('hosted by - name').blank? %>
-            <div style="float: right;">
-              <%- unless Settings.read('hosted by - link').blank? %>
-                Hosted by <%= link_to Settings.read('hosted by - name'), Settings.read('hosted by - link') %>
-              <%- else %>
-                Hosted by <%= Settings.read('hosted by - name') %>
-              <%- end %>
-            </div>
-          <%- end %>
+          <div style="float: right;">
+            Hosted by <%= link_to 'Aberdeen SAS', 'www.aberdeen-sas.org.uk' %>
+          </div>
           <div style="clear: both;"></div>
         </div>
       </div><!-- banner -->
