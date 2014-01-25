@@ -1,42 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
 
-contact_to:
-  key: contact us - to
-  value: contactus@example.com
-  description: Which email address submissions of the contact us form should be sent to.
-
-notifier_from:
-  key: notifier mailer - from
-  value: notifier-mailer@example.com
-  description: Which email address notification messages should claim to be from.
-
-user_from:
-  key: user mailer - from
-  value: user-mailer@example.com
-  description: Which email address user account messages should claim to be from.
-
-reminder_from:
-  key: reminder mailer - from
-  value: reminder-mailer@example.com
-  description: Which email address reminder emails should claim to be from.
-
-reminder_failure_to:
-  key: notifier mailer - send failed reminder to
-  value: reminder-mailer-failed@example.com
-  description: Which email address to send debugging information from failed email reminder messages to. If this is blank then this email will not be sent.
-
-maximum_settings_age:
-  key: maximum settings age
-  value: 1 second
-  description: How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. "10 minutes" or "1 hour"
-
-exception_to:
-  key: notifier mailer - send exception to
-  value: exceptions@example.com
-  description: Which email address should exceptions be sent to. If this is blank then this email will not be sent.
-
 test_setting:
   key: test
   value: a1b2c3d4
   description: A test value.
-

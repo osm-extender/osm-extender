@@ -1,5 +1,5 @@
 Thank you <%= @share.name %>, you are now subscribed to the reminder email for <%= @share.reminder.section_name %> on <%= Date::DAYNAMES[@share.reminder.send_on] %>.
 
 Should you wish to unsubscribe from the email then please use the following link
-<%= edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %>
+<%= routes.edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %>
 This link will also appear at the bottom of your reminder emails. If you unsubscribe you'll be able to resubscribe to the email, just as long as <%= @share.reminder.user.name %> is still sharing it with you.

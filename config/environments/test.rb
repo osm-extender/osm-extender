@@ -44,13 +44,51 @@ OSMExtender::Application.configure do
   # Which sort of cache to use
   config.cache_store = :null_store  # Turn off caching
 
-  # Mailer URL options
-  config.action_mailer.default_url_options = {
+  # URL Options
+  Rails.application.routes.default_url_options = {
     :protocol => 'http',
     :host => 'test',
+  }
+
+#  # Controller URL options
+#  config.action_controller.default_url_options = {
+#    :protocol => 'http',
+#    :host => 'test',
+#  }
+##  ActionController::Base.default_url_options = config.action_controller.default_url_options
+
+  # Mailer URL options
+#  config.action_mailer.default_url_options = {
+#    :protocol => 'http',
+#    :host => 'test',
+#  }
+##  ActionMailer::Base.send('default_url_options=', config.action_mailer.default_url_options)
+
+  # Mailer options
+  ActionMailer::Base.send :default, {
+    :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
+    'return-path' => 'osmx@localhost',  # Should be the email address portion of from
+  }
+  NotifierMailer.send :default, {
+    :from => 'notifier-mailer@example.com',         # Can be in the format - "Name" <email_address>
+    'return-path' => 'notifier-mailer@example.com', # Should be the email address portion of from
+  }
+  NotifierMailer.options = {
+    :contact_form__to => 'contactus@example.com',
+    :reminder_failed__to => 'reminder-mailer-failed@example.com',
+    :exception__to => 'exceptions@example.com',
+  }
+  ReminderMailer.send :default, {
+    :from => 'reminder-mailer@example.com',         # Can be in the format - "Name" <email_address>
+    'return-path' => 'reminder-mailer@example.com', # Should be the email address portion of from
+  }
+  UserMailer.send :default, {
+    :from => 'user-mailer@example.com',             # Can be in the format - "Name" <email_address>
+    'return-path' => 'user-mailer@example.com',     # Should be the email address portion of from
   }
 
 end
 
 # Load custom configuration
 require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+

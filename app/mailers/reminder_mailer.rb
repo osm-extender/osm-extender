@@ -1,7 +1,4 @@
 class ReminderMailer < ApplicationMailer
-  default from: Proc.new { Settings.read('reminder mailer - from') },
-          'return-path' => Proc.new { Settings.read('reminder mailer - from').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
-
 
   def reminder_email(reminder, data, send_to)
     @reminder = reminder

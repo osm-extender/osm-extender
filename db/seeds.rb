@@ -24,31 +24,6 @@ puts "Configuring OSMX"
 puts "----------------"
 config = [
   {
-    :prompt => 'What email address should contact us form submissions be sent to',
-    :key => 'contact us - to',
-    :description => 'Which email address submissions of the contact us form should be sent to.',
-  },{
-    :prompt => 'What email address should notifier mails be sent from',
-    :key => 'notifier mailer - from',
-    :description => 'Which email address notification messages should claim to be from.',
-  },{
-    :prompt => 'What email address should user related mails be sent from',
-    :key => 'user mailer - from',
-    :description => 'Which email address user account messages should claim to be from.',
-    :test_value => 'user-mailer@example.com',
-  },{
-    :prompt => 'What email address should reminder mails be sent from',
-    :key => 'reminder mailer - from',
-    :description => 'Which email address reminder emails should claim to be from',
-  },{
-    :prompt => 'What email address should reminder failure mails be sent to',
-    :key => 'notifier mailer - send failed reminder to',
-    :description => 'Which email address to send debugging information from failed email reminder messages to',
-  },{
-    :prompt => 'What address should exception notifications be sent to',
-    :key => 'notifier mailer - send exception to',
-    :description => 'Which email address should exceptions be sent to. If this is blank then this email will not be sent.',
-  },{
     :prompt => 'For how long should the settings read from the database be used without being reloaded',
     :key => 'maximum settings age',
     :description => "How long the site's settings should be kept in memory before rereading from the database. This should be a number followed by a unit of time e.g. '10 minutes' or '1 hour'",

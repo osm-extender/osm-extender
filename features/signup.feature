@@ -47,7 +47,7 @@ Feature: Sign up
         And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the signup page
-        And I should see "You are not authorised to do that."
+        And I should see "You must be signed out to do that."
 	And I should be on the my_page page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
@@ -193,6 +193,6 @@ Feature: Sign up
         And "bob@example.com" has activation_token "123abc"
         When I signin as "alice@example.com" with password "P@55word"
         When I go to activate_account token="123abc"
-        And I should see "You are not authorised to do that."
+        And I should see "You must be signed out to do that."
 	And I should be on the my_page page
         And "bob@example.com" should receive no email with subject /Your Account Has Been Activated/

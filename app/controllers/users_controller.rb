@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  skip_before_filter :require_login, :only => [:new, :create, :activate_account, :unlock_account]
+  forbid_login_for = [:new, :create, :activate_account, :unlock_account]
+  skip_before_filter :require_login, :only => forbid_login_for
+  before_filter :require_not_login, :only => forbid_login_for
   load_and_authorize_resource :except => [:activate_account, :unlock_account]
   helper_method :sort_column, :sort_direction
 

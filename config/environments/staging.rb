@@ -47,17 +47,30 @@ OSMExtender::Application.configure do
     :race_condition_ttl => 2.minutes
   }
 
-  # Mailer URL options (you should override this in staging_custom.rb)
-  config.action_mailer.default_url_options = {
+  # URL Options (copy/complete into staging_custom.rb)
+  Rails.application.routes.default_url_options = {
     :protocol => 'https',
     :host => 'localhost',
   }
 
-  # Controller URL options (you should override this in staging_custom.rb)
-  config.action_controller.default_url_options = {
-    :protocol => 'https',
-    :host => 'localhost',
-  }
+  # Mailer options (copy/complete into staging_custom.rb)
+#  ReminderMailer.send :default, {
+#    :from => '',                # Can be in the format - "Name" <email_address>
+#    'return-path' => '',        # Should be the email address portion of from
+#  }
+#  UserMailer.send :default, {
+#    :from => '',                # Can be in the format - "Name" <email_address>
+#    'return-path' => '',        # Should be the email address portion of from
+#  }
+#  NotifierMailer.send :default, {
+#    :from => '',                # Can be in the format - "Name" <email_address>
+#    'return-path' => '',        # Should be the email address portion of from
+#  }
+#  NotifierMailer.options = {
+#    :contact_form__to => '',    # Can be in the format - "Name" <email_address>
+#    :reminder_failed__to => '', # Can be in the format - "Name" <email_address>
+#    :exception__to => '',       # Can be in the format - "Name" <email_address>
+#  }
 
   # Mail sending options (copy/complete relevant version into staging_custom.rb)
   # Sendmail
