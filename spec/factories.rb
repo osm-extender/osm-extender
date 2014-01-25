@@ -3,7 +3,7 @@ FactoryGirl.define do
     sequence(:email_address) { |n| "someone-#{n}@example.com" }
     password 'P@55word'
     password_confirmation { |u| u.password }
-    name 'Someone'
+    name { |u| u.email_address.match(/[^@]*/)[0].capitalize } # Take before the @
   end
 
   factory :announcement do

@@ -13,10 +13,10 @@ Feature: Account Administration
     Background:
 	Given I have no users
         And I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
-	    | bob@example.com   | Bob   |
-            | chris@example.com | Chris |
+	    | email_address     |
+	    | alice@example.com |
+	    | bob@example.com   |
+            | chris@example.com |
         And "alice@example.com" is an activated user account
         And "chris@example.com" is an activated user account
         And "alice@example.com" can "administer_users"
