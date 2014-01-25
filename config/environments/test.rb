@@ -89,6 +89,27 @@ OSMExtender::Application.configure do
 
 end
 
-# Load custom configuration
-require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+ActionDispatch::Callbacks.to_prepare do
+  # OSM options (copy/complete into development_custom.rb)
+  Osm::configure(
+    :api => {
+      :default_site => :osm,
+      :osm => {
+        :id    => 12,
+        :token => '1234567890',
+        :name  => "Test API",
+      },
+      :debug   => false
+    },
+    :cache => {
+      :cache  => Rails.cache,
+      :ttl    => 30
+    },
+  )
 
+  # ReCAPTCHA options (copy/complete into staging_custom.rb)
+  Recaptcha.configure do |config|
+    config.public_key  = '11223344556677889900'
+    config.private_key = '00998877665544332211'
+  end
+end

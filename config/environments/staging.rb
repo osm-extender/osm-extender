@@ -92,5 +92,32 @@ OSMExtender::Application.configure do
 
 end
 
+ActionDispatch::Callbacks.to_prepare do
+  # OSM options (copy/complete into staging_custom.rb)
+#  Osm::configure(
+#    :api => {
+#      :default_site => :osm,
+#      :osm => {
+#        :id    => GET THIS FROM ED,
+#        :token => GET THIS FROM ED,
+#        :name  => GIVE THIS TO ED,
+#      },
+#      :debug   => true
+#    },
+#    :cache => {
+#      :cache  => Rails.cache,
+#      :ttl    => 30
+#    },
+#  )
+
+  # ReCAPTCHA options (copy/complete into staging_custom.rb)
+#  Recaptcha.configure do |config|
+#    config.public_key  = YOUR PUBLIC KEY HERE
+#    config.private_key = YOUR PRIVATE KEY HERE
+#  end
+end
+
+
 # Load custom configuration
 require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+

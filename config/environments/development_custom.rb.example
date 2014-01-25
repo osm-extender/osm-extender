@@ -1,4 +1,5 @@
 ActionDispatch::Callbacks.to_prepare do
+  # OSM options
   Osm::configure(
     :api => {
       :default_site => :osm,
@@ -7,11 +8,18 @@ ActionDispatch::Callbacks.to_prepare do
         :token => GET THIS FROM ED,
         :name  => GIVE THIS TO ED,
       },
-      :debug   => Rails.env.development? || defined?(IRB)
+      :debug   => true
     },
     :cache => {
       :cache  => Rails.cache,
-      :ttl    => Rails.env.development? ? 30 : 600
+      :ttl    => 30
     },
   )
+
+  # ReCAPTCHA options
+  Recaptcha.configure do |config|
+    config.public_key  = YOUR PUBLIC KEY HERE
+    config.private_key = YOUR PRIVATE KEY HERE
+  end
 end
+

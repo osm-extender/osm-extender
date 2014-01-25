@@ -1,6 +1,0 @@
-ActionDispatch::Callbacks.to_prepare do
-  Recaptcha.configure do |config|
-    config.public_key  = YOUR PUBLIC KEY HERE
-    config.private_key = YOUR PRIVATE KEY HERE
-  end
-end

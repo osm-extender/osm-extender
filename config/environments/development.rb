@@ -50,20 +50,6 @@ OSMExtender::Application.configure do
     :port => 3000,
   }
 
-#  # Controller URL options
-#  config.action_controller.default_url_options = {
-#    :protocol => 'http',
-#    :host => 'localhost',
-#    :port => 3000,
-#  }
-
-#  # Mailer URL options
-#  config.action_mailer.default_url_options = {
-#    :protocol => 'http',
-#    :host => 'localhost',
-#    :port => 3000,
-#  }
-
   # Mailer email address options (you may override this in development_custom.rb)
   ActionMailer::Base.send :default, {
     :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
@@ -77,5 +63,7 @@ OSMExtender::Application.configure do
 
 end
 
+
 # Load custom configuration
 require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+
