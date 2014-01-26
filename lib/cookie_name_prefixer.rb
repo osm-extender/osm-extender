@@ -19,18 +19,20 @@ class CookieNamePrefixer
 
   private
   def rename_incoming
-    @env.delete('rack.request.cookie_string')  # Force cookies header to be reread
-    @env.delete('rack.request.cookie_hash')    # Force cookies header to be reread
-    cookies = []
-    @env['HTTP_COOKIE'].split(';').each do |cookie|
-      if cookie.start_with?(@prefix)
-        old_name = cookie[0..cookie.index('=')-1]
-        cookie = cookie[@prefix.length..-1]
-        puts "Incoming cookie \"#{old_name}\" renamed -> #{cookie}" if @debug
-        cookies.push cookie
+    if @env.has_key?('HTTP_COOKIE')
+      @env.delete('rack.request.cookie_string')  # Force cookies header to be reread
+      @env.delete('rack.request.cookie_hash')    # Force cookies header to be reread
+      cookies = []
+      @env['HTTP_COOKIE'].split(';').each do |cookie|
+        if cookie.start_with?(@prefix)
+          old_name = cookie[0..cookie.index('=')-1]
+          cookie = cookie[@prefix.length..-1]
+          puts "Incoming cookie \"#{old_name}\" renamed -> #{cookie}" if @debug
+          cookies.push cookie
+        end
       end
+      @env['HTTP_COOKIE'] = cookies.join(';')
     end
-    @env['HTTP_COOKIE'] = cookies.join(';')
   end
   
   def rename_outgoing
