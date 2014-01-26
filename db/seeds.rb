@@ -29,7 +29,6 @@ unless User.count >= 1
     :password => prompt('What would you like your password to be?', 'P@55word'),
     :activation_state => "active",
     :can_administer_users => true,
-    :can_administer_settings => true,
     :can_view_statistics => true,
     :can_administer_announcements => true,
     :can_administer_delayed_job => true,
