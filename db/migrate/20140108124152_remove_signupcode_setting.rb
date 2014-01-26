@@ -5,6 +5,14 @@ class RemoveSignupcodeSetting < ActiveRecord::Migration
     STDOUT.print "> "
     STDIN.gets.strip
   end
+  class SettingValue < ActiveRecord::Base
+    audited
+    attr_accessible :key, :value, :description
+    validates_presence_of :key
+    validates_uniqueness_of :key
+    validates_presence_of :description
+  end
+
 
   def up
     sv = SettingValue.find_by_key('signup code')

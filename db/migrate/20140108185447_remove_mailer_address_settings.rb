@@ -5,6 +5,14 @@ class RemoveMailerAddressSettings < ActiveRecord::Migration
     STDOUT.print "> "
     STDIN.gets.strip
   end
+  class SettingValue < ActiveRecord::Base
+    audited
+    attr_accessible :key, :value, :description
+    validates_presence_of :key
+    validates_uniqueness_of :key
+    validates_presence_of :description
+  end
+
 
   def up
     setting_keys = ['contact us - to', 'notifier mailer - from', 'user mailer - from', 'reminder mailer - from', 'notifier mailer - send failed reminder to', 'notifier mailer - send exception to']
