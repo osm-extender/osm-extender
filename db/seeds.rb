@@ -5,6 +5,12 @@ puts "------------"
 puts
 
 
+# Ensure we're using the latest columns for each model
+Rails.application.eager_load! # Make sure all models are loaded
+ActiveRecord::Base.descendants.each do |c|
+  c.reset_column_information  # Reload column names from database
+end
+
 # Method to prompt user for data
 # param question - the question to ask the user
 # param test_answer - the answer provided by the user in the test environment
