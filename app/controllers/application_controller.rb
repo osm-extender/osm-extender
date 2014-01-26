@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :require_login
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
                 :api_has_osm_permission?, :get_section_names, :get_grouping_name,
-                :get_current_section_terms, :get_current_term_id,
+                :get_current_section_terms, :get_current_term_id, :require_not_login,
                 :osm_user_permission_human_friendly, :osm_api_permission_human_friendly
 
 
@@ -16,9 +16,19 @@ class ApplicationController < ActionController::Base
 
 
   private
+  # What to do when the require_login filter fails
   def not_authenticated
     flash[:error] = 'You must be signed in to access this resource.'
     redirect_to signin_path
+  end
+
+  # Filter to require that a user is not logged in
+  def require_not_login
+    if current_user
+      # Send user to their page (or where they came from)
+      flash[:error] = 'You must be signed out to do that.'
+      redirect_back_or_to my_page_path
+    end
   end
 
 
@@ -185,7 +195,7 @@ class ApplicationController < ActionController::Base
   end
 
   def email_error(exception)
-    NotifierMailer.exception(exception, env).deliver unless Settings.read('notifier mailer - send exception to').blank?
+    NotifierMailer.exception(exception, env).deliver
   end
 
   def clean_backtrace(exception)

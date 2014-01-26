@@ -43,21 +43,27 @@ OSMExtender::Application.configure do
   # Don't deliver emails, open them in a new window instead
   config.action_mailer.delivery_method = :letter_opener
 
-  # Mailer URL options
-  config.action_mailer.default_url_options = {
+  # URL Options
+  Rails.application.routes.default_url_options = {
     :protocol => 'http',
     :host => 'localhost',
     :port => 3000,
   }
 
-  # Controller URL options
-  config.action_controller.default_url_options = {
-    :protocol => 'http',
-    :host => 'localhost',
-    :port => 3000,
+  # Mailer email address options (you may override this in development_custom.rb)
+  ActionMailer::Base.send :default, {
+    :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
+    'return-path' => 'osmx@localhost',  # Should be the email address portion of from
+  }
+  NotifierMailer.options = {
+    :contact_form__to => 'contactus@example.com',
+    :reminder_failed__to => 'reminder-mailer-failed@example.com',
+    :exception__to => 'exceptions@example.com',
   }
 
 end
 
+
 # Load custom configuration
 require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+

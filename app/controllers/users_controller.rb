@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  skip_before_filter :require_login, :only => [:new, :create, :activate_account, :unlock_account]
+  forbid_login_for = [:new, :create, :activate_account, :unlock_account]
+  skip_before_filter :require_login, :only => forbid_login_for
+  before_filter :require_not_login, :only => forbid_login_for
   load_and_authorize_resource :except => [:activate_account, :unlock_account]
   helper_method :sort_column, :sort_direction
 
@@ -25,18 +27,9 @@ class UsersController < ApplicationController
   end
 
   def new
-    @signup_code = params[:signup_code]
   end
   
   def create
-    signup_code = Settings.read('signup code')
-    unless signup_code.blank?
-      unless signup_code.eql?(params[:signup_code])
-        flash[:error] = 'Incorrect signup code.'
-        render :action => :new and return
-      end
-    end
-
     @user = User.new(params[:user])
     if @user.save
       user = login(params[:user][:email_address], params[:user][:password])

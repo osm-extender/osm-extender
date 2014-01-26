@@ -18,9 +18,7 @@ class SessionsController < ApplicationController
         old_session[key] = session[key] unless session[key].nil?
       end
       reset_session
-      old_session.each_key do |key|
-        session[key] = old_session[key]
-      end
+      session.merge!(old_session)
 
       # Set current section
       if current_user.connected_to_osm?

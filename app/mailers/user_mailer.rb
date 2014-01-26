@@ -1,7 +1,4 @@
 class UserMailer < ApplicationMailer
-  default from: Proc.new { Settings.read('user mailer - from') },
-          'return-path' => Proc.new { (Settings.read('user mailer - from') || '').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
-
 
   def activation_needed(user)
     @user = user

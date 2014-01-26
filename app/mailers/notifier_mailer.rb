@@ -1,14 +1,19 @@
 class NotifierMailer < ApplicationMailer
-  default from: Proc.new { Settings.read('notifier mailer - from') },
-          'return-path' => Proc.new { Settings.read('notifier mailer - from').scan(EXTRACT_EMAIL_ADDRESS_REGEX)[0] }
-
   helper_method :inspect_object
 
-  def contact_form_submission(contact, to)
+  def self.options=(options)
+    raise ArgumentError 'options is not a Hash' unless options.is_a?(Hash)
+    [:contact_form__to, :reminder_failed__to, :exception__to].each do |option|
+      raise ArgumentError "options must contain a value for :#{option}" unless options.has_key?(option)
+    end
+    @@options = options
+  end
+
+  def contact_form_submission(contact)
     @contact = contact
     mail ({
       :subject => build_subject("Contact Form Submission"),
-      :to => to,
+      :to => @@options[:contact_form__to],
       :reply_to => "\"#{@contact.name}\" <#{@contact.email_address}>"
     })
   end
@@ -18,8 +23,8 @@ class NotifierMailer < ApplicationMailer
     @exception = exception
     mail ({
       :subject => build_subject('Reminder Email Failed'),
-      :to => Settings.read('notifier mailer - send failed reminder to'),
-    })
+      :to => @@options[:reminder_failed__to],
+    }) if @@options[:reminder_failed__to]
   end
 
   def exception(exception, environment)
@@ -29,8 +34,8 @@ class NotifierMailer < ApplicationMailer
     @request = ActionDispatch::Request.new(environment)
     mail ({
       :subject => build_subject('An Exception Occured'),
-      :to => Settings.read('notifier mailer - send exception to'),
-    })
+      :to => @@options[:exception__to],
+    }) if @@options[:exception__to]
   end
 
   def rake_exception(task, exception)
@@ -38,8 +43,8 @@ class NotifierMailer < ApplicationMailer
     @exception = exception
     mail ({
       :subject => build_subject('An Exception Occured in a Rake Task'),
-      :to => Settings.read('notifier mailer - send exception to'),
-    })
+      :to => @@options[:exception__to],
+    }) if @@options[:exception__to]
   end
 
   def email_list_changed(email_list)

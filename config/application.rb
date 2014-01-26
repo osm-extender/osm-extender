@@ -57,9 +57,7 @@ module OSMExtender
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']
 
-    # Allow mailer views to access helpers in application_helpers
-    config.to_prepare do
-      ActionMailer::Base.helper "application"
-    end
+    # Prefix cookie names
+    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_")
   end
 end

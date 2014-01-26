@@ -7,7 +7,7 @@ OSMExtender::Application.routes.draw do
 
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
-  get 'signup(/:signup_code)' => 'users#new', :as => 'signup'
+  get 'signup' => 'users#new', :as => 'signup'
   
   get 'my_account' => 'my_account#show', :as => 'my_account'
   get 'my_account/change_password' => 'my_account#change_password', :as => 'change_my_password'
@@ -71,9 +71,6 @@ OSMExtender::Application.routes.draw do
 
   get 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#edit', :as => 'edit_email_reminder_subscription'
   post 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#change', :as => 'change_email_reminder_subscription'
-
-  get 'settings' => 'settings#edit', :as => 'edit_settings'
-  put 'settings' => 'settings#update', :as => 'update_settings'
 
   resources :osm_flexi_records, :only => [:index, :show]
 

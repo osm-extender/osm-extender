@@ -8,5 +8,5 @@
 </ul>
 
 <p>You will be able to unsubscribe at any time, to subscribe to the email please follow the link below
-<br/><%= link_to nil, edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %><br/>
-If you do not follow the link then you will not receive the emails, <%= @share.reminder.user.name %> is able to have this email sent to you again if you feel they are abusing this ability then please goto <%= link_to nil, new_contact_u_url %> and use the contact form to let us know.</p>
+<br/><%= link_to nil, routes.edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %><br/>
+If you do not follow the link then you will not receive the emails, <%= @share.reminder.user.name %> is able to have this email sent to you again if you feel they are abusing this ability then please goto <%= link_to nil, routes.new_contact_u_url %> and use the contact form to let us know.</p>

@@ -90,11 +90,6 @@ class Ability
         can :administer, Announcement
       end
 
-      # Things Settings administrators can do
-      if user.can_administer_settings?
-        can :update, Settings
-      end
-
     end
   end
 end
