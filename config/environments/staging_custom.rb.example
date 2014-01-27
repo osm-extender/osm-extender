@@ -11,13 +11,16 @@ OSMExtender::Application.configure do
     :race_condition_ttl => 2.minutes
   }
 
-  # URL Options (copy/complete into staging_custom.rb)
+end
+
+ActionDispatch::Callbacks.to_prepare do
+  # URL Options
   Rails.application.routes.default_url_options = {
     :protocol => 'https',
     :host => 'localhost',
   }
 
-  # Mailer options (copy/complete into production_custom.rb)
+  # Mailer options
   ReminderMailer.send :default, {
     :from => ,                # Can be in the format - "Name" <email_address>
     'return-path' => ,        # Should be the email address portion of from
@@ -36,7 +39,7 @@ OSMExtender::Application.configure do
     :exception__to => ,       # Can be in the format - "Name" <email_address>
   }
 
-  # Mail sending options
+  # Mail sending options (uncomment the one which is relevant to your setup)
   # Sendmail
 #  ActionMailer::Base.delivery_method = :sendmail
 #  ActionMailer::Base.sendmail_settings = {
@@ -54,10 +57,7 @@ OSMExtender::Application.configure do
 #    :enable_starttls_auto => true
 #  }
 
-end
-
-ActionDispatch::Callbacks.to_prepare do
-  # OSM options (copy/complete into production_custom.rb)
+  # OSM options
   Osm::configure(
     :api => {
       :default_site => :osm,
@@ -74,10 +74,11 @@ ActionDispatch::Callbacks.to_prepare do
     },
   )
 
-  # ReCAPTCHA options (copy/complete into production_custom.rb)
+  # ReCAPTCHA options
   Recaptcha.configure do |config|
     config.public_key  = YOUR PUBLIC KEY HERE
     config.private_key = YOUR PRIVATE KEY HERE
   end
+
 end
 
