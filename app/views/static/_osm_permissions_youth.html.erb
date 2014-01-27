@@ -15,7 +15,7 @@
   </tr>
 
   <tr id="badge">
-    <td>Badge Records</td>
+    <td rowspan="2">Badge Records</td>
     <td><ul>
       <li>Email Reminders (Due badges)</li>
       <li>Reports:<ul>
@@ -23,12 +23,15 @@
         <li>Badge completion matrix</li>
         <li>Due badges</li>
         <li>Missing badge requirements</li>
-        <li>Planned badge requirements (fast method)</li>
       </ul></li>
     </ul></td>
     <td>Read</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :badge, current_user, section), osm_api_permission_human_friendly(:badge, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :badge, current_user, section), osm_user_permission_human_friendly(:badge, current_user, section) %></td>
+    <td rowspan="2"><%= pos_neg api_has_osm_permission?(:read, :badge, current_user, section), osm_api_permission_human_friendly(:badge, current_user, section) %></td>
+    <td rowspan="2"><%= pos_neg user_has_osm_permission?(:read, :badge, current_user, section), osm_user_permission_human_friendly(:badge, current_user, section) %></td>
+  </tr>
+  <tr>
+    <td>Planned badge requirements (fast method)</td>
+    <td>Read and Write</td>
   </tr>
 
   <!--
