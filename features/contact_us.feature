@@ -9,7 +9,7 @@ Feature: My Account
     Scenario: Send message
         When I go to the root page
         And I follow "Contact us"
-        Then I should be on the new contact u page
+        Then I should be on the contact us page
         When I fill in "Name" with "A User"
         And I fill in "Email address" with "someuser@example.com"
         And I fill in "Message" with "Some text"
@@ -25,12 +25,12 @@ Feature: My Account
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
-        And I go to the new contact u page
+        And I go to the contact us page
         Then "Email address" should contain "alice@example.com"
         And "Name" should contain "Alice"
 
     Scenario: Send message (missing name)
-        When I go to the new contact u page
+        When I go to the contact us page
         And I fill in "Email address" with "someuser@example.com"
         And I fill in "Message" with "Some text"
         And I press "Send"
@@ -39,7 +39,7 @@ Feature: My Account
         And there should be no emails
 
     Scenario: Send message (missing email address)
-        When I go to the new contact u page
+        When I go to the contact us page
         And I fill in "Name" with "A User"
         And I fill in "Message" with "Some text"
         And I press "Send"
@@ -48,7 +48,7 @@ Feature: My Account
         And there should be no emails
 
     Scenario: Send message (missing message)
-        When I go to the new contact u page
+        When I go to the contact us page
         And I fill in "Name" with "A User"
         And I fill in "Email address" with "someuser@example.com"
         And I press "Send"
@@ -57,7 +57,7 @@ Feature: My Account
         And there should be no emails
 
     Scenario: Send message (bad email address)
-        When I go to the new contact u page
+        When I go to the contact us page
         And I fill in "Name" with "A User"
         And I fill in "Email address" with "s"
         And I fill in "Message" with "Some text"

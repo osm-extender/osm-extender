@@ -8,6 +8,9 @@ OSMExtender::Application.routes.draw do
   get 'signin' => 'sessions#new', :as => 'signin'
   get 'signout' => 'sessions#destroy', :as => 'signout'
   get 'signup' => 'users#new', :as => 'signup'
+
+  get 'contact_us' => 'contact_us#form', :as => 'contact_us'
+  post 'contact_us' => 'contact_us#send_form', :as => 'send_contact_us'
   
   get 'my_account' => 'my_account#show', :as => 'my_account'
   get 'my_account/change_password' => 'my_account#change_password', :as => 'change_my_password'
@@ -50,7 +53,6 @@ OSMExtender::Application.routes.draw do
   get 'map_members/data' => 'map_members#data', :as => 'map_members_data'
 
   resources :password_resets
-  resources :contact_us, :only=>[:new, :create]
 
   resources :email_reminders do
     resources :email_reminder_shares, :as => 'shares', :only => [:index, :destroy, :new, :create], :path => 'shares'
