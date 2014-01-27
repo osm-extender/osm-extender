@@ -25,6 +25,6 @@
   <h1>This Reminder is Shared With You</h1>
   <p>
     You are getting this reminder because <%= @share.reminder.user.name %> shared it with you. You can edit your subscription to this email by following the link below.
-    <br/><%= link_to nil, edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %>
+    <br/><%= link_to nil, routes.edit_email_reminder_subscription_url(:id => @share.id, :auth_code => @share.auth_code) %>
   </p>
 <%- end %>

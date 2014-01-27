@@ -59,7 +59,7 @@ class EmailReminder < ActiveRecord::Base
           end
         rescue Exception => exception
           ReminderMailer.failed(self).deliver
-          NotifierMailer.reminder_failed(self, exception).deliver unless Settings.read('notifier mailer - send failed reminder to').blank?
+          NotifierMailer.reminder_failed(self, exception).deliver
         end
       end
     end

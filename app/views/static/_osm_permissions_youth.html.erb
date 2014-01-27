@@ -23,7 +23,7 @@
         <li>Badge completion matrix</li>
         <li>Due badges</li>
         <li>Missing badge requirements</li>
-        <li>Planned badge requirements</li>
+        <li>Planned badge requirements (fast method)</li>
       </ul></li>
     </ul></td>
     <td>Read</td>
@@ -61,7 +61,10 @@
       <li>Email reminders (Programme)</li>
       <li>Programme review</li>
       <li>OSM export</li>
-      <li>Reports (Calendar)</li>
+      <li>Reports<ul>
+        <li>Calendar</li>
+        <li>Planned badge requirements (slow method)</li>
+      </ul></li>
     </ul></td>
     <td>Read</td>
     <td><%= pos_neg api_has_osm_permission?(:read, :programme, current_user, section), osm_api_permission_human_friendly(:programme, current_user, section) %></td>

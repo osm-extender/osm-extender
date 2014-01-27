@@ -9,8 +9,8 @@ Feature: OSM
     Background:
 	Given I have no users
         And I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated user account
 
 
@@ -150,7 +150,6 @@ Feature: OSM
 	And I should see "Check OSM setup"
 	And I should not see "Programme review"
 
-@focus
     Scenario: No message and selected links for non youth section
 	Given "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 adult role

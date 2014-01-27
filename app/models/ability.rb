@@ -14,7 +14,7 @@ class Ability
 
     unless user
       # Things only non authenticated users can do
-      can [:new, :create, :activate_account], User
+      can [:new, :create, :activate_account], User unless Rails.env.staging?
 
     else
       # Things only authenticated users can do
@@ -88,11 +88,6 @@ class Ability
       # Things Announcement administrators can do
       if user.can_administer_announcements?
         can :administer, Announcement
-      end
-
-      # Things Settings administrators can do
-      if user.can_administer_settings?
-        can :update, Settings
       end
 
     end

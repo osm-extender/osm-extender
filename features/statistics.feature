@@ -7,9 +7,9 @@ Feature: Statistics
     Background:
 	Given I have no users
         And I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
-	    | bob@example.com   | Bob   |
+	    | email_address     |
+	    | alice@example.com |
+	    | bob@example.com   |
         And "alice@example.com" is an activated user account
         And "bob@example.com" is an activated user account
         And "alice@example.com" can "view_statistics"

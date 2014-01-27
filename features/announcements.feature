@@ -15,9 +15,9 @@ Feature: Site Announcements
 	Given I have no users
         And I have no announcements
         And I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
-	    | bob@example.com   | Bob   |
+	    | email_address     |
+	    | alice@example.com |
+	    | bob@example.com   |
         And I have the following announcement records
 	    | message                  | public  | prevent_hiding |
             | Public announcement      | true    | false          |

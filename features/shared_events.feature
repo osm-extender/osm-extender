@@ -22,8 +22,8 @@ Feature: Site Announcements
 	And I have no shared_event_field_datas
         And I have no users
         And I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated user account
         And "alice@example.com" is connected to OSM
 	And an OSM request to "get roles" will give 1 role

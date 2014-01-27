@@ -5,7 +5,6 @@ class ContactUs
   extend ActiveModel::Naming
 
   attr_accessor :name, :email_address, :message
-  attr_reader :to
 
   validates_presence_of :name
 
@@ -22,7 +21,7 @@ class ContactUs
 
   def send_contact
     if valid?
-      return NotifierMailer.contact_form_submission(self, Settings.read('contact us - to')).deliver
+      return NotifierMailer.contact_form_submission(self).deliver
     else
       return nil
     end

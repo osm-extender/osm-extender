@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131222215234) do
+ActiveRecord::Schema.define(:version => 20140125193254) do
 
   create_table "announcements", :force => true do |t|
     t.datetime "emailed_at"
@@ -153,12 +153,6 @@ ActiveRecord::Schema.define(:version => 20131222215234) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
-  create_table "setting_values", :force => true do |t|
-    t.text "key",         :limit => 255, :null => false
-    t.text "value"
-    t.text "description",                :null => false
-  end
-
   create_table "shared_event_attendances", :force => true do |t|
     t.integer  "shared_event_id", :null => false
     t.integer  "user_id",         :null => false
@@ -260,7 +254,6 @@ ActiveRecord::Schema.define(:version => 20131222215234) do
     t.boolean  "can_administer_users"
     t.text     "osm_userid",                      :limit => 6
     t.text     "osm_secret",                      :limit => 32
-    t.boolean  "can_administer_settings",                       :default => false
     t.boolean  "can_view_statistics",                           :default => false
     t.integer  "startup_section",                               :default => 0,     :null => false
     t.boolean  "can_administer_announcements",                  :default => false

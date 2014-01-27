@@ -1,8 +1,11 @@
 class ApplicationMailer < ActionMailer::Base
   layout 'mail'
+  helper 'application'
+  helper_method :routes
 
-  EXTRACT_EMAIL_ADDRESS_REGEX = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
-
+  def routes
+    Rails.application.routes.url_helpers
+  end
 
   private
   def build_subject(subject)

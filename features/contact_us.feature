@@ -21,8 +21,8 @@ Feature: My Account
     Scenario: Logged in user should see their name and email address but no captcha
 	Given I have no users
         And I have the following user records
-	    | email_address     | name  |
-	    | alice@example.com | Alice |
+	    | email_address     |
+	    | alice@example.com |
         And "alice@example.com" is an activated user account
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the new contact u page

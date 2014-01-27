@@ -29,12 +29,6 @@
     <%= f.label :password_confirmation %><br/>
     <%= f.password_field :password_confirmation, {:id => :password2} %>
   </div>
-  <%- unless Settings.read('signup code').blank? %>
-    <div class="field">
-      <%= label_tag :signup_code %><br/>
-      <%= text_field_tag :signup_code, @signup_code %>
-    </div>
-  <%- end %>
   <div class="actions"><%= f.submit 'Sign up' %></div>
 <% end %>
 
