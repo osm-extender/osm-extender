@@ -10,3 +10,4 @@ config/unicorn.conf
 config/initializers/osm.rb
 config/initializers/recaptcha.rb
 doc/app
+public/assets
