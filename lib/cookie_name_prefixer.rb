@@ -1,9 +1,9 @@
 class CookieNamePrefixer
 
-  def initialize(app, prefix)
+  def initialize(app, prefix, debug=false)
     @app = app
     @prefix = prefix
-    @debug = false
+    @debug = debug
   end
 
   def call(env)
@@ -24,11 +24,14 @@ class CookieNamePrefixer
       @env.delete('rack.request.cookie_hash')    # Force cookies header to be reread
       cookies = []
       @env['HTTP_COOKIE'].split(';').each do |cookie|
+        cookie.strip!
+        old_name = cookie[0..cookie.index('=')-1]
         if cookie.start_with?(@prefix)
-          old_name = cookie[0..cookie.index('=')-1]
           cookie = cookie[@prefix.length..-1]
           puts "Incoming cookie \"#{old_name}\" renamed -> #{cookie}" if @debug
           cookies.push cookie
+        else
+          puts "Incoming cookie \"#{old_name}\" ignored" if @debug
         end
       end
       @env['HTTP_COOKIE'] = cookies.join(';')

@@ -58,6 +58,6 @@ module OSMExtender
     config.assets.precompile += ['*.js', '*.css']
 
     # Prefix cookie names
-    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_")
+    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !Rails.env.in?('production', 'test')
   end
 end
