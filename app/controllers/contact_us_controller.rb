@@ -1,7 +1,7 @@
 class ContactUsController < ApplicationController
   skip_before_filter :require_login
 
-  def new
+  def form
     @contact = ContactUs.new
     if current_user
       @contact.email_address = current_user.email_address
@@ -9,7 +9,7 @@ class ContactUsController < ApplicationController
     end
   end
 
-  def create
+  def send_form
     @contact = ContactUs.new(params[:contact_us])
 
     contact_valid = @contact.valid?
@@ -18,7 +18,7 @@ class ContactUsController < ApplicationController
     if (recaptcha_ok && contact_valid) && @contact.send_contact
       redirect_back_or_to root_path, :notice => 'Your message was sent.'
     else
-      render :new
+      render :form
     end
   end
 
