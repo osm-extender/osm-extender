@@ -114,6 +114,14 @@ class ReportsController < ApplicationController
 
 
   def calendar
+    dates = [Osm.parse_date(params[:calendar_start]), Osm.parse_date(params[:calendar_finish])]
+    if dates.include?(nil)
+      flash[:error] = 'You failed to provide at least one of the dates.'
+      redirect_back_or_to reports_path
+      return
+    end
+    (@start, @finish) = dates.sort
+
     unless params[:programme].is_a?(Hash) || params[:events].is_a?(Hash)
       flash[:error] = 'You must select something to show on the calendar'
       redirect_to reports_path
@@ -129,7 +137,6 @@ class ReportsController < ApplicationController
       require_osm_permission(:read, :events, current_user, section.to_i) if selected.eql?('1')
     end
 
-    (@start, @finish) = [Osm.parse_date(params[:calendar_start]), Osm.parse_date(params[:calendar_finish])].sort
     @options = {
       :programme => params[:programme],
       :events => params[:events],
@@ -166,11 +173,13 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
 
-    (@start, @finish) = [Osm.parse_date(params[:start]), Osm.parse_date(params[:finish])].sort
-    if @start.nil? || @finish.nil?
+    dates = [Osm.parse_date(params[:start]), Osm.parse_date(params[:finish])]
+    if dates.include?(nil)
       flash[:errror] = 'You failed to provide at least one of the dates.'
       redirect_back_or_to reports_path
+      return
     end
+    (@start, @finish) = dates.sort
 
     terms = Osm::Term.get_for_section(current_user.osm_api, current_section)
     terms = terms.select{ |t| !(t.finish < @start) || t.start > @finish }
@@ -393,11 +402,13 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
 
-    (@start, @finish) = [Osm.parse_date(params[:planned_badges_start]), Osm.parse_date(params[:planned_badges_finish])].sort
-    if @start.nil? || @finish.nil?
+    dates = [Osm.parse_date(params[:planned_badges_start]), Osm.parse_date(params[:planned_badges_finish])]
+    if dates.include?(nil)
       flash[:errror] = 'You failed to provide at least one of the dates.'
       redirect_back_or_to reports_path
+      return
     end
+    (@start, @finish) = dates.sort
 
     badge_by_type = {
       'activity' => Osm::ActivityBadge,
