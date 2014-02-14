@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
       text.downcase! if [:email_address].include?(column)
       where(["#{column.to_s} LIKE ?", "%#{text}%"])
     else
-      scoped
+      all
     end
   end
 
