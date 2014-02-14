@@ -5,7 +5,7 @@ class EmailReminder < ActiveRecord::Base
 ##  attr_accessible :user, :section_id, :send_on
 
   belongs_to :user
-  has_many :items, :class_name=>'EmailReminderItem', :dependent => :destroy, :order => :position
+  has_many :items, -> { order :position }, :class_name=>'EmailReminderItem', :dependent => :destroy
   has_many :shares, :class_name=>'EmailReminderShare', :dependent => :destroy, :foreign_key => :reminder_id
 
   validates_presence_of :user
