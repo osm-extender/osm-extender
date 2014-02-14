@@ -6,7 +6,7 @@ class EmailReminderShare < ActiveRecord::Base
 
   belongs_to :reminder, :class_name => 'EmailReminder'
 
-  scope :shared_with, lambda { |email_address| { :conditions => ['email_address LIKE ?', (email_address.is_a?(String) ? email_address : email_address.email_address)] } }
+  scope :shared_with, ->(email_address) { where ['email_address LIKE ?', (email_address.is_a?(String) ? email_address : email_address.email_address)] }
 
   validates_presence_of :state
   validate :state_is_valid, :forbid_changing_state_back_to_pending

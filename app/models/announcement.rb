@@ -7,9 +7,9 @@ class Announcement < ActiveRecord::Base
   has_many :emailed_announcements, :dependent => :destroy
 
   scope :ignoring, ->(ids) { ids.size > 0 ? where("id not in (#{ ids.map{|id| id.to_i}.join(',') })") : nil }
-  scope :are_current, :conditions => 'start <= current_timestamp AND finish >= current_timestamp'
-  scope :are_public, :conditions => {:public => true}
-  scope :are_hideable, :conditions => {:prevent_hiding => false}
+  scope :are_current, -> { where('start <= current_timestamp AND finish >= current_timestamp')}
+  scope :are_public, -> { where public: true }
+  scope :are_hideable, -> { where prevent_hiding: false }
 
   validates_presence_of :message
   validates_presence_of :start
