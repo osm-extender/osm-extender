@@ -1,10 +1,10 @@
 class SharedEventFieldData < ActiveRecord::Base
-  audited :associated_with => :shared_event_attendance
+##  audited :associated_with => :shared_event_attendance
 
   belongs_to :shared_event_field
   belongs_to :shared_event_attendance
 
-  attr_accessible :source_type, :source_id, :source_field
+##  attr_accessible :source_type, :source_id, :source_field
 
   validates_presence_of :shared_event_field
   validates_presence_of :shared_event_attendance, :if => Proc.new { |record| record .persisted? }

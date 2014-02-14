@@ -1,4 +1,4 @@
-<%= form_for @shared_event, :validate=>true do |f| %>
+<%= form_for @shared_event do |f| %>
   <% if @shared_event.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@shared_event.errors.count, "error") %> prohibited this shared event from being saved:</h2>

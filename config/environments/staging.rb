@@ -1,6 +1,8 @@
 OSMExtender::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  config.eager_load = true
+
   # Code is not reloaded between requests
   config.cache_classes = true
 
@@ -13,9 +15,6 @@ OSMExtender::Application.configure do
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = false
-
-  # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin

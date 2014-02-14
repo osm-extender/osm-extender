@@ -1,8 +1,8 @@
 class EmailReminder < ActiveRecord::Base
-  audited
-  has_associated_audits
+##  audited
+##  has_associated_audits
 
-  attr_accessible :user, :section_id, :send_on
+##  attr_accessible :user, :section_id, :send_on
 
   belongs_to :user
   has_many :items, :class_name=>'EmailReminderItem', :dependent => :destroy, :order => :position

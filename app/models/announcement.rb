@@ -1,7 +1,7 @@
 class Announcement < ActiveRecord::Base
-  audited
+##  audited
 
-  attr_accessible :start, :finish, :message, :prevent_hiding, :public
+##  attr_accessible :start, :finish, :message, :prevent_hiding, :public
 
   has_many :hidden_announcements, :dependent => :destroy
   has_many :emailed_announcements, :dependent => :destroy

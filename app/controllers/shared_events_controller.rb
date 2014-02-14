@@ -23,7 +23,7 @@ class SharedEventsController < ApplicationController
   end
 
   def create
-    @shared_event = current_user.shared_events.new(params[:shared_event])
+    @shared_event = current_user.shared_events.new(params[:shared_event].permit(params[:shared_event].keys))
 
     if @shared_event.save
       flash[:instruction] = "You MUST add any extra fields you need BEFORE other sections use the event."
@@ -36,7 +36,7 @@ class SharedEventsController < ApplicationController
   def update
     @shared_event = current_user.shared_events.find(params[:id])
 
-    if @shared_event.update_attributes(params[:shared_event])
+    if @shared_event.update_attributes(params[:shared_event].permit(params[:shared_event].keys))
       redirect_to shared_events_path, notice: "#{@shared_event.name} was successfully updated."
     else
       @new_field = SharedEventField.new(:event => @shared_event)

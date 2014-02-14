@@ -94,7 +94,7 @@ Feature: Sign up
         And I fill in "password1" with "aB3$hj37"
         And I press "Sign up"
         Then I should have 0 users
-        And I should see "Password doesn't match confirmation"
+        And I should see "Password confirmation doesn't match Password"
         And I should not see "Your signup was successful"
 	And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/

@@ -1,5 +1,5 @@
 class ProgrammeReviewBalancedCache < ActiveRecord::Base
-  attr_accessible :term_id, :section_id, :term_name, :term_start, :term_finish, :data, :last_used_at
+##  attr_accessible :term_id, :section_id, :term_name, :term_start, :term_finish, :data, :last_used_at
 
   serialize :data, Hash
 

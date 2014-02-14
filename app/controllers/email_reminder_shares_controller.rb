@@ -13,7 +13,7 @@ class EmailReminderSharesController < ApplicationController
   end
   
   def create
-    @email_reminder_share = current_user.email_reminders.find(params[:email_reminder_id]).shares.build(params[:email_reminder_share])
+    @email_reminder_share = current_user.email_reminders.find(params[:email_reminder_id]).shares.build(params[:email_reminder_share].permit(params[:email_reminder_share].keys))
     authorize! :create, @email_reminder_share
 
     if @email_reminder_share.save

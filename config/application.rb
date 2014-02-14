@@ -42,12 +42,6 @@ module OSMExtender
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :osm_userid, :osm_secret, :confirmation_code, :auth_code]
 
-    # Enforce whitelist mode for mass assignment.
-    # This will create an empty whitelist of attributes available for mass-assignment for all models
-    # in your app. As such, your models will need to explicitly whitelist or blacklist accessible
-    # parameters by using an attr_accessible or attr_protected declaration.
-    config.active_record.whitelist_attributes = true
-
     # Enable the asset pipeline
     config.assets.enabled = true
 
@@ -58,6 +52,8 @@ module OSMExtender
     config.assets.precompile += ['*.js', '*.css']
 
     # Prefix cookie names
-    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !Rails.env.in?('production', 'test')
+#    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
+
+config.secret_key_base = 'WHY MUST I SET THIS WHEN IT IS NOT USED IN THIS APP?????'
   end
 end

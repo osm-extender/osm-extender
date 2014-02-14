@@ -1,8 +1,8 @@
 class EmailReminderShare < ActiveRecord::Base
-  audited :associated_with => :reminder
+##  audited :associated_with => :reminder
 
-  attr_accessible :email_address, :name
-  attr_accessible :reminder, :email_address, :name, :state, :as => :admin
+##  attr_accessible :email_address, :name
+##  attr_accessible :reminder, :email_address, :name, :state, :as => :admin
 
   belongs_to :reminder, :class_name => 'EmailReminder'
 

@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   forbid_login_for = [:new, :create, :activate_account, :unlock_account]
   skip_before_filter :require_login, :only => forbid_login_for
   before_filter :require_not_login, :only => forbid_login_for
-  load_and_authorize_resource :except => [:activate_account, :unlock_account]
+  load_and_authorize_resource :except => forbid_login_for
   helper_method :sort_column, :sort_direction
 
   def index
@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   
   def update
     user = User.find(params[:id])
-    if user.update_attributes(params[:user], :as => :admin)
+    if user.update_attributes(params[:user].permit(params[:user].keys))
       redirect_to users_path, :notice => 'The user was updated.'
     else
       render :action => :edit
@@ -27,10 +27,11 @@ class UsersController < ApplicationController
   end
 
   def new
+    @user = User.new
   end
   
   def create
-    @user = User.new(params[:user])
+    @user = User.new(params[:user].permit(params[:user].keys))
     if @user.save
       user = login(params[:user][:email_address], params[:user][:password])
       if user
@@ -39,7 +40,6 @@ class UsersController < ApplicationController
         redirect_to root_path, :notice => 'Your signup was successful, please check your email for instructions.'
       end
     else
-      @signup_code = params[:signup_code]
       render :new
     end
   end

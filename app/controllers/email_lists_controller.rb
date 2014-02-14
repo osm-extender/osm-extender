@@ -1,6 +1,6 @@
 class EmailListsController < ApplicationController
   before_filter :require_connected_to_osm
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>:create
 
   def index
     @email_lists = current_user.email_lists
@@ -28,7 +28,7 @@ class EmailListsController < ApplicationController
   end
 
   def create
-    @email_list = current_user.email_lists.new(clean_params(params[:email_list]))
+    @email_list = current_user.email_lists.new(clean_params(params[:email_list].permit(params[:email_list].keys)))
 
     if @email_list.save
       redirect_to email_lists_path, notice: 'Email list was successfully saved.'
@@ -89,7 +89,7 @@ class EmailListsController < ApplicationController
       params[key] = params[key].is_a?(String) ? params[key].downcase.eql?('true') : false
     end
     params[:match_grouping] = params[:match_grouping].to_i
-    return params
+    return params.permit(:name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping, :notify_changed)
   end
   
   def clean_lists(lists)

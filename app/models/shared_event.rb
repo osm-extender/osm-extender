@@ -1,12 +1,12 @@
 class SharedEvent < ActiveRecord::Base
-  audited
-  has_associated_audits
+##  audited
+##  has_associated_audits
 
   belongs_to :user
   has_many :attendance, :dependent => :destroy, :class_name => SharedEventAttendance
   has_many :fields, :dependent => :destroy, :class_name => SharedEventField
 
-  attr_accessible :cost, :finish_date, :finish_time, :name, :notes, :location, :start_date, :start_time, :confirm_by_date
+##  attr_accessible :cost, :finish_date, :finish_time, :name, :notes, :location, :start_date, :start_time, :confirm_by_date
 
   validates_presence_of :user
   validates_presence_of :name

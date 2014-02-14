@@ -1,8 +1,10 @@
 source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
-gem 'rails', '~> 3.2', '>= 3.2.16'
-gem 'actionmailer', '~> 3.2', '>= 3.2.16'
+# Rails
+gem 'rails', '~> 4.0', '>= 4.0.2'
+#gem 'actionmailer', '~> 3.2', '>= 3.2.16'
+gem 'activerecord-session_store', '~> 0.1'
 
 # Authentication / Authorisation
 gem 'sorcery', '~> 0.8', '>= 0.8.5'
@@ -13,10 +15,10 @@ gem 'therubyracer', '~> 0.12'
   gem 'libv8', '~> 3.16', '>= 3.16.14.03'
 gem 'jquery-rails', '~> 3.0'
 gem 'jquery-ui-rails', '~> 4.0'
-gem 'client_side_validations', '~> 3.1'
+##gem 'client_side_validations', '~> 3.1'
 
 # Misc
-gem 'osm', '~> 1.2', '>= 1.2.4'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.6'       # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
@@ -25,7 +27,7 @@ gem 'premailer-rails', '~> 1.6'       # Easily generate HTML emails (also does p
   gem 'nokogiri', '~> 1.5', '>= 1.6.1'# Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
-gem "audited-activerecord", "~> 3.0"  # Auditing of changes made to data
+##gem "audited-activerecord", "~> 3.0"  # Auditing of changes made to data
 
 # Jobs in background
 gem 'delayed_job_active_record', '~> 4.0'
@@ -36,8 +38,8 @@ gem 'daemon-spawn', '~> 0.4'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails', '~> 3.2.0'
-  gem 'coffee-rails', '~> 3.2.0'
+  gem 'sass-rails', '~> 4.0'
+  gem 'coffee-rails', '~> 4.0'
   gem 'uglifier', '~> 2.0'
 end
 

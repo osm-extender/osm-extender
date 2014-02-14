@@ -4,7 +4,7 @@ class EmailRemindersController < ApplicationController
     forbid_section_type :waiting
   end
   before_filter :setup_tertiary_menu
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>:create
 
   def index
     @my_reminders = current_user.email_reminders.order(:section_name)
@@ -26,7 +26,7 @@ class EmailRemindersController < ApplicationController
   end
 
   def create
-    @email_reminder = current_user.email_reminders.new(params[:email_reminder])
+    @email_reminder = current_user.email_reminders.new(params[:email_reminder].permit(params[:email_reminder].keys))
 
     if @email_reminder.save
       flash[:instruction] = 'You must now add some items to your reminder.'
@@ -41,7 +41,7 @@ class EmailRemindersController < ApplicationController
   def update
     @email_reminder = current_user.email_reminders.find(params[:id])
 
-    if @email_reminder.update_attributes(params[:email_reminder])
+    if @email_reminder.update_attributes(params[:email_reminder].permit(params[:email_reminder].keys))
       redirect_to @email_reminder, notice: 'Email reminder was successfully updated.'
     else
       render action: "edit"
