@@ -4,14 +4,14 @@ class EmailReminderSubscriptionsController < ApplicationController
 
   def edit
     # Display confirmation
-    @share = EmailReminderShare.find_by_id_and_auth_code!(params[:id], params[:auth_code])
+    @share = EmailReminderShare.find_by!(id: params[:id], auth_code: params[:auth_code])
     @state = ['subscribed', 'unsubscribed'].include?(params[:state]) ? params[:state].to_sym : @share.state
     @states = get_states(@share)
   end
 
   def change
     # Actually change
-    @share = EmailReminderShare.find_by_id_and_auth_code!(params[:id], params[:auth_code])
+    @share = EmailReminderShare.find_by!(id: params[:id], auth_code: params[:auth_code])
     @state = ['subscribed', 'unsubscribed'].include?(params[:state]) ? params[:state].to_sym : @share.state
 
     @share.state = @state

@@ -40,7 +40,7 @@ class SessionsController < ApplicationController
       flash[:notice] = 'Successfully signed in.'
       redirect_to (session[:return_to_url].nil? ? my_page_path : session.delete(:return_to_url) )
     else
-      user = User.find_by_email_address(params[:email_address].downcase)
+      user = User.find_by(email_address: params[:email_address].downcase)
       if user && user.activation_state.eql?('pending')
         log_usage(:result => 'not activated', :user => user, :section_id => nil)
         flash[:error] = 'You have not yet activated your account.'

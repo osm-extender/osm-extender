@@ -35,7 +35,7 @@ class EmailReminderShare < ActiveRecord::Base
   end
 
   def name
-    user = User.find_by_email_address(read_attribute(:email_address).try(:downcase))
+    user = User.find_by(email_address: read_attribute(:email_address).try(:downcase))
     user.nil? ? read_attribute(:name) : user.name
   end
 

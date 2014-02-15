@@ -18,7 +18,7 @@ class Statistics < ActiveRecord::Base
 
 
   def self.create_or_retrieve_for_date(date)
-    exists = find_by_date(date)
+    exists = find_by(date: date)
     return exists if exists
 
     data = Hash.new

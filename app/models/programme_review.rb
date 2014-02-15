@@ -114,7 +114,7 @@ class ProgrammeReview
       earliest = term.start if term.start < earliest
       latest = term.finish if term.finish > latest
 
-      cached_term_data = ProgrammeReviewBalancedCache.find_by_term_id(term.id)
+      cached_term_data = ProgrammeReviewBalancedCache.find_by(term_id: term.id)
       if cached_term_data.nil? || cached_term_data.data[:version] != 1
         # We need to make it
         data = get_balanced_term_data(term)
