@@ -1,5 +1,5 @@
 class MyAccountController < ApplicationController
-  before_filter :setup_tertiary_menu
+  before_action :setup_tertiary_menu
 
   def show
   end

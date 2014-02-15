@@ -1,6 +1,6 @@
 class OsmSearchMembersController < ApplicationController
-  before_filter :require_connected_to_osm
-  before_filter { require_osm_permission :read, :member }
+  before_action :require_connected_to_osm
+  before_action { require_osm_permission :read, :member }
 
   def search_form
     @column_names = {}

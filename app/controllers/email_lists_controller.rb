@@ -1,5 +1,5 @@
 class EmailListsController < ApplicationController
-  before_filter :require_connected_to_osm
+  before_action :require_connected_to_osm
   load_and_authorize_resource :except=>:create
 
   def index

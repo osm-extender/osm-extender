@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   forbid_login_for = [:new, :create, :activate_account, :unlock_account]
-  skip_before_filter :require_login, :only => forbid_login_for
-  before_filter :require_not_login, :only => forbid_login_for
+  skip_before_action :require_login, :only => forbid_login_for
+  before_action :require_not_login, :only => forbid_login_for
   load_and_authorize_resource :except => forbid_login_for
   helper_method :sort_column, :sort_direction
 

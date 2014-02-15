@@ -1,5 +1,5 @@
 class EmailReminderSubscriptionsController < ApplicationController
-  skip_before_filter :require_login, :only => [:edit, :change]
+  skip_before_action :require_login, :only => [:edit, :change]
 
 
   def edit

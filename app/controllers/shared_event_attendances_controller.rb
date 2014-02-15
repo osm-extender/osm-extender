@@ -1,8 +1,8 @@
 class SharedEventAttendancesController < ApplicationController
-  before_filter :require_connected_to_osm
-  before_filter { require_section_type Constants::YOUTH_AND_ADULT_SECTIONS }
-  before_filter { require_osm_permission [:read, :write], :events }
-  before_filter { require_osm_permission :read, [:flexi, :member] }
+  before_action :require_connected_to_osm
+  before_action { require_section_type Constants::YOUTH_AND_ADULT_SECTIONS }
+  before_action { require_osm_permission [:read, :write], :events }
+  before_action { require_osm_permission :read, [:flexi, :member] }
   load_and_authorize_resource
 
   def index

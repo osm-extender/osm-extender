@@ -1,6 +1,6 @@
 class EmailReminderItemsController < ApplicationController
-  before_filter :require_connected_to_osm
-  before_filter { forbid_section_type :waiting }
+  before_action :require_connected_to_osm
+  before_action { forbid_section_type :waiting }
   load_and_authorize_resource
 
   def index

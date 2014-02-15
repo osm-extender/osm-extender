@@ -1,5 +1,5 @@
 class EmailReminderSharesController < ApplicationController
-  skip_before_filter :require_login
+  skip_before_action :require_login
   load_and_authorize_resource :except => :create
 
 

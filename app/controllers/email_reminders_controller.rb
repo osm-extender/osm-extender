@@ -1,9 +1,9 @@
 class EmailRemindersController < ApplicationController
-  before_filter :require_connected_to_osm, :except => [:index, :show, :preview, :send_email]
-  before_filter :except => [:index, :show, :preview, :send_email] do
+  before_action :require_connected_to_osm, :except => [:index, :show, :preview, :send_email]
+  before_action :except => [:index, :show, :preview, :send_email] do
     forbid_section_type :waiting
   end
-  before_filter :setup_tertiary_menu
+  before_action :setup_tertiary_menu
   load_and_authorize_resource :except=>:create
 
   def index
