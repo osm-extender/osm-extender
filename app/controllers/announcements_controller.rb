@@ -32,7 +32,7 @@ class AnnouncementsController < ApplicationController
   def update
     @announcement = Announcement.find(params[:id])
 
-    if @announcement.update_attributes(params[:announcement].permit(params[:announcement].keys))
+    if @announcement.update(params[:announcement].permit(params[:announcement].keys))
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully updated.'
     else

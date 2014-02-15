@@ -42,7 +42,7 @@ class EmailListsController < ApplicationController
   def update
     @email_list = current_user.email_lists.find(params[:id])
 
-    if @email_list.update_attributes(clean_params(params[:email_list]))
+    if @email_list.update(clean_params(params[:email_list]))
       redirect_to email_lists_path, notice: 'Email list was successfully updated.'
     else
       @groupings = get_all_groupings

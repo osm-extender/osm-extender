@@ -14,7 +14,7 @@ class SharedEventFieldsController < ApplicationController
   def update
     @shared_event_field = current_user.shared_events.find(params[:shared_event_id]).fields.find(params[:id])
 
-    if @shared_event_field.update_attributes(params[:shared_event_field])
+    if @shared_event_field.update(params[:shared_event_field])
       redirect_to edit_shared_event_path(@shared_event_field.event), notice: "Field was successfully updated."
     else
       redirect_to edit_shared_event_path(@shared_event_field.event), error: "Field was not updated."

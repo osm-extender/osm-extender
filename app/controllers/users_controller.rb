@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   
   def update
     user = User.find(params[:id])
-    if user.update_attributes(params[:user].permit(params[:user].keys))
+    if user.update(params[:user].permit(params[:user].keys))
       redirect_to users_path, :notice => 'The user was updated.'
     else
       render :action => :edit

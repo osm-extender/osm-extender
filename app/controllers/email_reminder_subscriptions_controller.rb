@@ -15,7 +15,7 @@ class EmailReminderSubscriptionsController < ApplicationController
     @state = ['subscribed', 'unsubscribed'].include?(params[:state]) ? params[:state].to_sym : @share.state
 
     @share.state = @state
-    if @share.update_attributes(params.permit(:email_address, :name))
+    if @share.update(params.permit(:email_address, :name))
       flash[:notice] = 'Your subscription was updated.'
       redirect_to root_path
     else

@@ -41,7 +41,7 @@ class EmailRemindersController < ApplicationController
   def update
     @email_reminder = current_user.email_reminders.find(params[:id])
 
-    if @email_reminder.update_attributes(params[:email_reminder].permit(params[:email_reminder].keys))
+    if @email_reminder.update(params[:email_reminder].permit(params[:email_reminder].keys))
       redirect_to @email_reminder, notice: 'Email reminder was successfully updated.'
     else
       render action: "edit"
