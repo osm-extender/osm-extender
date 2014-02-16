@@ -1,6 +1,7 @@
 class AnnouncementsController < ApplicationController
   load_and_authorize_resource :except=>:create
 
+
   def index
     @announcements = Announcement.all
     @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
@@ -19,7 +20,7 @@ class AnnouncementsController < ApplicationController
   end
 
   def create
-    @announcement = Announcement.new(params[:announcement].permit(params[:announcement].keys))
+    @announcement = Announcement.new(sanatised_params.announcement)
 
     if @announcement.save
       email_to_users if params[:email_to_users]
@@ -32,7 +33,7 @@ class AnnouncementsController < ApplicationController
   def update
     @announcement = Announcement.find(params[:id])
 
-    if @announcement.update(params[:announcement].permit(params[:announcement].keys))
+    if @announcement.update(sanatised_params.announcement)
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully updated.'
     else

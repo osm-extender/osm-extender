@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   
   def update
     user = User.find(params[:id])
-    if user.update(params[:user].permit(params[:user].keys))
+    if user.update(params[:user].permit(:name, :email_address, :can_administer_users,:can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
       redirect_to users_path, :notice => 'The user was updated.'
     else
       render :action => :edit
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new(params[:user].permit(params[:user].keys))
+    @user = User.new(params[:user].permit(:name, :email_address, :password, :password_confirmation))
     if @user.save
       user = login(params[:user][:email_address], params[:user][:password])
       if user

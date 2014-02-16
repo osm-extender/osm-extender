@@ -1,8 +1,6 @@
 class UsageLog < ActiveRecord::Base
   belongs_to :user
 
-##  attr_accessible :controller, :action, :sub_action, :result, :extra_details, :section_id, :user
-
   serialize :extra_details, Hash
 
   validates_presence_of :user

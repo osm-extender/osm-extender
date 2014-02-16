@@ -23,7 +23,7 @@ class EmailReminderItemsController < ApplicationController
     params[:email_reminder_item] ||= {}
     @email_reminder_item = model.new({
       :email_reminder => EmailReminder.find(params[:email_reminder_id]),
-      :configuration => params[:email_reminder_item].symbolize_keys,
+      :configuration => configuration_params.symbolize_keys,
     })
 
     if @email_reminder_item.save
@@ -37,7 +37,7 @@ class EmailReminderItemsController < ApplicationController
     params[:email_reminder_item] ||= {}
     @email_reminder_item = EmailReminderItem.find(params[:id])
 
-    if @email_reminder_item.update(:configuration=>params[:email_reminder_item].symbolize_keys)
+    if @email_reminder_item.update(:configuration=>configuration_params.symbolize_keys)
       redirect_to edit_email_reminder_path(@email_reminder_item.email_reminder), notice: 'Item was successfully updated.'
     else
       render action: "edit"
@@ -50,6 +50,12 @@ class EmailReminderItemsController < ApplicationController
     @email_reminder_item.destroy
 
     redirect_to return_to
+  end
+
+
+  private
+  def configuration_params
+    params[:email_reminder_item].permit(model.default_configuration.keys)
   end
 
 end

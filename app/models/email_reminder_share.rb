@@ -1,9 +1,6 @@
 class EmailReminderShare < ActiveRecord::Base
 ##  audited :associated_with => :reminder
 
-##  attr_accessible :email_address, :name
-##  attr_accessible :reminder, :email_address, :name, :state, :as => :admin
-
   belongs_to :reminder, :class_name => 'EmailReminder'
 
   scope :shared_with, ->(email_address) { where ['email_address LIKE ?', (email_address.is_a?(String) ? email_address : email_address.email_address)] }

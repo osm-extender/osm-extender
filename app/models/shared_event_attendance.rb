@@ -6,8 +6,6 @@ class SharedEventAttendance < ActiveRecord::Base
   belongs_to :user
   has_many :shared_event_field_datas, :dependent => :destroy, :autosave => true
 
-##  attr_accessible :section_id, :event_id
-
   validates_presence_of :user
   validates_presence_of :shared_event
   validates_numericality_of :section_id, :only_integer=>true, :greater_than=>0

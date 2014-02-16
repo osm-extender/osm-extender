@@ -10,7 +10,7 @@ class ContactUsController < ApplicationController
   end
 
   def send_form
-    @contact = ContactUs.new(params[:contact_us])
+    @contact = ContactUs.new(sanatised_params.contact_us)
 
     contact_valid = @contact.valid?
     recaptcha_ok = current_user || verify_recaptcha(:model=>@contact)

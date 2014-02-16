@@ -6,8 +6,6 @@ class SharedEventField < ActiveRecord::Base
   belongs_to :shared_event
   has_many :data_sources, :dependent => :destroy, :class_name => SharedEventFieldData
 
-##  attr_accessible :name
-
   validates_presence_of :shared_event
   validates_presence_of :name
 

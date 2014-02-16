@@ -26,7 +26,7 @@ class EmailRemindersController < ApplicationController
   end
 
   def create
-    @email_reminder = current_user.email_reminders.new(params[:email_reminder].permit(params[:email_reminder].keys))
+    @email_reminder = current_user.email_reminders.new(sanatised_params.email_reminder)
 
     if @email_reminder.save
       flash[:instruction] = 'You must now add some items to your reminder.'
@@ -41,7 +41,7 @@ class EmailRemindersController < ApplicationController
   def update
     @email_reminder = current_user.email_reminders.find(params[:id])
 
-    if @email_reminder.update(params[:email_reminder].permit(params[:email_reminder].keys))
+    if @email_reminder.update(sanatised_params.email_reminder)
       redirect_to @email_reminder, notice: 'Email reminder was successfully updated.'
     else
       render action: "edit"

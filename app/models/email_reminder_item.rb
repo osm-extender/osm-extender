@@ -12,8 +12,6 @@
 class EmailReminderItem < ActiveRecord::Base
 ##  audited :associated_with => :email_reminder
 
-##  attr_accessible :email_reminder, :configuration, :position
-
   belongs_to :email_reminder
 
   serialize :configuration, Hash
