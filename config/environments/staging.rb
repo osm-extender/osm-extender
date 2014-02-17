@@ -101,7 +101,6 @@ ActionDispatch::Callbacks.to_prepare do
 #        :token => GET THIS FROM ED,
 #        :name  => GIVE THIS TO ED,
 #      },
-#      :debug   => true
 #    },
 #    :cache => {
 #      :cache  => Rails.cache,

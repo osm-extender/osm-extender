@@ -51,6 +51,16 @@ module OSMExtender
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']
 
+    # Setup console to use Pry and put Osm::Api into debug mode
+    console do
+      if Gem::Specification::find_all_by_name('pry').any?
+        require 'pry'
+        config.console = Pry
+      end
+      Osm::Api.debug = true
+    end
+
+
     # Prefix cookie names
 #    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
 

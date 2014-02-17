@@ -1,7 +1,10 @@
 # Generate test coverage report
-require 'simplecov'
-SimpleCov.coverage_dir(File.join('tmp', 'coverage', 'rake'))
-SimpleCov.start 'rails'
+if Gem::Specification::find_all_by_name('simplecov').any?
+  require 'simplecov'
+  SimpleCov.coverage_dir(File.join('tmp', 'coverage', 'rake'))
+  SimpleCov.start 'rails'
+end
+
 
 # Origonal top of file
 ENV["RAILS_ENV"] = "test"
