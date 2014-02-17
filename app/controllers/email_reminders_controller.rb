@@ -3,7 +3,6 @@ class EmailRemindersController < ApplicationController
   before_action :except => [:index, :show, :preview, :send_email] do
     forbid_section_type :waiting
   end
-  before_action :setup_tertiary_menu
   load_and_authorize_resource :except=>:create
 
   def index
@@ -13,7 +12,6 @@ class EmailRemindersController < ApplicationController
 
   def show
     @email_reminder = EmailReminder.find(params[:id])
-    @tertiary_menu_items = nil unless @email_reminder.user == current_user
   end
 
   def new
@@ -88,13 +86,6 @@ class EmailRemindersController < ApplicationController
 
 
   private
-  def setup_tertiary_menu
-    @tertiary_menu_items = [
-      ['List of reminders', email_reminders_path],
-      ['New reminder', new_email_reminder_path],
-    ]
-  end
-
   def get_available_items(section_id)
     items = []
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday')
