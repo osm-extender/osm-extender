@@ -72,6 +72,5 @@ module OSMExtender
     # Prefix cookie names
 #    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
 
-config.secret_key_base = 'WHY MUST I SET THIS WHEN IT IS NOT USED IN THIS APP?????'
   end
 end

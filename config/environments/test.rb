@@ -9,6 +9,7 @@ OSMExtender::Application.configure do
 
   config.eager_load = false
   config.cache_classes = true
+  config.secret_key_base = "Doesn't really matter what is used, the cookies only live during the tests"
 
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true

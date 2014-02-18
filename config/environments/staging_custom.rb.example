@@ -1,4 +1,7 @@
 OSMExtender::Application.configure do
+  # Setup key for encrypting cookies
+  config.secret_key_base = generate one by running bundle exec rake secret
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
