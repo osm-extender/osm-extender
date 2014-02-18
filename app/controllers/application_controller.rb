@@ -15,6 +15,22 @@ class ApplicationController < ActionController::Base
     rescue_from AbstractController::ActionNotFound, :with => :render_not_found
   end
 
+  rescue_from ActionController::ParameterMissing do |exception|
+    @message = "You failed to specify at least one required attribute "
+    @message += "(#{exception.param.inspect})."
+    log_error(exception)
+    email_error(exception)
+    render :template => "error/422", :status => 422
+  end
+
+  rescue_from ActionController::UnpermittedParameters do |exception|
+    @message = "You specified at least one attribute which you don't have permission to set "
+    @message += "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
+    log_error(exception)
+    email_error(exception)
+    render :template => "error/422", :status => 422
+  end
+
 
   private
   # What to do when the require_login filter fails

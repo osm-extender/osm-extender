@@ -138,6 +138,8 @@ ActionDispatch::Callbacks.to_prepare do
 #  end
 end
 
+ActionController::Parameters.action_on_unpermitted_parameters ||= :raise
+
 
 # Load custom configuration
 require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
