@@ -3,7 +3,9 @@ class SharedEventAttendancesController < ApplicationController
   before_action { require_section_type Constants::YOUTH_AND_ADULT_SECTIONS }
   before_action { require_osm_permission [:read, :write], :events }
   before_action { require_osm_permission :read, [:flexi, :member] }
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @shared_event_attendances = current_user.shared_event_attendances

@@ -1,7 +1,9 @@
 class EmailReminderItemsController < ApplicationController
   before_action :require_connected_to_osm
   before_action { forbid_section_type :waiting }
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @email_reminder_items = model.where(['email_reminder_id = ?', params[:email_reminder_id]])

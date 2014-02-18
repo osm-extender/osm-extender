@@ -3,7 +3,9 @@ class EmailRemindersController < ApplicationController
   before_action :except => [:index, :show, :preview, :send_email] do
     forbid_section_type :waiting
   end
-  load_and_authorize_resource :except=>:create
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @my_reminders = current_user.email_reminders.order(:section_name)

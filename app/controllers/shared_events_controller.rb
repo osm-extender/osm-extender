@@ -1,5 +1,7 @@
 class SharedEventsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @shared_events = current_user.shared_events

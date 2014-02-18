@@ -1,5 +1,7 @@
 class SharedEventFieldsController < ApplicationController
-  load_and_authorize_resource :except => :create
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def create
     @shared_event_field = current_user.shared_events.find(params[:shared_event_id]).fields.new(shared_event_field_params)

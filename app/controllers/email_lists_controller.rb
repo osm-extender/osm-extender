@@ -1,7 +1,9 @@
 class EmailListsController < ApplicationController
   before_action :require_connected_to_osm
   before_action :clean_search_params, :only=>[:create, :update, :preview]
-  load_and_authorize_resource :except=>:create
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @email_lists = current_user.email_lists

@@ -1,22 +1,31 @@
 class AnnouncementsController < ApplicationController
-  load_and_authorize_resource :except=>:create
+#  before_action do
+#    model = Announcement
+#    instance_variable_name = params[:controller].sub("Controller", "").underscore.split('/').last.singularize
+#    find_by_attribute = :id
+#    find_by_param = find_by_attribute
+#
+#    instance = model.find(find_by_attribute => params[find_by_param])
+#    instance_variable_set("@#{instance_variable_name}", instance)
+#    authorize! params[:action].to_sym, (params[:id].nil? ? model : instance)
+#  end
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+  before_action :only=>[:index, :new] do
+    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
+  end
 
 
   def index
-    @announcements = Announcement.all
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
   end
 
   def show
-    @announcement = Announcement.find(params[:id])
   end
 
   def new
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
   end
 
   def edit
-    @announcement = Announcement.find(params[:id])
   end
 
   def create
@@ -31,8 +40,6 @@ class AnnouncementsController < ApplicationController
   end
 
   def update
-    @announcement = Announcement.find(params[:id])
-
     if @announcement.update(sanatised_params.announcement)
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully updated.'
@@ -42,7 +49,6 @@ class AnnouncementsController < ApplicationController
   end
 
   def destroy
-    @announcement = Announcement.find(params[:id])
     @announcement.destroy
 
     redirect_to announcements_path
