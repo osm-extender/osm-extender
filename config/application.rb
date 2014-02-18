@@ -70,7 +70,7 @@ module OSMExtender
 
 
     # Prefix cookie names
-#    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
+    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
 
   end
 end
