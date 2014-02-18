@@ -1,5 +1,5 @@
 class Announcement < ActiveRecord::Base
-##  audited
+  has_paper_trail
 
   has_many :hidden_announcements, :dependent => :destroy
   has_many :emailed_announcements, :dependent => :destroy

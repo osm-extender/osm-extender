@@ -19,4 +19,11 @@ class ContactUs
     end
   end
 
+  def auto_html5_validation
+    true
+  end
+  def self.auto_html5_validation
+    true
+  end
+
 end

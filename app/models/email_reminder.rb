@@ -1,5 +1,5 @@
 class EmailReminder < ActiveRecord::Base
-##  audited
+  has_paper_trail
 ##  has_associated_audits
 
   belongs_to :user

@@ -51,13 +51,21 @@ module OSMExtender
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']
 
-    # Setup console to use Pry and put Osm::Api into debug mode
+    # Setup console
     console do
+      # Use Pry if installed
       if Gem::Specification::find_all_by_name('pry').any?
         require 'pry'
         config.console = Pry
       end
+      # Put OSM gem into debug mode
       Osm::Api.debug = true
+      # Set user for paper trails audits
+      who_am_i = `whoami`.strip
+      puts "Who should paper trail's versions credit changes to? (#{who_am_i})"
+      who = gets.strip
+      who = who.blank? ? who_am_i : who
+      PaperTrail.whodunnit = "console: #{who}"
     end
 
 

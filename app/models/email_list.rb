@@ -1,5 +1,5 @@
 class EmailList < ActiveRecord::Base
-##  audited
+  has_paper_trail
 
   belongs_to :user
 

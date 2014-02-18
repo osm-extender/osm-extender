@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
-##  audited :except => [:crypted_password, :salt, :activation_token, :reset_password_token]
+  has_paper_trail :class_name => 'UserVersion', :skip => [:crypted_password, :salt, :activation_token, :reset_password_token]
 
   has_many :email_reminders, :dependent => :destroy
   has_many :email_reminder_shares, :through => :email_reminders, :source => :shares

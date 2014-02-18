@@ -15,7 +15,6 @@ gem 'therubyracer', '~> 0.12'
   gem 'libv8', '~> 3.16', '>= 3.16.14.03'
 gem 'jquery-rails', '~> 3.0'
 gem 'jquery-ui-rails', '~> 4.0'
-##gem 'client_side_validations', '~> 3.1'
 
 # Misc
 gem 'osm', '~> 1.2', '>= 1.2.6'       # For using the OSM API
@@ -27,7 +26,7 @@ gem 'premailer-rails', '~> 1.6'       # Easily generate HTML emails (also does p
   gem 'nokogiri', '~> 1.5', '>= 1.6.1'# Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
-##gem "audited-activerecord", "~> 3.0"  # Auditing of changes made to data
+gem 'paper_trail', '~> 3.0.0'         # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'pry', '~> 0.9', :require=>false
 
