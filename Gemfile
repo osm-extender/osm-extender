@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 # Rails
-gem 'rails', '~> 4.0', '>= 4.0.2'
+gem 'rails', '~> 4.0', '>= 4.0.3'
 #gem 'actionmailer', '~> 3.2', '>= 3.2.16'
 gem 'activerecord-session_store', '~> 0.1'
 
