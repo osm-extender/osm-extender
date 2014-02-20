@@ -1,7 +1,10 @@
 class EditableParams < Struct.new(:for_user)
 
   def announcement
-    [:start, :finish, :message, :prevent_hiding, :public]
+    [
+      :start, :finish, :message, :prevent_hiding, :public,
+      :start_date, :start_time, :finish_date, :finish_time
+    ]
   end
 
   def contact_us
@@ -9,7 +12,10 @@ class EditableParams < Struct.new(:for_user)
   end
 
   def email_list
-    [:name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping, :notify_changed]
+    [
+      :name, :section_id, :email1, :email2, :email3, :email4,
+      :match_type, :match_grouping, :notify_changed
+    ]
   end
 
   def email_reminder

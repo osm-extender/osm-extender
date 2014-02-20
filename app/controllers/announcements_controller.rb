@@ -1,18 +1,15 @@
 class AnnouncementsController < ApplicationController
-#  before_action do
-#    model = Announcement
-#    instance_variable_name = params[:controller].sub("Controller", "").underscore.split('/').last.singularize
-#    find_by_attribute = :id
-#    find_by_param = find_by_attribute
-#
-#    instance = model.find(find_by_attribute => params[find_by_param])
-#    instance_variable_set("@#{instance_variable_name}", instance)
-#    authorize! params[:action].to_sym, (params[:id].nil? ? model : instance)
-#  end
   load_and_authorize_resource :except=>[:new, :create]
   authorize_resource :only=>[:new, :create]
+
   before_action :only=>[:index, :new] do
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
+    now = Time.now
+    now_hr = now.strftime('%H')
+    now_min = now.strftime('%M').to_i
+    @announcement = Announcement.new(
+      :start => DateTime.parse(now_hr + ':' + (now_min - (now_min % 5)).to_s) - 5.minutes,
+      :finish => 8.days.from_now.to_date
+    )
   end
 
 
