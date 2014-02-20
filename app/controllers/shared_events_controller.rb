@@ -1,5 +1,7 @@
 class SharedEventsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @shared_events = current_user.shared_events
@@ -23,7 +25,7 @@ class SharedEventsController < ApplicationController
   end
 
   def create
-    @shared_event = current_user.shared_events.new(params[:shared_event])
+    @shared_event = current_user.shared_events.new(shared_event_params)
 
     if @shared_event.save
       flash[:instruction] = "You MUST add any extra fields you need BEFORE other sections use the event."
@@ -36,7 +38,7 @@ class SharedEventsController < ApplicationController
   def update
     @shared_event = current_user.shared_events.find(params[:id])
 
-    if @shared_event.update_attributes(params[:shared_event])
+    if @shared_event.update(shared_event_params)
       redirect_to shared_events_path, notice: "#{@shared_event.name} was successfully updated."
     else
       @new_field = SharedEventField.new(:event => @shared_event)
@@ -78,6 +80,12 @@ class SharedEventsController < ApplicationController
       end
     end
     send_data csv_string, :filename => "#{shared_event.name}.#{params[:format]}", :type => "text/#{params[:format]}", :disposition => 'attachment'
+  end
+
+
+  private
+  def shared_event_params
+    params[:shared_event].permit(:cost, :finish_date, :finish_time, :name, :notes, :location, :start_date, :start_time, :confirm_by_date)
   end
 
 end

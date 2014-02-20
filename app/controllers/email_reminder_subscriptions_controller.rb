@@ -1,21 +1,21 @@
 class EmailReminderSubscriptionsController < ApplicationController
-  skip_before_filter :require_login, :only => [:edit, :change]
+  skip_before_action :require_login, :only => [:edit, :change]
 
 
   def edit
     # Display confirmation
-    @share = EmailReminderShare.find_by_id_and_auth_code!(params[:id], params[:auth_code])
+    @share = EmailReminderShare.find_by!(id: params[:id], auth_code: params[:auth_code])
     @state = ['subscribed', 'unsubscribed'].include?(params[:state]) ? params[:state].to_sym : @share.state
     @states = get_states(@share)
   end
 
   def change
     # Actually change
-    @share = EmailReminderShare.find_by_id_and_auth_code!(params[:id], params[:auth_code])
+    @share = EmailReminderShare.find_by!(id: params[:id], auth_code: params[:auth_code])
     @state = ['subscribed', 'unsubscribed'].include?(params[:state]) ? params[:state].to_sym : @share.state
 
     @share.state = @state
-    if @share.update_attributes(params)
+    if @share.update(sanatised_params.email_reminder_subscription)
       flash[:notice] = 'Your subscription was updated.'
       redirect_to root_path
     else

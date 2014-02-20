@@ -1,8 +1,5 @@
 class ContactUs
-
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  extend ActiveModel::Naming
+  include ActiveModel::Model
 
   attr_accessor :name, :email_address, :message
 
@@ -13,11 +10,6 @@ class ContactUs
 
   validates_presence_of :message
 
-  def initialize(attributes = {})
-    attributes.each do |name, value|
-      send("#{name}=", value)
-    end
-  end
 
   def send_contact
     if valid?
@@ -27,8 +19,11 @@ class ContactUs
     end
   end
 
-  def persisted?
-    false
+  def auto_html5_validation
+    true
+  end
+  def self.auto_html5_validation
+    true
   end
 
 end

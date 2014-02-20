@@ -1,4 +1,7 @@
 OSMExtender::Application.configure do
+  # Setup key for encrypting cookies
+  config.secret_key_base = generate one by running bundle exec rake secret
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
@@ -66,7 +69,6 @@ ActionDispatch::Callbacks.to_prepare do
         :token => GET THIS FROM ED,
         :name  => GIVE THIS TO ED,
       },
-      :debug   => true
     },
     :cache => {
       :cache  => Rails.cache,

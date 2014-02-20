@@ -1,7 +1,7 @@
 class MyPreferencesController < ApplicationController
 
   def update
-    if current_user.update_attributes(:startup_section => params[:startup_section])
+    if current_user.update(:startup_section => params[:startup_section])
       flash[:notice] = 'Your preferences were updated.'
     else
       flash[:error] = 'Your preferences were not updated.'

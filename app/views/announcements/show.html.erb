@@ -24,7 +24,7 @@
   <b>Emailed:</b>
   <%= yes_no(@announcement.emailed_at?, false) %>
   <%- if @announcement.emailed_at? %>
-    (<%= distance_of_time_in_words_to_now(announcement.emailed_at) %> ago)
+    (<%= distance_of_time_in_words_to_now(@announcement.emailed_at) %> ago)
   <%- end %>
 </p>
 

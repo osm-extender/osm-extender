@@ -1,10 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :require_login
+  before_action :require_login
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
                 :api_has_osm_permission?, :get_section_names, :get_grouping_name,
                 :get_current_section_terms, :get_current_term_id, :require_not_login,
-                :osm_user_permission_human_friendly, :osm_api_permission_human_friendly
+                :osm_user_permission_human_friendly, :osm_api_permission_human_friendly,
+                :sanatised_params, :editable_params
 
 
   unless Rails.configuration.consider_all_requests_local
@@ -14,6 +15,22 @@ class ApplicationController < ActionController::Base
     rescue_from AbstractController::ActionNotFound, :with => :render_not_found
   end
 
+  rescue_from ActionController::ParameterMissing do |exception|
+    @message = "You failed to specify at least one required attribute "
+    @message += "(#{exception.param.inspect})."
+    log_error(exception)
+    email_error(exception)
+    render :template => "error/422", :status => 422
+  end
+
+  rescue_from ActionController::UnpermittedParameters do |exception|
+    @message = "You specified at least one attribute which you don't have permission to set "
+    @message += "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
+    log_error(exception)
+    email_error(exception)
+    render :template => "error/422", :status => 422
+  end
+
 
   private
   # What to do when the require_login filter fails
@@ -21,6 +38,19 @@ class ApplicationController < ActionController::Base
     flash[:error] = 'You must be signed in to access this resource.'
     redirect_to signin_path
   end
+
+  # Sanatise the parameters which can be set by a user
+  # e.g. email_list.update(sanatised_params.email_list)
+  def sanatised_params
+    @sanatised_params ||= SanatisedParams.new(params, current_user)
+  end
+
+  # The parameters which are editable by the user
+  # e.g. permitted_params.email_list.include?(:name)
+  def editable_params
+    @editable_params ||= EditableParams.new(current_user)
+  end
+
 
   # Filter to require that a user is not logged in
   def require_not_login

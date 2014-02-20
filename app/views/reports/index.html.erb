@@ -20,8 +20,8 @@
   <p>This report allows you to see which badges were awarded to which members during a provided time period.</p>
   <%- if has_osm_permission?(:read, :badge) %>
     <%= form_tag awarded_badges_report_path, :method=>:get do %>  
-      Between <%= text_field_tag :start, (1.year.ago + 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
-      and <%= text_field_tag :finish, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      Between <%= date_field_tag :start, (1.year.ago + 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      and <%= date_field_tag :finish, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
       <br/><%= submit_tag 'Show awarded badges' %>
     <%- end %>
   <%- else %>
@@ -88,8 +88,8 @@
           </tr>
         <%- end %>
       </table>
-      Between <%= text_field_tag :calendar_start, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
-      and <%= text_field_tag :calendar_finish, (1.year.from_now - 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      Between <%= date_field_tag :calendar_start, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      and <%= date_field_tag :calendar_finish, (1.year.from_now - 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
       <br/>
       <%= submit_tag 'Show calendar' %>
     <%- end %>
@@ -186,8 +186,8 @@
   </p>
   <%- if has_osm_permission?(:read, :badge) %>
     <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
-      Between <%= text_field_tag :planned_badges_start, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
-      and <%= text_field_tag :planned_badges_finish, 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      Between <%= date_field_tag :planned_badges_start, Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+      and <%= date_field_tag :planned_badges_finish, 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
       <br/><%= submit_tag 'Show planned badge requirements' %>
     <%- end %>
   <%- else %>

@@ -5,6 +5,14 @@
 //= require_self
 
 
+function supports_input_type(type) {
+  var field = document.createElement("input");
+  field.setAttribute("type", type);
+  return (field.type == type);
+}
+const SUPPORTS_DATE_FIELD = supports_input_type("date");
+
+
 $(function() {
   $("#announcements div a.hide_link").on("click", function() {
     $.ajax({
@@ -96,15 +104,17 @@ function graphGridLines(range, targetSteps) {
 
 
 $(function() {
-  $( ".datepicker" ).datepicker({
-    showOn: 'both',
-    buttonImageOnly: true,
-    buttonImage: '/assets/icons/calendar-small.png',
-    buttonText: 'Calendar',
-    constrainInput: true,
-    dateFormat: 'yy-mm-dd',
-    changeMonth: true,
-    changeYear: true,
-    onClose: function(dateText, inst) { $(inst.input).change().focusout(); }
-  });
+  if (!SUPPORTS_DATE_FIELD) {
+    $( ".datepicker" ).datepicker({
+      showOn: 'both',
+      buttonImageOnly: true,
+      buttonImage: '/assets/icons/calendar-small.png',
+      buttonText: 'Calendar',
+      constrainInput: true,
+      dateFormat: 'yy-mm-dd',
+      changeMonth: true,
+      changeYear: true,
+      onClose: function(dateText, inst) { $(inst.input).change().focusout(); }
+    });
+  }
 });

@@ -27,8 +27,6 @@
   <%= javascript_include_tag 'jquery.ui.all' %>
   <%= javascript_include_tag 'jquery.thead' %>
   <%= javascript_include_tag 'jquery.toastmessage' %>
-  <%= javascript_include_tag 'rails.validations' %>
-  <%= javascript_include_tag 'rails.validations.custom' %>
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
   <%= javascript_include_tag 'https://maps.googleapis.com/maps/api/js?sensor=false' if content_for?(:use_maps) %>
   <%= javascript_include_tag 'application' %>
@@ -111,8 +109,12 @@
       </div><!-- secondary_menu -->
 
       <%- unless Rails.env.production? %>
-        <div style="background-color: <%= {'development'=>'#ff0000', 'staging'=>'#ffff00'}[Rails.env] || '#fa5ffa' %>; color: black; text-align: center; font-size: 200%; height: 1em;">
+        <div style="background-color: <%= {'development'=>'#ff0000', 'staging'=>'#ffff00'}[Rails.env] || '#fa5ffa' %>; color: black; text-align: center; font-size: 200%; min-height: 1em;">
           <b>This is the <%= Rails.env.upcase %> environment!</b>
+          <%- if Rails.env.development? %>
+            <br/>
+            <%= link_to('[Rails info.]', '/rails/info') %>
+          <%- end %>
         </div>
       <%- end %>
 
@@ -162,10 +164,10 @@
       <h1>Debugging Info</h1>
       <h2>@debug_log</h2>
       <pre><%= @debug_log %></pre>
-      <h2>Session</h2>
-      <%= debug(session) %>
       <h2>Params</h2>
       <%= debug(params) %>
+      <h2>Session</h2>
+      <%= debug(session) %>
     </div>
   <%- end %>
 

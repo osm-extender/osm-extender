@@ -1,25 +1,26 @@
 class Announcement < ActiveRecord::Base
-  audited
-
-  attr_accessible :start, :finish, :message, :prevent_hiding, :public
+  has_paper_trail
 
   has_many :hidden_announcements, :dependent => :destroy
   has_many :emailed_announcements, :dependent => :destroy
 
   scope :ignoring, ->(ids) { ids.size > 0 ? where("id not in (#{ ids.map{|id| id.to_i}.join(',') })") : nil }
-  scope :are_current, :conditions => 'start <= current_timestamp AND finish >= current_timestamp'
-  scope :are_public, :conditions => {:public => true}
-  scope :are_hideable, :conditions => {:prevent_hiding => false}
+  scope :are_current, -> { where('start <= current_timestamp AND finish >= current_timestamp')}
+  scope :are_public, -> { where public: true }
+  scope :are_hideable, -> { where prevent_hiding: false }
 
   validates_presence_of :message
   validates_presence_of :start
   validates_presence_of :finish
 
+  define_attribute_methods # Can be removed once date_time_attribute issue 2 is closed - https://github.com/einzige/date_time_attribute/issues/2
+  date_time_attribute :start
+  date_time_attribute :finish
+
 
   def allow_hiding?
     !prevent_hiding
   end
-
 
   def self.email_announcement(id)
     announcement = find(id)

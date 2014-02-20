@@ -1,5 +1,5 @@
 class EmailReminderSharesController < ApplicationController
-  skip_before_filter :require_login
+  skip_before_action :require_login
   load_and_authorize_resource :except => :create
 
 
@@ -13,7 +13,7 @@ class EmailReminderSharesController < ApplicationController
   end
   
   def create
-    @email_reminder_share = current_user.email_reminders.find(params[:email_reminder_id]).shares.build(params[:email_reminder_share])
+    @email_reminder_share = current_user.email_reminders.find(params[:email_reminder_id]).shares.build(sanatised_params.email_reminder_share)
     authorize! :create, @email_reminder_share
 
     if @email_reminder_share.save

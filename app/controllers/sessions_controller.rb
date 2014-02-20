@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :require_login, :only => [:new, :create, :destroy]
+  skip_before_action :require_login, :only => [:new, :create, :destroy]
 
   def new
   end
@@ -13,12 +13,14 @@ class SessionsController < ApplicationController
 
       # prevent session fixation attack
       old_session = {}
-      keys_to_preserve = [:user_id, :return_to_path, :return_to_url, :last_action_time, :login_time]
+      keys_to_preserve = [:user_id, :return_to_url, :last_action_time, :login_time]
       keys_to_preserve.each do |key|
         old_session[key] = session[key] unless session[key].nil?
       end
       reset_session
-      session.merge!(old_session)
+      old_session.each do |key, value|
+        session[key] = value
+      end
 
       # Set current section
       if current_user.connected_to_osm?
@@ -35,9 +37,10 @@ class SessionsController < ApplicationController
       end
 
       log_usage(:result => 'success', :section_id => nil)
-      redirect_back_or_to my_page_path, :notice => 'Successfully signed in.'
+      flash[:notice] = 'Successfully signed in.'
+      redirect_to (session[:return_to_url].nil? ? my_page_path : session.delete(:return_to_url) )
     else
-      user = User.find_by_email_address(params[:email_address].downcase)
+      user = User.find_by(email_address: params[:email_address].downcase)
       if user && user.activation_state.eql?('pending')
         log_usage(:result => 'not activated', :user => user, :section_id => nil)
         flash[:error] = 'You have not yet activated your account.'

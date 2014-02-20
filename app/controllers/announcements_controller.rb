@@ -1,25 +1,32 @@
 class AnnouncementsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
+  before_action :only=>[:index, :new] do
+    now = Time.now
+    now_hr = now.strftime('%H')
+    now_min = now.strftime('%M').to_i
+    @announcement = Announcement.new(
+      :start => DateTime.parse(now_hr + ':' + (now_min - (now_min % 5)).to_s) - 5.minutes,
+      :finish => 8.days.from_now.to_date
+    )
+  end
+
 
   def index
-    @announcements = Announcement.all
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
   end
 
   def show
-    @announcement = Announcement.find(params[:id])
   end
 
   def new
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
   end
 
   def edit
-    @announcement = Announcement.find(params[:id])
   end
 
   def create
-    @announcement = Announcement.new(params[:announcement])
+    @announcement = Announcement.new(sanatised_params.announcement)
 
     if @announcement.save
       email_to_users if params[:email_to_users]
@@ -30,9 +37,7 @@ class AnnouncementsController < ApplicationController
   end
 
   def update
-    @announcement = Announcement.find(params[:id])
-
-    if @announcement.update_attributes(params[:announcement])
+    if @announcement.update(sanatised_params.announcement)
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully updated.'
     else
@@ -41,7 +46,6 @@ class AnnouncementsController < ApplicationController
   end
 
   def destroy
-    @announcement = Announcement.find(params[:id])
     @announcement.destroy
 
     redirect_to announcements_path

@@ -1,5 +1,5 @@
 class MyAccountController < ApplicationController
-  before_filter :setup_tertiary_menu
+  before_action :setup_tertiary_menu
 
   def show
   end
@@ -20,7 +20,7 @@ class MyAccountController < ApplicationController
       end
     end
 
-    if @user.update_attributes(params)
+    if @user.update(params.permit(:name, :email_address))
       redirect_to my_account_path, notice: 'Sucessfully updated your details.'
     else
       render :action => :edit

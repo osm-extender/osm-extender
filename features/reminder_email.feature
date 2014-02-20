@@ -32,7 +32,7 @@ Feature: Reminder Email
     Scenario: Add reminder email
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Email reminders"
-        And I follow "New reminder"
+        And I follow "create one"
         And I select "Tuesday" from "Send on"
         And I press "Create Email reminder"
         Then I should see "successfully created"
@@ -51,7 +51,7 @@ Feature: Reminder Email
 	    | badge      | read    |
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Email reminders"
-        And I follow "New reminder"
+        And I follow "create one"
 	And I select "1st Somewhere : Section 2" from "Section"
         And I select "Tuesday" from "Send on"
         And I press "Create Email reminder"

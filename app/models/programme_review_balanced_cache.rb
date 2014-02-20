@@ -1,5 +1,4 @@
 class ProgrammeReviewBalancedCache < ActiveRecord::Base
-  attr_accessible :term_id, :section_id, :term_name, :term_start, :term_finish, :data, :last_used_at
 
   serialize :data, Hash
 
@@ -11,7 +10,7 @@ class ProgrammeReviewBalancedCache < ActiveRecord::Base
   validates_presence_of :data
   validates_presence_of :last_used_at
 
-  scope :for_section, ->(section) { where("section_id = ?", section.to_i) }
+  scope :for_section, ->(section) { where section_id: section.to_i }
 
   def self.delete_old(older_than=1.year.ago)
     if older_than.is_a?(String)

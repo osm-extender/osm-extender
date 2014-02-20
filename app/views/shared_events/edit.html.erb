@@ -12,7 +12,7 @@
     <li>Last name</li>
     <%- @shared_event.fields.each do |field| %>
       <li>
-        <%= form_for field, :url=>shared_event_field_path(@shared_event, field), :validate=>true do |f| %>
+        <%= form_for field, :url=>shared_event_field_path(@shared_event, field) do |f| %>
           <%= f.text_field :name %>
           <%= f.submit 'Update field' %>
           <%= link_to '[Destroy]', shared_event_field_path(@shared_event, field), data: {:confirm => 'Are you sure?'}, method: :delete %>
@@ -20,7 +20,7 @@
       </li>
     <%- end %>
     <li>
-      <%= form_for @new_field, :url=>shared_event_fields_path(@shared_event),  :validate=>true do |f| %>
+      <%= form_for @new_field, :url=>shared_event_fields_path(@shared_event) do |f| %>
         <%= f.text_field :name, {:placeholder => 'Name for a new field'} %>
         <%= f.submit 'Create new field' %>
       <%- end %>

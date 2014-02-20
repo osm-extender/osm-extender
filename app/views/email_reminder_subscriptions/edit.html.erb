@@ -35,13 +35,13 @@
       </div>
     
       <div class="field"><br/>
-        <%= label_tag :name, 'Your name' %><br/>
-        <%= text_field_tag :name, @share.name %>
+        <%= label_tag 'email_reminder_subscription[name]', 'Your name' %><br/>
+        <%= text_field_tag 'email_reminder_subscription[name]', @share.name %>
       </div>
     
       <div class="field"><br/>
-        <%= label_tag :email_address, 'Your email address' %><br/>
-        <%= email_field_tag :email_address, @share.email_address %>
+        <%= label_tag 'email_reminder_subscription[email_address]', 'Your email address' %><br/>
+        <%= email_field_tag 'email_reminder_subscription[email_address]', @share.email_address %>
       </div>
     
       <%= submit_tag 'Update subscription' %>

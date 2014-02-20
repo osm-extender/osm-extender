@@ -42,22 +42,35 @@ module OSMExtender
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :osm_userid, :osm_secret, :confirmation_code, :auth_code]
 
-    # Enforce whitelist mode for mass assignment.
-    # This will create an empty whitelist of attributes available for mass-assignment for all models
-    # in your app. As such, your models will need to explicitly whitelist or blacklist accessible
-    # parameters by using an attr_accessible or attr_protected declaration.
-    config.active_record.whitelist_attributes = true
-
     # Enable the asset pipeline
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '44'
+    config.assets.version = '45'
 
     # Ensure that the application's assets are picked up for compiling
     config.assets.precompile += ['*.js', '*.css']
 
+    # Setup console
+    console do
+      # Use Pry if installed
+      if Gem::Specification::find_all_by_name('pry').any?
+        require 'pry'
+        config.console = Pry
+      end
+      # Put OSM gem into debug mode
+      Osm::Api.debug = true
+      # Set user for paper trails audits
+      who_am_i = `whoami`.strip
+      puts "Who should paper trail's versions credit changes to? (#{who_am_i})"
+      who = gets.strip
+      who = who.blank? ? who_am_i : who
+      PaperTrail.whodunnit = "console: #{who}"
+    end
+
+
     # Prefix cookie names
-    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !Rails.env.in?('production', 'test')
+    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
+
   end
 end

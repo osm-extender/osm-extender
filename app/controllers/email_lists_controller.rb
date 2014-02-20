@@ -1,6 +1,9 @@
 class EmailListsController < ApplicationController
-  before_filter :require_connected_to_osm
-  load_and_authorize_resource
+  before_action :require_connected_to_osm
+  before_action :clean_search_params, :only=>[:create, :update, :preview]
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @email_lists = current_user.email_lists
@@ -28,7 +31,7 @@ class EmailListsController < ApplicationController
   end
 
   def create
-    @email_list = current_user.email_lists.new(clean_params(params[:email_list]))
+    @email_list = current_user.email_lists.new(sanatised_params.email_list)
 
     if @email_list.save
       redirect_to email_lists_path, notice: 'Email list was successfully saved.'
@@ -42,7 +45,7 @@ class EmailListsController < ApplicationController
   def update
     @email_list = current_user.email_lists.find(params[:id])
 
-    if @email_list.update_attributes(clean_params(params[:email_list]))
+    if @email_list.update(sanatised_params.email_list)
       redirect_to email_lists_path, notice: 'Email list was successfully updated.'
     else
       @groupings = get_all_groupings
@@ -60,9 +63,8 @@ class EmailListsController < ApplicationController
 
 
   def preview
-    @params = params
     @groupings = get_all_groupings
-    @email_list = current_user.email_lists.new(clean_params(params[:email_list]))
+    @email_list = current_user.email_lists.new(sanatised_params.email_list)
     @lists = @email_list.get_list
   end
 
@@ -83,15 +85,17 @@ class EmailListsController < ApplicationController
 
 
   private
-  def clean_params(params_in)
-    params = params_in.clone
-    [:email1, :email2, :email3, :email4, :match_type].each do |key|
-      params[key] = params[key].is_a?(String) ? params[key].downcase.eql?('true') : false
+  def clean_search_params
+    if params[:email_list].is_a?(Hash)
+      [:email1, :email2, :email3, :email4, :match_type].each do |key|
+        params[:email_list][key] = params[:email_list][key].is_a?(String) ? params[:email_list][key].downcase.eql?('true') : false
+      end
+      params[:email_list][:match_grouping] = params[:email_list][:match_grouping].to_i
+    else
+      {}
     end
-    params[:match_grouping] = params[:match_grouping].to_i
-    return params
   end
-  
+
   def clean_lists(lists)
     (lists || {}).select{ |k,v| v['selected'].eql?('1') }.map{ |k,v| k.to_i}
   end

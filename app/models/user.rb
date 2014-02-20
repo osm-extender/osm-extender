@@ -1,9 +1,6 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
-  audited :except => [:crypted_password, :salt, :activation_token, :reset_password_token]
-
-  attr_accessible :name, :email_address, :password, :password_confirmation, :startup_section
-  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user, :as => :admin
+  has_paper_trail :class_name => 'UserVersion', :skip => [:crypted_password, :salt, :activation_token, :reset_password_token]
 
   has_many :email_reminders, :dependent => :destroy
   has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
@@ -93,7 +90,7 @@ class User < ActiveRecord::Base
       text.downcase! if [:email_address].include?(column)
       where(["#{column.to_s} LIKE ?", "%#{text}%"])
     else
-      scoped
+      all
     end
   end
 

@@ -1,12 +1,11 @@
 class SharedEventAttendance < ActiveRecord::Base
-  audited :associated_with => :shared_event
-  has_associated_audits
+  has_paper_trail
+##  audited :associated_with => :shared_event
+##  has_associated_audits
 
   belongs_to :shared_event
   belongs_to :user
   has_many :shared_event_field_datas, :dependent => :destroy, :autosave => true
-
-  attr_accessible :section_id, :event_id
 
   validates_presence_of :user
   validates_presence_of :shared_event

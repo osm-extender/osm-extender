@@ -1,4 +1,4 @@
-<%= form_for @announcement, :validate=>true do |f| %>
+<%= form_for @announcement do |f| %>
   <% if @announcement.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@announcement.errors.count, "error") %> prohibited this announcement from being saved:</h2>
@@ -17,11 +17,13 @@
   </div>
   <div class="field">
     <%= f.label :start %><br/>
-    <%= f.datetime_select :start %>
+    <%= f.date_field :start_date %>
+    <%= f.time_field :start_time, :step => 5.minutes %>
   </div>
   <div class="field">
     <%= f.label :finish %><br/>
-    <%= f.datetime_select :finish %>
+    <%= f.date_field :finish_date %>
+    <%= f.time_field :finish_time, :step=>5.minutes %>
   </div>
 
   <div class="field">

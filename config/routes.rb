@@ -30,9 +30,9 @@ OSMExtender::Application.routes.draw do
   post 'email_lists/multiple' => 'email_lists#multiple', :as => 'multiple_email_list'
   resources :email_lists
 
-  match 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
-  match 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
-  match 'unlock_account/:token' => 'users#unlock_account', :as => 'unlock_account'
+  get 'activate_account/:token' => 'users#activate_account', :as => 'activate_account'
+  get 'reset_password/:token' => 'password_resets#edit', :as => 'reset_password'
+  get 'unlock_account/:token' => 'users#unlock_account', :as => 'unlock_account'
 
   resources :users
   get 'users/:id/reset_password' => 'users#reset_password', :as => 'reset_password_user'

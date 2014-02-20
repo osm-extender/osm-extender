@@ -1,6 +1,7 @@
 class EmailReminderItemEventsController < EmailReminderItemsController
-  before_filter { require_osm_permission :read, :programme }
+  before_action { require_osm_permission :read, :programme }
 
+  private
   def model
     return EmailReminderItemEvent
   end
