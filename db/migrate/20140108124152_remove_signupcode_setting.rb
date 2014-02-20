@@ -6,7 +6,7 @@ class RemoveSignupcodeSetting < ActiveRecord::Migration
     STDIN.gets.strip
   end
   class SettingValue < ActiveRecord::Base
-    audited
+    has_paper_trail
     attr_accessible :key, :value, :description
     validates_presence_of :key
     validates_uniqueness_of :key
