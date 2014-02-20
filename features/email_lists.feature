@@ -147,7 +147,7 @@ Feature: Email Lists
         And I press "Get addresses"
 	And I fill in "Name" with "Test list"
 	And I press "Save this list"
-	Then I should see "Email list was successfully saved"
+	Then I should see "Email list was successfully created"
 	And I should be on the email_lists page
 	And I should see "Section 2" in the "Section" column of the "Test list" row
 

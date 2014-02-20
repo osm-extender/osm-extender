@@ -19,11 +19,15 @@ class UsersController < ApplicationController
   end
   
   def update
-    user = User.find(params[:id])
-    if user.update(params[:user].permit(:name, :email_address, :can_administer_users,:can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
+    @user = User.find(params[:id])
+    @user.assign_attributes(params[:user].permit(:name, :email_address, :can_administer_users, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
+
+    if @user.invalid?
+      render action: :edit, status: 422
+    elsif @user.save
       redirect_to users_path, :notice => 'The user was updated.'
     else
-      render :action => :edit
+      render action: :edit, status: 500, error: 'The user could not be updated.'
     end
   end
 
@@ -33,15 +37,20 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user].permit(:name, :email_address, :password, :password_confirmation))
-    if @user.save
+    if @user.invalid?
+      render action: :new, status: 422
+
+    elsif @user.save
       user = login(params[:user][:email_address], params[:user][:password])
       if user
         redirect_back_or_to root_path, :notice => 'Your signup was successful, you are now signed in.'
       else
         redirect_to root_path, :notice => 'Your signup was successful, please check your email for instructions.'
       end
+
     else
-      render :new
+      render action: :new, status: 500, error: 'Your signup was unsuccessful.'
+    
     end
   end
 

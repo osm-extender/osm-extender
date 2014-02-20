@@ -23,7 +23,7 @@ class MyAccountController < ApplicationController
     if @user.update(params.permit(:name, :email_address))
       redirect_to my_account_path, notice: 'Sucessfully updated your details.'
     else
-      render :action => :edit
+      render action: :edit, status: 500, error: 'Your details could not be updated.'
     end
   end
 

@@ -28,20 +28,26 @@ class AnnouncementsController < ApplicationController
   def create
     @announcement = Announcement.new(sanatised_params.announcement)
 
-    if @announcement.save
+    if @announcement.invalid?
+      render action: :new, status: 422
+    elsif @announcement.save
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully created.'
     else
-      render action: "new"
+      render action: :new, status: 500, error: 'Announcement could not be created.'
     end
   end
 
   def update
-    if @announcement.update(sanatised_params.announcement)
+    @announcement.assign_attributes(sanatised_params.announcement)
+
+    if @announcement.invalid?
+      render action: :edit, status: 422
+    elsif @announcement.save
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully updated.'
     else
-      render action: "edit"
+      render action: :edit, status: 500, error: 'Announcement could not be updated.'
     end
   end
 

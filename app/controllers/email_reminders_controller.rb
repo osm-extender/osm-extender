@@ -28,23 +28,30 @@ class EmailRemindersController < ApplicationController
   def create
     @email_reminder = current_user.email_reminders.new(sanatised_params.email_reminder)
 
-    if @email_reminder.save
+    if @email_reminder.invalid?
+      render action: :new, status: 422
+
+    elsif @email_reminder.save
       flash[:instruction] = 'You must now add some items to your reminder.'
       flash[:notice] = 'Email reminder was successfully created.'
       @available_items = get_available_items(@email_reminder.section_id)
       render action: 'edit'
+
     else
-      render action: "new"
+      render action: :new, status: 500, error: 'Email reminder could not be created.'
     end
   end
 
   def update
     @email_reminder = current_user.email_reminders.find(params[:id])
+    @email_reminder.assign_attributes(sanatised_params.email_reminder)
 
-    if @email_reminder.update(sanatised_params.email_reminder)
+    if @email_reminder.invalid?
+      render action: :edit, status: 422
+    elsif @email_reminder.save
       redirect_to @email_reminder, notice: 'Email reminder was successfully updated.'
     else
-      render action: "edit"
+      render action: :edit, status: 500, error: 'Email reminder could not be updated.'
     end
   end
 

@@ -33,24 +33,29 @@ class EmailListsController < ApplicationController
   def create
     @email_list = current_user.email_lists.new(sanatised_params.email_list)
 
-    if @email_list.save
-      redirect_to email_lists_path, notice: 'Email list was successfully saved.'
+    if @email_list.invalid?
+      render action: :new, status: 422
+    elsif @email_list.save
+      redirect_to email_lists_path, notice: 'Email list was successfully created.'
     else
       @groupings = get_all_groupings
       @sections_data = get_sections_data
-      render action: "new"
+      render action: :new, status: 500, error: 'Email list could not be created.'
     end
   end
 
   def update
     @email_list = current_user.email_lists.find(params[:id])
+    @email_list.assign_attributes(sanatised_params.email_list)
 
-    if @email_list.update(sanatised_params.email_list)
+    if @email_list.invalid?
+      render action: :edit, status: 422
+    elsif @email_list.save
       redirect_to email_lists_path, notice: 'Email list was successfully updated.'
     else
       @groupings = get_all_groupings
       @sections_data = get_sections_data
-      render action: "edit"
+      render action: :edit, status: 500, error: 'Email list could not be updated.'
     end
   end
 

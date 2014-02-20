@@ -28,21 +28,26 @@ class EmailReminderItemsController < ApplicationController
       :configuration => configuration_params.symbolize_keys,
     })
 
-    if @email_reminder_item.save
+    if @email_reminder_item.invalid?
+      render action: :new, status: 422
+    elsif @email_reminder_item.save
       redirect_to edit_email_reminder_path(@email_reminder_item.email_reminder), notice: 'Item was successfully added.'
     else
-      render action: "new"
+      render action: :new, status: 500, error: 'Item could not be added.'
     end
   end
 
   def update
     params[:email_reminder_item] ||= {}
     @email_reminder_item = EmailReminderItem.find(params[:id])
+    @email_reminder_item.assign_attributes(:configuration=>configuration_params.symbolize_keys)
 
-    if @email_reminder_item.update(:configuration=>configuration_params.symbolize_keys)
+    if @email_reminder_item.invalid?
+      render action: :edit, status: 422
+    elsif @email_reminder_item.save
       redirect_to edit_email_reminder_path(@email_reminder_item.email_reminder), notice: 'Item was successfully updated.'
     else
-      render action: "edit"
+      render action: :edit, status: 500, error: 'Item could not be updated.'
     end
   end
 
