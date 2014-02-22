@@ -10,11 +10,6 @@ gem 'activerecord-session_store', '~> 0.1'
 gem 'sorcery', '~> 0.8', '>= 0.8.5'
 gem 'cancan', '~> 1.6'
 
-# Javascript
-gem 'therubyracer', '~> 0.12'
-  gem 'libv8', '~> 3.16', '>= 3.16.14.03'
-gem 'jquery-rails', '~> 3.0'
-gem 'jquery-ui-rails', '~> 4.0'
 
 # Misc
 gem 'osm', '~> 1.2', '>= 1.2.6'       # For using the OSM API
@@ -31,19 +26,22 @@ gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.0.5' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false
 
+
 # Jobs in background
 gem 'delayed_job_active_record', '~> 4.0'
 gem 'daemons', '~> 1.1'
 gem 'daemon-spawn', '~> 0.4'
 
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails', '~> 4.0'
-  gem 'coffee-rails', '~> 4.0'
-  gem 'uglifier', '~> 2.0'
-end
+# Javascript / Assets
+gem 'therubyracer', '~> 0.12'
+  gem 'libv8', '~> 3.16', '>= 3.16.14.03'
+gem 'jquery-rails', '~> 3.0'
+gem 'jquery-ui-rails', '~> 4.0'
+gem 'sass-rails', '~> 4.0'
+gem 'coffee-rails', '~> 4.0'
+gem 'uglifier', '~> 2.0'
+
 
 group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
