@@ -13,7 +13,6 @@ class Announcement < ActiveRecord::Base
   validates_presence_of :start
   validates_presence_of :finish
 
-  define_attribute_methods # Can be removed once date_time_attribute issue 2 is closed - https://github.com/einzige/date_time_attribute/issues/2
   date_time_attribute :start
   date_time_attribute :finish
 
