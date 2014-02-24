@@ -4,7 +4,7 @@ class Announcement < ActiveRecord::Base
   has_many :hidden_announcements, :dependent => :destroy
   has_many :emailed_announcements, :dependent => :destroy
 
-  scope :ignoring, ->(ids) { ids.size > 0 ? where("id not in (#{ ids.map{|id| id.to_i}.join(',') })") : nil }
+  scope :ignoring, ->(ids) { where.not(id: ids.map{|id| id.to_i}) }
   scope :are_current, -> { where('start <= current_timestamp AND finish >= current_timestamp')}
   scope :are_public, -> { where public: true }
   scope :are_hideable, -> { where prevent_hiding: false }
