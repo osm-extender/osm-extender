@@ -1,7 +1,5 @@
 class SharedEventField < ActiveRecord::Base
   has_paper_trail
-##  audited :associated_with => :shared_event
-##  has_associated_audits
 
   belongs_to :event, :class_name => SharedEvent, :foreign_key => :shared_event_id
   belongs_to :shared_event

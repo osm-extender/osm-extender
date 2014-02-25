@@ -1,6 +1,5 @@
 class EmailReminder < ActiveRecord::Base
   has_paper_trail
-##  has_associated_audits
 
   belongs_to :user
   has_many :items, -> { order :position }, class_name: EmailReminderItem, dependent: :destroy, inverse_of: :email_reminder

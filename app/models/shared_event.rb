@@ -1,6 +1,5 @@
 class SharedEvent < ActiveRecord::Base
   has_paper_trail
-##  has_associated_audits
 
   belongs_to :user
   has_many :attendance, dependent: :destroy, class_name: SharedEventAttendance, inverse_of: :shared_event

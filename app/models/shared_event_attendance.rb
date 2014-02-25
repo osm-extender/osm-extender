@@ -1,7 +1,5 @@
 class SharedEventAttendance < ActiveRecord::Base
   has_paper_trail
-##  audited :associated_with => :shared_event
-##  has_associated_audits
 
   belongs_to :shared_event
   belongs_to :user
