@@ -5,7 +5,7 @@ class SharedEventAttendance < ActiveRecord::Base
 
   belongs_to :shared_event
   belongs_to :user
-  has_many :shared_event_field_datas, :dependent => :destroy, :autosave => true
+  has_many :shared_event_field_datas, dependent: :destroy, autosave: true, inverse_of: :shared_event_attendance
 
   validates_presence_of :user
   validates_presence_of :shared_event

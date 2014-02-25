@@ -3,8 +3,8 @@ class SharedEvent < ActiveRecord::Base
 ##  has_associated_audits
 
   belongs_to :user
-  has_many :attendance, :dependent => :destroy, :class_name => SharedEventAttendance
-  has_many :fields, :dependent => :destroy, :class_name => SharedEventField
+  has_many :attendance, dependent: :destroy, class_name: SharedEventAttendance, inverse_of: :shared_event
+  has_many :fields, dependent: :destroy, class_name: SharedEventField, inverse_of: :shared_event
 
   validates_presence_of :user
   validates_presence_of :name

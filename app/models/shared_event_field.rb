@@ -5,7 +5,7 @@ class SharedEventField < ActiveRecord::Base
 
   belongs_to :event, :class_name => SharedEvent, :foreign_key => :shared_event_id
   belongs_to :shared_event
-  has_many :data_sources, :dependent => :destroy, :class_name => SharedEventFieldData
+  has_many :data_sources, dependent: :destroy, class_name: SharedEventFieldData, inverse_of: :shared_event_field
 
   validates_presence_of :shared_event
   validates_presence_of :name

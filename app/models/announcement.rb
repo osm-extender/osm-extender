@@ -1,8 +1,8 @@
 class Announcement < ActiveRecord::Base
   has_paper_trail
 
-  has_many :hidden_announcements, :dependent => :destroy
-  has_many :emailed_announcements, :dependent => :destroy
+  has_many :hidden_announcements, dependent: :destroy, inverse_of: :announcement
+  has_many :emailed_announcements, dependent: :destroy, inverse_of: :announcement
 
   scope :ignoring, ->(ids) { where.not(id: ids.map{|id| id.to_i}) }
   scope :are_current, -> { where('start <= current_timestamp AND finish >= current_timestamp')}
