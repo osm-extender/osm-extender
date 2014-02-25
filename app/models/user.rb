@@ -2,14 +2,14 @@ class User < ActiveRecord::Base
   authenticates_with_sorcery!
   has_paper_trail :class_name => 'UserVersion', :skip => [:crypted_password, :salt, :activation_token, :reset_password_token]
 
-  has_many :email_reminders, :dependent => :destroy
-  has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
-  has_many :email_lists, :dependent => :destroy
-  has_many :hidden_announcements, :dependent => :destroy
-  has_many :emailed_announcements, :dependent => :destroy
-  has_many :shared_event_attendances, :dependent => :destroy
-  has_many :shared_events, :dependent => :destroy
-  has_many :usage_log
+  has_many :email_reminders, dependent: :destroy, inverse_of: :user
+  has_many :email_reminder_shares, through: :email_reminders, source: :shares
+  has_many :email_lists, dependent: :destroy, inverse_of: :user
+  has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
+  has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
+  has_many :shared_event_attendances, dependent: :destroy, inverse_of: :user
+  has_many :shared_events, dependent: :destroy, inverse_of: :user
+  has_many :usage_log, inverse_of: :user
 
   validates_presence_of :name
 

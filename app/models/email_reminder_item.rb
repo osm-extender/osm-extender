@@ -11,7 +11,6 @@
 
 class EmailReminderItem < ActiveRecord::Base
   has_paper_trail
-##  audited :associated_with => :email_reminder
 
   belongs_to :email_reminder
 

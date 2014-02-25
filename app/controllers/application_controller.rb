@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_action :require_login
+  add_flash_types :information, :error, :warning, :notice, :instruction
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
                 :api_has_osm_permission?, :get_section_names, :get_grouping_name,
                 :get_current_section_terms, :get_current_term_id, :require_not_login,

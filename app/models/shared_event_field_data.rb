@@ -1,6 +1,5 @@
 class SharedEventFieldData < ActiveRecord::Base
   has_paper_trail
-##  audited :associated_with => :shared_event_attendance
 
   belongs_to :shared_event_field
   belongs_to :shared_event_attendance

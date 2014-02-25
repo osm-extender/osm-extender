@@ -1,10 +1,10 @@
 class Announcement < ActiveRecord::Base
   has_paper_trail
 
-  has_many :hidden_announcements, :dependent => :destroy
-  has_many :emailed_announcements, :dependent => :destroy
+  has_many :hidden_announcements, dependent: :destroy, inverse_of: :announcement
+  has_many :emailed_announcements, dependent: :destroy, inverse_of: :announcement
 
-  scope :ignoring, ->(ids) { ids.size > 0 ? where("id not in (#{ ids.map{|id| id.to_i}.join(',') })") : nil }
+  scope :ignoring, ->(ids) { where.not(id: ids.map{|id| id.to_i}) }
   scope :are_current, -> { where('start <= current_timestamp AND finish >= current_timestamp')}
   scope :are_public, -> { where public: true }
   scope :are_hideable, -> { where prevent_hiding: false }
@@ -13,7 +13,6 @@ class Announcement < ActiveRecord::Base
   validates_presence_of :start
   validates_presence_of :finish
 
-  define_attribute_methods # Can be removed once date_time_attribute issue 2 is closed - https://github.com/einzige/date_time_attribute/issues/2
   date_time_attribute :start
   date_time_attribute :finish
 
@@ -53,7 +52,7 @@ class Announcement < ActiveRecord::Base
     if older_than.is_a?(String)
       older_than = older_than.split.inject { |count, unit| count.to_i.send(unit) }
     end
-    destroy_all ['updated_at <= ? AND finish <= ?', older_than, older_than]
+    destroy_all ['updated_at <= :when AND finish <= :when', when: older_than.to_date]
   end
 
 end

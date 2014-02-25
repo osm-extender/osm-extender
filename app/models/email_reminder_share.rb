@@ -1,6 +1,5 @@
 class EmailReminderShare < ActiveRecord::Base
   has_paper_trail
-##  audited :associated_with => :reminder
 
   belongs_to :reminder, :class_name => 'EmailReminder'
 
