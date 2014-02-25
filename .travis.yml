@@ -5,4 +5,5 @@ branches:
   only:
     - master
     - staging
+    - /gh(?:\d)+(?:-.+)?/
 script: rake ci:travis
