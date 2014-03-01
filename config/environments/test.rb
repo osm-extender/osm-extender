@@ -1,7 +1,6 @@
 OSMExtender::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-
   # The test environment is used exclusively to run your application's
   # test suite.  You never need to work with it otherwise.  Remember that
   # your test database is "scratch space" for the test suite and is wiped
@@ -51,20 +50,6 @@ OSMExtender::Application.configure do
     :host => 'test',
   }
 
-#  # Controller URL options
-#  config.action_controller.default_url_options = {
-#    :protocol => 'http',
-#    :host => 'test',
-#  }
-##  ActionController::Base.default_url_options = config.action_controller.default_url_options
-
-  # Mailer URL options
-#  config.action_mailer.default_url_options = {
-#    :protocol => 'http',
-#    :host => 'test',
-#  }
-##  ActionMailer::Base.send('default_url_options=', config.action_mailer.default_url_options)
-
   # Mailer options
   ActionMailer::Base.send :default, {
     :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
@@ -88,29 +73,4 @@ OSMExtender::Application.configure do
     'return-path' => 'user-mailer@example.com',     # Should be the email address portion of from
   }
 
-end
-
-ActionDispatch::Callbacks.to_prepare do
-  # OSM options (copy/complete into development_custom.rb)
-  Osm::configure(
-    :api => {
-      :default_site => :osm,
-      :osm => {
-        :id    => 12,
-        :token => '1234567890',
-        :name  => "Test API",
-      },
-      :debug   => false
-    },
-    :cache => {
-      :cache  => Rails.cache,
-      :ttl    => 30
-    },
-  )
-
-  # ReCAPTCHA options (copy/complete into staging_custom.rb)
-  Recaptcha.configure do |config|
-    config.public_key  = '11223344556677889900'
-    config.private_key = '00998877665544332211'
-  end
 end
