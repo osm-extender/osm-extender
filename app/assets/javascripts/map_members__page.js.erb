@@ -145,7 +145,7 @@ function plot() {
     });
   }
   $.ajax({
-    url: '/map_members/data?address=' + document.getElementById('address').value,
+    url: '<%= OSMExtender::Application.routes.url_helpers.map_members_data_path %>?address=' + document.getElementById('address').value,
     dataType:'json',
     async: false,
     success: function(data, status, jqXHR) {
