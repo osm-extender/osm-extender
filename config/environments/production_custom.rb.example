@@ -1,7 +1,4 @@
 OSMExtender::Application.configure do
-  # Setup key for encrypting cookies
-  config.secret_key_base = generate one by running bundle exec rake secret
-
   # Specifies the header that your server uses for sending files
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
@@ -25,6 +22,7 @@ ActionDispatch::Callbacks.to_prepare do
   Rails.application.routes.default_url_options = {
     :protocol => 'https',
     :host => 'localhost',
+#   :script_name => '/something'
   }
 
   # Mailer options
@@ -64,26 +62,4 @@ ActionDispatch::Callbacks.to_prepare do
 #    :enable_starttls_auto => true
 #  }
 
-  # OSM options
-  Osm::configure(
-    :api => {
-      :default_site => :osm,
-      :osm => {
-        :id    => GET THIS FROM ED,
-        :token => GET THIS FROM ED,
-        :name  => GIVE THIS TO ED,
-      },
-    },
-    :cache => {
-      :cache  => Rails.cache,
-      :ttl    => 30
-    },
-  )
-
-  # ReCAPTCHA options
-  Recaptcha.configure do |config|
-    config.public_key  = YOUR PUBLIC KEY HERE
-    config.private_key = YOUR PRIVATE KEY HERE
-  end
 end
-

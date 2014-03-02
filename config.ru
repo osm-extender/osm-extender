@@ -2,6 +2,6 @@
 
 require ::File.expand_path('../config/environment',  __FILE__)
 
-map OSMExtender::Application.config.relative_url_root || '/' do
+map Rails.application.routes.default_url_options[:script_name] || '/' do
   run OSMExtender::Application
 end

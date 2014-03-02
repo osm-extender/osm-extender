@@ -4,8 +4,9 @@ db/*.sqlite3-journal
 log/*
 tmp/
 .sass-cache/
-config/database.yml
 config/environments/*_custom.rb
+config/database.yml
+config/secrets.yml
 config/unicorn.conf
 doc/app
 public/assets
