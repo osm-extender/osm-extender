@@ -75,7 +75,7 @@ class Report
           Osm::Event.get_for_section(user.osm_api, section).each do |event|
             unless event.start.nil?
               event_date = event.finish.nil? ? event.start : event.finish
-              unless (event_date < params[:calendar_start]) || (event_date > params[:calendar_finish])
+              unless (event_date < params[:start]) || (event_date > params[:finish])
                 items.push [event_date, event]
               end
             end
@@ -84,9 +84,9 @@ class Report
   
         if params[:programme][section.id.to_s].eql?('1')
           Osm::Term.get_for_section(user.osm_api, section).each do |term|
-            unless term.before?(params[:calendar_start]) || term.after?(params[:calendar_finish])
+            unless term.before?(params[:start]) || term.after?(params[:finish])
               Osm::Meeting.get_for_section(user.osm_api, section, term).each do |meeting|
-                unless (meeting.date < params[:calendar_start]) || (meeting.date > params[:calendar_finish])
+                unless (meeting.date < params[:start]) || (meeting.date > params[:finish])
                   items.push [meeting.date, meeting]
                 end
               end

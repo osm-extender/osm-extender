@@ -1,5 +1,6 @@
 class ReportsController < ApplicationController
   before_action :require_connected_to_osm
+  before_action { @my_params = (params[params[:action]] || {}) }
 
 
   def index
@@ -26,7 +27,7 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
     due_badges = Osm::Badges.get_due_badges(current_user.osm_api, current_section)
-    @check_stock = params[:check_stock].eql?('1')
+    @check_stock = @my_params[:check_stock].eql?('1')
     @by_member = due_badges.by_member
     @badge_totals = due_badges.totals
     @badge_names = due_badges.badge_names
@@ -47,20 +48,20 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     require_osm_permission(:read, :events)
 
-    unless params['events'].is_a?(Hash)
+    unless @my_params['events'].is_a?(Hash)
       flash[:error] = 'You must select at least one event to get the attendance for.'
       redirect_to reports_path
       return
     end
 
-    unless params['groupings'].is_a?(Hash)
+    unless @my_params['groupings'].is_a?(Hash)
       flash[:error] = "You must select at least one #{get_grouping_name(current_section.type)} to get the attendance for."
       redirect_to reports_path
       return
     end
 
 
-    selected_groupings = params['groupings'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i}
+    selected_groupings = @my_params['groupings'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i}
     @grouping_names = get_current_section_groupings.invert.to_a.select{ |g| selected_groupings.include?(g[0]) }.sort do |a,b|
       result = 1 if a[0] == -2
       result = -1 if b[0] == -2
@@ -68,7 +69,7 @@ class ReportsController < ApplicationController
       result
     end
 
-    data = Report.event_attendance(current_user, current_section, params['events'].to_a.select{|i| i[1].eql?('1')}.map{|i| i[0].to_i}, selected_groupings)
+    data = Report.event_attendance(current_user, current_section, @my_params['events'].to_a.select{|i| i[1].eql?('1')}.map{|i| i[0].to_i}, selected_groupings)
     @event_names = data[:event_names]
     @row_groups = data[:row_groups]
     @member_totals = data[:member_totals]
@@ -77,8 +78,8 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html do
         @options = {
-          :groupings => params[:groupings],
-          :events => params[:events],
+          :groupings => @my_params[:groupings],
+          :events => @my_params[:events],
         }
       end # html
       format.csv do
@@ -107,14 +108,14 @@ class ReportsController < ApplicationController
       :sub_action => request.format.to_s,
       :extra_details => {
         :groupings => selected_groupings,
-        :events => params['events'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i},
+        :events => @my_params['events'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i},
       }
     )
   end
 
 
   def calendar
-    dates = [Osm.parse_date(params[:calendar_start]), Osm.parse_date(params[:calendar_finish])]
+    dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
       flash[:error] = 'You failed to provide at least one of the dates.'
       redirect_back_or_to reports_path
@@ -122,28 +123,22 @@ class ReportsController < ApplicationController
     end
     (@start, @finish) = dates.sort
 
-    unless params[:programme].is_a?(Hash) || params[:events].is_a?(Hash)
+    unless @my_params[:programme].is_a?(Hash) || @my_params[:events].is_a?(Hash)
       flash[:error] = 'You must select something to show on the calendar'
       redirect_to reports_path
       return
     end
-    params[:programme] ||= {}
-    params[:events] ||= {}
+    @my_params[:programme] ||= {}
+    @my_params[:events] ||= {}
 
-    params[:programme].each do |section, selected|
+    @my_params[:programme].each do |section, selected|
       require_osm_permission(:read, :programme, current_user, section.to_i) if selected.eql?('1')
     end
-    params[:events].each do |section, selected|
+    @my_params[:events].each do |section, selected|
       require_osm_permission(:read, :events, current_user, section.to_i) if selected.eql?('1')
     end
 
-    @options = {
-      :programme => params[:programme],
-      :events => params[:events],
-      :calendar_start => @start,
-      :calendar_finish => @finish,
-    }
-    @items = Report.calendar(current_user, @options)
+    @items = Report.calendar(current_user, @my_params.merge(start: @start, finish: @finish))
 
     respond_to do |format|
       format.html # html
@@ -173,7 +168,7 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
 
-    dates = [Osm.parse_date(params[:start]), Osm.parse_date(params[:finish])]
+    dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
       flash[:errror] = 'You failed to provide at least one of the dates.'
       redirect_back_or_to reports_path
@@ -249,7 +244,7 @@ class ReportsController < ApplicationController
         staged_badges = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section)
         staged_badges.each do |staged_badge|
           staged_badge.get_data_for_section(current_user.osm_api, current_section).each do |data|
-            if data.awarded_date?
+            if data.awarded_date? && (data.awarded_date >= @start) && (data.awarded_date <= @finish)
               # It has been awarded
               name = "#{data[:first_name]} #{data[:last_name]}"
               badge_key = staged_badge.osm_key
@@ -279,10 +274,10 @@ class ReportsController < ApplicationController
     require_osm_permission(:read, :events)
 
     options = {
-      :include_core => params[:include_core].eql?('1'),
-      :include_challenge => params[:include_challenge].eql?('1'),
-      :include_staged => params[:include_staged].eql?('1'),
-      :include_activity => params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+      :include_core => @my_params[:include_core].eql?('1'),
+      :include_challenge => @my_params[:include_challenge].eql?('1'),
+      :include_staged => @my_params[:include_staged].eql?('1'),
+      :include_activity => @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
     }
     (@names, @matrix) = Report.badge_completion_matrix(current_user, current_section, options)
 
@@ -319,10 +314,10 @@ class ReportsController < ApplicationController
     @badge_requirement_labels = {}
 
     @badge_types = {}
-    @badge_types[:core] = 'Core' if params[:include_core].eql?('1')
-    @badge_types[:challenge] = 'Challenge' if params[:include_challenge].eql?('1')
-    @badge_types[:staged] = 'Staged Activity and Partnership' if params[:include_staged].eql?('1')
-    if params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+    @badge_types[:core] = 'Core' if @my_params[:include_core].eql?('1')
+    @badge_types[:challenge] = 'Challenge' if @my_params[:include_challenge].eql?('1')
+    @badge_types[:staged] = 'Staged Activity and Partnership' if @my_params[:include_staged].eql?('1')
+    if @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
       @badge_types[:activity] = 'Activity'
     end
 
@@ -402,7 +397,7 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
 
-    dates = [Osm.parse_date(params[:planned_badges_start]), Osm.parse_date(params[:planned_badges_finish])]
+    dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
       flash[:errror] = 'You failed to provide at least one of the dates.'
       redirect_back_or_to reports_path
