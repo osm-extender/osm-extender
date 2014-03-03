@@ -1,5 +1,4 @@
 class MyAccountController < ApplicationController
-  before_action :setup_tertiary_menu
 
   def show
   end
@@ -96,16 +95,6 @@ class MyAccountController < ApplicationController
       flash[:error] = 'Sorry something went wrong.'
       redirect_to confirm_delete_my_account_path
     end
-  end
-  
-  private
-  def setup_tertiary_menu
-    @tertiary_menu_items = [
-      ['Edit Details', edit_my_account_path],
-      ['Change Password', change_my_password_path],
-      ['Delete Account', confirm_delete_my_account_path]
-    ]
-    @tertiary_menu_items.push(['Connect to OSM', connect_to_osm_path]) unless current_user.connected_to_osm?
   end
 
 end

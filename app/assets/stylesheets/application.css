@@ -201,23 +201,6 @@ div.pagination {
     font-weight:        bold;
 }
 
-#tertiary_menu {
-    text-align:         center;
-}
-#tertiary_menu .menu_item {
-    display:            inline-block;
-    margin-left:        10px;
-    margin-right:       10px;
-    margin-top:         5px;
-}
-#tertiary_menu .menu_item a {
-    color:              blue;
-    text-decoration:    none;
-}
-#tertiary_menu .menu_item a:hover {
-    text-decoration:    underline;
-}
-
 
 #announcements {
     padding:            5px;

@@ -1,5 +1,6 @@
 <% provide :title, "#{current_user.name}'s Account" %>
 
+
 <h2>Personal Details</h2>
 
 <div class="field">
@@ -11,3 +12,8 @@
   <%= label_tag :email_address %><br/>
   <%= current_user.email_address %>
 </div>
+
+
+<%= link_to 'Edit details', edit_my_account_path %> |
+<%= link_to 'Change password', change_my_password_path %> |
+<%= link_to 'Delete account', confirm_delete_my_account_path %>

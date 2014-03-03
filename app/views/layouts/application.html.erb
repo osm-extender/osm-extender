@@ -140,14 +140,6 @@
       <%- end %>
     </div><!-- header -->
 
-    <div id="tertiary_menu">
-      <%- if @tertiary_menu_items %>
-        <%- @tertiary_menu_items.each do |item| %>
-          <div class="menu_item"><%= link_to item[0], item[1] %></div>
-        <%- end %>
-      <%- end %>
-    </div><!-- tertiary_menu -->
-
   
     <div id="content">
       <%- if content_for?(:title) %>
