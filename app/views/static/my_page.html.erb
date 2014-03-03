@@ -1,4 +1,4 @@
-<% provide :title, "#{current_user.name}'s Page" %>
+<%= page_title "#{current_user.name}'s Page" %>
 
 <%- unless current_user.connected_to_osm? %>
   <p>You have not yet connected your account to your OSM account - <%= link_to 'Connect now', connect_to_osm_path %></p>

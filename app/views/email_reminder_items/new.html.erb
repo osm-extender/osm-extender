@@ -1,4 +1,4 @@
-<% provide :title, "New #{@email_reminder_item.human_name.downcase} item" %>
+<%= page_title "New #{@email_reminder_item.human_name.downcase} item" %>
 
 <%= form_for @email_reminder_item do |f| %>
   <%= render 'form', :f=>f %>

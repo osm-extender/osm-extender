@@ -1,4 +1,4 @@
-<% provide :title, "Contact Us" %>
+<%= page_title "Contact Us" %>
 
 <%= form_for @contact, {:url => send_contact_us_path} do |f| %>
   <% if @contact.errors.any? %>

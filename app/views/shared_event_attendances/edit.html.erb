@@ -1,4 +1,4 @@
-<% provide :title, "Edit Shared Event Attendance - #{@shared_event_attendance.shared_event.name}" %>
+<%= page_title "Edit Shared Event Attendance - #{@shared_event_attendance.shared_event.name}" %>
 
 <%= form_for @shared_event_attendance do |f| %>
   <% if @shared_event_attendance.errors.any? %>

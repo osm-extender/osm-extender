@@ -1,4 +1,4 @@
-<% provide :title, "#{current_user.name}'s Account - Connect to OSM" %>
+<%= page_title "#{current_user.name}'s Account - Connect to OSM" %>
 
 <%= form_tag connect_to_osm2_path, :method => :post do %>
   <% if current_user.errors.any? %>
