@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
     alphabet_size += 10 if pass.gsub(/[^0-9]/, '').length > 0
     alphabet_size += 33 if pass.gsub(/[a-zA-Z0-9]/, '').length > 0
 
-    haystack_size = alphabet_size * (alphabet_size+1)**(pass.length-1)
+    haystack_size = alphabet_size**pass.length
 
     if haystack_size < minimum_haystack
       if alphabet_size < 40

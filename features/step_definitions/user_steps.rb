@@ -22,10 +22,16 @@ Given /^"([^"]*)" has activation_token "([^"]*)"$/ do |email, activation_token|
   user.save!
 end
 
+Given /^"([^"]*)" has (\d*) failed login attempts$/ do |email, attempts|
+  user = User.find_by_email_address(email)
+  user.failed_logins_count = attempts.to_i
+  user.save!
+end
+
 Given /^"([^"]*)" has been a locked user account$/ do |email|
-    user = User.find_by_email_address(email)
-    user.lock_expires_at = 1.hour.ago
-    user.save!
+  user = User.find_by_email_address(email)
+  user.lock_expires_at = 1.hour.ago
+  user.save!
 end
 
 Given /^"([^"]*)" is a locked user account$/ do |email|
