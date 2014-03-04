@@ -55,6 +55,7 @@ OSMExtender::Application.configure do
 end
 
 
+ActiveSupport::Deprecation.silenced = true
 ActionController::Parameters.action_on_unpermitted_parameters ||= :raise
 
 

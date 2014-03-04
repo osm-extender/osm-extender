@@ -79,6 +79,7 @@ end
 
 
 ActionController::Parameters.action_on_unpermitted_parameters ||= :raise
+ActiveSupport::Deprecation.silenced = true
 
 
 # Load custom configuration
