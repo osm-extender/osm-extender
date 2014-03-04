@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  protect_from_forgery :with => :exception
   before_action :require_login
   add_flash_types :information, :error, :warning, :notice, :instruction
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
     @message += "(#{exception.param.inspect})."
     log_error(exception)
     email_error(exception)
-    render :template => "error/422", :status => 422
+    render :template => 'error/422', :status => 422
   end
 
   rescue_from ActionController::UnpermittedParameters do |exception|
@@ -29,7 +29,11 @@ class ApplicationController < ActionController::Base
     @message += "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
     log_error(exception)
     email_error(exception)
-    render :template => "error/422", :status => 422
+    render :template => 'error/422', :status => 422
+  end
+
+  rescue_from ActionController::InvalidAuthenticityToken do
+    render :template => 'error/invalid_authenticity_token', :status => 422
   end
 
 
