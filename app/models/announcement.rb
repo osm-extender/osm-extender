@@ -22,8 +22,13 @@ class Announcement < ActiveRecord::Base
   date_time_attribute :finish
 
 
-  def allow_hiding?
+  def hideable?
     !prevent_hiding
+  end
+
+  def current?
+    now = Time.now
+    (start < now) && (finish > now)
   end
 
   def self.email_announcement(id)

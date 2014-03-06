@@ -20,11 +20,11 @@
 <% @announcements.reverse.each do |announcement| %>
   <tr>
     <td title="<%= announcement.message %>"><%= announcement.message.truncate(30) %></td>
-    <td><%= yes_no((announcement.start < now) && (announcement.finish > now)) %></td>
+    <td><%= yes_no announcement.current? %></td>
     <td><%= distance_of_time_in_words_to_now(announcement.start) %> <%= (announcement.start < now) ? 'ago' : 'time' %></td>
     <td><%= distance_of_time_in_words_to_now(announcement.finish) %> <%= (announcement.finish < now) ? 'ago' : 'time' %></td>
-    <td><%= yes_no(announcement.public, false) %></td>
-    <td><%= yes_no(announcement.prevent_hiding, false) %></td>
+    <td><%= yes_no announcement.public?, false %></td>
+    <td><%= yes_no announcement.prevent_hiding?, false %></td>
     <td><%= (distance_of_time_in_words_to_now(announcement.emailed_at) + ' ago') if announcement.emailed_at? %></td>
     <td>
       <%= link_to '[Show]', announcement %>
