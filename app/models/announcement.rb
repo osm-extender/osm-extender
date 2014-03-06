@@ -13,11 +13,6 @@ class Announcement < ActiveRecord::Base
   validates_presence_of :start
   validates_presence_of :finish
 
-
-  # Remove this monkey patch when date_time_attribute gem is updated
-  def self.attribute_methods_generated?
-    @attribute_methods_generated
-  end
   date_time_attribute :start
   date_time_attribute :finish
 
