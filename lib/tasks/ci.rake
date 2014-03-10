@@ -13,7 +13,7 @@ namespace :ci do
 
     if ENV['TRAVIS']
       puts "Sending results to coveralls"
-      Rake::Task['coveralls:push'].invoke
+      Coveralls.push!
     end
   end
 
