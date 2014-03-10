@@ -71,8 +71,9 @@ group :test do
   gem 'database_cleaner', '~> 1.0'
   gem 'fakeweb', '~> 1.3'
   gem 'timecop', '~> 0.5'
-  gem 'simplecov', '~> 0.6', :require => false
+  gem 'simplecov', '~> 0.6'
   gem 'turn', '~> 0.9', :require => false
+  gem 'coveralls', '~> 0.7'
 end
 
 
