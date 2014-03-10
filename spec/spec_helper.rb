@@ -8,6 +8,9 @@ require 'rspec/rails'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+# Setup coveralls
+require 'coveralls' and Coveralls.wear_merged! if ENV['TRAVIS']
+
 # Cause an error if any spec causes a real web request
 # This should both speed up tests and ensure that our tests cover all remote requests
 FakeWeb.allow_net_connect = false

@@ -1,9 +1,18 @@
 require File.expand_path('../boot', __FILE__)
+require File.join(File.dirname(__FILE__), '..', 'lib', 'capture_outputs.rb')
 
 require 'rails/all'
 require 'csv'
 
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+
+unless Rails.env.development? && File.basename($0).eql?('rails')
+  capture_stderr do
+    Bundler.require(:default, Rails.env) if defined?(Bundler)
+  end
+else
+  Bundler.require(:default, Rails.env) if defined?(Bundler)
+end
+
 
 module OSMExtender
   class Application < Rails::Application
