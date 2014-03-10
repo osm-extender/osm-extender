@@ -75,6 +75,10 @@ Then /^the "([^\"]*)" column of the "([^\"]*)" row (.*)$/ do |column_title, row_
   end
 end
 
+Then /^the page should have the title "([^"]+)"$/ do |page_title|
+  page.title.strip.should == page_title
+end
+
 Then /^"([^"]*)" should contain "([^"]*)"$/ do |field, value|
   field = find_field(field)
   field_value = (field.tag_name == 'textarea') ? field.text : field.value

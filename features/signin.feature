@@ -32,6 +32,8 @@ Feature: Sign in
 	And I should see "Sign out"
 	And I should not see "Sign in"
 	And I should not see "Sign up"
+        And I should see "Alice's Page"
+        And the page should have the title "OSMExtender - Alice's Page"
 	And "alice@example.com" should receive no email with subject /Account Locked/
 	And I should have 1 usage log
 	And I should have the following usage log
