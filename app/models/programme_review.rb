@@ -106,8 +106,8 @@ class ProgrammeReview
   def balanced(start=@@section_duration[@section.type].ago, finish=@@section_duration[@section.type].from_now)
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
-    earliest = Date.today
-    latest = Date.today
+    earliest = Date.current
+    latest = Date.current
 
     Osm::Term.get_for_section(@user.osm_api, @section.id).each do |term|
       next if term.before?(start) || term.after?(finish)

@@ -9,7 +9,7 @@
       <%- if has_osm_permission?(:read, :badge) %>
         <%= form_tag awarded_badges_report_path, :method=>:get do %>
           Between <%= date_field_tag 'awarded_badges[start]', (1.year.ago + 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
-          and <%= date_field_tag 'awarded_badges[finish]', Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+          and <%= date_field_tag 'awarded_badges[finish]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           <br/><%= submit_tag 'Show awarded badges' %>
         <%- end %>
       <%- else %>
@@ -78,7 +78,7 @@
             </tr>
           <%- end %>
         </table>
-        Between <%= date_field_tag 'calendar[start]', Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+        Between <%= date_field_tag 'calendar[start]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
         and <%= date_field_tag 'calendar[finish]', (1.year.from_now - 1.day).strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
         <br/>
         <%= submit_tag 'Show calendar' %>
@@ -175,7 +175,7 @@
       </p>
       <%- if has_osm_permission?(:read, :badge) %>
         <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
-          Between <%= date_field_tag 'planned_badge_requirements[start]', Date.today.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+          Between <%= date_field_tag 'planned_badge_requirements[start]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           and <%= date_field_tag 'planned_badge_requirements[finish]', 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           <br/>
           <%= submit_tag 'Show planned badge requirements' %>
