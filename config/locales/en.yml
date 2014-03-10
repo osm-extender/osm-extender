@@ -7,3 +7,6 @@ en:
       email_format: 'does not look like an email address'
       time24h_format: 'does not look like a time in 24 hour format'
       date_format: 'does not look like a date in yyyy-mm-dd format'
+  support:
+    array:
+      last_word_connector: ' and '
