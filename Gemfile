@@ -22,7 +22,7 @@ gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
 gem 'paper_trail', '~> 3.0.0'         # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
-gem 'date_time_attribute', '~> 0.0.8' # Allow splitting datetime attributes to a date field and a time field
+gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false
 
 
