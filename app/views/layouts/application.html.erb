@@ -105,7 +105,8 @@
           <b>This is the <%= Rails.env.upcase %> environment!</b>
           <%- if Rails.env.development? %>
             <br/>
-            <%= link_to('[Rails info.]', '/rails/info') %>
+            <%= link_to '[Rails info]', '/rails/info' %>
+            <%= link_to '[Mailer previews]', '/rails/mailers' %>
           <%- end %>
         </div>
       <%- end %>
