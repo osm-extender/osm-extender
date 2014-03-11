@@ -59,6 +59,8 @@ group :staging, :production do
   gem 'mysql2', '~> 0.3.11'           # Use a mysql database
   gem 'unicorn', '~> 4.3'             # Use unicorn as the web server
   gem 'dalli', '~> 2.6'               # Using memcache as the cache store
+  gem 'kgio', '~> 2.9'                # Give dalli a performace boost
+  gem 'connection_pool', '~> 1.2'     # Allow dalli to use a pool of connections
 end
 
 
