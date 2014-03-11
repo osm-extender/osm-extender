@@ -23,7 +23,7 @@ gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
 gem 'paper_trail', '~> 3.0.0'         # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
-gem 'pry', '~> 0.9', :require=>false
+gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in
 
 
 # Jobs in background
@@ -48,6 +48,8 @@ group :development do
   gem 'better_errors', '~> 1.0'       # See nicer exception pages with more useful information
   gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
   gem 'meta_request', '~> 0.2.2'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+  gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
+  gem 'debugger', '~> 1.6', :require=>false
 end
 
 group :development, :test do
@@ -81,6 +83,3 @@ end
 
 # Deploy with Capistrano
 # gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
