@@ -1,4 +1,4 @@
-//= require email_lists__form_criteria
+//= require ./form_criteria
 
 $(document).ready(function() {  
     $('#select_all').click(function(){
