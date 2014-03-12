@@ -1,0 +1,89 @@
+#primary_menu {
+    background-color:   #aaaaaa;
+    padding:            10px;
+    min-height:         60px;
+    border-top-right-radius: 20px;
+    border-top-left-radius:  20px;
+}
+#primary_menu_nav {
+    float:              left;
+}
+#primary_menu_user {
+    float:              right;
+}
+#primary_menu .menu_item {
+    display:            inline-block;
+}
+#primary_menu .menu_item a {
+    display:            table-cell;
+    font-size:          large;
+    text-align:         center;
+    vertical-align:     middle;
+    width:              12ex;
+    height:             60px;
+    padding-left:       10px;
+    padding-right:      10px;
+    border:             thick;
+    border-radius:      10px;
+    color:              black;
+    text-decoration:    none;
+    background:         #7e7eff;
+}
+#primary_menu .menu_item a:hover {
+    color:              #7e7eff;
+    text-decoration:    underline;
+    background:         black;
+}
+
+
+#banner {
+    background-color:   #cccccc;
+    text-align:         center;
+    min-height:         150px;
+}
+#banner img {
+    margin-top:         10px;
+    margin-bottom:      10px;
+}
+
+
+#secondary_menu {
+    background-color:   #aaaaaa;
+    padding:            10px;
+    min-height:         60px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius:  20px;
+}
+#secondary_menu .menu_item {
+    display:            inline-block;
+}
+#secondary_menu .menu_item a {
+    display:            table-cell;
+    font-size:          large;
+    text-align:         center;
+    vertical-align:     middle;
+    width:              15ex;
+    height:             40px;
+    padding-left:       10px;
+    padding-right:      10px;
+    border:             thick;
+    border-radius:      10px;
+    color:              black;
+    text-decoration:    none;
+    background:         #aaffaa;
+}
+#secondary_menu .menu_item a:hover {
+    color:              #aaffaa;
+    text-decoration:    underline;
+    background:         black;
+}
+#secondary_menu_admin .menu_item a {
+    background:         #feff7e;
+}
+#secondary_menu_admin .menu_item a:hover {
+    color:              #feff7e;
+}
+#current_section {
+    font-weight:        bold;
+}
+

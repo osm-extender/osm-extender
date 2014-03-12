@@ -2,8 +2,11 @@
  * This manifest file will include application wide style sheets
  * Stylesheets (or manifests) for specific controllers should be
  * called <controller>.css(.scss), for example projects.css.
+ *= require jquery.ui.all
+ *= require jquery.toastmessage
  *= require scaffolds
  *= require_self
+ *= require_tree ./application
 */
 
 *{margin:0px;}
@@ -47,58 +50,6 @@ h2, h3, h4 {
     margin-bottom:      2ex;
 }
 
-table {
-    border-collapse:    collapse;
-    margin-left:        auto;
-    margin-right:       auto;
-}
-
-table.left {
-    margin-left: 0px;
-}
-table.right {
-    margin-right: 0px;
-}
-
-table, td {
-    border:             2px solid green;
-}
-
-th {
-    border:             2px solid white;
-    border-bottom-color: green;
-    background-color:   green;
-    color:              white;
-    font-size:          120%;
-}
-
-th, td {
-    padding:            2px 8px 2px 8px;
-}
-
-th.empty, td.empty {
-    border-width:       0px;
-    border-right:       inherit;
-}
-
-table th .sortable_current {
-  padding-right:        24px;
-  background-repeat:    no-repeat;
-  background-position:  right center;
-}
-
-table th .sortable_asc {
-  background-image:     url(/assets/up_arrow.gif);
-}
-
-table th .sortable_desc {
-  background-image:     url(/assets/down_arrow.gif);
-}
-
-table th a.sortable {
-    color:              white;
-}
-
 
 div.pagination {
     text-align:         center;
@@ -109,154 +60,6 @@ div.pagination {
     margin-top:         10px;
     margin-left:        15px;
     margin-right:       15px;
-}
-
-
-#primary_menu {
-    background-color:   #aaaaaa;
-    padding:            10px;
-    min-height:         60px;
-    border-top-right-radius: 20px;
-    border-top-left-radius:  20px;
-}
-#primary_menu_nav {
-    float:              left;
-}
-#primary_menu_user {
-    float:              right;
-}
-#primary_menu .menu_item {
-    display:            inline-block;
-}
-#primary_menu .menu_item a {
-    display:            table-cell;
-    font-size:          large;
-    text-align:         center;
-    vertical-align:     middle;
-    width:              12ex;
-    height:             60px;
-    padding-left:       10px;
-    padding-right:      10px;
-    border:             thick;
-    border-radius:      10px;
-    color:              black;
-    text-decoration:    none;
-    background:         #7e7eff;
-}
-#primary_menu .menu_item a:hover {
-    color:              #7e7eff;
-    text-decoration:    underline;
-    background:         black;
-}
-
-
-#banner {
-    background-color:   #cccccc;
-    text-align:         center;
-    min-height:         150px;
-}
-#banner img {
-    margin-top:         10px;
-    margin-bottom:      10px;
-}
-
-
-#secondary_menu {
-    background-color:   #aaaaaa;
-    padding:            10px;
-    min-height:         60px;
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius:  20px;
-}
-#secondary_menu .menu_item {
-    display:            inline-block;
-}
-#secondary_menu .menu_item a {
-    display:            table-cell;
-    font-size:          large;
-    text-align:         center;
-    vertical-align:     middle;
-    width:              15ex;
-    height:             40px;
-    padding-left:       10px;
-    padding-right:      10px;
-    border:             thick;
-    border-radius:      10px;
-    color:              black;
-    text-decoration:    none;
-    background:         #aaffaa;
-}
-#secondary_menu .menu_item a:hover {
-    color:              #aaffaa;
-    text-decoration:    underline;
-    background:         black;
-}
-#secondary_menu_admin .menu_item a {
-    background:         #feff7e;
-}
-#secondary_menu_admin .menu_item a:hover {
-    color:              #feff7e;
-}
-#current_section {
-    font-weight:        bold;
-}
-
-
-#announcements {
-    padding:            5px;
-    margin-left:        25%;
-    margin-right:       25%;
-    margin-bottom:      5px;
-}
-#announcements div {
-    margin:             5px;
-    border-style:       solid;
-    border-radius:      4px;
-    padding:            2px;
-    margin-top:         5px;
-    margin-bottom:      5px;
-    margin-left:        auto;
-    margin-right:       auto;
-    background-color:   #fff288;
-    border-color:       orange;
-}
-
-
-#notices {
-    padding:            5px;
-    margin-left:        10%;
-    margin-right:       10%;
-}
-#notices div {
-    margin:             5px;
-    border-style:       solid;
-    border-radius:      4px;
-    padding:            2px;
-    margin-top:         5px;
-    margin-bottom:      10px;
-    margin-left:        auto;
-    margin-right:       auto;
-}
-#notices_error {
-    background-color:   #ff4444;
-    border-color:       red;
-    font-weight:        bold;
-}
-#notices_warning {
-    background-color:   #fff288;
-    border-color:       yellow;
-}
-#notices_notice {
-    background-color:   #90f090;
-    border-color:       green;
-}
-#notices_instruction {
-    background-color:   #c0c0f0;
-    border-color:       blue;
-}
-#notices_information {
-    background-color:   #d0d0d0;
-    border-color:       black;
 }
 
 

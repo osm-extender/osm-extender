@@ -32,7 +32,7 @@
           <tr>
             <td><%= row[0].first_name %> <%= row[0].last_name %></td>
             <%- row.each do |cell| %>
-              <td class="event_attendance_<%= cell.attending || 'unknown' %>"><%= cell.attending.to_s.titleize %></td>
+              <td class="<%= cell.attending || 'unknown' %>"><%= cell.attending.to_s.titleize %></td>
             <%- end %>
             <%- [:invited, :yes, :reserved, :no].each do |total_type| %>
               <td><%= @member_totals[row[0].member_id][total_type] %></td>

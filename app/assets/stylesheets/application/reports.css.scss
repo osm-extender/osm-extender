@@ -1,0 +1,42 @@
+body.reports.badge_completion_matrix {
+    td.yes {
+        background-color:   #30f030;
+    }
+    td.no {
+        background-color:   #f03030;
+    }
+    td.not_needed {
+        background-color:   #f0f030;
+    }
+    td.awarded {
+        background-color:   #a0a0a0;
+    }
+    td.completed {
+        background-color:   #303030;
+    }
+    td.not_started {
+        background-color:   #ffffff;
+    }
+}
+
+
+body.reports.event_attendance {
+    td.yes {
+        background-color:   #b0f0b0;
+    }
+    td.no {
+        background-color:   #f0b0b0;
+    }
+    td.invited {
+        background-color:   #f0c040;
+    }
+    td.shown {
+        background-color:   #ffffff;
+    }
+    td.reserved {
+        background-color:   #f0f0b0;
+    }
+    td.unknown {
+        background-color:   #ffffff;
+    }
+}

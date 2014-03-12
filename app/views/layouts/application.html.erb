@@ -5,14 +5,10 @@
     <%= content_for?(:title) ? "OSMExtender - #{yield :title}" : 'OSMExtender' %>
   </title>
 
-  <%= stylesheet_link_tag 'jquery.ui.all' %>
-  <%= stylesheet_link_tag 'jquery.toastmessage' %>
   <%= stylesheet_link_tag 'application', :media => :all %>
   <%= stylesheet_link_tag 'application__print', :media=>:print %>
   <%= stylesheet_link_tag params[:controller], :media=>:all if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
-  <%= stylesheet_link_tag "#{params[:controller]}__#{params[:action]}", :media=>:all if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}.css") %>
   <%= stylesheet_link_tag "#{params[:controller]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__print.css") %>
-  <%= stylesheet_link_tag "#{params[:controller]}__#{params[:action]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}__print.css") %>
 
   <%= javascript_include_tag :jquery  %>
   <%= javascript_include_tag :jquery_ujs %>
@@ -27,7 +23,7 @@
 
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body class="<%= [controller.controller_name, controller.action_name].join(' ') %>">
   <div id="page">
     <div id="header">
       <div id="primary_menu">
