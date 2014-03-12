@@ -16,7 +16,7 @@ OSMExtender::Application.configure do
   #  :race_condition_ttl => 2.minutes
   #}
   # For memcache
-  #config.cache_store = :dalli_store, 'memcache.tangyorange.co.uk:11211', {
+  #config.cache_store = :dalli_store, 'server.name', {
   #  :expires_in => 10.minutes,
   #  :race_condition_ttl => 2.minutes,
   #  :namespace => 'osmx.staging',
