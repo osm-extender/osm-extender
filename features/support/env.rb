@@ -1,5 +1,6 @@
 # Generate test coverage report
 if Gem::Specification::find_all_by_name('simplecov').any?
+  require 'simplecov'
   SimpleCov.coverage_dir(File.join('tmp', 'coverage'))
   SimpleCov.start 'rails' do
     add_filter 'features/'
