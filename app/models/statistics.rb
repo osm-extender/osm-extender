@@ -45,7 +45,15 @@ class Statistics < ActiveRecord::Base
     total = 0
 
     User.where("osm_userid IS NOT NULL").each do |user|
-      Osm::Section.get_all(user.osm_api).each do |section|
+      sections = []
+      begin
+        sections = Osm::Section.get_all(user.osm_api)
+      rescue Osm::Error => e
+        # Ignore OSM returning no data (presumabably becuase user has removed access)
+        raise e unless e.message.eql?('null')
+      end
+
+      sections.each do |section|
         unless section_ids_seen.include?(section.id)
           if Constants::YOUTH_AND_ADULT_SECTIONS.include?(section.type)
             section_ids_seen.push section.id
