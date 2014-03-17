@@ -66,7 +66,7 @@ GEM
       execjs
     coffee-script-source (1.7.0)
     columnize (0.3.6)
-    connection_pool (1.2.0)
+    connection_pool (2.0.0)
     coveralls (0.7.0)
       multi_json (~> 1.3)
       rest-client
@@ -272,7 +272,7 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turn (0.9.6)
+    turn (0.9.7)
       ansi
     tzinfo (1.1.0)
       thread_safe (~> 0.1)
@@ -301,7 +301,7 @@ DEPENDENCIES
   binding_of_caller (~> 0.6)
   cancan (~> 1.6)
   coffee-rails (~> 4.0)
-  connection_pool (~> 1.2)
+  connection_pool (~> 2.0)
   coveralls (~> 0.7)
   cucumber-rails (~> 1.3)
   daemon-spawn (~> 0.4)
