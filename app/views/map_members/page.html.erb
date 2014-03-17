@@ -7,7 +7,8 @@
 
     <h3>Pin colours for each <%= get_grouping_name(current_section.type) %></h3>
     <%- @groupings.each do |name, id| %>
-      <label for="pin-<%= id %>" style="display: inline-block; min-width: 100px; text-align: right;"><%= name %></label> <%= select_tag "pin-#{id}", options_from_collection_for_select(@pin_colours, :to_s, :to_s, (@pin_colours.include?(name.capitalize) ? name.capitalize : ((id == -2) ? 'White' : nil))) %><br/>
+      <label for="pin-<%= id %>" style="display: inline-block; min-width: 100px; text-align: right;"><%= name %></label>
+      <%= select_tag "pin-#{id}", options_from_collection_for_select(@pin_colours, :downcase, :capitalize, (@pin_colours.include?(name.downcase) ? name.downcase : ((id == -2) ? 'white' : nil))) %><br/>
     <%- end %>
 
     <h3>Which address?</h3>

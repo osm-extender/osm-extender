@@ -6,7 +6,7 @@ class MapMembersController < ApplicationController
 
   def page
     @groupings = get_current_section_groupings
-    @pin_colours = %w{Red Green Blue Yellow Brown Orange Purple White Grey Black}
+    @pin_colours = %w{red green blue yellow brown orange purple white grey black}
   end
 
   def data
