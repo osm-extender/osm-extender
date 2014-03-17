@@ -51,6 +51,15 @@ class EmailList < ActiveRecord::Base
     }
   end
 
+  def section
+    return @section unless @section.nil?
+    user.connected_to_osm? ? @section ||= Osm::Section.get(user.osm_api, section_id) : nil
+  end
+  def section=(new_section)
+    write_attribute(:section_id, new_section.to_i)
+    @section = new_section
+  end
+
   def get_hash_of_addresses
    return Digest::SHA256.hexdigest(get_list[:emails].sort.inspect)
   end
