@@ -48,7 +48,7 @@ class StatisticsController < ApplicationController
     end
 
     weekly_signins_last_week_hash = UsageLog.where('at >= ?', 6.days.ago.to_date).where(:controller => 'SessionsController', :action => 'create', :result => 'success').group(:at_day_of_week, :at_hour).count
-    weekly_signins_last_4_weeks_hash = UsageLog.where('at >= ? AND at < ?', 29.days.ago.to_date, Date.today).where(:controller => 'SessionsController', :action => 'create', :result => 'success').count(:group => [:at_day_of_week, :at_hour])
+    weekly_signins_last_4_weeks_hash = UsageLog.where('at >= ? AND at < ?', 29.days.ago.to_date, Date.today).where(:controller => 'SessionsController', :action => 'create', :result => 'success').group(:at_day_of_week, :at_hour).count
     weekly_signins_label = []
     weekly_signins_last_week = []
     weekly_signins_last_4_weeks = []
@@ -61,7 +61,8 @@ class StatisticsController < ApplicationController
       end
     end
     signins = []
-    signins_hash = UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').count(:user_id, :distinct => true, :group => 'DATE(at)')
+    signins_hash = 
+    UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').group('DATE(at)').count(:user_id, :distinct => true)
     earliest_signin = UsageLog.minimum(:at).to_date
     (earliest_signin..Date.today).each do |date|
       value = signins_hash[date] || signins_hash[date.strftime('%Y-%m-%d')] # Key is a Date from mysql, a String from sqlite
