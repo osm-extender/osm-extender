@@ -1,25 +1,30 @@
 class Announcement < ActiveRecord::Base
-  audited
+  has_paper_trail
 
-  attr_accessible :start, :finish, :message, :prevent_hiding, :public
+  has_many :hidden_announcements, dependent: :destroy, inverse_of: :announcement
+  has_many :emailed_announcements, dependent: :destroy, inverse_of: :announcement
 
-  has_many :hidden_announcements, :dependent => :destroy
-  has_many :emailed_announcements, :dependent => :destroy
-
-  scope :ignoring, ->(ids) { ids.size > 0 ? where("id not in (#{ ids.map{|id| id.to_i}.join(',') })") : nil }
-  scope :are_current, :conditions => 'start <= current_timestamp AND finish >= current_timestamp'
-  scope :are_public, :conditions => {:public => true}
-  scope :are_hideable, :conditions => {:prevent_hiding => false}
+  scope :ignoring, ->(ids) { where.not(id: ids.map{|id| id.to_i}) }
+  scope :are_current, -> { where('start <= current_timestamp AND finish >= current_timestamp')}
+  scope :are_public, -> { where public: true }
+  scope :are_hideable, -> { where prevent_hiding: false }
 
   validates_presence_of :message
   validates_presence_of :start
   validates_presence_of :finish
 
+  date_time_attribute :start
+  date_time_attribute :finish
 
-  def allow_hiding?
+
+  def hideable?
     !prevent_hiding
   end
 
+  def current?
+    now = Time.now
+    (start < now) && (finish > now)
+  end
 
   def self.email_announcement(id)
     announcement = find(id)
@@ -52,7 +57,7 @@ class Announcement < ActiveRecord::Base
     if older_than.is_a?(String)
       older_than = older_than.split.inject { |count, unit| count.to_i.send(unit) }
     end
-    destroy_all ['updated_at <= ? AND finish <= ?', older_than, older_than]
+    destroy_all ['updated_at <= :when AND finish <= :when', when: older_than.to_date]
   end
 
 end

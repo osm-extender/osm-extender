@@ -32,6 +32,8 @@ Feature: Sign in
 	And I should see "Sign out"
 	And I should not see "Sign in"
 	And I should not see "Sign up"
+        And I should see "Alice's Page"
+        And the page should have the title "OSMExtender - Alice's Page"
 	And "alice@example.com" should receive no email with subject /Account Locked/
 	And I should have 1 usage log
 	And I should have the following usage log
@@ -88,15 +90,12 @@ Feature: Sign in
 	    | alice@example.com | SessionsController | create | not activated |
 
     @send_email
-    Scenario: User should be locked after 3 bad logins
-        When I signin as "alice@example.com" with password "wrong"
-        Then I should see "Email address or password was invalid."
-        When I signin as "alice@example.com" with password "wrong"
-        Then I should see "Email address or password was invalid."
+    Scenario: User should be locked after 10 failed logins
+        Given "alice@example.com" has 9 failed login attempts
         When I signin as "alice@example.com" with password "wrong"
         Then "alice@example.com" should be a locked user account
 	And I should see "The account was locked."
-	And I should have 3 usage log records
+	And I should have 1 usage log records
 	And I should have the following usage log
 	    | user              | controller         | action | result  |
 	    | alice@example.com | SessionsController | create | locked  |
@@ -113,10 +112,7 @@ Feature: Sign in
 
     Scenario: User should be unlocked after following link in email
         Given no emails have been sent
-        When I signin as "alice@example.com" with password "wrong"
-        Then I should see "Email address or password was invalid."
-        When I signin as "alice@example.com" with password "wrong"
-        Then I should see "Email address or password was invalid."
+        And "alice@example.com" has 9 failed login attempts
         When I signin as "alice@example.com" with password "wrong"
         Then "alice@example.com" should be a locked user account
         And "alice@example.com" should receive an email with subject /Account Locked/

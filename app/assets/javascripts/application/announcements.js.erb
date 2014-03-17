@@ -1,0 +1,11 @@
+$(function() {
+  $("#announcements div a.hide_link").on("click", function() {
+    $.ajax({
+      type: 'POST',
+      headers: {'X-CSRF-Token': $(this).data('csrf-token')},
+      url: '<%= CGI.unescape OSMExtender::Application.routes.url_helpers.hide_announcement_path('[[id]]')  %>'.replace('[[id]]', $(this).data('announcement-id')),
+      dataType: 'script'
+    });
+    return false;
+  });
+});

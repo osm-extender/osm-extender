@@ -5,14 +5,14 @@ OSMExtender::Application.configure do
   # test suite.  You never need to work with it otherwise.  Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
+
+  config.eager_load = false
   config.cache_classes = true
+  config.secret_key_base = "Doesn't really matter what is used, the cookies only live during the tests"
 
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
-
-  # Log error messages when you accidentally call methods on nil
-  config.whiny_nils = true
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -50,20 +50,6 @@ OSMExtender::Application.configure do
     :host => 'test',
   }
 
-#  # Controller URL options
-#  config.action_controller.default_url_options = {
-#    :protocol => 'http',
-#    :host => 'test',
-#  }
-##  ActionController::Base.default_url_options = config.action_controller.default_url_options
-
-  # Mailer URL options
-#  config.action_mailer.default_url_options = {
-#    :protocol => 'http',
-#    :host => 'test',
-#  }
-##  ActionMailer::Base.send('default_url_options=', config.action_mailer.default_url_options)
-
   # Mailer options
   ActionMailer::Base.send :default, {
     :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
@@ -87,29 +73,4 @@ OSMExtender::Application.configure do
     'return-path' => 'user-mailer@example.com',     # Should be the email address portion of from
   }
 
-end
-
-ActionDispatch::Callbacks.to_prepare do
-  # OSM options (copy/complete into development_custom.rb)
-  Osm::configure(
-    :api => {
-      :default_site => :osm,
-      :osm => {
-        :id    => 12,
-        :token => '1234567890',
-        :name  => "Test API",
-      },
-      :debug   => false
-    },
-    :cache => {
-      :cache  => Rails.cache,
-      :ttl    => 30
-    },
-  )
-
-  # ReCAPTCHA options (copy/complete into staging_custom.rb)
-  Recaptcha.configure do |config|
-    config.public_key  = '11223344556677889900'
-    config.private_key = '00998877665544332211'
-  end
 end

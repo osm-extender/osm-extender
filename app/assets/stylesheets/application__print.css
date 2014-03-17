@@ -1,3 +1,12 @@
+/*
+ * This manifest file will include application wide style sheets
+ * Stylesheets (or manifests) for specific controllers should be
+ * called <controller>.css(.scss), for example projects.css.
+ * This one applies only to print media (i.e. when the page is printed)
+ * add appears in page headers after the normal application one.
+ *= require_self
+*/
+
 #header {
     display:            none;
 }

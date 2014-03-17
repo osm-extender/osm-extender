@@ -1,5 +1,4 @@
-<% provide :title, 'Reset Password' %>
-
+<%= page_title 'Reset Password' %>
 
 <%= form_tag password_resets_path+'/'+@token, :method => :put do %>
   <% if @user.errors.any? %>

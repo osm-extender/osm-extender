@@ -1,6 +1,8 @@
 OSMExtender::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  config.eager_load = true
+
   # Code is not reloaded between requests
   config.cache_classes = true
 
@@ -13,9 +15,6 @@ OSMExtender::Application.configure do
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = false
-
-  # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
@@ -53,69 +52,11 @@ OSMExtender::Application.configure do
     :host => 'localhost',
   }
 
-  # Mailer options (copy/complete into staging_custom.rb)
-#  ReminderMailer.send :default, {
-#    :from => '',                # Can be in the format - "Name" <email_address>
-#    'return-path' => '',        # Should be the email address portion of from
-#  }
-#  UserMailer.send :default, {
-#    :from => '',                # Can be in the format - "Name" <email_address>
-#    'return-path' => '',        # Should be the email address portion of from
-#  }
-#  NotifierMailer.send :default, {
-#    :from => '',                # Can be in the format - "Name" <email_address>
-#    'return-path' => '',        # Should be the email address portion of from
-#  }
-#  NotifierMailer.options = {
-#    :contact_form__to => '',    # Can be in the format - "Name" <email_address>
-#    :reminder_failed__to => '', # Can be in the format - "Name" <email_address>
-#    :exception__to => '',       # Can be in the format - "Name" <email_address>
-#  }
-
-  # Mail sending options (copy/complete relevant version into staging_custom.rb)
-  # Sendmail
-#  ActionMailer::Base.delivery_method = :sendmail
-#  ActionMailer::Base.sendmail_settings = {
-#    :location => '',
-#  }
-  # SMTP
-#  ActionMailer::Base.delivery_method = :smtp
-#  ActionMailer::Base.smtp_settings = {
-#    :address              => '',
-#    :port                 => '',
-#    :domain               => '',
-#    :user_name            => '',
-#    :password             => '',
-#    :authentication       => 'plain',
-#    :enable_starttls_auto => true
-#  }
-
 end
 
-ActionDispatch::Callbacks.to_prepare do
-  # OSM options (copy/complete into staging_custom.rb)
-#  Osm::configure(
-#    :api => {
-#      :default_site => :osm,
-#      :osm => {
-#        :id    => GET THIS FROM ED,
-#        :token => GET THIS FROM ED,
-#        :name  => GIVE THIS TO ED,
-#      },
-#      :debug   => true
-#    },
-#    :cache => {
-#      :cache  => Rails.cache,
-#      :ttl    => 30
-#    },
-#  )
 
-  # ReCAPTCHA options (copy/complete into staging_custom.rb)
-#  Recaptcha.configure do |config|
-#    config.public_key  = YOUR PUBLIC KEY HERE
-#    config.private_key = YOUR PRIVATE KEY HERE
-#  end
-end
+ActiveSupport::Deprecation.silenced = true
+ActionController::Parameters.action_on_unpermitted_parameters ||= :raise
 
 
 # Load custom configuration

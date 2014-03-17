@@ -1,16 +1,16 @@
-<% provide :title, 'Badge Completion Matrix' %>
+<%= page_title 'Badge Completion Matrix' %>
 
 <p>Due to how OSM stores the awarding of staged activity badges all previous stages of a badge are assumed to have also been awarded.</p>
 <p>In most browsers you'll need to turn on the "Print background images & colours" option in order to print this matrix in a meaningful way, otherwise you'll get a page without the cells coloured in.</p>
 
 <table>
   <tr><th colspan="2"</th>Key</th></tr>
-  <tr><td class="met_yes">&nbsp;&nbsp;&nbsp;</td><td>This requirement has been met</td></tr>
-  <tr><td class="met_no">&nbsp;&nbsp;&nbsp;</td><td>Not met &amp; Needed</td></tr>
-  <tr><td class="met_not_needed">&nbsp;&nbsp;&nbsp;</td><td>Not met &amp; Not needed</td></tr>
-  <tr><td class="met_awarded">&nbsp;&nbsp;&nbsp;</td><td>The badge has been awarded</td></tr>
-  <tr><td class="met_not_started">&nbsp;&nbsp;&nbsp;</td><td>The badge has not been started</td></tr>
-  <tr><td class="met_completed">&nbsp;&nbsp;&nbsp;</td><td>The badge has been completed but not yet awarded</td></tr>
+  <tr><td class="yes">&nbsp;&nbsp;&nbsp;</td><td>This requirement has been met</td></tr>
+  <tr><td class="no">&nbsp;&nbsp;&nbsp;</td><td>Not met &amp; Needed</td></tr>
+  <tr><td class="not_needed">&nbsp;&nbsp;&nbsp;</td><td>Not met &amp; Not needed</td></tr>
+  <tr><td class="awarded">&nbsp;&nbsp;&nbsp;</td><td>The badge has been awarded</td></tr>
+  <tr><td class="not_started">&nbsp;&nbsp;&nbsp;</td><td>The badge has not been started</td></tr>
+  <tr><td class="completed">&nbsp;&nbsp;&nbsp;</td><td>The badge has been completed but not yet awarded</td></tr>
 </table>
 
 <br/>
@@ -34,7 +34,7 @@
             <td><%= cell %></td>
           <%- end %>
           <%- row[4..-1].each do |cell| %>
-            <td class="met_<%= cell %>">&nbsp;</td>
+            <td class="<%= cell %>">&nbsp;</td>
           <%- end %>
         <tr>
       <%- end %>

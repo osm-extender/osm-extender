@@ -1,7 +1,6 @@
 class RemoveDevelopmentMailInterceptor < ActiveRecord::Migration
   class SettingValue < ActiveRecord::Base
-    audited
-    attr_accessible :key, :value, :description
+    has_paper_trail
     validates_presence_of :key
     validates_uniqueness_of :key
     validates_presence_of :description

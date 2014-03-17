@@ -1,5 +1,5 @@
 class OsmExportsController < ApplicationController
-  before_filter :require_connected_to_osm
+  before_action :require_connected_to_osm
 
   before_filter {
     params[:file_options] ||= {}

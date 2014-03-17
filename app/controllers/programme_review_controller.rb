@@ -1,7 +1,7 @@
 class ProgrammeReviewController < ApplicationController
-  before_filter { require_section_type Constants::YOUTH_SECTIONS }
-  before_filter :require_connected_to_osm
-  before_filter { require_osm_permission :read, :programme }
+  before_action { require_section_type Constants::YOUTH_SECTIONS }
+  before_action :require_connected_to_osm
+  before_action { require_osm_permission :read, :programme }
 
   def balanced
     @methods = ProgrammeReview.methods[current_section.type]

@@ -4,7 +4,7 @@ class EmailReminderItemAdvisedAbsence < EmailReminderItem
 
   def get_data
     latest = configuration[:the_next_n_weeks].weeks.from_now.to_date
-    earliest = Date.today
+    earliest = Date.current
 
     api = user.osm_api
     register_structure = Osm::Register.get_structure(api, section_id)

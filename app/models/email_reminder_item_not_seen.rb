@@ -4,7 +4,7 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
   def get_data
     earliest = configuration[:the_last_n_weeks].weeks.ago.to_date
-    latest = Date.today
+    latest = Date.current
 
     api = user.osm_api
     register_structure = Osm::Register.get_structure(api, section_id)

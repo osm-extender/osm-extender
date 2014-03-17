@@ -88,7 +88,18 @@ namespace :scheduled  do
       puts "#{deleted} announcements deleted."
     end
 
-    task :all => [:balanced_programme_cache, :announcements]
+    desc "Stop the versions tables getting too big"
+    task :paper_trails => :environment do
+      $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Paper Trails"
+      deleted = 0
+      [PaperTrail::Version, UserVersion].each do |model|
+        this_deleted = model.destroy_all ["created_at < ?", 1.year.ago].size
+        puts "deleted #{deleted} old #{model.name} versions."
+      end
+      puts "deleted #{deleted} total old versions."
+    end
+
+    task :all => [:balanced_programme_cache, :announcements, :paper_trail]
   end
 
 end

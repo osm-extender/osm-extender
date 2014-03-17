@@ -106,15 +106,15 @@ class ProgrammeReview
   def balanced(start=@@section_duration[@section.type].ago, finish=@@section_duration[@section.type].from_now)
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
-    earliest = Date.today
-    latest = Date.today
+    earliest = Date.current
+    latest = Date.current
 
     Osm::Term.get_for_section(@user.osm_api, @section.id).each do |term|
       next if term.before?(start) || term.after?(finish)
       earliest = term.start if term.start < earliest
       latest = term.finish if term.finish > latest
 
-      cached_term_data = ProgrammeReviewBalancedCache.find_by_term_id(term.id)
+      cached_term_data = ProgrammeReviewBalancedCache.find_by(term_id: term.id)
       if cached_term_data.nil? || cached_term_data.data[:version] != 1
         # We need to make it
         data = get_balanced_term_data(term)

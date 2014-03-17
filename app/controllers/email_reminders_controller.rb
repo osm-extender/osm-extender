@@ -1,10 +1,11 @@
 class EmailRemindersController < ApplicationController
-  before_filter :require_connected_to_osm, :except => [:index, :show, :preview, :send_email]
-  before_filter :except => [:index, :show, :preview, :send_email] do
+  before_action :require_connected_to_osm, :except => [:index, :show, :preview, :send_email]
+  before_action :except => [:index, :show, :preview, :send_email] do
     forbid_section_type :waiting
   end
-  before_filter :setup_tertiary_menu
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
 
   def index
     @my_reminders = current_user.email_reminders.order(:section_name)
@@ -13,7 +14,6 @@ class EmailRemindersController < ApplicationController
 
   def show
     @email_reminder = EmailReminder.find(params[:id])
-    @tertiary_menu_items = nil unless @email_reminder.user == current_user
   end
 
   def new
@@ -26,25 +26,32 @@ class EmailRemindersController < ApplicationController
   end
 
   def create
-    @email_reminder = current_user.email_reminders.new(params[:email_reminder])
+    @email_reminder = current_user.email_reminders.new(sanatised_params.email_reminder)
 
-    if @email_reminder.save
+    if @email_reminder.invalid?
+      render action: :new, status: 422
+
+    elsif @email_reminder.save
       flash[:instruction] = 'You must now add some items to your reminder.'
       flash[:notice] = 'Email reminder was successfully created.'
       @available_items = get_available_items(@email_reminder.section_id)
       render action: 'edit'
+
     else
-      render action: "new"
+      render action: :new, status: 500, error: 'Email reminder could not be created.'
     end
   end
 
   def update
     @email_reminder = current_user.email_reminders.find(params[:id])
+    @email_reminder.assign_attributes(sanatised_params.email_reminder)
 
-    if @email_reminder.update_attributes(params[:email_reminder])
+    if @email_reminder.invalid?
+      render action: :edit, status: 422
+    elsif @email_reminder.save
       redirect_to @email_reminder, notice: 'Email reminder was successfully updated.'
     else
-      render action: "edit"
+      render action: :edit, status: 500, error: 'Email reminder could not be updated.'
     end
   end
 
@@ -88,13 +95,6 @@ class EmailRemindersController < ApplicationController
 
 
   private
-  def setup_tertiary_menu
-    @tertiary_menu_items = [
-      ['List of reminders', email_reminders_path],
-      ['New reminder', new_email_reminder_path],
-    ]
-  end
-
   def get_available_items(section_id)
     items = []
     unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday')

@@ -72,7 +72,7 @@ Feature: Forgotten Password
         When I go to reset_password token="abc123"
         And I fill in "password1" with "P@55word"
         And I press "Reset password"
-        Then I should see "Password doesn't match confirmation"
+        Then I should see "Password confirmation doesn't match Password"
 	And I should be on "/password_resets/abc123"
         And "alice@example.com" should receive no email with subject /Password Changed/
 

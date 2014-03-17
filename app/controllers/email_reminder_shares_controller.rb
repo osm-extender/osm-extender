@@ -1,5 +1,5 @@
 class EmailReminderSharesController < ApplicationController
-  skip_before_filter :require_login
+  skip_before_action :require_login
   load_and_authorize_resource :except => :create
 
 
@@ -13,14 +13,16 @@ class EmailReminderSharesController < ApplicationController
   end
   
   def create
-    @email_reminder_share = current_user.email_reminders.find(params[:email_reminder_id]).shares.build(params[:email_reminder_share])
+    @email_reminder_share = current_user.email_reminders.find(params[:email_reminder_id]).shares.build(sanatised_params.email_reminder_share)
     authorize! :create, @email_reminder_share
 
-    if @email_reminder_share.save
+    if @email_reminder_share.invalid?
+      render action: :new, status: 422
+    elsif @email_reminder_share.save
       flash[:notice] = 'Email reminder was successfully shared.'
       redirect_to email_reminder_shares_path(params[:email_reminder_id])
     else
-      render action: 'new'
+      render action: :new, status: 500, error: 'Email reminder could not be shared.'
     end
   end
   

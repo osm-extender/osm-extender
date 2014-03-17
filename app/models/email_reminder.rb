@@ -1,12 +1,9 @@
 class EmailReminder < ActiveRecord::Base
-  audited
-  has_associated_audits
-
-  attr_accessible :user, :section_id, :send_on
+  has_paper_trail
 
   belongs_to :user
-  has_many :items, :class_name=>'EmailReminderItem', :dependent => :destroy, :order => :position
-  has_many :shares, :class_name=>'EmailReminderShare', :dependent => :destroy, :foreign_key => :reminder_id
+  has_many :items, -> { order :position }, class_name: EmailReminderItem, dependent: :destroy, inverse_of: :email_reminder
+  has_many :shares, class_name: EmailReminderShare, dependent: :destroy, foreign_key: :reminder_id, inverse_of: :reminder
 
   validates_presence_of :user
   

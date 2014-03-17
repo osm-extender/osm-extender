@@ -1,2 +1,2 @@
 <p><%= @email_list.user.name %>, at least one of the addresses in your
-<%= @email_list.name %> email list for <%= @section ? "#{@section.name} (#{@section.group_name})" : 'Unknown section' %> changed.</p>
+<%= @email_list.name %> email list for <%= @email_list.section ? "#{@email_list.section.name} (#{@email_list.section.group_name})" : 'Unknown section' %> changed.</p>

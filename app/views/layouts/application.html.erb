@@ -2,42 +2,22 @@
 <html>
 <head>
   <title>
-    <%- if content_for?(:head_title) %>
-      OSMExtender - <%= yield(:head_title) %>
-    <%- else %>
-      <%- if content_for?(:title) %>
-         OSMExtender - <%= yield(:title) %>
-      <%- else %>
-        OSMExtender
-      <%- end %>
-    <%- end %>
+    <%= content_for?(:title) ? "OSMExtender - #{yield :title}" : 'OSMExtender' %>
   </title>
 
-  <%= stylesheet_link_tag 'jquery.ui.all' %>
-  <%= stylesheet_link_tag 'jquery.toastmessage' %>
   <%= stylesheet_link_tag 'application', :media => :all %>
   <%= stylesheet_link_tag 'application__print', :media=>:print %>
   <%= stylesheet_link_tag params[:controller], :media=>:all if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
-  <%= stylesheet_link_tag "#{params[:controller]}__#{params[:action]}", :media=>:all if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}.css") %>
   <%= stylesheet_link_tag "#{params[:controller]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__print.css") %>
-  <%= stylesheet_link_tag "#{params[:controller]}__#{params[:action]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}__print.css") %>
 
-  <%= javascript_include_tag :jquery  %>
-  <%= javascript_include_tag :jquery_ujs %>
-  <%= javascript_include_tag 'jquery.ui.all' %>
-  <%= javascript_include_tag 'jquery.thead' %>
-  <%= javascript_include_tag 'jquery.toastmessage' %>
-  <%= javascript_include_tag 'rails.validations' %>
-  <%= javascript_include_tag 'rails.validations.custom' %>
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
   <%= javascript_include_tag 'https://maps.googleapis.com/maps/api/js?sensor=false' if content_for?(:use_maps) %>
   <%= javascript_include_tag 'application' %>
-  <%= javascript_include_tag params[:controller] if OSMExtender::Application.assets.find_asset("#{params[:controller]}.js") %>
-  <%= javascript_include_tag "#{params[:controller]}__#{params[:action]}" if OSMExtender::Application.assets.find_asset("#{params[:controller]}__#{params[:action]}.js") %>
+  <%= javascript_include_tag "#{params[:controller]}/#{params[:action]}" if OSMExtender::Application.assets.find_asset("#{params[:controller]}/#{params[:action]}.js") %>
 
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body class="<%= [controller.controller_name, controller.action_name].join(' ') %>">
   <div id="page">
     <div id="header">
       <div id="primary_menu">
@@ -63,7 +43,7 @@
         <div>
           <div style="float: left;">Adding functionallity to the <a href="https://www.onlinescoutmanager.co.uk" target="_blank">Online Scout Manager</a></div>
           <div style="float: right;">
-            Hosted by <%= link_to 'Aberdeen SAS', 'www.aberdeen-sas.org.uk' %>
+            Hosted by <%= link_to 'Aberdeen SAS', '//www.aberdeen-sas.org.uk' %>
           </div>
           <div style="clear: both;"></div>
         </div>
@@ -111,8 +91,13 @@
       </div><!-- secondary_menu -->
 
       <%- unless Rails.env.production? %>
-        <div style="background-color: <%= {'development'=>'#ff0000', 'staging'=>'#ffff00'}[Rails.env] || '#fa5ffa' %>; color: black; text-align: center; font-size: 200%; height: 1em;">
+        <div style="background-color: <%= {'development'=>'#ff0000', 'staging'=>'#ffff00'}[Rails.env] || '#fa5ffa' %>; color: black; text-align: center; font-size: 200%; min-height: 1em;">
           <b>This is the <%= Rails.env.upcase %> environment!</b>
+          <%- if Rails.env.development? %>
+            <br/>
+            <%= link_to '[Rails info]', '/rails/info' %>
+            <%= link_to '[Mailer previews]', '/rails/mailers' %>
+          <%- end %>
         </div>
       <%- end %>
 
@@ -121,7 +106,7 @@
           <%- current_announcements.each do |announcement| %>
             <div id="announcement-<%= announcement.id %>">
               <%= markdown(announcement.message) %>
-              <%- if current_user && announcement.allow_hiding? %>
+              <%- if current_user && announcement.hideable? %>
                 <p><%= link_to '[Hide this announcement]', '#', {:class => 'hide_link', :data => {'announcement-id' => announcement.id, 'csrf-token' => form_authenticity_token.to_s}} %></p>
               <%- end %>
             </div>
@@ -138,19 +123,8 @@
       <%- end %>
     </div><!-- header -->
 
-    <div id="tertiary_menu">
-      <%- if @tertiary_menu_items %>
-        <%- @tertiary_menu_items.each do |item| %>
-          <div class="menu_item"><%= link_to item[0], item[1] %></div>
-        <%- end %>
-      <%- end %>
-    </div><!-- tertiary_menu -->
-
   
     <div id="content">
-      <%- if content_for?(:title) %>
-        <h1><%= yield(:title) %></h1>
-      <%- end %>
 <%= yield %>
     </div><!-- content -->
 
@@ -162,10 +136,10 @@
       <h1>Debugging Info</h1>
       <h2>@debug_log</h2>
       <pre><%= @debug_log %></pre>
-      <h2>Session</h2>
-      <%= debug(session) %>
       <h2>Params</h2>
       <%= debug(params) %>
+      <h2>Session</h2>
+      <%= debug(session) %>
     </div>
   <%- end %>
 

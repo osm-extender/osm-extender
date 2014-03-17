@@ -4,7 +4,7 @@ class EmailReminderItemProgramme < EmailReminderItem
 
   def get_data
     data = []
-    earliest = Date.today.to_date
+    earliest = Date.current.to_date
     latest = configuration[:the_next_n_weeks].weeks.from_now.to_date
 
     Osm::Term.get_for_section(user.osm_api, section_id).each do |term|
@@ -24,7 +24,7 @@ class EmailReminderItemProgramme < EmailReminderItem
 
   def get_fake_data
     data = []
-    dates = (Date.today.to_date..configuration[:the_next_n_weeks].weeks.from_now.to_date).step(7)
+    dates = (Date.current.to_date..configuration[:the_next_n_weeks].weeks.from_now.to_date).step(7)
     dates.each_with_index do |date, index|
       activities = []
       (1 + rand(3)).times do |activity|

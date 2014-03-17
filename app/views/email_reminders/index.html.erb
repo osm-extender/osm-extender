@@ -1,5 +1,4 @@
-<% provide :title, 'Email reminders' %>
-
+<%= page_title 'Email reminders' %>
 
 <h2>Your reminders</h2>
 <%- if current_user.connected_to_osm? %>
@@ -27,6 +26,11 @@
         </td>
       </tr>
     <% end %>
+    <tr>
+      <td colspan="3" style="text-align: center;">
+        <%= link_to 'Add new Email Reminder', new_email_reminder_path  %>
+      </td>
+    <tr>
     </table>
   <%- else %>
     <p>You do not currently have any email reminders setup, <%= link_to 'create one', new_email_reminder_path %>.</p>

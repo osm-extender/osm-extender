@@ -30,7 +30,7 @@ class EmailReminderItemBirthday < EmailReminderItem
 
   def get_fake_data
     data = []
-    earliest_date = -(Date.today - configuration[:the_last_n_months].months.ago.to_date).to_i
+    earliest_date = -(Date.current - configuration[:the_last_n_months].months.ago.to_date).to_i
     date_range = (configuration[:the_next_n_months] + configuration[:the_last_n_months]).months  /  1.day
 
     (1 + rand(4)).times do
@@ -79,7 +79,7 @@ class EmailReminderItemBirthday < EmailReminderItem
 
 
   private
-  def next_birthday_for_member(member, from=Date.today)
+  def next_birthday_for_member(member, from=Date.current)
     year = from.year
     mmdd = member.date_of_birth.strftime('%m%d')
     year += 1 if mmdd < from.strftime('%m%d')

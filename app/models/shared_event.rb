@@ -1,12 +1,9 @@
 class SharedEvent < ActiveRecord::Base
-  audited
-  has_associated_audits
+  has_paper_trail
 
   belongs_to :user
-  has_many :attendance, :dependent => :destroy, :class_name => SharedEventAttendance
-  has_many :fields, :dependent => :destroy, :class_name => SharedEventField
-
-  attr_accessible :cost, :finish_date, :finish_time, :name, :notes, :location, :start_date, :start_time, :confirm_by_date
+  has_many :attendance, dependent: :destroy, class_name: SharedEventAttendance, inverse_of: :shared_event
+  has_many :fields, dependent: :destroy, class_name: SharedEventField, inverse_of: :shared_event
 
   validates_presence_of :user
   validates_presence_of :name

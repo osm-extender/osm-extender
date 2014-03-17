@@ -1,12 +1,6 @@
-<% provide :title, "#{current_user.name}'s Account" %>
+<%= page_title "#{current_user.name}'s Account" %>
 
 <h2>Personal Details</h2>
-
-<div class="field">
-  GRAvatar<br/>
-  <%= image_tag "https://secure.gravatar.com/avatar/#{current_user.gravatar_id}?size=120".html_safe, :size=>'120x120', :alt=>"#{current_user.name}'s gravatar" %><br/>
-  Change your GRAvatar by going to <%= link_to 'GRAvatar.com', 'https://www.gravatar.com', :target=>'_blank' %>
-</div>
 
 <div class="field">
   <%= label_tag :name %><br/>
@@ -17,3 +11,8 @@
   <%= label_tag :email_address %><br/>
   <%= current_user.email_address %>
 </div>
+
+
+<%= link_to 'Edit details', edit_my_account_path %> |
+<%= link_to 'Change password', change_my_password_path %> |
+<%= link_to 'Delete account', confirm_delete_my_account_path %>

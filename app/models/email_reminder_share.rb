@@ -1,12 +1,9 @@
 class EmailReminderShare < ActiveRecord::Base
-  audited :associated_with => :reminder
-
-  attr_accessible :email_address, :name
-  attr_accessible :reminder, :email_address, :name, :state, :as => :admin
+  has_paper_trail
 
   belongs_to :reminder, :class_name => 'EmailReminder'
 
-  scope :shared_with, lambda { |email_address| { :conditions => ['email_address LIKE ?', (email_address.is_a?(String) ? email_address : email_address.email_address)] } }
+  scope :shared_with, ->(email_address) { where ['email_address LIKE ?', (email_address.is_a?(String) ? email_address : email_address.email_address)] }
 
   validates_presence_of :state
   validate :state_is_valid, :forbid_changing_state_back_to_pending
@@ -35,7 +32,7 @@ class EmailReminderShare < ActiveRecord::Base
   end
 
   def name
-    user = User.find_by_email_address(read_attribute(:email_address).try(:downcase))
+    user = User.find_by(email_address: read_attribute(:email_address).try(:downcase))
     user.nil? ? read_attribute(:name) : user.name
   end
 

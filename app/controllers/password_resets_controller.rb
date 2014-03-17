@@ -1,11 +1,11 @@
 class PasswordResetsController < ApplicationController
-  skip_before_filter :require_login
+  skip_before_action :require_login
 
   def new
   end
 
   def create 
-    @user = User.find_by_email_address(params[:email_address])
+    @user = User.find_by(email_address: params[:email_address])
     @user.deliver_reset_password_instructions! if @user
     redirect_to(root_path, :notice => 'Instructions have been sent to your email address.')
   end
@@ -28,7 +28,7 @@ class PasswordResetsController < ApplicationController
         redirect_to root_path, :notice => 'Password sucessfully changed.'
       end
     else
-      render :action => :edit
+      render action: :edit
     end
   end
 end

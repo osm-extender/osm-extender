@@ -49,7 +49,6 @@ class NotifierMailer < ApplicationMailer
 
   def email_list_changed(email_list)
     @email_list = email_list
-    @section = Osm::Section.get(@email_list.user.osm_api, @email_list.section_id)
     mail ({
       :subject => build_subject('Email List Changed'),
       :to => @email_list.user.email_address_with_name
@@ -58,7 +57,6 @@ class NotifierMailer < ApplicationMailer
 
   def email_list_changed__no_current_term(email_list, exception)
     @email_list = email_list
-    @section = Osm::Section.get(@email_list.user.osm_api, @email_list.section_id)
     user = @email_list.user
 
     unless user.nil? || !user.connected_to_osm? || @email_list.section_id.nil?

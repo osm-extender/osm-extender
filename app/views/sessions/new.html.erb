@@ -1,9 +1,9 @@
-<% provide :title, 'Sign in' %>
+<%= page_title 'Sign in' %>
 
 <%= form_tag sessions_path do %>
   <div class="field">
     <%= label_tag :email_address %><br/>
-    <%= text_field_tag :email_address, params[:email_address] %>
+    <%= email_field_tag :email_address, params[:email_address] %>
   </div>
   <div class="field">
     <%= label_tag :password %><br/>

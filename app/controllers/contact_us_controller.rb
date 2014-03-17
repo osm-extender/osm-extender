@@ -1,5 +1,5 @@
 class ContactUsController < ApplicationController
-  skip_before_filter :require_login
+  skip_before_action :require_login
 
   def form
     @contact = ContactUs.new
@@ -10,7 +10,7 @@ class ContactUsController < ApplicationController
   end
 
   def send_form
-    @contact = ContactUs.new(params[:contact_us])
+    @contact = ContactUs.new(sanatised_params.contact_us)
 
     contact_valid = @contact.valid?
     recaptcha_ok = current_user || verify_recaptcha(:model=>@contact)

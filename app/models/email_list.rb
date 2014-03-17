@@ -1,7 +1,5 @@
 class EmailList < ActiveRecord::Base
-  audited
-
-  attr_accessible :user, :name, :section_id, :email1, :email2, :email3, :email4, :match_type, :match_grouping, :notify_changed, :last_hash_of_addresses
+  has_paper_trail
 
   belongs_to :user
 
@@ -51,6 +49,15 @@ class EmailList < ActiveRecord::Base
       :emails => emails,
       :no_emails => no_emails
     }
+  end
+
+  def section
+    return @section unless @section.nil?
+    user.connected_to_osm? ? @section ||= Osm::Section.get(user.osm_api, section_id) : nil
+  end
+  def section=(new_section)
+    write_attribute(:section_id, new_section.to_i)
+    @section = new_section
   end
 
   def get_hash_of_addresses

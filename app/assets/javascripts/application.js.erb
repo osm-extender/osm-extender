@@ -1,0 +1,36 @@
+// This is a manifest file will include application wide java scripts
+// javascripts (or manifests) for specific controllers should be
+// called <controller>.js(.coffee), for example projects.js.
+//
+//= require jquery
+//= require jquery_ujs
+//= require jquery.ui.all
+//= require jquery.thead
+//= require jquery.toastmessage
+//= require_self
+//= require_tree ./application
+
+
+function supports_input_type(type) {
+  var field = document.createElement("input");
+  field.setAttribute("type", type);
+  return (field.type == type);
+}
+const SUPPORTS_DATE_FIELD = supports_input_type("date");
+
+
+$(function() {
+  if (!SUPPORTS_DATE_FIELD) {
+    $( ".datepicker" ).datepicker({
+      showOn: 'both',
+      buttonImageOnly: true,
+      buttonImage: '<%= image_path 'icons/calendar-small.png' %>',
+      buttonText: 'Calendar',
+      constrainInput: true,
+      dateFormat: 'yy-mm-dd',
+      changeMonth: true,
+      changeYear: true,
+      onClose: function(dateText, inst) { $(inst.input).change().focusout(); }
+    });
+  }
+});

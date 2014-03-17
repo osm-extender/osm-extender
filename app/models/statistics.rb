@@ -1,5 +1,4 @@
 class Statistics < ActiveRecord::Base
-  attr_accessible :date, :users, :email_reminders, :email_reminders_by_day, :email_reminder_shares_by_day, :email_reminders_by_type, :usage
 
   serialize :email_reminders_by_day, Array
   serialize :email_reminder_shares_by_day, Array
@@ -18,7 +17,7 @@ class Statistics < ActiveRecord::Base
 
 
   def self.create_or_retrieve_for_date(date)
-    exists = find_by_date(date)
+    exists = find_by(date: date)
     return exists if exists
 
     data = Hash.new

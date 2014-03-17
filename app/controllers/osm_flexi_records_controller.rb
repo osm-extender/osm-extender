@@ -1,7 +1,7 @@
 class OsmFlexiRecordsController < ApplicationController
-  before_filter { forbid_section_type :waiting }
-  before_filter :require_connected_to_osm
-  before_filter { require_osm_permission :read, :flexi }
+  before_action { forbid_section_type :waiting }
+  before_action :require_connected_to_osm
+  before_action { require_osm_permission :read, :flexi }
 
   def index
     @records = current_section.flexi_records.sort

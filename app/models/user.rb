@@ -1,18 +1,15 @@
 class User < ActiveRecord::Base
   authenticates_with_sorcery!
-  audited :except => [:crypted_password, :salt, :activation_token, :reset_password_token]
+  has_paper_trail :class_name => 'UserVersion', :skip => [:crypted_password, :salt, :activation_token, :reset_password_token]
 
-  attr_accessible :name, :email_address, :password, :password_confirmation, :startup_section
-  attr_accessible :name, :email_address, :password, :password_confirmation, :can_administer_users, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user, :as => :admin
-
-  has_many :email_reminders, :dependent => :destroy
-  has_many :email_reminder_shares, :through => :email_reminders, :source => :shares
-  has_many :email_lists, :dependent => :destroy
-  has_many :hidden_announcements, :dependent => :destroy
-  has_many :emailed_announcements, :dependent => :destroy
-  has_many :shared_event_attendances, :dependent => :destroy
-  has_many :shared_events, :dependent => :destroy
-  has_many :usage_log
+  has_many :email_reminders, dependent: :destroy, inverse_of: :user
+  has_many :email_reminder_shares, through: :email_reminders, source: :shares
+  has_many :email_lists, dependent: :destroy, inverse_of: :user
+  has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
+  has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
+  has_many :shared_event_attendances, dependent: :destroy, inverse_of: :user
+  has_many :shared_events, dependent: :destroy, inverse_of: :user
+  has_many :usage_log, inverse_of: :user
 
   validates_presence_of :name
 
@@ -93,7 +90,7 @@ class User < ActiveRecord::Base
       text.downcase! if [:email_address].include?(column)
       where(["#{column.to_s} LIKE ?", "%#{text}%"])
     else
-      scoped
+      all
     end
   end
 
@@ -115,7 +112,7 @@ class User < ActiveRecord::Base
     alphabet_size += 10 if pass.gsub(/[^0-9]/, '').length > 0
     alphabet_size += 33 if pass.gsub(/[a-zA-Z0-9]/, '').length > 0
 
-    haystack_size = alphabet_size * (alphabet_size+1)**(pass.length-1)
+    haystack_size = alphabet_size**pass.length
 
     if haystack_size < minimum_haystack
       if alphabet_size < 40

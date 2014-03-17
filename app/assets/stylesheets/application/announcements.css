@@ -1,0 +1,19 @@
+#announcements {
+    padding:            5px;
+    margin-left:        25%;
+    margin-right:       25%;
+    margin-bottom:      5px;
+}
+#announcements div {
+    margin:             5px;
+    border-style:       solid;
+    border-radius:      4px;
+    padding:            2px;
+    margin-top:         5px;
+    margin-bottom:      5px;
+    margin-left:        auto;
+    margin-right:       auto;
+    background-color:   #fff288;
+    border-color:       orange;
+}
+

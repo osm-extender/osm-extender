@@ -44,8 +44,8 @@ Feature: Reminder Email
 
         When I open the email with subject /Shared With You/
         And I click the /email_reminder_subscriptions/ link in the email
-        And I fill in "name" with "Charlie2"
-        And I fill in "email_address" with "charlie2@example.com"
+        And I fill in "email_reminder_subscription_name" with "Charlie2"
+        And I fill in "email_reminder_subscription_email_address" with "charlie2@example.com"
 	And I select "subscribed" from "state"
         And I press "Update subscription"
         Then I should see "Your subscription was updated"
@@ -65,8 +65,8 @@ Feature: Reminder Email
         When I signin as "bob@example.com" with password "P@55word"
         And I go to the list of email_reminders
         And I follow "[Edit subscription]" in the "Actions" column of the "Tuesday" row
-        And I fill in "name" with "Charlie2"
-        And I fill in "email_address" with "charlie2@example.com"
+        And I fill in "email_reminder_subscription_name" with "Charlie2"
+        And I fill in "email_reminder_subscription_email_address" with "charlie2@example.com"
 	And I select "unsubscribed" from "state"
         And I press "Update subscription"
         Then I should see "Your subscription was updated"

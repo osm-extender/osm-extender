@@ -1,8 +1,5 @@
-# Move getting usage stats to model
-#  Generate past usage stats in migration too
-
 class StatisticsController < ApplicationController
-  before_filter { require_osmx_permission :view_statistics }
+  before_action { require_osmx_permission :view_statistics }
 
   def index
   end

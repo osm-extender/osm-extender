@@ -1,9 +1,9 @@
-<p>Whilst trying to update the addresses in your email list for <%= @section ? "#{@section.name} (#{@section.group_name})" : 'Unknown section' %> an error occured - there is no current term.</p>
+<p>Whilst trying to update the addresses in your email list for <%= @email_list.section ? "#{@email_list.section.name} (#{@email_list.section.group_name})" : 'Unknown section' %> an error occured - there is no current term.</p>
 <p>This is a problem because when we ask OSM for the contact details for your section we need to tell OSM what term we want the details for. Since today is not in a term we couldn't work out what term to give to OSM. Please correct this by following the instructions below.</p>
 
 <ul>
   <li>Login to <%= link_to 'OSM', 'https://www.onlinescoutmanager.co.uk' %>.</li>
-  <li>Make sure you are using the <%= @section.group_name %>: <%= @section.name %> section.</li>
+  <li>Make sure you are using the <%= @email_list.section.group_name %>: <%= @email_list.section.name %> section.</li>
   <li>From the term selector choose "Configure terms".</li>
   <%- if @next_term.nil? && @last_term.nil? %>
   <li>Add some terms.</li>

@@ -50,9 +50,4 @@ class UserMailer < ApplicationMailer
     })
   end
 
-  # Patch as Sorcery doesn't allow a class 'between' this and ApplicationMailer
-  def self.superclass
-    return ApplicationMailer.superclass
-  end
-
 end

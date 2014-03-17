@@ -1,6 +1,6 @@
-<% provide :title, "Share with a new person" %>
+<%= page_title "Share with a new person" %>
 
-<%= form_for @email_reminder_share, :validate=>true do |f| %>
+<%= form_for @email_reminder_share do |f| %>
   <%- if @email_reminder_share.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@email_reminder_share.errors.count, "error") %> prohibited the reminder from being shared:</h2>

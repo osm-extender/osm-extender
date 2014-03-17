@@ -1,47 +1,57 @@
 class AnnouncementsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:new, :create]
+  authorize_resource :only=>[:new, :create]
+
+  before_action :only=>[:index, :new] do
+    now = Time.now
+    now_hr = now.strftime('%H')
+    now_min = now.strftime('%M').to_i
+    @announcement = Announcement.new(
+      :start => DateTime.parse(now_hr + ':' + (now_min - (now_min % 5)).to_s) - 5.minutes,
+      :finish => 8.days.from_now.to_date
+    )
+  end
+
 
   def index
-    @announcements = Announcement.all
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
   end
 
   def show
-    @announcement = Announcement.find(params[:id])
   end
 
   def new
-    @announcement = Announcement.new(:start => Time.now, :finish => 1.week.from_now.to_date)
   end
 
   def edit
-    @announcement = Announcement.find(params[:id])
   end
 
   def create
-    @announcement = Announcement.new(params[:announcement])
+    @announcement = Announcement.new(sanatised_params.announcement)
 
-    if @announcement.save
+    if @announcement.invalid?
+      render action: :new, status: 422
+    elsif @announcement.save
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully created.'
     else
-      render action: "new"
+      render action: :new, status: 500, error: 'Announcement could not be created.'
     end
   end
 
   def update
-    @announcement = Announcement.find(params[:id])
+    @announcement.assign_attributes(sanatised_params.announcement)
 
-    if @announcement.update_attributes(params[:announcement])
+    if @announcement.invalid?
+      render action: :edit, status: 422
+    elsif @announcement.save
       email_to_users if params[:email_to_users]
       redirect_to announcements_path, notice: 'Announcement was successfully updated.'
     else
-      render action: "edit"
+      render action: :edit, status: 500, error: 'Announcement could not be updated.'
     end
   end
 
   def destroy
-    @announcement = Announcement.find(params[:id])
     @announcement.destroy
 
     redirect_to announcements_path

@@ -1,4 +1,4 @@
-<%= form_for @shared_event, :validate=>true do |f| %>
+<%= form_for @shared_event do |f| %>
   <% if @shared_event.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@shared_event.errors.count, "error") %> prohibited this shared event from being saved:</h2>
@@ -25,12 +25,12 @@
 
   <div class="field">
     <%= f.label :start_date %><br/>
-    <%= f.text_field :start_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+    <%= f.date_field :start_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
   </div>
 
   <div class="field">
     <%= f.label :finish_date %><br/>
-    <%= f.text_field :finish_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+    <%= f.date_field :finish_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
   </div>
 
   <div class="field">
@@ -55,7 +55,7 @@
 
   <div class="field">
     <%= f.label :confirm_by_date %><br/>
-    <%= f.text_field :confirm_by_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
+    <%= f.date_field :confirm_by_date, {:class=>'datepicker', :placeholder=>'yyyy-mm-dd'} %>
   </div>
 
   <div class="field">

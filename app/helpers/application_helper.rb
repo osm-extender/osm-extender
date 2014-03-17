@@ -58,4 +58,11 @@ module ApplicationHelper
     %q{<div id="password_strength_meter" style="display: inline-block; min-width: 215px; font-weight: bold; color: black; background-color: #7777ff;">No password!</div>}.html_safe
   end
 
+
+  # Set title for the page and insert an H1 tag
+  def page_title(title)
+    provide :title, title
+    content_tag 'h1', title
+  end
+
 end

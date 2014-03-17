@@ -1,19 +1,19 @@
-<% provide :title, 'Calendar' %>
+<%= page_title 'Calendar' %>
 
 <p>This calendar includes the following:
   <ul>
     <%- Osm::Section.get_all(current_user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section| %>
-      <%- if params['events'][section.id.to_s].eql?('1') || params['programme'][section.id.to_s].eql?('1') %>
+      <%- if @my_params['events'][section.id.to_s].eql?('1') || @my_params['programme'][section.id.to_s].eql?('1') %>
         <li>
           <%= get_section_names[section.id] %>
-            <%- if params['programme'][section.id.to_s].eql?('1') %>
-              <%- if params['events'][section.id.to_s].eql?('1') %>
+            <%- if @my_params['programme'][section.id.to_s].eql?('1') %>
+              <%- if @my_params['events'][section.id.to_s].eql?('1') %>
                 (Programme and Events)
               <%- else %>
                 (Programme)
               <%- end %>
             <%- else %>
-              <%- if params['events'][section.id.to_s].eql?('1') %>
+              <%- if @my_params['events'][section.id.to_s].eql?('1') %>
                 (Events)
               <%- end %>
             <%- end %>
@@ -57,5 +57,5 @@
   </tbody>
 </table>
 
-<%= link_to '[Export as CSV]', calendar_report_path(@options.merge(:format => :csv)) %><br/>
-<%= link_to '[Export as TSV]', calendar_report_path(@options.merge(:format => :tsv)) %><br/>
+<%= link_to '[Export as CSV]', calendar_report_path(params.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', calendar_report_path(params.merge(:format => :tsv)) %><br/>
