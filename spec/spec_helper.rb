@@ -3,12 +3,9 @@ puts "Loading spec_helper.rb"
 # Generate test coverage report
 if Gem::Specification::find_all_by_name('simplecov').any?
   require 'simplecov'
-  SimpleCov.coverage_dir(File.join('tmp', 'coverage'))
-  SimpleCov.start 'rails' do
-    add_filter 'spec/'
-    add_filter 'config/'
-  end
-
+  SimpleCov.command_name 'rspec'
+  SimpleCov.merge_timeout 1800 # Half an hour
+  SimpleCov.start 'rails'
   require 'coveralls' and Coveralls.wear_merged!('rails') if ENV['TRAVIS']
 end
 
