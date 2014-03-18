@@ -2,7 +2,7 @@ namespace :scheduled  do
 
   def exception_raised(task, exception)
     puts "\t\tAn Exception was raised (#{exception.message})"
-    NotifierMailer.rake_exception(task, exception).deliver unless Settings.read('notifier mailer - send exception to').blank?
+    NotifierMailer.rake_exception(task, exception).deliver
   end
 
   desc "Delete old sessions"
@@ -44,7 +44,8 @@ namespace :scheduled  do
     desc "Check email lists for changes"
     task :changed_email_lists => :environment do
       $PROGRAM_NAME = "OSMX #{Rails.env} - Send Changed Email Lists"
-      failed_emails_sent = {}
+      noterm_emails_sent = {}
+      forbidden_emails_sent = {}
       puts "Checking for email lists with changed addresses"
       lists = EmailList.where(:notify_changed => true).order(:section_id)
       count = lists.size
@@ -58,12 +59,22 @@ namespace :scheduled  do
             list.update_attributes(:last_hash_of_addresses => todays_hash)
             NotifierMailer.email_list_changed(list).deliver
           end
+        rescue Osm::Forbidden => exception
+          puts "\t\tUser is fobidden from fetching data"
+          forbidden_emails_sent[list.user_id] ||= []
+          unless forbidden_emails_sent[list.user_id].include?(list.section_id)
+            NotifierMailer.email_list_changed__forbidden(list, exception).deliver
+            forbidden_emails_sent[list.user_id].push list.section_id
+          end
         rescue Osm::Error::NoCurrentTerm => exception
-          puts "\t\tAn Exception was raised (#{exception.message})"
-          failed_emails_sent[list.user_id] ||= []
-          NotifierMailer.email_list_changed__no_current_term(list, exception).deliver unless failed_emails_sent[list.user_id].include?(list.section_id)
-          failed_emails_sent[list.user_id].push list.section_id
+          puts "\t\tNo current term for section"
+          noterm_emails_sent[list.user_id] ||= []
+          unless noterm_emails_sent[list.user_id].include?(list.section_id)
+            NotifierMailer.email_list_changed__no_current_term(list, exception).deliver
+            noterm_emails_sent[list.user_id].push list.section_id
+          end
         rescue Exception => exception
+          puts "\t\tAn Exception was raised (#{exception.message})"
           exception_raised("Checking list for changed address (id: #{list.id})", exception)
         end
       end

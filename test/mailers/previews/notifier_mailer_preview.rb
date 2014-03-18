@@ -37,6 +37,19 @@ class NotifierMailerPreview < ActionMailer::Preview
     NotifierMailer.email_list_changed__no_current_term(list, exception)
   end
 
+  def email_list_changed__forbidden
+    exception = Osm::Forbidden.new("You do not have access to that section.")
+    list = EmailList.new(
+      id: 0,
+      name: 'TEST LIST',
+      user: User.new(
+        name: 'John Smith',
+        email_address: 'john.smith@example.com'
+      )
+    )
+    NotifierMailer.email_list_changed__forbidden(list, exception)
+  end
+
   def reminder_failed
     reminder = EmailReminder.new(id: 0)
     NotifierMailer.reminder_failed(reminder, get_an_exception)
