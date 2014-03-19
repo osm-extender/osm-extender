@@ -23,15 +23,15 @@
   </tr>
   -->
 
-  <!--
+
   <tr id="user">
     <td>Administration</td>
-    <td>Feature(s)</td>
-    <td>Read or Read/Write</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :user, current_user, section), osm_api_permission_human_friendly(:user, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :user, current_user, section), osm_user_permission_human_friendly(:user, current_user, section) %></td>
+    <td>Reports (Audit leader access)</td>
+    <td>Administer</td>
+    <td><%= pos_neg api_has_osm_permission?(:administer, :user, current_user, section), osm_api_permission_human_friendly(:user, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:administer, :user, current_user, section), osm_user_permission_human_friendly(:user, current_user, section) %></td>
   </tr>
-  -->
+
 
   <!--
   <tr id="register">

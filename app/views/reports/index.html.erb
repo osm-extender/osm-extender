@@ -2,6 +2,22 @@
 
 <div class="ui-accordion accordion_reports">
 
+  <h2 class="ui-accordion-header"><a href="#">Audit Leader Access</a></h2>
+  <div class="ui-accordion-content">
+    <p>This report allows you to see what access has been granted to who (for each of the sections you have administion access to).</p>
+    <%= form_tag leader_access_audit_path, :method=>:get do %>
+      <%- @sections.each do |section| %>
+        <%- if has_osm_permission?(:administer, :user) %>
+          <%= check_box_tag "leader_access_audit[sections[#{section.id}]]", 1, true %>
+          <%= label_tag "leader_access_audit[sections[#{section.id}]]", section.name %>
+          <br/>
+        <%- end %>
+      <%- end %>
+      <%= submit_tag 'Show leader access' %>
+    <%- end %>
+  </div>
+
+
   <%- if current_section.youth_section? %>
     <h2 class="ui-accordion-header"><a href="#">Awarded Badges</a></h2>
     <div class="ui-accordion-content">
