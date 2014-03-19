@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   
   def locked?
     return false if send(sorcery_config.lock_expires_at_attribute_name).nil?
-    return (send(sorcery_config.lock_expires_at_attribute_name) > Time.now)
+    return (send(sorcery_config.lock_expires_at_attribute_name) > Time.now.utc)
   end
 
   def active?

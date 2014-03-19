@@ -3,7 +3,7 @@ class AnnouncementsController < ApplicationController
   authorize_resource :only=>[:new, :create]
 
   before_action :only=>[:index, :new] do
-    now = Time.now
+    now = Time.zone.now
     now_hr = now.strftime('%H')
     now_min = now.strftime('%M').to_i
     @announcement = Announcement.new(
