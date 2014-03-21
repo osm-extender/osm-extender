@@ -158,6 +158,7 @@ class ReportsController < ApplicationController
           end
         end
       end # tsv
+      format.ics # ICS
     end
 
     log_usage(:sub_action => request.format.to_s, :extra_details => @options, :section_id => nil)
