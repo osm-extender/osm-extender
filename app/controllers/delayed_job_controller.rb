@@ -3,11 +3,7 @@ class DelayedJobController < ApplicationController
 
   def index
     wanted_settings = [:default_priority, :max_attempts, :max_run_time, :sleep_delay, :destroy_failed_jobs, :delay_jobs]
-    @settings = wanted_settings.inject({}) do |hash, value|
-      hash[value] = Delayed::Worker.send(value)
-      hash
-    end
-
+    @settings = Hash[ wanted_settings.map{ |i| [i, Delayed::Worker.send(i)] } ]
     @jobs = Delayed::Job.all
   end
 
