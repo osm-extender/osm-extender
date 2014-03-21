@@ -8,5 +8,6 @@ config/environments/*_custom.rb
 config/database.yml
 config/secrets.yml
 config/unicorn.conf
+coverage
 doc/app
 public/assets

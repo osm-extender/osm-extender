@@ -11,7 +11,7 @@ gem 'cancan', '~> 1.6'
 
 
 # Misc
-gem 'osm', '~> 1.2', '>= 1.2.7'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.8'       # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
@@ -24,6 +24,7 @@ gem 'paper_trail', '~> 3.0.0'         # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in
+gem 'icalendar', '~> 1.5'             # Do stuff with ICS format files
 
 
 # Jobs in background

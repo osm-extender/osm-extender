@@ -158,6 +158,7 @@ class ReportsController < ApplicationController
           end
         end
       end # tsv
+      format.ics # ICS
     end
 
     log_usage(:sub_action => request.format.to_s, :extra_details => @options, :section_id => nil)
@@ -462,6 +463,47 @@ class ReportsController < ApplicationController
             @earnt_badges[key].push member_name
           end
         end
+      end
+    end
+
+    log_usage
+  end
+
+  def leader_access_audit
+    permission_names = {
+      10 => 'Read',
+      20 => 'Read &amp; Write'.html_safe,
+      100 => 'Administer',
+      'r' => 'Read',
+      'rw' => 'Read &amp; Write'.html_safe,
+      'arw' => 'Administer'
+    }
+
+    sections = Osm::Section.get_all(current_user.osm_api)
+    sections.select! { |s| @my_params[:sections][s.id.to_s].eql?('1') }
+
+    @by_section = {}
+    @by_leader = {current_user.osm_userid => {}}
+    @leader_names = {current_user.osm_userid => "#{current_user.name} (YOU)"}
+    @section_names = {}
+
+    sections.each do |section|
+      @by_section[section.id] ||= {}
+      @section_names[section.id] = "#{section.name} (#{section.group_name})"
+
+      my_permissions = current_user.osm_api.get_user_permissions[section.id]
+      my_permissions = Hash[my_permissions.map{ |k,v| [k.to_s, permission_names[v.map{ |i| i.to_s.first }.sort.join]] }]
+      @by_section[section.id][current_user.osm_userid] = my_permissions
+      @by_leader[current_user.osm_userid][section.id] = my_permissions
+
+      leaders = current_user.osm_api.perform_query("ext/settings/access/?action=getUsersForSection&sectionid=#{section.id}")
+      leaders.each do |leader|
+        leader_id = leader['userid'].to_i
+        @by_leader[leader_id] ||= {}
+        @leader_names[leader_id] = leader['firstname']
+        permissions = Hash[leader['permissions'].map{ |k,v| [k, permission_names[v.to_i]] }]
+        @by_section[section.id][leader_id] = permissions
+        @by_leader[leader_id][section.id] = permissions
       end
     end
 

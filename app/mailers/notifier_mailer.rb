@@ -76,6 +76,15 @@ class NotifierMailer < ApplicationMailer
     })
   end
 
+  def email_list_changed__forbidden(email_list, exception)
+    @email_list = email_list
+
+    mail ({
+      :subject => build_subject('Checking Email List For Changes FAILED'),
+      :to => @email_list.user.email_address_with_name
+    })
+  end
+
   private
   def inspect_object(object)
     case object

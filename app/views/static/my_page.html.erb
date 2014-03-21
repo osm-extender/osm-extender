@@ -19,7 +19,7 @@
 <%= form_tag update_my_preferences_path, :method=>:post do %>
   <div class="field">
     <%= label_tag :startup_section %><br/>
-    <%= select_tag :startup_section, options_for_select({'No preference'=>'0'}.merge(@sections.inject({}){ |new_hash, section| new_hash[section[:name]] = section[:id]; new_hash }), current_user.startup_section) %>
+    <%= select_tag :startup_section, options_for_select({'No preference'=>'0'}.merge(Hash[ @sections.map{ |s| [s[:name], s[:id]]} ]), current_user.startup_section) %>
   </div>
 
   <%= submit_tag 'Save preferences' %><br/>

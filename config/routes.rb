@@ -98,6 +98,7 @@ OSMExtender::Application.routes.draw do
   get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'
   get 'reports/badge_completion_matrix' => 'reports#badge_completion_matrix', :as => 'badge_completion_matrix_report'
   get 'reports/planned_badge_requirements' => 'reports#planned_badge_requirements', :as => 'planned_badge_requirements_report'
+  get 'reports/leader_access_audit' => 'reports#leader_access_audit', :as => 'leader_access_audit'
 
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
@@ -115,7 +116,7 @@ OSMExtender::Application.routes.draw do
 #    resources :shared_event_attendances, :as => 'attendances', :path => 'attendances'
     get 'export' => 'shared_events#export', :as => 'export', :path => 'export', :constraints => {:format => /tsv|csv/}
   end
-  get '/shared_events/:shared_event_id/attend(.:format)' => 'shared_event_attendances#attend'
+  get 'shared_events/:shared_event_id/attend(.:format)' => 'shared_event_attendances#attend'
   resources :shared_event_attendances
 
   root :to => 'static#welcome'

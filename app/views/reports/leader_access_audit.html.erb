@@ -1,0 +1,69 @@
+<%= page_title 'Leader Access Audit' %>
+
+
+<h2>By Section</h2>
+<%- @by_section.each do |section_id, leaders| %>
+  <h3><%= @section_names[section_id] %></h3>
+  <table>
+    <tr>
+      <th>Leader</th>
+      <th>Contact Details</th>
+      <th>Badge Records</th>
+      <th>Administration</th>
+      <th>Attendance Register</th>
+      <th>Programme</th>
+      <th>Events</th>
+      <th>Flexi-Records</th>
+      <th>Finance</th>
+      <th>Quartermaster</th>
+    </tr>
+    <%- leaders.each do |leader_id, permissions| %>
+      <tr>
+        <td><%= @leader_names[leader_id] %></td>
+        <td><%= permissions['contact'] %></td>
+        <td><%= permissions['badge'] %></td>
+        <td><%= permissions['user'] %></td>
+        <td><%= permissions['register'] %></td>
+        <td><%= permissions['programme'] %></td>
+        <td><%= permissions['events'] %></td>
+        <td><%= permissions['flexi'] %></td>
+        <td><%= permissions['finance'] %></td>
+        <td><%= permissions['quartermaster'] %></td>
+      </tr>
+    <%- end %>
+  </table>
+<%- end %>
+
+
+<h2 class="page-break-before">By Leader</h2>
+<%- @by_leader.each do |leader_id, sections| %>
+  <h3><%= @leader_names[leader_id] %></h3>
+  <table>
+    <tr>
+      <th>Section</th>
+      <th>Contact Details</th>
+      <th>Badge Records</th>
+      <th>Administration</th>
+      <th>Attendance Register</th>
+      <th>Programme</th>
+      <th>Events</th>
+      <th>Flexi-Records</th>
+      <th>Finance</th>
+      <th>Quartermaster</th>
+    </tr>
+    <%- sections.each do |section_id, permissions| %>
+      <tr>
+        <td><%= @section_names[section_id] %></td>
+        <td><%= permissions['contact'] %></td>
+        <td><%= permissions['badge'] %></td>
+        <td><%= permissions['user'] %></td>
+        <td><%= permissions['register'] %></td>
+        <td><%= permissions['programme'] %></td>
+        <td><%= permissions['events'] %></td>
+        <td><%= permissions['flexi'] %></td>
+        <td><%= permissions['finance'] %></td>
+        <td><%= permissions['quartermaster'] %></td>
+      </tr>
+    <%- end %>
+  </table>
+<%- end %>

@@ -6,7 +6,7 @@ class EmailReminderItemEvent < EmailReminderItem
     events = []
     Osm::Event.get_for_section(user.osm_api, section_id).each do |event|
       unless event.start.nil?
-        if (event.start < configuration[:the_next_n_months].months.from_now)  &&  (event.start > Time.now)
+        if (event.start < configuration[:the_next_n_months].months.from_now)  &&  (event.start > Time.zone.now)
           events.push event
         end
       end

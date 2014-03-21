@@ -128,13 +128,13 @@ class ProgrammeReview
             :term_finish => term.finish,
             :section_id => term.section_id,
             :data => data,
-            :last_used_at => Time.now,
+            :last_used_at => Time.now.utc,
           })
           cached_term_data.save
         end
       else
         # Use cahed data
-        cached_term_data.last_used_at = Time.now
+        cached_term_data.last_used_at = Time.now.utc
         cached_term_data.save
         data = cached_term_data.data
       end

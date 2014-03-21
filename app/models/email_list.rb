@@ -28,20 +28,19 @@ class EmailList < ActiveRecord::Base
     no_emails = Array.new
 
     section = Osm::Section.get(user.osm_api, section_id)
-    unless section.nil?
-      Osm::Member.get_for_section(user.osm_api, section).each do |member|
-        if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
-          added_address_for_member = false
-          [:email1, :email2, :email3, :email4].each do |emailN|
-            email = member.send(emailN).downcase
-            if self.send(emailN) && !email.blank?
-            #  collecting this email?  not blank
-              emails.push email unless emails.include?(email)
-              added_address_for_member = true
-            end
+    raise Osm::Forbidden if section.nil?
+    Osm::Member.get_for_section(user.osm_api, section).each do |member|
+      if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
+        added_address_for_member = false
+        [:email1, :email2, :email3, :email4].each do |emailN|
+          email = member.send(emailN).downcase
+          if self.send(emailN) && !email.blank?
+          #  collecting this email?  not blank
+            emails.push email unless emails.include?(email)
+            added_address_for_member = true
           end
-          no_emails.push member.name unless added_address_for_member
         end
+        no_emails.push member.name unless added_address_for_member
       end
     end
 
