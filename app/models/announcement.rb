@@ -22,7 +22,7 @@ class Announcement < ActiveRecord::Base
   end
 
   def current?
-    now = Time.now
+    now = Time.zone.now
     (start < now) && (finish > now)
   end
 
@@ -43,7 +43,7 @@ class Announcement < ActiveRecord::Base
     end
 
     if success # We've sent to everyone we should have
-      announcement.emailed_at = Time.now
+      announcement.emailed_at = Time.zone.now
       announcement.save
     end
   end

@@ -16,7 +16,7 @@
     <th>Actions</th>
   </tr>
 
-<%- now = Time.now %>
+<%- now = Time.zone.now %>
 <% @announcements.reverse.each do |announcement| %>
   <tr>
     <td title="<%= announcement.message %>"><%= announcement.message.truncate(30) %></td>

@@ -74,9 +74,10 @@ class Report
         if params[:events][section.id.to_s].eql?('1')
           Osm::Event.get_for_section(user.osm_api, section).each do |event|
             unless event.start.nil?
-              event_date = event.finish.nil? ? event.start : event.finish
-              unless (event_date < params[:start]) || (event_date > params[:finish])
-                items.push [event_date, event]
+              start = event.start
+              finish = event.finish.nil? ? event.start : event.finish
+              unless (finish < params[:start]) || (start > params[:finish])
+                items.push [start, event]
               end
             end
           end

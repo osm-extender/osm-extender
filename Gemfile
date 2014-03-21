@@ -24,6 +24,7 @@ gem 'paper_trail', '~> 3.0.0'         # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in
+gem 'icalendar', '~> 1.5'             # Do stuff with ICS format files
 
 
 # Jobs in background
