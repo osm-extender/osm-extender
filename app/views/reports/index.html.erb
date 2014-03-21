@@ -7,7 +7,7 @@
     <p>This report allows you to see what access has been granted to who (for each of the sections you have administion access to).</p>
     <%= form_tag leader_access_audit_path, :method=>:get do %>
       <%- @sections.each do |section| %>
-        <%- if has_osm_permission?(:administer, :user) %>
+        <%- if has_osm_permission?(:administer, :user, current_user, section) %>
           <%= check_box_tag "leader_access_audit[sections[#{section.id}]]", 1, true %>
           <%= label_tag "leader_access_audit[sections[#{section.id}]]", section.name %>
           <br/>
