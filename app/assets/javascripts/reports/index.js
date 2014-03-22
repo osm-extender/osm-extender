@@ -16,6 +16,14 @@ $(document).ready(function() {
     });
 });
 
+
+$(document).ready(function() {
+    $('.leader_access_audit_select_group').click(function(){
+        $('.leader_access_audit_group-' + $(this).data('group-id')).prop('checked', this.checked);
+    });
+});
+
+
 jQuery(document).ready(function(){
         $('.accordion_reports h2').click(function() {
                 $(this).next().toggle('slow');

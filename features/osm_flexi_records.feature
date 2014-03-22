@@ -14,19 +14,51 @@ Feature: Flexi Records
 	    | alice@example.com |
         And "alice@example.com" is an activated user account
 	And "alice@example.com" is connected to OSM
-	And an OSM request to "get roles" will give 1 role
+	And an OSM request to "get roles" will give 2 roles
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | flexi      | read    |
+        And an OSM request to get_api_access for section "2" will have the permissions
+            | permission | granted |
+            | flexi      | none    |
+
 
 
     Scenario: Get list of flexi records
+        Given an OSM request to get_api_access for section "2" will have the permissions
+            | permission | granted |
+            | flexi      | read    |
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "Flexi records"
+        And I follow "Flexi records" within "#secondary_menu_all"
+And I go to the osm_flexi_records page
         Then I should be on the osm_flexi_records page
+        And I should see "1st Somewhere : Section 1"
+        And I should see "1st Somewhere : Section 2"
         And I should see "Flexi 1"
         And I should see "Flexi 2"
         And I should have 1 usage log record
+
+   Scenario: Get list of flexi records (one section has no permission)
+       When I signin as "alice@example.com" with password "P@55word"
+        And I follow "Flexi records" within "#secondary_menu_all"
+And I go to the osm_flexi_records page
+        Then I should be on the osm_flexi_records page
+        And I should see "1st Somewhere : Section 1"
+        And I should see "1st Somewhere : Section 2"
+        And I should see "Flexi 1"
+        And I should see "Flexi 2"
+        And I should see "You don't have permission to get flexi-records for this section."
+        And I should have 1 usage log record
+
+
+    Scenario: Get list of flexi records for a section
+        When I signin as "alice@example.com" with password "P@55word"
+        And I follow "Flexi records" within "#secondary_menu_current"
+And I go to the osm_flexi_records_for_section 1 page
+        Then I should be on the osm_flexi_records_for_section 1 page
+        And I should see "Flexi records for Section 1 (1st Somewhere)"
+        And I should not see "Section 2"
+        And I should see "Flexi 1"
 
     Scenario: Show a flexi record
 	Given an OSM request to get_flexi_record_fields for section "1" flexi "101" will have the fields
@@ -42,9 +74,10 @@ Feature: Flexi Records
 	    | 1       | Term 1 |
 
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "Flexi records"
-        And I follow "[Show]" in the "Actions" column of the "Flexi 1" row
-        Then I should see "Flexi 1 for Section 1"
+        And I follow "Flexi records" within "#secondary_menu_current"
+And I go to the osm_flexi_records_for_section 1 page
+        And I follow "Flexi 1"
+        Then I should see "Flexi 1 for Section 1 (1st Somewhere)"
         And I should see "First name"
         And I should see "Last name"
         And I should see "Custom 1"
@@ -66,8 +99,14 @@ Feature: Flexi Records
 	And I should be on the signin page
         And I should have 0 usage log records
 
+    Scenario: Show flexi records for a section (not signed in)
+        When I go to the osm_flexi_records_for_section 1 page
+        Then I should see "You must be signed in"
+        And I should be on the signin page
+        And I should have 0 usage log records
+
     Scenario: Show a flexi record (not signed in)
-	When I go to the page for osm_flexi_record 1
+	When I go to the page for osm_flexi_record 1 2
 	Then I should see "You must be signed in"
 	And I should be on the signin page
         And I should have 0 usage log records

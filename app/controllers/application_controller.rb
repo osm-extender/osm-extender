@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :require_login
   add_flash_types :information, :error, :warning, :notice, :instruction
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
-                :api_has_osm_permission?, :get_section_names, :get_grouping_name,
+                :api_has_osm_permission?, :get_section_names, :get_group_names, :get_grouping_name,
                 :get_current_section_terms, :get_current_term_id, :require_not_login,
                 :osm_user_permission_human_friendly, :osm_api_permission_human_friendly,
                 :sanatised_params, :editable_params
@@ -163,9 +163,9 @@ class ApplicationController < ActionController::Base
   # Ensure the current section is of a given type
   # if not redirect them to the relevant page and set an instruction flash
   # @param type a Symbol representing the type of section to require (may be :beavers, :cubs ... or an Array of allowable types)
-  def require_section_type(type)
-    if current_section.nil? || ![*type].include?(current_section.type)
-      flash[:error] = "The current section must be a #{type} section to do that."
+  def require_section_type(type, section=current_section)
+    if section.nil? || ![*type].include?(section.type)
+      flash[:error] = "The section must be a #{type} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
   end
@@ -173,9 +173,9 @@ class ApplicationController < ActionController::Base
   # Forbid the current section if it is of a given type
   # if so redirect them to the relevant page and set an instruction flash
   # @param type a Symbol representing the type of section to forbid (may be :beavers, :cubs ... or an Array ot them)
-  def forbid_section_type(type)
-    if current_section.nil? || [*type].include?(current_section.type)
-      flash[:error] = "The current section must not be a #{t} section to do that."
+  def forbid_section_type(type, section=current_section)
+    if section.nil? || [*type].include?(section.type)
+      flash[:error] = "The section must not be a #{t} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
   end
@@ -211,7 +211,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def render_not_found(exception)
+  def render_not_found
     render :template => "error/404", :status => 404
   end
 
@@ -230,7 +230,7 @@ class ApplicationController < ActionController::Base
   end
 
   def email_error(exception)
-    NotifierMailer.exception(exception, env).deliver
+    NotifierMailer.exception(exception, env, session).deliver
   end
 
   def clean_backtrace(exception)
@@ -296,6 +296,10 @@ class ApplicationController < ActionController::Base
 
   def get_section_names
     @section_names ||= Hash[ Osm::Section.get_all(current_user.osm_api).map { |s| [s.id, "#{s.group_name} : #{s.name}"] } ]
+  end
+
+  def get_group_names
+    @group_names ||= Hash[ Osm::Section.get_all(current_user.osm_api).map { |s| [s.group_id, s.group_name] }.uniq ]
   end
 
 

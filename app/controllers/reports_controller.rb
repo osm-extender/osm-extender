@@ -470,6 +470,12 @@ class ReportsController < ApplicationController
   end
 
   def leader_access_audit
+    unless @my_params[:sections].is_a?(Hash)
+      flash[:error] = 'You must select some sections to sudit'
+      redirect_to reports_path
+      return
+    end
+
     permission_names = {
       10 => 'Read',
       20 => 'Read &amp; Write'.html_safe,
