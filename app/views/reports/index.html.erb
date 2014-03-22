@@ -4,25 +4,29 @@
 
   <h2 class="ui-accordion-header"><a href="#">Audit Leader Access</a></h2>
   <div class="ui-accordion-content">
-    <p>This report allows you to see what access has been granted to who (for each of the sections you have administion access to).</p>
-    <%= form_tag leader_access_audit_path, :method=>:get do %>
-      <ul>
-        <%- @sections.group_by{ |s| s.group_name }.each do |group_name, sections| %>
-          <%- sections.select!{ |s| has_osm_permission?(:administer, :user, current_user, s) } %>
-          <%- unless sections.empty?  %>
-            <li><%= group_name %>:<ul style="list-style-type: none;">
-              <%- sections.each do |section| %>
-                <li>
-                  <%= check_box_tag "leader_access_audit[sections[#{section.id}]]", 1, true %>
-                  <%= label_tag "leader_access_audit[sections[#{section.id}]]", section.name %>
-                </li>
-              <%- end #each section %>
-            </ul></li>
-          <%- end %>
-        <%- end #sections %>
-      </ul>
-      <%= submit_tag 'Show leader access' %>
-    <%- end #form %>
+    <p>This report allows you to see what access has been granted to who.</p>
+    <%- sections = @sections.select{ |s| has_osm_permission?(:administer, :user, current_user, s) } %>
+    <%- unless sections.empty? %>
+      <%= form_tag leader_access_audit_path, :method=>:get do %>
+        <ul>
+          <%- sections.group_by{ |s| s.group_name }.each do |group_name, group_sections| %>
+            <li><%= group_name %>:
+              <ul style="list-style-type: none;">
+                <%- group_sections.each do |section| %>
+                  <li>
+                    <%= check_box_tag "leader_access_audit[sections[#{section.id}]]", 1, false %>
+                    <%= label_tag "leader_access_audit[sections[#{section.id}]]", section.name %>
+                  </li>
+                <%- end #each section %>
+              </ul>
+            </li>
+          <%- end #group %>
+        </ul>
+        <br/><%= submit_tag 'Show leader access' %>
+      <%- end #form %>
+    <%- else #sections.empty? %>
+      You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
+    <%- end #sections.empty? %>
   </div>
 
 
