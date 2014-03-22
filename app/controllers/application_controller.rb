@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :require_login
   add_flash_types :information, :error, :warning, :notice, :instruction
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
-                :api_has_osm_permission?, :get_section_names, :get_grouping_name,
+                :api_has_osm_permission?, :get_section_names, :get_group_names, :get_grouping_name,
                 :get_current_section_terms, :get_current_term_id, :require_not_login,
                 :osm_user_permission_human_friendly, :osm_api_permission_human_friendly,
                 :sanatised_params, :editable_params
@@ -296,6 +296,10 @@ class ApplicationController < ActionController::Base
 
   def get_section_names
     @section_names ||= Hash[ Osm::Section.get_all(current_user.osm_api).map { |s| [s.id, "#{s.group_name} : #{s.name}"] } ]
+  end
+
+  def get_group_names
+    @group_names ||= Hash[ Osm::Section.get_all(current_user.osm_api).map { |s| [s.group_id, s.group_name] }.uniq ]
   end
 
 
