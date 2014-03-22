@@ -74,7 +74,9 @@ OSMExtender::Application.routes.draw do
   get 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#edit', :as => 'edit_email_reminder_subscription'
   post 'email_reminder_subscriptions/:id/edit' => 'email_reminder_subscriptions#change', :as => 'change_email_reminder_subscription'
 
-  resources :osm_flexi_records, :only => [:index, :show]
+  get 'osm_flexi_records' => 'osm_flexi_records#index', :as => 'osm_flexi_records'
+  get 'osm_flexi_records/:section_id' => 'osm_flexi_records#index_for_section', :as => 'osm_flexi_records_for_section'
+  get 'osm_flexi_records/:section_id/:record_id' => 'osm_flexi_records#show', :as => 'osm_flexi_record'
 
   get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
   post 'osm_details/show' => 'osm_details#show', :as => 'osm_details_show'

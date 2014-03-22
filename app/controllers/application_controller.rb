@@ -163,9 +163,9 @@ class ApplicationController < ActionController::Base
   # Ensure the current section is of a given type
   # if not redirect them to the relevant page and set an instruction flash
   # @param type a Symbol representing the type of section to require (may be :beavers, :cubs ... or an Array of allowable types)
-  def require_section_type(type)
-    if current_section.nil? || ![*type].include?(current_section.type)
-      flash[:error] = "The current section must be a #{type} section to do that."
+  def require_section_type(type, section=current_section)
+    if section.nil? || ![*type].include?(section.type)
+      flash[:error] = "The section must be a #{type} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
   end
@@ -173,9 +173,9 @@ class ApplicationController < ActionController::Base
   # Forbid the current section if it is of a given type
   # if so redirect them to the relevant page and set an instruction flash
   # @param type a Symbol representing the type of section to forbid (may be :beavers, :cubs ... or an Array ot them)
-  def forbid_section_type(type)
-    if current_section.nil? || [*type].include?(current_section.type)
-      flash[:error] = "The current section must not be a #{t} section to do that."
+  def forbid_section_type(type, section=current_section)
+    if section.nil? || [*type].include?(section.type)
+      flash[:error] = "The section must not be a #{t} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
     end
   end
@@ -211,7 +211,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def render_not_found(exception)
+  def render_not_found
     render :template => "error/404", :status => 404
   end
 

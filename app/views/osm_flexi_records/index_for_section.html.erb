@@ -1,0 +1,12 @@
+<%= page_title "Flexi records for #{@section.name} (#{@section.group_name})" %>
+
+<%- unless @records.empty? %>
+  <ul>
+    <%- @records.each do |record| %>
+      <li><%= link_to record.name, osm_flexi_record_path(@section.id, record.id) %></li>
+    <%- end %>
+  </ul>
+
+<%- else %>
+  <p>You do not currently have any flexi records setup for the section, you'll need to create them in OSM.</p>
+<%- end %>
