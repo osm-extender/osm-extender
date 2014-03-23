@@ -203,7 +203,7 @@
       <p>
         This report allows you to see which badge requirements you are planning on covering between two dates.
       </p>
-      <%- if has_osm_permission?(:read, :badge) %>
+      <%- if has_osm_permission?(:read, [:badge, :member]) %>
         <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
           Between <%= date_field_tag 'planned_badge_requirements[start]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           and <%= date_field_tag 'planned_badge_requirements[finish]', 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>

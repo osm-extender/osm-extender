@@ -455,14 +455,25 @@ class ReportsController < ApplicationController
     badge_data.each do |badge, datas|
       badge_name = "#{badge.type.to_s.titleize} - #{badge.name}"
       datas.each do |data|
-        member_name = "#{data.first_name} #{data.last_name}"
         unless data.awarded?
           if data.earnt?
+            member_name = "#{data.first_name} #{data.last_name}"
             key = badge.type.eql?(:staged) ? "#{badge_name} (#{data.earnt}))" : badge_name
             @earnt_badges[key] ||= []
             @earnt_badges[key].push member_name
           end
         end
+      end
+    end
+
+    # Get participation badges
+    Osm::Member.get_for_section(current_user.osm_api, current_section).each do |member|
+      next if member.grouping_id == -2  # Leaders don't get these participation badges
+      next_level_due = ((Time.zone.now - member.started.to_time) / 1.year).ceil
+      if (@start..@finish).include?(member.started + next_level_due.years)
+        key = "Participation (#{next_level_due})"
+        @earnt_badges[key] ||= []
+        @earnt_badges[key].push member.name
       end
     end
 
