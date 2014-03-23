@@ -69,7 +69,7 @@ class NotifierMailer < ApplicationMailer
       api = user.osm_api
       @next_term = nil
       @last_term = nil
-      terms = Osm::Term.get_for_section(api, @section)
+      terms = Osm::Term.get_for_section(api, @email_list.section)
       terms.each do |term|
         @last_term = term if term.past? && (@last_term.nil? || term.finish > @last_term.finish)
         @next_term = term if term.future? && (@next_term.nil? || term.start < @next_term.start)
