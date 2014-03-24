@@ -110,7 +110,7 @@ namespace :scheduled  do
       puts "deleted #{deleted} total old versions."
     end
 
-    task :all => [:balanced_programme_cache, :announcements, :paper_trail]
+    task :all => [:balanced_programme_cache, :announcements, :paper_trails]
   end
 
 end
