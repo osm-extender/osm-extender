@@ -121,7 +121,7 @@
     <div class="ui-accordion-content">
       <p>This report allows you to see which members are due which badges and whether you have enough of them.</p>
       <%- if has_osm_permission?(:read, :badge) %>
-        <%= form_tag due_badges_report_path, :method=>:get do %>  
+        <%= form_tag due_badges_report_path, :method=>:get do %>
           <%= check_box_tag 'due_badges[check_stock]', 1, true %> <%= label_tag 'due_badges[check_stock]', 'Check badge stock?' %><br/>
           <%= submit_tag 'Show due badges' %>
         <%- end %>
@@ -207,6 +207,8 @@
         <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
           Between <%= date_field_tag 'planned_badge_requirements[start]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           and <%= date_field_tag 'planned_badge_requirements[finish]', 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+          <br/>
+          <%= check_box_tag 'planned_badge_requirements[check_stock]', 1, true %> <%= label_tag 'planned_badge_requirements[check_stock]', 'Check badge stock?' %>
           <br/>
           <%= submit_tag 'Show planned badge requirements' %>
         <%- end %>
