@@ -7,10 +7,12 @@ class EmailReminderItemDueBadge < EmailReminderItem
     due_badges = Osm::Badges.get_due_badges(api, section_id)
 
     return nil if due_badges.empty?
+    badge_stock = configuration[:show_stock] ? Osm::Badges.get_stock(api, section_id) : {}
+    badge_stock.default = 0
 
     return {
       :due_badges => due_badges,
-      :badge_stock => configuration[:show_stock] ? Osm::Badges.get_stock(api, section_id) : {}
+      :badge_stock => badge_stock
     }
   end
 

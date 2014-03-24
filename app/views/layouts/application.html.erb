@@ -143,8 +143,9 @@
       <pre><%= @debug_log %></pre>
       <h2>Params</h2>
       <%= debug(params) %>
-      <h2>Session</h2>
-      <%= debug(session) %>
+      <h2>Session values</h2>
+      <%- longest_key_length = session.keys.sort { |a,b| a.length <=> b.length }.last.length %>
+      <%= debug session.keys.map{ |key| "#{key.ljust((longest_key_length + 2), ' .')} #{session[key].inspect}" }.join("\n") %>
     </div>
   <%- end %>
 

@@ -396,7 +396,7 @@ class ReportsController < ApplicationController
 
   def planned_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS
-    require_osm_permission(:read, :badge)
+    require_osm_permission(:read, [:badge, :member])
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
@@ -405,6 +405,9 @@ class ReportsController < ApplicationController
       return
     end
     (@start, @finish) = dates.sort
+    @check_stock = @my_params[:check_stock].eql?('1')
+    @badge_stock = @check_stock ? Osm::Badges.get_stock(current_user.osm_api, current_section) : {}
+    @badge_stock.default = 0
 
     badge_by_type = {
       'activity' => Osm::ActivityBadge,
@@ -453,16 +456,27 @@ class ReportsController < ApplicationController
 
     # Get list of finished badges
     badge_data.each do |badge, datas|
-      badge_name = "#{badge.type.to_s.titleize} - #{badge.name}"
       datas.each do |data|
-        member_name = "#{data.first_name} #{data.last_name}"
         unless data.awarded?
           if data.earnt?
-            key = badge.type.eql?(:staged) ? "#{badge_name} (#{data.earnt}))" : badge_name
+            member_name = "#{data.first_name} #{data.last_name}"
+            key = [badge, data.earnt]
             @earnt_badges[key] ||= []
             @earnt_badges[key].push member_name
           end
         end
+      end
+    end
+
+    # Get participation badges
+    badge = Osm::StagedBadge.get_badges_for_section(current_user.osm_api, current_section).select{ |b| b.osm_key == 'participation' }.first
+    Osm::Member.get_for_section(current_user.osm_api, current_section).each do |member|
+      next if member.grouping_id == -2  # Leaders don't get these participation badges
+      next_level_due = ((Time.zone.now - member.started.to_time) / 1.year).ceil
+      if (@start..@finish).include?(member.started + next_level_due.years)
+        key = [badge, next_level_due]
+        @earnt_badges[key] ||= []
+        @earnt_badges[key].push member.name
       end
     end
 

@@ -25,12 +25,23 @@
 <h2>Badges Completed</h2>
 <p>
   The following badges will be completed if everyone turns up all the time.
-  The process of working this out is fairly dumb, it doesn't take account of related badge requirements unless they are also included in the programme and can't do badges which require you to add columns.
+  The process of working this out is fairly dumb, it doesn't take account of:<ul>
+    <li>Related badge requirements (unless they are also included in the programme)
+    <li>Badge requirements added to events (yet)
+    <li>Known adsences
+  </ul>
   <%- unless (current_section.subscription_level > 1) %><b>Activity badges have been excluded as you need at least a Silver subscription in OSM to use them.</b><%- end %>
 </p>
+
 <ul>
-  <%- @earnt_badges.sort.each do |badge_name, member_names| %>
-    <li><%= badge_name %> (x <%= member_names.count %>):
+  <%- @earnt_badges.sort.each do |(badge, level), member_names| %>
+    <%- badge_name = "#{badge.type.to_s.titleize} - #{badge.name}" %>
+    <%- badge_name = badge.type.eql?(:staged) ? "#{badge_name} #{level}" : badge_name %>
+    <%- badge_stock = @badge_stock["#{badge.osm_long_key}_#{level}"] %>
+    <li>
+      <%= badge_name %> (x <%= member_names.count %>)
+      <%- if @check_stock %><%= pos_neg((badge_stock >= member_names.count), "(you have #{badge_stock})") %><%- end %>
+      :
       <ul>
         <%- member_names.each do |member_name| %>
           <li><%= member_name %></li>
