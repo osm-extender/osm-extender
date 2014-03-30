@@ -2,6 +2,7 @@
  * This manifest file will include application wide style sheets
  * Stylesheets (or manifests) for specific controllers should be
  * called <controller>.css(.scss), for example projects.css.
+ *= require normalize-rails
  *= require jquery.ui.all
  *= require jquery.toastmessage
  *= require scaffolds
@@ -9,7 +10,7 @@
  *= require_tree ./application
 */
 
-*{margin:0px;}
+
 
 body {
     margin-bottom:      3ex;
@@ -25,11 +26,16 @@ hr {
 
 a, a:link, a:visited {
     color:              #000000;
-}
-
-a:hover {
-    color:              #ffffff;
-    background-color:   #000000;
+    &:link {
+        color:              #000000;
+    }
+    &:visited { 
+        color:              #000000;
+    }
+    &:hover {
+        color:              #ffffff;
+        background-color:   #000000;
+    }
 }
 
 p {
