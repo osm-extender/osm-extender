@@ -82,6 +82,13 @@ group :test do
   gem 'coveralls', '~> 0.7'
 end
 
+group :development do
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring', '~> 1.1'
+  gem 'spring-commands-rspec', '~> 1.0'
+  gem 'spring-commands-cucumber', '~> 1.0'
+end
+
 
 # Deploy with Capistrano
 # gem 'capistrano'
