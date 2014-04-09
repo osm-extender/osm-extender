@@ -1,0 +1,46 @@
+@import '../mixins.css.scss';
+
+$colour_error: red;
+$colour_warning: yellow;
+$colour_notice: green;
+$colour_instruction: blue;
+$colour_information: black;
+
+
+#notices {
+    padding:            5px;
+    margin-left:        10%;
+    margin-right:       10%;
+    div {
+        margin:             5px;
+        border-style:       solid;
+        border-radius:      4px;
+        padding:            2px;
+        margin-top:         5px;
+        margin-bottom:      10px;
+        margin-left:        auto;
+        margin-right:       auto;
+    }
+}
+#notices_error {
+    background-color:   lighten($colour_error, 33%);
+    border-color:       $colour_error;
+    font-weight:        bold;
+}
+#notices_warning {
+    background-color:   lighten($colour_warning, 30%);
+    border-color:       $colour_warning;
+}
+#notices_notice {
+    background-color:   lighten($colour_notice, 60%);
+    border-color:       $colour_notice;
+}
+#notices_instruction {
+    background-color:   lighten($colour_instruction, 40%);
+    border-color:       $colour_instruction;
+}
+#notices_information {
+    background-color:   lighten($colour_information, 90%);
+    border-color:       $colour_information;
+}
+

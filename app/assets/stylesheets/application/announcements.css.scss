@@ -1,3 +1,6 @@
+@import '../mixins.css.scss';
+
+
 #announcements {
     padding:            5px;
     margin-left:        25%;
@@ -7,7 +10,7 @@
 #announcements div {
     margin:             5px;
     border-style:       solid;
-    border-radius:      4px;
+    @include border_radius(4px);
     padding:            2px;
     margin-top:         5px;
     margin-bottom:      5px;
