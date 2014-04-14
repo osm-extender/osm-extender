@@ -346,7 +346,7 @@ class ReportsController < ApplicationController
             @badge_data_by_member[data.member_id][type] ||= []
             if badge.osm_key.eql?('adventure')
               @badge_data_by_member[data.member_id][type].push "Adventure - completed #{data.gained_in_sections['a']} of #{badge.needed_from_section['a']}"
-            elsif ['nightsaway', 'hikes'].include?(badge.osm_key)
+            elsif ['nightsaway', 'hikes', 'timeonthewater'].include?(badge.osm_key)
               @badge_data_by_member[data.member_id][type].push "#{badge.name} - completed #{data.requirements['y_01']} of #{data.started}"
             else
               badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key

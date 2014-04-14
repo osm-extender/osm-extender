@@ -19,7 +19,7 @@ class Report
       end
   
       badges.each do |badge|
-        unless ['nightsaway', 'hikes', 'adventure'].include?(badge.osm_key)
+        unless ['nightsaway', 'hikes', 'timeonthewater', 'adventure'].include?(badge.osm_key)
           completion_data = badge.get_data_for_section(user.osm_api, section)
           completion_data.sort!{ |a,b| member_ids.find_index(a.member_id) <=> member_ids.find_index(b.member_id) }
           badge.requirements.each do |requirement|
