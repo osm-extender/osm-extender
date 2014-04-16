@@ -1,40 +1,58 @@
 class OsmFlexiRecordsController < ApplicationController
-  before_action { forbid_section_type :waiting }
+  before_action :except=>:index do
+    @section = Osm::Section.get(current_user.osm_api, params[:section_id].to_i)
+    if @section.nil?
+      render_not_found
+    else
+      forbid_section_type :waiting, @section
+    end
+  end
+  before_action :except=>:index do
+    require_osm_permission :read, :flexi, current_user, @section
+  end
   before_action :require_connected_to_osm
-  before_action { require_osm_permission :read, :flexi }
 
   def index
-    @records = current_section.flexi_records.sort
+    sections = Osm::Section.get_all(current_user.osm_api)
+    sections.select!{ |s| !s.waiting? }
+
+    @records = {}
+    @section_ids = []
+    @no_permissions = []
+
+    sections.each do |section|
+      @section_ids.push section.id
+      if has_osm_permission?(:read, :flexi, current_user, section)
+        records = section.flexi_records.sort
+        @records[section.id] = records
+      else
+        @no_permissions.push section.id
+      end
+    end
+  end
+
+  def index_for_section
+    @records = @section.flexi_records.sort
   end
 
   def show
     @record = nil
-    params[:id] = params[:id].to_i
+    record_id = params[:record_id].to_i
 
-    current_section.flexi_records.each do |record|
-      @record = record if record.id == params[:id]
-      @section = current_section
-      break
-    end
-
-    if @record.nil? # Record not found for current section, user might still be allowed access though
-      Osm::Section.get_all(current_user.osm_api).each do |section|
-        section.flexi_records.each do |record|
-          if record.id == params[:id]
-            @record = record
-            @section = section
-            break
-          end
-        end
+    @section.flexi_records.each do |record|
+      if record.id == record_id
+        @record = record
+        break
       end
     end
 
-    render_not_found(nil) if @record.nil? # Record isn't accessible by this user
+    if @record.nil? # Record doesn't exist
+      render_not_found and return
+    end
 
     @fields = @record.get_columns(current_user.osm_api)
     @field_order = []
     @field_order = @fields.map{ |field| field.id }
-
 
     # Get Totals & Counts
     @total_count_fields = @field_order.select{ |field| field.match(/\Af_\d+\Z/) || ['total'].include?(field) }
@@ -53,7 +71,7 @@ class OsmFlexiRecordsController < ApplicationController
       end
     end
 
-    log_usage(:extra_details => {:id => params[:id]})
+    log_usage(:extra_details => {record_id: params[:record_id], section_id: params[:section_id]})
   end
 
 end

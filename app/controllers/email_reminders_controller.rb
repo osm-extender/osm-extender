@@ -64,8 +64,12 @@ class EmailRemindersController < ApplicationController
 
 
   def re_order
-    params[:email_reminder_item].each_with_index do |id, index|
-      current_user.email_reminders.find(params[:id]).items.update_all({position: index+1}, {id: id})
+    ActiveRecord::Base.transaction do
+      params[:email_reminder_item].each_with_index do |id, index|
+        item = current_user.email_reminders.find(params[:id]).items.find(id)
+        item.position = index + 1
+        item.save!
+      end
     end
     render nothing: true
   end
@@ -79,7 +83,7 @@ class EmailRemindersController < ApplicationController
   def sample
     @reminder = EmailReminder.find(params[:id])
     @data = @reminder.get_fake_data
-    flash.now[:notice] = 'Fake data has been used in order to ensure that all the selected items have something to show.'
+    flash.now[:information] = 'Fake data has been used in order to ensure that all the selected items have something to show.'
     render "reminder_mailer/reminder_email", :layout => 'mail'
   end
 

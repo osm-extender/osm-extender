@@ -1,21 +1,25 @@
 <%= page_title 'Flexi records' %>
 
 <%- unless @records.empty? %>
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Actions</th>
-    </tr>
-  
-  <%- @records.each do |record| %>
-    <tr>
-      <td><%= record.name %></td>
-      <td>
-        <%= link_to '[Show]', osm_flexi_record_path(record.id) %>
-      </td>
-    </tr>
-  <% end %>
-  </table>
+  <ul>
+    <%- @section_ids.each do |section_id| %>
+      <%- unless @no_permissions.include?(section_id) %>
+        <li>
+          <%= link_to get_section_names[section_id], osm_flexi_records_for_section_path(section_id) %>
+          <ul>
+            <%- @records[section_id].each do |record| %>
+              <li><%= link_to record.name, osm_flexi_record_path(section_id, record.id) %>
+            <%- end %>
+          </ul>
+        </li>
+      <%- else #doesn't have permission %>
+        <li>
+          <%= get_section_names[section_id] %> - You don't have permission to get flexi-records for this section.
+        </li>
+      <%- end #unless has permission %>
+    <%- end #section_ids %>
+  </ul>
+
 <%- else %>
-  <p>You do not currently have any flexi records setup for the section, you'll need to create them in OSM.</p>
+  <p>You do not currently have any flexi records setup for any sections, you'll need to create them in OSM.</p>
 <%- end %>

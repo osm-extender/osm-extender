@@ -19,32 +19,38 @@ class NotifierMailer < ApplicationMailer
   end
 
   def reminder_failed(email_reminder, exception)
-    @email_reminder = email_reminder
-    @exception = exception
-    mail ({
-      :subject => build_subject('Reminder Email Failed'),
-      :to => @@options[:reminder_failed__to],
-    }) if @@options[:reminder_failed__to]
+    if @@options[:reminder_failed__to]
+      @email_reminder = email_reminder
+      @exception = exception
+      mail ({
+        :subject => build_subject('Reminder Email Failed'),
+        :to => @@options[:reminder_failed__to],
+      })
+    end
   end
 
-  def exception(exception, environment)
-    require 'pp'
-    @exception = exception
-    @environment = environment
-    @request = ActionDispatch::Request.new(environment)
-    mail ({
-      :subject => build_subject('An Exception Occured'),
-      :to => @@options[:exception__to],
-    }) if @@options[:exception__to]
+  def exception(exception, environment, session)
+    if @@options[:exception__to]
+      @exception = exception
+      @environment = environment
+      @request = ActionDispatch::Request.new(environment)
+      @session = session
+      mail ({
+        :subject => build_subject('An Exception Occured'),
+        :to => @@options[:exception__to],
+      })
+    end
   end
 
   def rake_exception(task, exception)
-    @task = task
-    @exception = exception
-    mail ({
-      :subject => build_subject('An Exception Occured in a Rake Task'),
-      :to => @@options[:exception__to],
-    }) if @@options[:exception__to]
+    if @@options[:exception__to]
+      @task = task
+      @exception = exception
+      mail ({
+        :subject => build_subject('An Exception Occured in a Rake Task'),
+        :to => @@options[:exception__to],
+      })
+    end
   end
 
   def email_list_changed(email_list)
@@ -63,7 +69,7 @@ class NotifierMailer < ApplicationMailer
       api = user.osm_api
       @next_term = nil
       @last_term = nil
-      terms = Osm::Term.get_for_section(api, @section)
+      terms = Osm::Term.get_for_section(api, @email_list.section)
       terms.each do |term|
         @last_term = term if term.past? && (@last_term.nil? || term.finish > @last_term.finish)
         @next_term = term if term.future? && (@next_term.nil? || term.start < @next_term.start)

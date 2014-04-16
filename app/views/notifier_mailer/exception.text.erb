@@ -9,7 +9,12 @@ The request was:
 
 
 The session was:
-<%= raw PP.pp(@request.session, "") %>
+ <%- longest_key_length = @session.keys.sort { |a,b| a.length <=> b.length }.last.length %>
+ <%- @session.keys.each do |key| %>
+  <%= key.ljust (longest_key_length + 2), ' .' %> <%= @session[key].inspect %>
+ <%- end %>
+
+
 
 
 The environment was:
@@ -21,5 +26,7 @@ The environment was:
   * Process: <%= raw $$ %>
 
 
+<%- if @exception.backtrace %>
 The backtrace was:
 <%= raw Rails.backtrace_cleaner.send(:filter, @exception.backtrace).join("\n    ") %>
+<%- end %>

@@ -4,17 +4,31 @@
 
   <h2 class="ui-accordion-header"><a href="#">Audit Leader Access</a></h2>
   <div class="ui-accordion-content">
-    <p>This report allows you to see what access has been granted to who (for each of the sections you have administion access to).</p>
-    <%= form_tag leader_access_audit_path, :method=>:get do %>
-      <%- @sections.each do |section| %>
-        <%- if has_osm_permission?(:administer, :user) %>
-          <%= check_box_tag "leader_access_audit[sections[#{section.id}]]", 1, true %>
-          <%= label_tag "leader_access_audit[sections[#{section.id}]]", section.name %>
-          <br/>
-        <%- end %>
-      <%- end %>
-      <%= submit_tag 'Show leader access' %>
-    <%- end %>
+    <p>This report allows you to see what access has been granted to who.</p>
+    <%- sections = @sections.select{ |s| has_osm_permission?(:administer, :user, current_user, s) } %>
+    <%- unless sections.empty? %>
+      <%= form_tag leader_access_audit_path, :method=>:get do %>
+        <ul style="list-style-type: none;">
+          <%- sections.group_by{ |s| s.group_id }.each do |group_id, group_sections| %>
+            <li>
+              <%= check_box_tag "leader_access_audit_select_group-#{group_id}", 1, false, {:class => 'leader_access_audit_select_group', :data => {'group-id' => group_id}, :title => '(Un)Select all for this group'} %>
+              <%= label_tag "leader_access_audit_select_group-#{group_id}", get_group_names[group_id] %>:
+              <ul style="list-style-type: none;">
+                <%- group_sections.each do |section| %>
+                  <li>
+                    <%= check_box_tag "leader_access_audit[sections[#{section.id}]]", 1, false, {:class => "leader_access_audit_group-#{group_id}"} %>
+                    <%= label_tag "leader_access_audit[sections[#{section.id}]]", section.name %>
+                  </li>
+                <%- end #each section %>
+              </ul>
+            </li>
+          <%- end #group %>
+        </ul>
+        <br/><%= submit_tag 'Show leader access' %>
+      <%- end #form %>
+    <%- else #sections.empty? %>
+      You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
+    <%- end #sections.empty? %>
   </div>
 
 
@@ -107,7 +121,7 @@
     <div class="ui-accordion-content">
       <p>This report allows you to see which members are due which badges and whether you have enough of them.</p>
       <%- if has_osm_permission?(:read, :badge) %>
-        <%= form_tag due_badges_report_path, :method=>:get do %>  
+        <%= form_tag due_badges_report_path, :method=>:get do %>
           <%= check_box_tag 'due_badges[check_stock]', 1, true %> <%= label_tag 'due_badges[check_stock]', 'Check badge stock?' %><br/>
           <%= submit_tag 'Show due badges' %>
         <%- end %>
@@ -189,10 +203,12 @@
       <p>
         This report allows you to see which badge requirements you are planning on covering between two dates.
       </p>
-      <%- if has_osm_permission?(:read, :badge) %>
+      <%- if has_osm_permission?(:read, [:badge, :member]) %>
         <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
           Between <%= date_field_tag 'planned_badge_requirements[start]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           and <%= date_field_tag 'planned_badge_requirements[finish]', 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
+          <br/>
+          <%= check_box_tag 'planned_badge_requirements[check_stock]', 1, true %> <%= label_tag 'planned_badge_requirements[check_stock]', 'Check badge stock?' %>
           <br/>
           <%= submit_tag 'Show planned badge requirements' %>
         <%- end %>

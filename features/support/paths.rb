@@ -14,8 +14,14 @@ module NavigationHelpers
     when /^the list of (.*)$/
       self.send("#{$1.downcase}_path".to_sym)
 
-    when /^the page for (.*) (\d+)$/
+    when /^the page for ([^\d]*) (\d+)$/
       self.send("#{$1.downcase}_path".to_sym, $2.to_i)
+
+    when /^the page for ([^\d]*) (\d+) (\d+)$/
+      self.send("#{$1.downcase}_path".to_sym, $2.to_i, $3.to_i)
+
+    when /^the osm_flexi_records_for_section (\d+) page$/
+      "/osm_flexi_records/#{$1}"
 
     when /^reset_password token="([^"]*)"$/
       "/reset_password/#{$1}"
