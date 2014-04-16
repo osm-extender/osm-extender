@@ -7,44 +7,50 @@ class EmailReminderItemAdvisedAbsence < EmailReminderItem
     earliest = Date.current
 
     api = user.osm_api
-    register_structure = Osm::Register.get_structure(api, section_id)
-    register = Osm::Register.get_attendance(api, section_id).sort
+    structures = []
+    attendances = []
+    Osm::Term.get_for_section(user.osm_api, section_id).each do |term|
+      if !term.before?(earliest) && !term.after?(latest)
+        structures += Osm::Register.get_structure(api, section_id, term)
+        attendances += Osm::Register.get_attendance(api, section_id, term)
+      end
+    end
+    attendances.sort!
 
     dates_to_check = []
-    register_structure.each do |row|
+    structures.each do |row|
       unless /\A[0-9]{4}-[0-2][0-9]-[0-3][0-9]\Z/.match(row.name).nil?
         date = Date.strptime(row.name, '%Y-%m-%d')
         dates_to_check.push date if (date >= earliest) && (date <= latest)
       end
     end
 
-    data = {
-      :total_leaders => 0,
-      :total_members => 0,
-      :dates => {},
-    }
-    register.each do |row|
-      data[(row.grouping_id == -2) ? :total_leaders : :total_members] += 1
-      dates_to_check.each do |date|
-        if row.attendance[date].eql?(:advised_absent)
-          data[:dates][date] ||= []
-          data[:dates][date].push({
-            :first_name => row.first_name,
-            :last_name => row.last_name,
-            :leader => (row.grouping_id == -2)
-          })
+    data = {}
+    dates_to_check.each do |date|
+      data[date] = { total_leaders: 0, total_members: 0, absent: [] }
+      attendances.each do |row|
+        if row.attendance.keys.include?(date)
+          leader = row.grouping_id.eql?(-2)
+          data[date][leader ? :total_leaders : :total_members] += 1
+          if row.attendance[date].eql?(:advised_absent)
+            data[date] ||= []
+            data[date][:absent].push({
+              :first_name => row.first_name,
+              :last_name => row.last_name,
+              :leader => leader
+            })
+          end
         end
       end
     end
-    return data[:dates].empty? ? nil : data
+    return data.empty? ? nil : data
   end
 
+
   def get_fake_data
-    data = {
-      :total_leaders => 2 + rand(4),
-      :total_members => 4 + rand(20),
-      :dates => {},
-    }
+    data = {}
+    total_leaders = 2 + rand(4)
+    total_members = 4 + rand(20)
 
     (1 + rand(3)).times do
       people = []
@@ -56,7 +62,11 @@ class EmailReminderItemAdvisedAbsence < EmailReminderItem
         })
       end
       date = rand(configuration[:the_next_n_weeks] * 7).days.from_now.to_date
-      data[:dates][date] = people
+      data[date] = {
+        total_leaders: total_leaders,
+        total_members: total_members,
+        absent: people
+      }
     end
 
     return data
