@@ -1,9 +1,9 @@
 The following members have said they will not be present during the next <%= pluralize(configuration[:the_next_n_weeks], 'week') %>:
-<ul><%- data[:dates].keys.sort.each do |date| %>
-  <%- expected_leaders = data[:total_leaders] - data[:dates][date].select{ |p| p[:leader]}.size %>
-  <%- expected_members = data[:total_members] - data[:dates][date].select{ |p| !p[:leader]}.size %>
+<ul><%- data.keys.sort.each do |date| %>
+  <%- expected_leaders = data[date][:total_leaders] - data[date][:absent].select{ |p| p[:leader]}.size %>
+  <%- expected_members = data[date][:total_members] - data[date][:absent].select{ |p| !p[:leader]}.size %>
   <li><%= ordinalized_date(date, "%a the %d of %b %Y") %> (you're still expecting <%= expected_members %> members and <%= expected_leaders %> leaders)<ul>
-  <%- data[:dates][date].each do |person| %>
+  <%- data[date][:absent].each do |person| %>
     <li><%= person[:first_name] %> <%= person[:last_name] %></li>
   <%- end %>
   </ul></li>

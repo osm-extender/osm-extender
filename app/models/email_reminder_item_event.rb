@@ -4,10 +4,11 @@ class EmailReminderItemEvent < EmailReminderItem
 
   def get_data
     events = []
-    Osm::Event.get_for_section(user.osm_api, section_id).each do |event|
-      unless event.start.nil?
-        if (event.start < configuration[:the_next_n_months].months.from_now)  &&  (event.start > Time.zone.now)
-          events.push event
+    Osm::Event.get_list(user.osm_api, section_id).each do |event|
+      start = event[:start]
+      unless start.nil?
+        if (start < configuration[:the_next_n_months].months.from_now)  &&  (start > Time.zone.now)
+          events.push Osm::Event.get(user.osm_api, section_id, event[:id])
         end
       end
     end

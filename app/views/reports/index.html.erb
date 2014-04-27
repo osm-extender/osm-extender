@@ -154,8 +154,8 @@
               <h3>For which <%= 'event'.pluralize(@future_events.count) %></h3>
                 <%- unless @future_events.empty? %>
                   <%- @future_events.each do |event| %>
-                    <%= check_box_tag("event_attendance[events[#{event.id}]]", 1, true) %>
-                    <%= label_tag "event_attendance[events[#{event.id}]]", event.name %></br>
+                    <%= check_box_tag("event_attendance[events[#{event[:id]}]]", 1, true) %>
+                    <%= label_tag "event_attendance[events[#{event[:id]}]]", event[:name] %></br>
                   <%- end %>
                 <%- else %>
                   <p>You must add some future events to OSM in order to use this report.</p>
