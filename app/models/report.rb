@@ -72,12 +72,12 @@ class Report
       items = []
       Osm::Section.get_all(user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section|
         if params[:events][section.id.to_s].eql?('1')
-          Osm::Event.get_for_section(user.osm_api, section).each do |event|
-            unless event.start.nil?
-              start = event.start
-              finish = event.finish.nil? ? event.start : event.finish
+          Osm::Event.get_list(user.osm_api, section).each do |event|
+            start = event[:start]
+            unless start.nil?
+              finish = event[:finish].nil? ? start : event[:finish]
               unless (finish < params[:start]) || (start > params[:finish])
-                items.push [start, event]
+                items.push [start, Osm::Event.get(user.osm_api, section, event[:id])]
               end
             end
           end
@@ -103,13 +103,12 @@ class Report
 
 
   def self.event_attendance(user, section, events, groupings)
-    Rails.cache.fetch("3user#{user.id}-report-event_attendance-data-#{user.id}-#{section.id}-#{events.inspect}-#{groupings.inspect}", :expires_in => 10.minutes) do
+    Rails.cache.fetch("user#{user.id}-report-event_attendance-data-#{user.id}-#{section.id}-#{events.inspect}-#{groupings.inspect}", :expires_in => 10.minutes) do
       event_names = []
       row_groups = {}
       member_totals = {}
       event_totals = {:yes=>[], :no=>[], :invited=>[], :shown=>[], :reserved=>[]}
-      all_events = Osm::Event.get_for_section(user.osm_api, section)
-      all_events.select{|e| events.include?(e.id)}.sort.each do |event|
+      events.map{ |id| Osm::Event.get(user.osm_api, section, id) }.sort.each do |event|
         this_event_totals = {:yes=>0, :no=>0, :invited=>0, :shown=>0, :reserved=>0}
         event.get_attendance(user.osm_api).each do |attendance|
           if groupings.include?(attendance.grouping_id)
