@@ -16,6 +16,7 @@
       <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label><br/>
       <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
     <%- when :boolean %>
+      <input type="hidden" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="0"/>
       <input type="checkbox" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="1" <%- if @email_reminder_item.configuration[key] %>checked="checked"<%- end %>/>
       <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label>
     <%- else %>
