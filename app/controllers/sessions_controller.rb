@@ -24,7 +24,7 @@ class SessionsController < ApplicationController
 
       # Set current section
       if current_user.connected_to_osm?
-        sections = Osm::Section.get_all(current_user.osm_api)
+        sections = Osm::Section.get_all(osm_api)
         set_current_section sections.first
         if current_user.startup_section?
           sections.each do |section|
@@ -67,7 +67,7 @@ class SessionsController < ApplicationController
     section_id = params[:section_id].to_i
 
     # Check user has access to section then change current section
-    Osm::Section.get_all(current_user.osm_api).each do |section|
+    Osm::Section.get_all(osm_api).each do |section|
       if section_id == section.id
         set_current_section section
         break

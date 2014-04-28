@@ -125,7 +125,7 @@ class UsersController < ApplicationController
       session[:user_id] = user.id
       # Set current section
       if current_user.connected_to_osm?
-        sections = Osm::Section.get_all(current_user.osm_api)
+        sections = Osm::Section.get_all(osm_api)
         set_current_section sections.first
         if current_user.startup_section?
           sections.each do |section|

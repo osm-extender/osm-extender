@@ -10,7 +10,7 @@ class MapMembersController < ApplicationController
 
 
   def index
-    @sections = Osm::Section.get_all(current_user.osm_api).select{ |s| !s.waiting? }
+    @sections = Osm::Section.get_all(osm_api).select{ |s| !s.waiting? }
   end
 
   def page
@@ -22,7 +22,7 @@ class MapMembersController < ApplicationController
     address_method = ['address', 'address2'].include?(params[:address]) ? params[:address] : 'address'
     members = Array.new
 
-    Osm::Member.get_for_section(current_user.osm_api, @section).each do |member|
+    Osm::Member.get_for_section(osm_api, @section).each do |member|
       members.push ({
         :grouping_id => member.grouping_id,
         :name => member.name,

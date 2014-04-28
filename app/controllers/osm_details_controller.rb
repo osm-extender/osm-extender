@@ -15,7 +15,7 @@ class OsmDetailsController < ApplicationController
     current_section.column_names.except(:patrol).keys.each do |key|
       @fields.push(key) if params[:fields][key]
     end
-    @members = Osm::Member.get_for_section(current_user.osm_api, current_section)
+    @members = Osm::Member.get_for_section(osm_api, current_section)
 
     # Get Totals & Counts
     @totals = {}

@@ -9,7 +9,7 @@ class OsmFlexiRecordsController < ApplicationController
   end
 
   def index
-    sections = Osm::Section.get_all(current_user.osm_api)
+    sections = Osm::Section.get_all(osm_api)
     sections.select!{ |s| !s.waiting? }
 
     @records = {}
@@ -46,7 +46,7 @@ class OsmFlexiRecordsController < ApplicationController
       render_not_found and return
     end
 
-    @fields = @record.get_columns(current_user.osm_api)
+    @fields = @record.get_columns(osm_api)
     @field_order = []
     @field_order = @fields.map{ |field| field.id }
 
@@ -59,7 +59,7 @@ class OsmFlexiRecordsController < ApplicationController
       @counts[field] = 0
     end
 
-    @records = @record.get_data(current_user.osm_api)
+    @records = @record.get_data(osm_api)
     @records.each do |record|
       @total_count_fields.each do |field|
         @totals[field] += record.fields[field].to_i

@@ -108,7 +108,7 @@ class EmailListsController < ApplicationController
   def get_sections_data
     data = {}
     groupings = get_all_groupings
-    Osm::Section.get_all(current_user.osm_api).each do |section|
+    Osm::Section.get_all(osm_api).each do |section|
       data[section.id] = {
         'fields' => section.column_names.select{ |k,v| [:email1, :email2, :email3, :email4].include?(k) },
         'grouping_name' => get_grouping_name(section.type),
@@ -121,8 +121,8 @@ class EmailListsController < ApplicationController
   def multiple_get_addresses(lists)
     lists = clean_lists(lists)
     @email_lists = current_user.email_lists.find(lists).sort{ |a, b|
-      section_a = Osm::Section.get(current_user.osm_api, a.section_id)
-      section_b = Osm::Section.get(current_user.osm_api, b.section_id)
+      section_a = Osm::Section.get(osm_api, a.section_id)
+      section_b = Osm::Section.get(osm_api, b.section_id)
       compare = section_a.group_name <=> section_b.group_name
       (compare == 0) ? a.name <=> b.name : compare
     }

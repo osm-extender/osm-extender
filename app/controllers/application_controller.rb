@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
 
   # Filter to set @section from :section_id in params
   def get_section_from_params
-    @section = Osm::Section.get(current_user.osm_api, params[:section_id].to_i)
+    @section = Osm::Section.get(osm_api, params[:section_id].to_i)
     if @section.nil?
       render_not_found
     end
@@ -201,17 +201,16 @@ class ApplicationController < ActionController::Base
 
   rescue_from Osm::Error::NoCurrentTerm do |exception|
     unless current_user.nil? || !current_user.connected_to_osm? || exception.section_id.nil?
-      api = current_user.osm_api
-      section = Osm::Section.get(api, exception.section_id)
+      section = Osm::Section.get(osm_api, exception.section_id)
       next_term = nil
       last_term = nil
-      terms = Osm::Term.get_for_section(api, section)
+      terms = Osm::Term.get_for_section(osm_api, section)
       terms.each do |term|
         last_term = term if term.past? && (last_term.nil? || term.finish > last_term.finish)
         next_term = term if term.future? && (next_term.nil? || term.start < next_term.start)
       end
       render :template => "error/no_current_term", :status => 503, :locals => {:last_term => last_term, :next_term => next_term, :section => section}
-      Osm::Model.cache_delete(api, ['terms', api.user_id]) # Clear cached terms ready for a retry
+      Osm::Model.cache_delete(osm_api, ['terms', osm_api.user_id]) # Clear cached terms ready for a retry
     else
       render :template => "error/osm", :status => 503, :locals => {:exception => exception}
     end
@@ -257,9 +256,12 @@ class ApplicationController < ActionController::Base
     @current_section = section
   end
   def current_section
-    @current_section ||= Osm::Section.get(current_user.osm_api, session[:current_section_id])
+    @current_section ||= Osm::Section.get(osm_api, session[:current_section_id])
   end
 
+  def osm_api
+    @osm_api ||= current_user.osm_api
+  end
 
   def current_announcements
     @current_announcements ||= (current_user ? current_user.current_announcements : Announcement.are_current.are_public)
@@ -267,14 +269,14 @@ class ApplicationController < ActionController::Base
 
   def get_current_section_terms
     @terms ||= {}
-    Osm::Term.get_for_section(current_user.osm_api, current_section).each do |term|
+    Osm::Term.get_for_section(osm_api, current_section).each do |term|
       @terms[term.name] = term.id
     end
     return @terms
   end
 
   def get_current_term_id
-    @current_term_id ||= Osm::Term.get_current_term_for_section(current_user.osm_api, current_section).try(:id)
+    @current_term_id ||= Osm::Term.get_current_term_for_section(osm_api, current_section).try(:id)
     return @current_term_id
   end
 
@@ -287,7 +289,7 @@ class ApplicationController < ActionController::Base
     section_id = section.to_i
     return @groupings[section_id] unless @groupings[section_id].nil?
     @groupings[section_id] = {}
-    Osm::Grouping.get_for_section(current_user.osm_api, section).each do |grouping|
+    Osm::Grouping.get_for_section(osm_api, section).each do |grouping|
       @groupings[section_id][grouping.name] = grouping.id
     end
     return @groupings[section_id]
@@ -296,10 +298,9 @@ class ApplicationController < ActionController::Base
   def get_all_groupings
     return @groupings unless @groupings.nil?
     @groupings = {}
-    api = current_user.osm_api
-    Osm::Section.get_all(api).each do |section|
+    Osm::Section.get_all(osm_api).each do |section|
       @groupings[section.id] = {}
-      Osm::Grouping.get_for_section(api, section).each do |grouping|
+      Osm::Grouping.get_for_section(osm_api, section).each do |grouping|
         @groupings[section.id][grouping.name] = grouping.id
       end
     end
@@ -307,11 +308,11 @@ class ApplicationController < ActionController::Base
   end
 
   def get_section_names
-    @section_names ||= Hash[ Osm::Section.get_all(current_user.osm_api).map { |s| [s.id, "#{s.group_name} : #{s.name}"] } ]
+    @section_names ||= Hash[ Osm::Section.get_all(osm_api).map { |s| [s.id, "#{s.group_name} : #{s.name}"] } ]
   end
 
   def get_group_names
-    @group_names ||= Hash[ Osm::Section.get_all(current_user.osm_api).map { |s| [s.group_id, s.group_name] }.uniq ]
+    @group_names ||= Hash[ Osm::Section.get_all(osm_api).map { |s| [s.group_id, s.group_name] }.uniq ]
   end
 
 

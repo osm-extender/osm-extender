@@ -37,7 +37,7 @@ class OsmExportsController < ApplicationController
 
     custom_fields = []
     system_fields = []
-    flexi_record.get_columns(current_user.osm_api).each do |field|
+    flexi_record.get_columns(osm_api).each do |field|
       field.name = 'Date of Birth' if field.id.eql?('dob')
       if field.id.match(/\Af_\d+\Z/)
         custom_fields.push field
@@ -48,7 +48,7 @@ class OsmExportsController < ApplicationController
 
     fields = [*system_fields, *custom_fields]
     headers = ['Member ID', *fields.map{ |f| f.name }]
-    records = flexi_record.get_data(current_user.osm_api).map{ |r| [
+    records = flexi_record.get_data(osm_api).map{ |r| [
       r.member_id,
       *r.fields.values_at(*fields.map{ |f| f.id })
     ]}
@@ -61,7 +61,7 @@ class OsmExportsController < ApplicationController
   def members
     require_osm_permission :read, :member
 
-    members = Osm::Member.get_for_section(current_user.osm_api, current_section, params[:term_id])
+    members = Osm::Member.get_for_section(osm_api, current_section, params[:term_id])
     groupings = get_current_section_groupings.invert
 
     headers = [
@@ -164,7 +164,7 @@ class OsmExportsController < ApplicationController
     ]
 
     data = []
-    Osm::Meeting.get_for_section(current_user.osm_api, current_section, params[:term_id]).each do |meeting|
+    Osm::Meeting.get_for_section(osm_api, current_section, params[:term_id]).each do |meeting|
       meeting.activities.each do |activity|
         data.push [meeting.id, activity.activity_id, activity.title, activity.notes]
       end
@@ -190,7 +190,7 @@ class OsmExportsController < ApplicationController
       'Games',
     ]
 
-    data = Osm::Meeting.get_for_section(current_user.osm_api, current_section, params[:term_id]).map { |i|
+    data = Osm::Meeting.get_for_section(osm_api, current_section, params[:term_id]).map { |i|
       i.attributes.values_at(
         'id',
         'date',
