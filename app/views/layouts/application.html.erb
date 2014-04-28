@@ -57,6 +57,7 @@
               <div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div>
               <div class="menu_item"><%= link_to 'Search members', osm_search_members_form_path %></div>
               <div class="menu_item"><%= link_to 'Shared events (management)', shared_events_path %></div>
+              <div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div>
               <div class="menu_item"><%= link_to 'Check OSM setup', check_osm_setup_path %></div>
             </div>
             <div id="current_section">
@@ -69,7 +70,6 @@
               <%- if !current_section.waiting? && has_osm_permission?([:read, :write], :events) %><div class="menu_item"><%= link_to 'Shared events (attendance)', shared_event_attendances_path %></div><%- end %>
               <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
               <div class="menu_item"><%= link_to 'OSM export', osm_export_path %></div>
-              <%- if current_section.youth_section? %><div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div><%- end %>
               <%- unless current_section.waiting? %><div class="menu_item"><%= link_to 'Reports', reports_path %></div><%- end %>
               <%- unless  current_section.waiting? \
                           || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi, :events, :programme]) && has_osm_permission?(:write, [:events])) \
