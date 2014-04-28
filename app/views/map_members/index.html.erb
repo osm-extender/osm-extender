@@ -1,0 +1,13 @@
+<%= page_title 'Map members' %>
+
+<ul>
+<%- @sections.each do |section| %>
+  <li>
+    <%- if has_osm_permission?(:read, :member, current_user, section) %>
+      <%= link_to get_section_names[section.id], map_members_path(section.id) %>
+    <%- else %>
+      <%= get_section_names[section.id] %> - You don't have permission to get members for this section.
+    <%- end %>
+  </li>
+<%- end %>
+</ul>

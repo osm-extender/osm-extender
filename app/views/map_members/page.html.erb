@@ -1,4 +1,4 @@
-<%= page_title 'Map Members' %>
+<%= page_title "Map Members for #{get_section_names[@section.id]}" %>
 <% provide :use_maps, true %>
 
 <div style="width: 710px; margin-left: auto; margin-right: auto;">
@@ -18,7 +18,7 @@
     <%= text_field_tag 'base' %>(optional)
 
     <h2>Plot your members</h2>
-    <%= button_tag 'Plot members', :name=>'plot', :type => :button, :onClick => 'plot();' %>
+    <%= button_tag 'Plot members', :name=>'plot', :type => :button, :onClick => "plot(#{params[:section_id]});" %>
   </div>
 
   <div style="display: inline-block; vertical-align: middle; text-align: center; margin-left: 10px;">

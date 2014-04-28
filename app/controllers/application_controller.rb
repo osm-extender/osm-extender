@@ -56,6 +56,13 @@ class ApplicationController < ActionController::Base
     @editable_params ||= EditableParams.new(current_user)
   end
 
+  # Filter to set @section from :section_id in params
+  def get_section_from_params
+    @section = Osm::Section.get(current_user.osm_api, params[:section_id].to_i)
+    if @section.nil?
+      render_not_found
+    end
+  end
 
   # Filter to require that a user is not logged in
   def require_not_login
@@ -272,13 +279,18 @@ class ApplicationController < ActionController::Base
   end
 
   def get_current_section_groupings
+    get_section_groupings(current_section)
+  end
+
+  def get_section_groupings(section)
     @groupings ||= {}
-    return @groupings[current_section.id] unless @groupings[current_section.id].nil?
-    @groupings[current_section.id] = {}
-    Osm::Grouping.get_for_section(current_user.osm_api, current_section).each do |grouping|
-      @groupings[current_section.id][grouping.name] = grouping.id
+    section_id = section.to_i
+    return @groupings[section_id] unless @groupings[section_id].nil?
+    @groupings[section_id] = {}
+    Osm::Grouping.get_for_section(current_user.osm_api, section).each do |grouping|
+      @groupings[section_id][grouping.name] = grouping.id
     end
-    return @groupings[current_section.id]
+    return @groupings[section_id]
   end
 
   def get_all_groupings

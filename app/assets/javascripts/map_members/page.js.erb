@@ -100,7 +100,7 @@ var geocodeMember = function(member) {
   }
 }
 
-function plot() {
+function plot(section_id) {
   bounds = new google.maps.LatLngBounds();
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
   markers = {};
@@ -128,7 +128,7 @@ function plot() {
     });
   }
   $.ajax({
-    url: '<%= OSMExtender::Application.routes.url_helpers.map_members_data_path %>?address=' + document.getElementById('address').value,
+    url: '<%= CGI.unescape OSMExtender::Application.routes.url_helpers.map_members_data_path(section_id: '[[section_id]]')  %>'.replace('[[section_id]]', section_id) + '?address=' + document.getElementById('address').value,
     dataType:'json',
     async: false,
     success: function(data, status, jqXHR) {

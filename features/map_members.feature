@@ -30,16 +30,22 @@ Feature: Map Members
 	    | A          | Member    |
 	    | B          | Member    |
 
+    Scenario: Index page
+        When I signin as "alice@example.com" with password "P@55word"
+        And I go to the map_members_index page
+        And I follow "1st Somewhere : Section 1"
+        Then I should be on the page for map_members 1
+
     Scenario: Get page
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Map members"
-        Then I should be on the map_members page
+        Then I should be on the page for map_members 1
         And I should have 1 usage log record
 
     Scenario: Get data
         When I signin as "alice@example.com" with password "P@55word"
-        And I go to the map_members_data page
-        Then I should be on the map_members_data page
+        And I go to the page for map_members_data 1
+        Then I should be on the page for map_members_data 1
         And I should have 2 usage log records
         And I should have the following usage log
             | user              | controller           | action |
@@ -47,13 +53,13 @@ Feature: Map Members
 
 
     Scenario: Get page (not signed in)
-	When I go to the map_members page
+	When I go to the page for map_members 1
 	Then I should see "You must be signed in"
 	And I should be on the signin page
         And I should have 0 usage log records
 
     Scenario: Get data (not signed in)
-	When I go to the map_members_data page
+	When I go to the page for map_members_data 1
 	Then I should see "You must be signed in"
 	And I should be on the signin page
         And I should have 0 usage log records
@@ -64,7 +70,7 @@ Feature: Map Members
 	    | permission | granted |
 	    | member     | none    |
         When I signin as "alice@example.com" with password "P@55word"
-	And I go to the map_members page
+	And I go to the page for map_members 1
 	Then I should see "You do not have the correct OSM permissions"
 	And I should be on the check_osm_setup page
         And I should have 1 usage log records
@@ -74,7 +80,7 @@ Feature: Map Members
 	    | permission | granted |
 	    | member     | none    |
         When I signin as "alice@example.com" with password "P@55word"
-	And I go to the map_members_data page
+	And I go to the page for map_members_data 1
 	Then I should see "You do not have the correct OSM permissions"
 	And I should be on the check_osm_setup page
         And I should have 1 usage log records

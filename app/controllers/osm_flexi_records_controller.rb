@@ -1,16 +1,12 @@
 class OsmFlexiRecordsController < ApplicationController
+  before_action :require_connected_to_osm
+  before_action :get_section_from_params, :except=>:index
   before_action :except=>:index do
-    @section = Osm::Section.get(current_user.osm_api, params[:section_id].to_i)
-    if @section.nil?
-      render_not_found
-    else
-      forbid_section_type :waiting, @section
-    end
+    forbid_section_type :waiting, @section
   end
   before_action :except=>:index do
     require_osm_permission :read, :flexi, current_user, @section
   end
-  before_action :require_connected_to_osm
 
   def index
     sections = Osm::Section.get_all(current_user.osm_api)
