@@ -9,8 +9,7 @@ class EmailReminderItemBirthday < EmailReminderItem
 
     members = Osm::Member.get_for_section(user.osm_api, section_id)
     members.each do |member|
-      leader = member.grouping_id.eql?(-2)
-      next if leader && !configuration[:include_leaders]
+      next if member.leader? && !configuration[:include_leaders]
       next if member.date_of_birth.nil?
 
       birthday = next_birthday_for_member(member, earliest)
@@ -19,7 +18,7 @@ class EmailReminderItemBirthday < EmailReminderItem
         data.push({
           :name => member.name,
           :birthday => birthday,
-          :age_on_birthday => !(leader && !configuration[:include_leaders_age]) ? age : nil
+          :age_on_birthday => !(member.leader? && !configuration[:include_leaders_age]) ? age : nil
         })
       end
     end
