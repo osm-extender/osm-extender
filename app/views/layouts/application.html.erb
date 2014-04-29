@@ -62,6 +62,7 @@
             </div>
             <div id="current_section">
               Current section: <%= "#{current_section.name} (#{current_section.group_name})" %>
+              <%= link_to '[change]', my_page_path %>
             </div>
             <div id="secondary_menu_current">
               <%- if has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Contact details', osm_details_fields_path %></div><%- end %>
