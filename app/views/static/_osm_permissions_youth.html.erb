@@ -47,12 +47,15 @@
 
   <tr id="register">
     <td>Attendance Register</td>
-    <td><ul>
-      <li>Email Reminders:<ul>
-        <li>Not seen</li>
-        <li>Advised absences</li>
-      </ul></li>
-    </ul></td>
+    <td>
+      <ul>
+        <li>Email Reminders:<ul>
+          <li>Not seen</li>
+          <li>Advised absences</li>
+        </ul></li>
+      <li>Planned badge requirements report</li>
+      </ul>
+    </td>
     <td>Read</td>
     <td><%= pos_neg api_has_osm_permission?(:read, :register, current_user, section), osm_api_permission_human_friendly(:register, current_user, section) %></td>
     <td><%= pos_neg user_has_osm_permission?(:read, :register, current_user, section), osm_user_permission_human_friendly(:register, current_user, section) %></td>

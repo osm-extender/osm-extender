@@ -203,12 +203,20 @@
       <p>
         This report allows you to see which badge requirements you are planning on covering between two dates.
       </p>
-      <%- if has_osm_permission?(:read, [:badge, :member]) %>
+      <%- if has_osm_permission?(:read, [:badge, :member, :register]) && ((current_section.subscription_level <= 1) || has_osm_permission?(:read, :events)) %>
         <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
           Between <%= date_field_tag 'planned_badge_requirements[start]', Date.current.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           and <%= date_field_tag 'planned_badge_requirements[finish]', 6.months.from_now.strftime('%Y-%m-%d'), {:class=>'datepicker'} %>
           <br/>
+          <%= check_box_tag 'planned_badge_requirements[check_earnt]', 1, true %> <%= label_tag 'planned_badge_requirements[check_earnt]', 'Check which badges will be earnt?' %>
+          <br/>
           <%= check_box_tag 'planned_badge_requirements[check_stock]', 1, true %> <%= label_tag 'planned_badge_requirements[check_stock]', 'Check badge stock?' %>
+          <br/>
+          <%- if (current_section.subscription_level > 1) # Bronze does not include events %>
+            <%= check_box_tag 'planned_badge_requirements[check_event_attendance]', 1, true %> <%= label_tag 'planned_badge_requirements[check_event_attendance]', 'Check event attendance? (those marked as "Yes", "Reserved", "Invited" or "Show in My.SCOUT" are assumed to be attending)' %>
+          <%- end %>
+          <br/>
+          <%= check_box_tag 'planned_badge_requirements[check_meeting_attendance]', 1, true %> <%= label_tag 'planned_badge_requirements[check_meeting_attendance]', 'Check meeting attendance? (those not marked as absent (either known or unknown) are assumed to be attending)' %>
           <br/>
           <%= submit_tag 'Show planned badge requirements' %>
         <%- end %>
