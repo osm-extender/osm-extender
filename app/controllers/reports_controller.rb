@@ -418,41 +418,80 @@ class ReportsController < ApplicationController
     badges = {}
     badge_data = {}
 
-    @all_links = []
-    @links_by_meeting = {}
+    @by_badge = {}
+    @by_meeting = {}
+    @by_event = {}
+    all_requirements = {} # key is an Osm::Meeting or Osm::Event, value is array f hashes of the information
     @earnt_badges = {}
+
+    # For events
+    events = Osm::Event.get_list(osm_api, current_section)
+    events.select!{ |e|  (e[:start] >= @start) && (e[:start] <= @finish) }
+    events.map!{ |e| Osm::Event.get(osm_api, current_section, e[:id]) }
+    events.each do |event|
+      @by_event[event] ||= {} unless event.badges.empty?
+      all_requirements[event] ||= []
+      event.badges.each do |bl|
+        next unless bl.badge_section.eql?(current_section.type)
+        badge_name = "#{bl.badge_label} #{bl.badge_type} badge"
+        requirement_name = bl.requirement_label
+        @by_badge[badge_name] ||= []
+        @by_badge[badge_name].push requirement_name unless @by_badge[badge_name].include?(requirement_name)
+        @by_event[event][badge_name] ||= []
+        @by_event[event][badge_name].push requirement_name unless @by_event[event][badge_name].include?(requirement_name)
+        all_requirements[event].push({
+            'section' => bl.badge_section.to_s,
+            'badgetype' => bl.badge_type.to_s,
+            'badge' => bl.badge_key,
+            'columnname' => bl.requirement_key,
+            'data' => 'YES',
+        })
+      end
+    end
+
+
+    # For meetings
     terms = Osm::Term.get_for_section(osm_api, current_section)
     terms = terms.select{ |t| !(t.finish < @start) && !(t.start > @finish) }
     terms.each do |term|
       Osm::Meeting.get_for_section(osm_api, current_section, term).each do |meeting|
-        if (meeting.date >= @start) && (meeting.date <= @finish)
-          badge_links = meeting.get_badge_requirements(osm_api)
-          badge_links.select!{ |l| l['section'] == current_section.type.to_s} # No point reporting badges for a different section
-          badge_links.each do |badge_link|
-            badge_name = "#{badge_link['badgeName']} #{badge_link['badgetype']} badge - #{badge_link['name']}"
-            @links_by_meeting[meeting] ||= []
-            @links_by_meeting[meeting].push badge_name unless @links_by_meeting[meeting].include?(badge_name)
-            @all_links.push badge_name unless @all_links.include?(badge_name)
-            # Complete badge requirements which will be met
-            unless badge_link['badgetype'].eql?('activity') && (current_section.subscription_level < 2) # Silver or higher required for activity badges
-              badge_key = "#{badge_link['section']}|#{badge_link['badgetype']}|#{badge_link['badge']}"
-              badge = badges[badge_key]
-              if badge.nil?
-                badge_class = badge_by_type[badge_link['badgetype']]
-                badge = badge_class.get_badges_for_section(osm_api, current_section).select{ |b| b.osm_key == badge_link['badge'] }.first unless badge_class.nil?
-                badges[badge_key] = badge
-              end
-              unless badge.nil?
-                badge_data[badge] ||= badge.get_data_for_section(osm_api, current_section)
-                badge_data[badge].each do |data|
-                  data.requirements[badge_link['columnname']] = 'YES'
-                end
-              end
-            end
-          end # badge links for each meeting in date range
+        next if (meeting.date > @finish) || (meeting.date < @start)
+        badge_links = meeting.get_badge_requirements(osm_api)
+        badge_links.select!{ |l| l['section'] == current_section.type.to_s} # No point reporting badges for a different section
+        all_requirements[meeting] ||= [] unless badge_links.empty?
+        badge_links.each do |badge_link|
+          badge_name = "#{badge_link['badgeName']} #{badge_link['badgetype']} badge"
+          requirement_name = badge_link['name']
+          @by_meeting[meeting] ||= {}
+          @by_meeting[meeting][badge_name] ||= []
+          @by_meeting[meeting][badge_name].push requirement_name unless @by_meeting[meeting][badge_name].include?(requirement_name)
+          @by_badge[badge_name] ||= []
+          @by_badge[badge_name].push requirement_name unless @by_badge[badge_name].include?(requirement_name)
+          all_requirements[meeting].push badge_link.merge({'data' => 'YES'})
         end
       end # meetings for section
     end # terms in date range
+
+   # Fast forward badge requirements
+   all_requirements.each do |thing, requirements|
+    requirements.each do |requirement|
+      unless requirement['badgetype'].eql?('activity') && (current_section.subscription_level < 2) # Silver or higher required for activity badges
+        badge_key = "#{requirement['section']}|#{requirement['badgetype']}|#{requirement['badge']}"
+        badge = badges[badge_key]
+        if badge.nil?
+          badge_class = badge_by_type[requirement['badgetype']]
+          badge = badge_class.get_badges_for_section(osm_api, current_section).select{ |b| b.osm_key == requirement['badge'] }.first unless badge_class.nil?
+          badges[badge_key] = badge
+        end
+        unless badge.nil?
+          badge_data[badge] ||= badge.get_data_for_section(osm_api, current_section)
+          badge_data[badge].each do |data|
+            data.requirements[requirement['columnname']] = requirement['data']
+          end
+        end
+      end
+    end
+   end
 
     # Get list of finished badges
     badge_data.each do |badge, datas|
