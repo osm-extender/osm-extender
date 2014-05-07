@@ -6,4 +6,4 @@ branches:
     - master
     - staging
     - /gh(?:\d)+(?:-.+)?/
-script: rake ci:travis
+script: bundle exec rake ci:travis

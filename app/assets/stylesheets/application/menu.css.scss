@@ -85,6 +85,10 @@
     color:              #feff7e;
 }
 #current_section {
-    font-weight:        bold;
+    font-weight:        bolder;
+    a {
+        font-weight:        lighter !important;
+        text-decoration:    none !important;
+    }
 }
 

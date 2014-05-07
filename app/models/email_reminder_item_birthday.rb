@@ -9,16 +9,17 @@ class EmailReminderItemBirthday < EmailReminderItem
 
     members = Osm::Member.get_for_section(user.osm_api, section_id)
     members.each do |member|
-      unless member.date_of_birth.nil?
-        birthday = next_birthday_for_member(member, earliest)
-        if birthday < latest
-          item = {
-            :name => member.name,
-            :birthday => birthday,
-            :age_on_birthday => ((birthday - member.date_of_birth) / 365).to_i,
-          }
-          data.push item
-        end
+      next if member.leader? && !configuration[:include_leaders]
+      next if member.date_of_birth.nil?
+
+      birthday = next_birthday_for_member(member, earliest)
+      age = ((birthday - member.date_of_birth) / 365).to_i
+      if birthday < latest
+        data.push({
+          :name => member.name,
+          :birthday => birthday,
+          :age_on_birthday => !(member.leader? && !configuration[:include_leaders_age]) ? age : nil
+        })
       end
     end
 
@@ -40,6 +41,13 @@ class EmailReminderItemBirthday < EmailReminderItem
         :age_on_birthday => (6 + rand(12))
       })
     end
+    if configuration[:include_leaders]
+      data.push ({
+        :name => "#{Faker::Name.first_name} #{Faker::Name.last_name}",
+        :birthday => (earliest_date + rand(date_range)).days.from_now.to_date,
+        :age_on_birthday => configuration[:include_leaders_age] ? (18 + rand(40)) : nil
+      })
+    end
 
     return data.sort do |a, b|
       a[:birthday] <=> b[:birthday]
@@ -51,6 +59,8 @@ class EmailReminderItemBirthday < EmailReminderItem
     {
       :the_next_n_months => 'How many months into the future?',
       :the_last_n_months => 'How many months into the past?',
+      :include_leaders => 'Include leaders?',
+      :include_leaders_age => "Include leaders' ages?",
     }
   end
 
@@ -58,13 +68,17 @@ class EmailReminderItemBirthday < EmailReminderItem
     {
       :the_next_n_months => 1,
       :the_last_n_months => 2,
-    }
+      :include_leaders => true,
+      :include_leaders_age => true,
+     }
   end
 
   def self.configuration_types
     {
       :the_next_n_months => :positive_integer,
       :the_last_n_months => :positive_integer,
+      :include_leaders => :boolean,
+      :include_leaders_age => :boolean,
     }
   end
 
@@ -74,7 +88,8 @@ class EmailReminderItemBirthday < EmailReminderItem
 
   def human_configuration
     "From #{configuration[:the_last_n_months]} #{"month".pluralize(configuration[:the_last_n_months])} ago " +
-    "to #{configuration[:the_next_n_months]} months time."
+    "to #{configuration[:the_next_n_months]} months time. " +
+    "#{configuration[:include_leaders] ? 'Including' : 'Not incuding'} leaders#{" but not their ages" if (configuration[:include_leaders] && !configuration[:include_leaders_age])}."
   end
 
 

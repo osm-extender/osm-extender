@@ -5,7 +5,7 @@ class OsmSearchMembersController < ApplicationController
   def search_form
     @column_names = {}
     @field_keys = [:first_name, :last_name]
-    Osm::Section.get_all(current_user.osm_api).each do |section|
+    Osm::Section.get_all(osm_api).each do |section|
       if api_has_osm_permission?(:read, :member, current_user, section) && user_has_osm_permission?(:read, :member, current_user, section)
         section_columns = section.column_names.except(:patrol)
         @column_names[section.id] = {:first_name=>'First name', :last_name=>'Last name'}.merge(section_columns)
@@ -26,12 +26,12 @@ class OsmSearchMembersController < ApplicationController
     params[:selected].keys.map{|i| i.to_i}.each do |section_id|
       # Get columns to search for this section
       columns = [:first_name, :last_name]
-      Osm::Section.get(current_user.osm_api, section_id).column_names.keys.each do |key|
+      Osm::Section.get(osm_api, section_id).column_names.keys.each do |key|
         columns.push key if params[:selected][section_id.to_s][key.to_s] == '1'
       end
 
       # Find the members which match
-      Osm::Member.get_for_section(current_user.osm_api, section_id).each do |member|
+      Osm::Member.get_for_section(osm_api, section_id).each do |member|
         match = false
         columns.each do |column|
           if member.send(column).downcase.include?(search_for)

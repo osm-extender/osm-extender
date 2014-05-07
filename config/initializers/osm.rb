@@ -12,7 +12,7 @@ ActionDispatch::Callbacks.to_prepare do
       },
       :cache => {
         :cache  => Rails.cache,
-        :ttl    => Rails.env.development? ? 30 : 600
+        :ttl    => Rails.env.development? ? 60 : 600
       },
     )
 
