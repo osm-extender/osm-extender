@@ -76,12 +76,7 @@ class ReportsController < ApplicationController
     @event_totals = data[:event_totals]
 
     respond_to do |format|
-      format.html do
-        @options = {
-          :groupings => @my_params[:groupings],
-          :events => @my_params[:events],
-        }
-      end # html
+      format.html # html
       format.csv do
         send_sv_file({:col_sep => ',', :headers => ['Name', *@event_names]}, 'event_attendance.csv', 'text/csv') do |csv|
           @row_groups.values.each do |group|

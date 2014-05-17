@@ -58,5 +58,5 @@
   </tbody>
 </table>
 
-<%= link_to '[Export as CSV]', event_attendance_report_path(@options.merge(:format => :csv)) %><br/>
-<%= link_to '[Export as TSV]', event_attendance_report_path(@options.merge(:format => :tsv)) %><br/>
+<%= link_to '[Export as CSV]', event_attendance_report_path(params.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', event_attendance_report_path(params.merge(:format => :tsv)) %><br/>
