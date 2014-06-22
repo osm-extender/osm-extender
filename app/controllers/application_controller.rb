@@ -65,23 +65,27 @@ class ApplicationController < ActionController::Base
   end
 
   # Filter to require that a user is not logged in
+  # @return [Boolean] Whether the user is not logged in ( !current_user )
   def require_not_login
     if current_user
-      # Send user to their page (or where they came from)
       flash[:error] = 'You must be signed out to do that.'
       redirect_back_or_to my_page_path
+      return false
     end
+    return true
   end
 
 
   # Ensure the user has connected to OSM
   # if not redirect them to the relevant page and set an instruction flash
+  # @return [Boolean] Whether the user has connected to their OSM account
   def require_connected_to_osm
     unless current_user.connected_to_osm?
-      # Send user to the connect to OSM page
       flash[:instruction] = 'You must connect to your OSM account first.'
       redirect_to(current_user ? connect_to_osm_path : signin_path)
+      return false
     end
+    return true
   end
 
 
@@ -110,12 +114,14 @@ class ApplicationController < ActionController::Base
   # if not redirect them to the osm permissions page and set an instruction flash
   # @param permission_to the action which is being checked (:read or :write)
   # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
+  # @return [Boolean] Whether the user has been given the permission
   def require_osm_permission(permission_to, permission_on, user=current_user, section=current_section)
     unless has_osm_permission?(permission_to, permission_on, user, section)
-      # Send user to the osm permissions page
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
       redirect_back_or_to(current_user ? check_osm_setup_path : signin_path)
+      return false
     end
+    return true
   end
 
   # Check if the user and API have a given OSM permission
@@ -159,22 +165,29 @@ class ApplicationController < ActionController::Base
   # Ensure the user has a given OSMX permission
   # if not redirect them to the osm permissions page and set an instruction flash
   # @param permission_to the action which is being checked (:administer_users or :administer_faqs)
+  # @return [Boolean] Whether the user has granted permission to osmx
   def require_osmx_permission(permission_to)
     unless current_user && current_user.send("can_#{permission_to}?")
       # Send user to the osm permissions page
       flash[:error] = 'You are not allowed to do that.'
       redirect_back_or_to(current_user ? my_page_path : signin_path)
+      return false
     end
+    return true
   end
 
-  # Ensure the current section is of a given type
+  # Ensure the section is of a given type
   # if not redirect them to the relevant page and set an instruction flash
   # @param type a Symbol representing the type of section to require (may be :beavers, :cubs ... or an Array of allowable types)
+  # @param section an Osm::Section to check (defaults to current_section)
+  # @return [Boolean] Whether the section is of the type passed
   def require_section_type(type, section=current_section)
     if section.nil? || ![*type].include?(section.type)
       flash[:error] = "The section must be a #{type} section to do that."
       redirect_back_or_to(current_user ? my_page_path : signin_path)
+      return false
     end
+    return true
   end
 
   # Forbid the current section if it is of a given type

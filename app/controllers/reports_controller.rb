@@ -24,8 +24,8 @@ class ReportsController < ApplicationController
 
 
   def due_badges
-    require_section_type Constants::YOUTH_SECTIONS
-    require_osm_permission(:read, :badge)
+    require_section_type Constants::YOUTH_SECTIONS or return
+    require_osm_permission(:read, :badge) or return
     due_badges = Osm::Badges.get_due_badges(osm_api, current_section)
     @check_stock = @my_params[:check_stock].eql?('1')
     @by_member = due_badges.by_member
@@ -45,8 +45,8 @@ class ReportsController < ApplicationController
 
 
   def event_attendance
-    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
-    require_osm_permission(:read, :events)
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
+    require_osm_permission(:read, :events) or return
 
     unless @my_params['events'].is_a?(Hash)
       flash[:error] = 'You must select at least one event to get the attendance for.'
@@ -127,10 +127,14 @@ class ReportsController < ApplicationController
     @my_params[:events] ||= {}
 
     @my_params[:programme].each do |section, selected|
-      require_osm_permission(:read, :programme, current_user, section.to_i) if selected.eql?('1')
+      if selected.eql?('1')
+        require_osm_permission(:read, :programme, current_user, section.to_i) or return
+      end
     end
     @my_params[:events].each do |section, selected|
-      require_osm_permission(:read, :events, current_user, section.to_i) if selected.eql?('1')
+      if selected.eql?('1')
+        require_osm_permission(:read, :events, current_user, section.to_i) or return
+      end
     end
 
     @items = Report.calendar(current_user, @my_params.merge(start: @start, finish: @finish))
@@ -161,8 +165,8 @@ class ReportsController < ApplicationController
 
 
   def awarded_badges
-    require_section_type Constants::YOUTH_SECTIONS
-    require_osm_permission(:read, :badge)
+    require_section_type Constants::YOUTH_SECTIONS or return
+    require_osm_permission(:read, :badge) or return
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
@@ -266,8 +270,8 @@ class ReportsController < ApplicationController
 
 
   def badge_completion_matrix
-    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
-    require_osm_permission(:read, :events)
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
+    require_osm_permission(:read, :events) or return
 
     options = {
       :include_core => @my_params[:include_core].eql?('1'),
@@ -300,8 +304,8 @@ class ReportsController < ApplicationController
 
 
   def missing_badge_requirements
-    require_section_type Constants::YOUTH_SECTIONS
-    require_osm_permission(:read, :badge)
+    require_section_type Constants::YOUTH_SECTIONS or return
+    require_osm_permission(:read, :badge) or return
 
     @badge_data_by_member = {}
     @badge_data_by_badge = {}
@@ -390,9 +394,11 @@ class ReportsController < ApplicationController
 
 
   def planned_badge_requirements
-    require_section_type Constants::YOUTH_SECTIONS
-    require_osm_permission(:read, [:badge, :member, :register])
-    require_osm_permission(:read, :events) if (current_section.subscription_level > 1) # Only for silver and above
+    require_section_type Constants::YOUTH_SECTIONS or return
+    require_osm_permission(:read, [:badge, :member, :register]) or return
+    if (current_section.subscription_level > 1) # Only for silver and above
+      require_osm_permission(:read, :events) or return
+    end
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
