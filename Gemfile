@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 # Rails
-gem 'rails', '~> 4.1.0'
+gem 'rails', '~> 4.1.0', '>= 4.1.4'
 gem 'activerecord-session_store', '~> 0.1'
 
 # Authentication / Authorisation
@@ -11,7 +11,7 @@ gem 'cancan', '~> 1.6'
 
 
 # Misc
-gem 'osm', '~> 1.2', '>= 1.2.13'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.14'       # For using the OSM API
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
