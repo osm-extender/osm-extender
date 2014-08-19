@@ -18,7 +18,7 @@ class ReportsController < ApplicationController
     end
 
     if has_osm_permission?(:read, :events)
-      @future_events = Osm::Event.get_list(osm_api, current_section).select{ |e| e[:start] >= Date.current && !e[:archived] }
+      @future_events = Osm::Event.get_list(osm_api, current_section).select{ |e| (e[:start].nil? || (e[:start] >= Date.current)) && !e[:archived] }
     end
   end
 
