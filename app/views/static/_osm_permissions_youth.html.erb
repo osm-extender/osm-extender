@@ -88,8 +88,8 @@
       </li>
     </ul></td>
     <td>Read</td>
-    <td rowspan="2"><%= pos_neg api_has_osm_permission?([:read, :write], :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
-    <td rowspan="2"><%= pos_neg user_has_osm_permission?([:read, :write], :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
   </tr>
 <!--  <tr>
     <td>Something</td>
