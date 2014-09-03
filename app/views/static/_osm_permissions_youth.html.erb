@@ -5,7 +5,6 @@
       <li>Email Lists</li>
       <li>Email Reminders (Birthdays)</li>
       <li>Reports (Event attendance)</li>
-      <li>Shared Events (Attendance)</li>
       <li>Search Members</li>
       <li>OSM Export</li>
       <li>Planned badge requirements report</li>
@@ -79,7 +78,7 @@
   </tr>
 
   <tr id="events">
-    <td rowspan="2">Events</td>
+    <td rowspan="1">Events</td>
     <td><ul>
       <li>Email Reminders (Events)</li>
       <li>Reports:<ul>
@@ -89,20 +88,19 @@
       </li>
     </ul></td>
     <td>Read</td>
-    <td rowspan="2"><%= pos_neg api_has_osm_permission?([:read, :write], :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
-    <td rowspan="2"><%= pos_neg user_has_osm_permission?([:read, :write], :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg api_has_osm_permission?(:read, :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg user_has_osm_permission?(:read, :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
   </tr>
-  <tr>
-    <td>Shared Events (attendance)</td>
+<!--  <tr>
+    <td>Something</td>
     <td>Read and Write</td>
-  </tr>
+  </tr> -->
 
   <tr id="flexi">
     <td>Flexi-Records</td>
-    <td><ul>
-      <li>Flexi Records</li>
-      <li>Shared Events (attendance)</li>
-    </ul></td>
+    <td>
+      Flexi Records
+    </td>
     <td>Read</td>
     <td><%= pos_neg api_has_osm_permission?(:read, :flexi, current_user, section), osm_api_permission_human_friendly(:flexi, current_user, section) %></td>
     <td><%= pos_neg user_has_osm_permission?(:read, :flexi, current_user, section), osm_user_permission_human_friendly(:flexi, current_user, section) %></td>
