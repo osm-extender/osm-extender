@@ -272,25 +272,49 @@ Given /^an OSM request to get the register for term (\d+) and section (\d+) will
 end
 
 Given /^an OSM request to get due badges for section (\d+) and term (\d+) will result in the following being due their "([^"]*)" badge$/ do |section_id, term_id, badge_name, table|
-  url = "challenges.php?action=outstandingBadges&section=cubs&sectionid=#{section_id}&termid=#{term_id}"
-
-  badge_symbol = badge_name.downcase.gsub(/ /, '_')
+  url = "ext/badges/due/?action=get&section=cubs&sectionid=#{section_id}&termid=#{term_id}"
+  badge_id = "#{rand(100)}_1"
 
   members = []
   table.hashes.each_with_index do |hash, index|
+    scout_id = (index + 1).to_s
     member = {
-      'scoutid' => (index + 1).to_s,
+      'badge_id' => badge_id,
+      'badge_identifier' => '93_0',
+      'badge_version' => '0',
+      'completed' => '2',
+      'current_stock' => '20',
+      'extra' => (hash['completed'].empty? ? hash['extra'] : "Lvl #{hash['completed']}"),
       'firstname' => hash['name'],
+      'label' => 'Staged',
       'lastname' => 'Smith',
-      'completed' => hash['completed'],
-      'extra' => hash['extra'],
+      'name' => 'Participation',
+      'patrolid' => '1502',
+      'pic' => true,
+      'picture' => '',
+      'scout_id' => scout_id,
+      'sid' => scout_id,
+      'type_id' => '3',
     }
     members.push member
   end
-  
+
   data = {
-    'pending' => {badge_symbol=>members},
-    'description' => {badge_symbol => {'name'=>badge_name, 'section'=>'section_type', 'type'=>'core','badge'=>badge_symbol}}
+    'includeStock' => true,
+    'count' => 1,
+    'badgesToBuy' => 0,
+    'description' => {
+      badge_id => {
+        'badge_identifier' => badge_id,
+        'name' => badge_name,
+        'picture' => '',
+        'typeLabel' => 'Staged',
+        'type_id' => 3
+      }
+    },
+    'pending' => {
+      badge_id => members,
+    },
   }
 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => data.to_json, :content_type => 'application/json')

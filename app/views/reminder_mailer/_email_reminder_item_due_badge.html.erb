@@ -1,9 +1,9 @@
-<h2>The following <%= (data[:due_badges].by_member.size > 1) ? 'members are' : 'member is' %> due badges</h2>
-<%- badges_due = data[:due_badges].by_member %>
-<%- badge_totals = data[:due_badges].totals %>
-<%- badge_names = data[:due_badges].badge_names %>
-<%- member_names = data[:due_badges].member_names %>
-<%- badge_stock = data[:badge_stock] %>
+<h2>The following <%= (data.by_member.size > 1) ? 'members are' : 'member is' %> due badges</h2>
+<%- badges_due = data.by_member %>
+<%- badge_totals = data.totals %>
+<%- badge_names = data.badge_names %>
+<%- member_names = data.member_names %>
+<%- badge_stock = data.badge_stock %>
 <ul><%- badges_due.each do |member_id, badges| %>
   <li><%= member_names[member_id] %>:
 <ul><%- badges.each do |badge| %>

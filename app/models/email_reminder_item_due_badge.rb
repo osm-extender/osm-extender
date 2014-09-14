@@ -7,13 +7,8 @@ class EmailReminderItemDueBadge < EmailReminderItem
     due_badges = Osm::Badges.get_due_badges(api, section_id)
 
     return nil if due_badges.empty?
-    badge_stock = configuration[:show_stock] ? Osm::Badges.get_stock(api, section_id) : {}
-    badge_stock.default = 0
 
-    return {
-      :due_badges => due_badges,
-      :badge_stock => badge_stock
-    }
+    return due_badges
   end
 
 
@@ -30,7 +25,7 @@ class EmailReminderItemDueBadge < EmailReminderItem
       by_member[member_id] ||= []
       (1..badges_generated).each do |badge_num|
         badge_name = "#{badge_num.ordinalize} badge"
-        badge_tag = "badge_#{badge_num}"
+        badge_tag = "#{badge_num}_1"
         badge_names[badge_tag] = badge_name
         by_member[member_id].push(badge_tag) if (rand(10) % 3) >= 1
       end
@@ -42,10 +37,7 @@ class EmailReminderItemDueBadge < EmailReminderItem
 
     by_member = by_member.select{ |k,v| !v.empty? }
 
-    return {
-      :due_badges => Osm::Badges::DueBadges.new(:by_member => by_member, :badge_names => badge_names, :member_names => member_names),
-      :badge_stock => badge_stock
-    }
+    return Osm::Badges::DueBadges.new(:by_member => by_member, :badge_names => badge_names, :member_names => member_names, :badge_stock => badge_stock)
   end
 
 
