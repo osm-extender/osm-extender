@@ -176,8 +176,9 @@ class ReportsController < ApplicationController
     end
     (@start, @finish) = dates.sort
 
-    terms = Osm::Term.get_for_section(osm_api, current_section)
-    terms.select!{ |t| !(t.finish < @start) || t.start > @finish }
+    terms = Osm::Term.get_for_section(osm_api, current_section).sort
+    terms = terms.select!{ |t| !((t.finish < @start) || (t.start > @finish)) }
+    terms = [terms[-1], *terms[0..-2]] # Check last, first then other terms - more chance of getting all members in least API traffic
 
     @badge_types = {
       :core => 'Core',
@@ -192,14 +193,34 @@ class ReportsController < ApplicationController
     @badge_names = {}
     @badge_totals = { :core => {},  :staged =>{},  :challenge => {},  :activity => {} }
     badge_clases = { core: Osm::CoreBadge, staged: Osm::StagedBadge, activity: Osm::ActivityBadge, challenge: Osm::ChallengeBadge }
+    members_seen = [] # IDs of members we've already processed, allows skipping of terms (saving API use) if we won't get more information by quering for it's badge data
 
     terms.each do |term|
       # For each term get the badge data and process it
+      badges_to_get = []
+
+      # Get summaries to check which badges we're interested in
+      summary = Osm::Badge.get_summary_for_section(osm_api, current_section, term)
+      summary.each do |s|
+        s.each do |k,v|
+          if k.is_a?(String) && v.eql?(:awarded)
+            badges_to_get.push(k) unless badges_to_get.include?(k) 
+          end
+        end
+      end
+
+      # Skip term if we've already seen all the members we just got data for
+      next term unless summary.map{ |i| members_seen.include?(i[:member_id]) }.include?(false)
+      members_seen.push(*summary.map{ |s| s[:member_id] }).uniq!
+
+      # Get data for interesting badges
       @badge_types.keys.each do |badge_type|
         badges = badge_clases[badge_type].get_badges_for_section(osm_api, current_section)
+        badges.select!{ |b| badges_to_get.include?(b.identifier) }
         badges.each do |badge|
           @badge_names[badge.identifier] = badge.name
-          badge.get_data_for_section(osm_api, current_section, term).each do |data|
+          badge_data = badge.get_data_for_section(osm_api, current_section, term)
+          badge_data.each do |data|
             if data.awarded_date? && (data.awarded_date >= @start) && (data.awarded_date <= @finish)
               # It has been awarded
               name = "#{data[:first_name]} #{data[:last_name]}"
