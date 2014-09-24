@@ -587,7 +587,7 @@ class ReportsController < ApplicationController
       @by_section[section.id] ||= {}
       @section_names[section.id] = "#{section.name} (#{section.group_name})"
 
-      my_permissions = osm_api.get_user_permissions[section.id]
+      my_permissions = osm_api.get_user_permissions[section.id] || {}
       my_permissions = Hash[my_permissions.map{ |k,v| [k.to_s, permission_names[v.map{ |i| i.to_s.first }.sort.join]] }]
       @by_section[section.id][current_user.osm_userid] = my_permissions
       @by_leader[current_user.osm_userid][section.id] = my_permissions
