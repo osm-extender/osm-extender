@@ -17,7 +17,7 @@ class EmailReminderItemEvent < EmailReminderItem
 
     attendance = {}
     if configuration[:include_attendance]
-      events.each do |e|
+      events.each do |event|
         h = {
           :yes => {:leaders=>0, :members=>0, :total=>0},
           :no => {:leaders=>0, :members=>0, :total=>0},
@@ -25,11 +25,11 @@ class EmailReminderItemEvent < EmailReminderItem
           :shown => {:leaders=>0, :members=>0, :total=>0},
           :reserved => {:leaders=>0, :members=>0, :total=>0},
         }
-        e.get_attendance(user.osm_api, section_id).each do |a|
-          h[a.attending][a.grouping_id == -2 ? :leaders : :members] += 1
+        event.get_attendance(user.osm_api).each do |a|
+          h[a.attending][a.grouping_id.eql?(-2) ? :leaders : :members] += 1
           h[a.attending][:total] += 1
         end
-        attendance[e.id] = h
+        attendance[event.id] = h
       end
     end
 
