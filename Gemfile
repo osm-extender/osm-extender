@@ -35,7 +35,7 @@ gem 'daemon-spawn', '~> 0.4'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
-  gem 'libv8', '~> 3.16', '>= 3.16.14.03'
+  gem 'libv8', '~> 3.16', '>= 3.16.14.03', '< 3.16.14.4'
 gem 'jquery-rails', '~> 3.0'
 gem 'jquery-ui-rails', '~> 4.0'
 gem 'sass-rails', '~> 4.0'
