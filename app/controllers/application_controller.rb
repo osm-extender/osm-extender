@@ -207,9 +207,11 @@ class ApplicationController < ActionController::Base
   end
 
 
-  rescue_from Osm::Error do |exception|
-    log_error(exception)
-    render :template => "error/osm", :status => 503, :locals => {:exception => exception}
+  unless Rails.configuration.consider_all_requests_local
+    rescue_from Osm::Error do |exception|
+      log_error(exception)
+      render :template => "error/osm", :status => 503, :locals => {:exception => exception}
+    end
   end
 
   rescue_from Osm::Error::NoCurrentTerm do |exception|

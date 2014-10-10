@@ -67,35 +67,28 @@ class Report
     end
   end
 
-  def self.calendar(user, params)
-    Rails.cache.fetch("user#{user.id}-report-calendar-data-#{params.inspect}", :expires_in => 10.minutes) do
+  def self.calendar(user, options)
+    Rails.cache.fetch("user#{user.id}-report-calendar-data-#{options.inspect}", :expires_in => 10.minutes) do
       items = []
-      Osm::Section.get_all(user.osm_api).select{ |s| s.youth_section? || s.adults? }.each do |section|
-        if params[:events][section.id.to_s].eql?('1')
-          Osm::Event.get_list(user.osm_api, section).each do |event|
-            start = event[:start]
-            unless start.nil?
-              finish = event[:finish].nil? ? start : event[:finish]
-              unless (finish < params[:start]) || (start > params[:finish])
-                items.push [start, Osm::Event.get(user.osm_api, section, event[:id])]
-              end
-            end
-          end
+
+      sections = Osm::Section.get_all(user.osm_api)
+      sections.select!{ |s| s.youth_section? || s.adults? }
+      sections.each do |section|
+        these_options = options.merge({
+          include_events: options[:events][section.id.to_s].eql?('1'),
+          include_meetings: options[:programme][section.id.to_s].eql?('1'),
+        })
+
+        these_items = get_calendar_items_for_section(user.osm_api, section, these_options)
+
+        these_items[:events].each do |event|
+          items.push [event.start, event]
         end
-  
-        if params[:programme][section.id.to_s].eql?('1')
-          Osm::Term.get_for_section(user.osm_api, section).each do |term|
-            unless term.before?(params[:start]) || term.after?(params[:finish])
-              Osm::Meeting.get_for_section(user.osm_api, section, term).each do |meeting|
-                unless (meeting.date < params[:start]) || (meeting.date > params[:finish])
-                  items.push [meeting.date, meeting]
-                end
-              end
-            end
-          end
+        these_items[:meetings].each do |meeting|
+          items.push [meeting.date, meeting]
         end
       end
-      
+
       items.sort!{ |i1, i2| i1[0] <=> i2[0] }
       items.map{ |i| i[1]}
     end
@@ -135,6 +128,55 @@ class Report
         :member_totals => member_totals,
       }
     end
+  end
+
+  # options Hash includes:
+  # :start [Date] - start date
+  # :finish [Date] - finish date
+  # :include_meetings [Boolean]
+  # :include_events [Boolean]
+  # @return [Hash]
+  def self.get_calendar_items_for_section(api, section, options)
+    [:start, :finish, :include_meetings, :include_events].each do |attr|
+      raise ArgumentError, "options doesn't contain a value for :#{attr}" unless options.has_key?(attr)
+    end
+
+    # Fetch options
+    start = options[:start]
+    finish = options[:finish]
+    include_meetings = !!options[:include_meetings]
+    include_events = !!options[:include_events]
+
+    # Stuff we'll return
+    meetings = []
+    events = []
+
+    # Fetch terms
+    terms = Osm::Term.get_for_section(api, section)
+    terms.select!{ |term| !(term.finish < start) && !(term.start > finish) }
+
+    # Fetch meetings
+    if include_meetings
+      terms.each do |term|
+        these_meetings = Osm::Meeting.get_for_section(api, section, term)
+        these_meetings.select!{ |meeting| (meeting.date >= start) && (meeting.date <= finish) }
+        meetings.push(*these_meetings)
+        meetings.sort!
+      end
+    end
+
+    # Fetch events
+    if include_events
+      events = Osm::Event.get_list(api, section)
+      events.select!{ |e|  (e[:start] >= start) && (e[:start] <= finish) }
+      events.map!{ |e| Osm::Event.get(api, section, e[:id]) }
+      events.sort!
+    end
+
+    return {
+      meetings: meetings,
+      events: events,
+    }
   end
 
 end
