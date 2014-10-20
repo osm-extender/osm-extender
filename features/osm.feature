@@ -35,18 +35,6 @@ Feature: OSM
 	And I should see "Please use OSM to allow us access to your data"
         And "alice@example.com" should be connected to OSM
 
-    Scenario: Connect to OSM Account (API Error)
-        Given an OSM request to "authorize" will not work
-        When I signin as "alice@example.com" with password "P@55word"
-        And I go to the connect_to_osm page
-        And I fill in "Email" with "alice@example.com"
-        And I fill in "Password" with "password"
-        And I press "Connect to OSM"
-        Then I should not see "Sucessfully connected to your OSM account."
-	And I should see "We're sorry, an OSM error occured"
-        And I should see "A simulated OSM API error occured"
-        And "alice@example.com" should not be connected to OSM
-
 
     Scenario: Select between multiple OSM accounts
 	Given "alice@example.com" is connected to OSM

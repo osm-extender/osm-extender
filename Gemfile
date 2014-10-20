@@ -11,7 +11,8 @@ gem 'cancan', '~> 1.6'
 
 
 # Misc
-gem 'osm', '~> 1.2', '>= 1.2.14'       # For using the OSM API
+#gem 'osm', '~> 1.2', '>= 1.2.15'       # For using the OSM API
+gem 'osm', '1.2.15.dev'
 #gem "osm", :path => "../../osm/code"
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
@@ -35,7 +36,7 @@ gem 'daemon-spawn', '~> 0.4'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
-  gem 'libv8', '~> 3.16', '>= 3.16.14.03'
+  gem 'libv8', '~> 3.16', '>= 3.16.14.03', '< 3.16.14.4'
 gem 'jquery-rails', '~> 3.0'
 gem 'jquery-ui-rails', '~> 4.0'
 gem 'sass-rails', '~> 4.0'
@@ -48,6 +49,7 @@ group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
   gem 'rack-mini-profiler', '~> 0.1'  # See how long a request takes and why
   gem 'better_errors', '~> 1.0'       # See nicer exception pages with more useful information
+# better_errors 2.0.0 requires ruby 2.0.0
   gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
   gem 'meta_request', '~> 0.2.2'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
   gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140218103135) do
+ActiveRecord::Schema.define(version: 20140806160231) do
 
   create_table "announcements", force: true do |t|
     t.datetime "emailed_at"
@@ -152,57 +152,6 @@ ActiveRecord::Schema.define(version: 20140218103135) do
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at"
-
-  create_table "shared_event_attendances", force: true do |t|
-    t.integer  "shared_event_id", null: false
-    t.integer  "user_id",         null: false
-    t.integer  "section_id",      null: false
-    t.integer  "event_id",        null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  add_index "shared_event_attendances", ["shared_event_id"], name: "index_shared_event_attendances_on_shared_event_id"
-  add_index "shared_event_attendances", ["user_id"], name: "index_shared_event_attendances_on_user_id"
-
-  create_table "shared_event_field_data", force: true do |t|
-    t.integer  "shared_event_field_id",      null: false
-    t.integer  "shared_event_attendance_id", null: false
-    t.string   "source_type",                null: false
-    t.integer  "source_id"
-    t.string   "source_field",               null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "shared_event_field_data", ["shared_event_attendance_id"], name: "index_shared_event_field_data_on_shared_event_attendance_id"
-  add_index "shared_event_field_data", ["shared_event_field_id"], name: "index_shared_event_field_data_on_shared_event_field_id"
-
-  create_table "shared_event_fields", force: true do |t|
-    t.integer  "shared_event_id", null: false
-    t.string   "name",            null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  add_index "shared_event_fields", ["shared_event_id"], name: "index_shared_event_fields_on_shared_event_id"
-
-  create_table "shared_events", force: true do |t|
-    t.string   "name",            null: false
-    t.date     "start_date"
-    t.string   "start_time"
-    t.date     "finish_date"
-    t.string   "finish_time"
-    t.string   "cost"
-    t.string   "location"
-    t.text     "notes"
-    t.integer  "user_id",         null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.date     "confirm_by_date"
-  end
-
-  add_index "shared_events", ["user_id"], name: "index_shared_events_on_user_id"
 
   create_table "statistics", force: true do |t|
     t.date     "date",                         null: false

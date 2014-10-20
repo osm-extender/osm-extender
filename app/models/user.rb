@@ -7,8 +7,6 @@ class User < ActiveRecord::Base
   has_many :email_lists, dependent: :destroy, inverse_of: :user
   has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
   has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
-  has_many :shared_event_attendances, dependent: :destroy, inverse_of: :user
-  has_many :shared_events, dependent: :destroy, inverse_of: :user
   has_many :usage_log, inverse_of: :user
 
   validates_presence_of :name
