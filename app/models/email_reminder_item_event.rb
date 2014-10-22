@@ -26,8 +26,10 @@ class EmailReminderItemEvent < EmailReminderItem
           :reserved => {:leaders=>0, :members=>0, :total=>0},
         }
         event.get_attendance(user.osm_api).each do |a|
-          h[a.attending][a.grouping_id.eql?(-2) ? :leaders : :members] += 1
-          h[a.attending][:total] += 1
+          unless a.attending.nil?
+            h[a.attending][a.grouping_id.eql?(-2) ? :leaders : :members] += 1
+            h[a.attending][:total] += 1
+          end
         end
         attendance[event.id] = h
       end
