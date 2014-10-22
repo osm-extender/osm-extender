@@ -254,9 +254,11 @@ class ReportsController < ApplicationController
       :include_core => @my_params[:include_core].eql?('1'),
       :include_challenge => @my_params[:include_challenge].eql?('1'),
       :include_staged => @my_params[:include_staged].eql?('1'),
-      :include_activity => @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+      :include_activity => @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1), # Bronze does not include activity badges
+      :exclude_not_started => @my_params[:hide_not_started].eql?('1'),
+      :exclude_all_finished => @my_params[:hide_all_finished].eql?('1'),
     }
-    (@names, @matrix) = Report.badge_completion_matrix(current_user, current_section, options)
+    @names, @matrix = Report.badge_completion_matrix(current_user, current_section, options).values_at(:names, :matrix)
 
     respond_to do |format|
       format.html # html

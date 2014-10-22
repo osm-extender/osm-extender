@@ -1,69 +1,99 @@
 class Report
 
-  def self.badge_completion_matrix(user, section, params)
-    Rails.cache.fetch("user#{user.id}-report-badge_completion_matrix-data-#{params.inspect}", :expires_in => 10.minutes) do
+  def self.badge_completion_matrix(user, section, options)
+    Rails.cache.fetch("user#{user.id}-report-badge_completion_matrix-data-#{options.inspect}", :expires_in => 10.minutes) do
       matrix = []
       names = []
       member_ids = []
-  
+
       badges = []
-      badges += Osm::CoreBadge.get_badges_for_section(user.osm_api, section) if params[:include_core]
-      badges += Osm::StagedBadge.get_badges_for_section(user.osm_api, section) if params[:include_staged]
-      badges += Osm::ChallengeBadge.get_badges_for_section(user.osm_api, section) if params[:include_challenge]
-      badges += Osm::ActivityBadge.get_badges_for_section(user.osm_api, section) if params[:include_activity]
-  
+      badges += Osm::CoreBadge.get_badges_for_section(user.osm_api, section) if options[:include_core]
+      badges += Osm::StagedBadge.get_badges_for_section(user.osm_api, section) if options[:include_staged]
+      badges += Osm::ChallengeBadge.get_badges_for_section(user.osm_api, section) if options[:include_challenge]
+      badges += Osm::ActivityBadge.get_badges_for_section(user.osm_api, section) if options[:include_activity]
+      badges.select!{ |b| b.completion_criteria[:add_columns_to_module].nil? } # Skip badges we add columns to
+
       unless badges.first.nil?
         data = badges.first.get_data_for_section(user.osm_api, section)
         names = data.map{ |i| "#{i.first_name} #{i.last_name}" }
         member_ids = data.map{ |i| i.member_id }
       end
-  
-      badges.each do |badge|
-        unless ['nightsaway', 'hikes', 'timeonthewater', 'adventure'].include?(badge.osm_key)
-          completion_data = badge.get_data_for_section(user.osm_api, section)
-          completion_data.sort!{ |a,b| member_ids.find_index(a.member_id) <=> member_ids.find_index(b.member_id) }
-          badge.requirements.each do |requirement|
-            requirement_group = requirement.field.split('_').first
-            unless requirement_group.eql?('y')
-              met_data = completion_data.map do |i|
-                met = nil
-                if badge.type.eql?(:staged) && i.awarded?
-                  met = :awarded if requirement_group <= ' abcde'[i.awarded]
-                  met ||= :completed if requirement_group.eql?(' abcde'[i.completed])
-                else
-                  met = :awarded if i.awarded?
-                  met ||= :completed if i.completed?
-                end
-                if i.started?
-                  unless badge.type.eql?(:staged) && !requirement_group.eql?(' abcde'[i.started])
-                    value = i.requirements[requirement.field]
-                    if value.blank? || value.to_s[0].downcase.eql?('x')
-                      if (i.total_gained < badge.total_needed) || (i.gained_in_sections[requirement_group] < (badge.needed_from_section[requirement_group] || 0))
-                        met = :no
-                      else
-                        met = :not_needed
-                      end
-                    else
-                      met = :yes
-                    end
-                  end
-                end #started?
-                met || :not_started
-              end
-  
-              matrix.push ([
-                badge.type,
-                badge.name,
-                (badge.type.eql?(:staged) ? 'abcde'.index(requirement_group)+1 : requirement_group),
-                requirement.name,
-                *met_data,
-              ])
-            end
-          end # each badge.requirement
+
+      # Exclude any badges matching the criteria
+      if options[:exclude_not_started] || options[:exclude_all_finished]
+        summary = Osm::Badge.get_summary_for_section(user.osm_api, section)
+        started = Hash.new(0)  # Count of people who have started each badge
+        finished = Hash.new(0) # Count of people who have finished each badge
+        summary.each do |member|
+          member.keys.select{ |k| !!k.match(/\d+_\d+/)}.each do |key| # Keys which relate to badge information
+            started[key] += 1 if member[key].eql?(:started)
+            finished[key] += 1 if [:due, :awarded].include?(member[key])
+          end
+        end # each member in summary
+
+        badges.select! do |badge|
+          exclude = false
+          if options[:exclude_not_started]
+            # exclude the badge if noone has started it
+            exclude ||= started[badge.identifier].eql?(0)
+          end
+          if options[:exclude_all_finished]
+            exclude the badge if everyone has finished it
+            exclude ||= finished[badge.identifier].eql?(summary.count)
+          end
+          !exclude
         end
+      end
+
+      # Get badge data
+      badges.each do |badge|
+        completion_data = badge.get_data_for_section(user.osm_api, section)
+        completion_data.sort!{ |a,b| member_ids.find_index(a.member_id) <=> member_ids.find_index(b.member_id) }
+        badge.requirements.each do |requirement|
+          met_data = completion_data.map do |i|
+            met = nil
+
+            # Workout if badge is completed or awarded
+            if badge.has_levels? # Staged
+              met = :awarded if requirement.module_letter < ('a'..'z').to_a[i.awarded]
+              met ||= :completed if requirement.module_letter.eql?(('a'..'z').to_a[i.earnt - 1])
+            else # 'Normal'
+              met = :awarded if i.awarded?
+              met ||= :completed if i.earnt?
+            end
+
+            # Workout if the requirmeent is needed to complete the badge (if started)
+            if i.started?
+              unless badge.has_levels? && !requirement.module_letter.eql?(('a'..'z').to_a[i.started - 1])
+                if i.requirement_met?(requirement.field)
+                  met = :yes
+                else
+                  # Requirement not met but is it actually needed?
+                  needed_for_total = (i.total_gained < badge.completion_criteria[:min_requirements_completed])
+                  needed_for_module = !i.modules_gained.include?(requirement.module_letter)
+                  module_needed = true#(i.badge.completion_criteria[:requires] || []).select{ |a| a.include?(requirement.module_letter) }.map{ |a| a - [requirement.module_letter] }.map{ |a| a.map{ |b| i.modules_gained.include?(b) }.include?(true) }.include?(false)
+                  if needed_for_total || (needed_for_module && module_needed)
+                    met = :no
+                  else
+                    met = :not_needed
+                  end
+                end
+              end
+            end #started?
+            met || :not_started
+          end
+
+          matrix.push ([
+            badge.type,
+            badge.name,
+            (badge.has_levels? ? ('a'..'z').to_a.index(requirement.module_letter)+1 : requirement.module_letter),
+            requirement.name,
+            *met_data,
+          ])
+        end # each badge.requirement
       end # each badge
-  
-      [names, matrix]
+
+      {names: names, matrix: matrix}
     end
   end
 
