@@ -289,8 +289,7 @@ class ReportsController < ApplicationController
     @badge_data_by_member = {}
     @badge_data_by_badge = {}
     @member_names = {}
-    @badge_names = {:core => {}, :staged => {}, :activity => {}, :challenge => {}}
-    @badge_requirement_labels = {}
+    @badge_names = {:core => {}, :staged => {}, :activity => {}, :challenge => {}} #TODO flatten
 
     @badge_types = {}
     @badge_types[:core] = 'Core' if @my_params[:include_core].eql?('1')
@@ -309,47 +308,28 @@ class ReportsController < ApplicationController
     badge_data = {}
     badges.each do |type, bs|
       badge_data[type] = []
-      @badge_requirement_labels[type] = {}
       @badge_data_by_badge[type] = {}
       bs.each do |badge|
-        @badge_requirement_labels[type][badge.osm_key] = {}
-        @badge_names[type][badge.osm_key] = badge.name
-        badge.requirements.each do |requirement|
-          @badge_requirement_labels[type][badge.osm_key][requirement.field] = requirement.name
-        end
+        @badge_names[type][badge.identifier] = badge.name
         badge.get_data_for_section(osm_api, current_section).each do |data|
+          next unless badge.completion_criteria[:add_columns_to_module].nil?
           if data.started?
             @member_names[data.member_id] = "#{data[:first_name]} #{data[:last_name]}"
             @badge_data_by_member[data.member_id] ||= {}
             @badge_data_by_member[data.member_id][type] ||= []
-            if badge.osm_key.eql?('adventure')
-              @badge_data_by_member[data.member_id][type].push "Adventure - completed #{data.gained_in_sections['a']} of #{badge.needed_from_section['a']}"
-            elsif ['nightsaway', 'hikes', 'timeonthewater'].include?(badge.osm_key)
-              @badge_data_by_member[data.member_id][type].push "#{badge.name} - completed #{data.requirements['y_01']} of #{data.started}"
+            badge_key = badge.type.eql?(:staged) ? "#{badge.identifier}_#{data.started}" : badge.identifier
+            @badge_data_by_badge[type][badge_key] ||= {}
+            @badge_data_by_member[data.member_id][type].push data
+            if badge.has_levels?
+              # Get requirements for only the started level
+              requirements = badge.requirements.select{ |r| r.module_letter.eql?(('a'..'z').to_a[data.started-1])}
             else
-              badge_key = badge.type.eql?(:staged) ? "#{badge.osm_key}_#{data.started}" : badge.osm_key
-              @badge_data_by_badge[type][badge_key] ||= {}
-              @badge_data_by_member[data.member_id][type].push data
-              if badge.type.eql?(:staged)
-                # Get requirements for only the started level
-                requirements = badge.requirements.select{ |r| r.field[0].eql?("abcde"[data.started-1])}
-              else
-                requirements = badge.requirements
-              end
-              requirements.each do |requirement|
-                value = data.requirements[requirement.field]
-                not_met = true
-                if requirement.field[0].eql?('y')
-                  # It's a count column
-                  not_met = (value < 3) if badge.osm_key.eql?('adventure')
-                  not_met = (value < 6) if badge.osm_key.eql?('community')
-                else
-                  not_met = value.blank? || value[0].to_s.downcase.eql?('x')
-                end
-                if not_met
-                  @badge_data_by_badge[type][badge_key][requirement.field] ||= []
-                  @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
-                end
+              requirements = badge.requirements
+            end
+            requirements.each do |requirement|
+              unless data.requirement_met?(requirement.field)
+                @badge_data_by_badge[type][badge_key][requirement.field] ||= []
+                @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
               end
             end
           end
@@ -358,12 +338,10 @@ class ReportsController < ApplicationController
     end
 
     # Suffix levels to names for staged badges
-    # (Shallow) copy badge requirement labels for staged badges
     new_badge_names = {}
     @badge_names[:staged].each do |key, label|
       (1..5).each do |level|
         new_badge_names["#{key}_#{level}"] = "#{label} (Level #{level})"
-        @badge_requirement_labels[:staged]["#{key}_#{level}"] = @badge_requirement_labels[:staged][key]
       end
     end
     @badge_names[:staged].merge!(new_badge_names)
