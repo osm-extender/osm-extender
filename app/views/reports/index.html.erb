@@ -49,7 +49,7 @@
   <%- end %>
 
 
-<!--  <%- if current_section.youth_section? %>
+  <%- if current_section.youth_section? %>
     <h2 class="ui-accordion-header"><a href="#">Badge Completion Matrix</a></h2>
     <div class="ui-accordion-content">
       <p>
@@ -66,13 +66,15 @@
           <%- end %>
           <%= check_box_tag 'badge_completion_matrix[include_challenge]', 1, true %> <%= label_tag 'badge_completion_matrix[include_challenge]', 'Include challenge badges?' %><br/>
           <%= check_box_tag 'badge_completion_matrix[include_staged]', 1, true %> <%= label_tag 'badge_completion_matrix[include_staged]', 'Include staged activity and Partnership badges?' %><br/>
+          <%= check_box_tag 'badge_completion_matrix[hide_not_started]', 1, true %> <%= label_tag 'badge_completion_matrix[hide_not_started]', 'Hide badges noone has started' %><br/>
+          <%= check_box_tag 'badge_completion_matrix[hide_all_finished]', 1, true %> <%= label_tag 'badge_completion_matrix[hide_all_finished]', 'Hide badges everyone has finished' %><br/>
           <%= submit_tag 'Show badge completion matrix' %>
         <%- end %>
       <%- else %>
         You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
       <%- end %>
     </div>
-  <%- end %> -->
+  <%- end %>
 
 
     <h2 class="ui-accordion-header"><a href="#">Calendar</a></h2>
@@ -171,7 +173,7 @@
   <%- end %>
 
 
-<!--  <%- if current_section.youth_section? %>
+  <%- if current_section.youth_section? %>
     <h2 class="ui-accordion-header"><a href="#">Missing Badge Requirements</a></h2>
     <div class="ui-accordion-content">
       <p>
@@ -194,10 +196,10 @@
         You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
       <%- end %>
     </div>
-  <%- end %>-->
+  <%- end %>
 
 
-<!--  <%- if current_section.youth_section? %>
+  <%- if current_section.youth_section? %>
     <h2 class="ui-accordion-header"><a href="#">Planned Badge Requirements</a></h2>
     <div class="ui-accordion-content">
       <p>
@@ -225,6 +227,6 @@
         Due to the amount of data this report needs to slurp from OSM it may take a while to run.
       <%- end %>
     </div>
-  <%- end %>-->
+  <%- end %>
 
 </div><!-- accordian -->

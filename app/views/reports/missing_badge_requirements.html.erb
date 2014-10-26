@@ -6,6 +6,7 @@
       <li><%= label %></li>
     <%- end %>
   </ul>
+  However badges which require you to add columns are ignored. This report also doesn't take account of which combinations of modules are required (only the minimum number required).
 </p>
 
 <h2>Grouped by Member</h2>
@@ -25,24 +26,24 @@
               <%- else %>
                 <li>
                   <%- total_needed = 0 %>
-                  <%- sections_in_badge = data.badge.needed_from_section.keys.size %>
-                  <%- data.badge.needed_from_section.each{ |section, needed| needed_in_section = (needed - data.gained_in_sections[section]); total_needed += needed_in_section if needed_in_section > 0} %>
-                  <%- total_needed = data.badge.total_needed if data.badge.total_needed > total_needed %>
-                  <%- sections_needed = data.badge.sections_needed - data.sections_gained %>
+                  <%- sections_in_badge = data.badge.modules.size %>
+                  <%- data.badge.needed_per_module.each{ |section, needed| next unless section.is_a?(String); needed_in_section = (needed - data.gained_in_modules[section]); total_needed += needed_in_section if needed_in_section > 0} %>
+                  <%- total_needed = data.badge.completion_criteria[:min_requirements_completed] if data.badge.completion_criteria[:min_requirements_completed] > total_needed %>
+                  <%- sections_needed = data.badge.completion_criteria[:min_modules_required] - data.modules_gained.size %>
                   <%= data.badge.name %> (need to do <%= total_needed %>):
                   <ul>
-                    <%- data.gained_in_sections.each do |section, gained| %>
-                      <%- needed_from_section = (data.badge.needed_from_section[section] || 0) - gained %>
+                    <%- data.gained_in_modules.select{ |k,v| k.is_a?(String) }.each do |section, gained| %>
+                      <%- needed_from_section = (data.badge.needed_per_module[section] || 0) - gained %>
                       <%- if needed_from_section > 0 %>
 <%- if sections_in_badge > 1 %>
                         <li>
-                          Section <%= section.upcase %> (need to do <%= needed_from_section %>):
+                          Module <%= section.upcase %> (need to do <%= needed_from_section %>):
                           <ul>
 <%- end %>
-                            <%- data.requirements.each do |r_key, r_value| %>
-                              <%- if r_key[0].eql?(section) && (r_value.blank? || r_value.to_s[0].downcase.eql?('x')) %>
+                            <%- data.badge.requirements.select{ |r| r.module_letter.eql?(section)}.each do |r| %>
+                              <%- unless data.requirement_met?(r.field) %>
                                 <li>
-                                  <%= @badge_requirement_labels[type][data.badge.osm_key][r_key] %>
+                                  <%= r.name %>
                                 </li>
                               <%- end %>
                             <%- end %>
@@ -69,13 +70,13 @@
               <li><%= data %></li>
             <%- else %>
               <li>
-                <%- stage = "abcde"[data.started - 1] %>
-                <%= data.badge.name %> (need to do <%= data.badge.needed_from_section[stage] - data.gained_in_sections[stage] %>):
+                <%- stage = ('a'..'z').to_a[data.started - 1] %>
+                <%= data.badge.name %> <%= data.started %> (need to do <%= data.badge.needed_per_module[stage] - data.gained_in_modules[stage] %>):
                 <ul>
-                  <%- data.requirements.each do |r_key, r_value| %>
-                    <%- if r_key[0].eql?(stage) && (r_value.blank? || r_value.to_s[0].downcase.eql?('x')) %>
+                  <%- data.badge.requirements.select{ |r| r.module_letter.eql?(stage)}.each do |r| %>
+                    <%- unless data.requirement_met?(r.field) %>
                       <li>
-                        <%= @badge_requirement_labels[:staged][data.badge.osm_key][r_key] %>
+                        <%= r.name %>
                       </li>
                     <%- end %>
                   <%- end %>
@@ -103,7 +104,7 @@
               <li><%= @badge_names[type][badge_key] %>:
                 <ul>
                   <%- requirements.each do |r_key, members| %>
-                    <li><%= @badge_requirement_labels[type][badge_key][r_key] %>:
+                    <li><%= '@badge_requirement_labels[type][badge_key][r_key]' %>:
                       <ul>
                         <%- members.each do |member_id| %>
                           <li><%= @member_names[member_id] %></li>
