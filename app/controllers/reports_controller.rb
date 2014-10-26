@@ -176,72 +176,112 @@ class ReportsController < ApplicationController
     end
     (@start, @finish) = dates.sort
 
-    terms = Osm::Term.get_for_section(osm_api, current_section).sort
-    terms = terms.select!{ |t| !((t.finish < @start) || (t.start > @finish)) }
-    terms = [terms[-1], *terms[0..-2]] # Check last, first then other terms - more chance of getting all members in least API traffic
-
+    badge_clases = { core: Osm::CoreBadge, staged: Osm::StagedBadge, activity: Osm::ActivityBadge, challenge: Osm::ChallengeBadge }
     @badge_types = {
       :core => 'Core',
       :challenge => 'Challenge',
       :staged => 'Staged Activity and Partnership',
     }
     @badge_types[:activity] = 'Activity' unless (current_section.subscription_level < 2) # Bronze does not include activity badges
+    @badges = {}
+    @badge_types.keys.each do |badge_type|
+      badge_clases[badge_type].get_badges_for_section(osm_api, current_section).each do |badge|
+        @badges[badge.identifier] = badge
+      end
+    end
 
     @by_badge = { :core => {},  :staged => {},  :challenge => {},  :activity => {} }
     @by_member = {}
     @member_totals = {}
-    @badge_names = {}
     @badge_totals = { :core => {},  :staged =>{},  :challenge => {},  :activity => {} }
-    badge_clases = { core: Osm::CoreBadge, staged: Osm::StagedBadge, activity: Osm::ActivityBadge, challenge: Osm::ChallengeBadge }
     members_seen = [] # IDs of members we've already processed, allows skipping of terms (saving API use) if we won't get more information by quering for it's badge data
 
+    terms = Osm::Term.get_for_section(osm_api, current_section).sort
+    terms = terms.select!{ |t| !((t.finish < @start) || (t.start > @finish)) }
+    terms = [terms[-1], *terms[0..-2]] # Check last, first then other terms - more chance of getting all members in least API traffic
     terms.each do |term|
-      # For each term get the badge data and process it
-      badges_to_get = []
-
       # Get summaries to check which badges we're interested in
       summary = Osm::Badge.get_summary_for_section(osm_api, current_section, term)
-      summary.each do |s|
-        s.each do |k,v|
-          if k.is_a?(String) && v.eql?(:awarded)
-            badges_to_get.push(k) unless badges_to_get.include?(k) 
-          end
-        end
-      end
 
       # Skip term if we've already seen all the members we just got data for
       next term unless summary.map{ |i| members_seen.include?(i[:member_id]) }.include?(false)
-      members_seen.push(*summary.map{ |s| s[:member_id] }).uniq!
 
-      # Get data for interesting badges
-      @badge_types.keys.each do |badge_type|
-        badges = badge_clases[badge_type].get_badges_for_section(osm_api, current_section)
-        badges.select!{ |b| badges_to_get.include?(b.identifier) }
-        badges.each do |badge|
-          @badge_names[badge.identifier] = badge.name
-          badge_data = badge.get_data_for_section(osm_api, current_section, term)
-          badge_data.each do |data|
-            if data.awarded_date? && (data.awarded_date >= @start) && (data.awarded_date <= @finish)
-              # It has been awarded
-              name = "#{data[:first_name]} #{data[:last_name]}"
-              badge_key = badge.identifier
-              badge_key_level = badge_type.eql?(:staged) ? "#{badge_key}_#{data.awarded}" : badge_key
-              @badge_names[badge_key_level] ||= badge_type.eql?(:staged) ? "#{badge.name} (Level #{data.awarded})" : badge.name
-              @by_member[name] ||= { :core => [],  :staged => [],   :challenge => [],  :activity => [] }
-              unless @by_member[name][badge_type].include?(badge_key_level)
-                @by_member[name][badge_type].push badge_key_level
-                @by_badge[badge_type][badge_key] ||= []
-                @by_badge[badge_type][badge_key].push badge_type.eql?(:staged) ? "#{name} (Level #{data.awarded})" : name
-                @member_totals[name] ||= 0
-                @member_totals[name] += 1
-                @badge_totals[badge_type][badge_key] ||= 0
-                @badge_totals[badge_type][badge_key] += 1
+      # Process data from the summary
+      badge_data = {} # Cache variable badge.identifier to data
+      summary.each do |s|
+        this_name = s[:name]
+        this_member_id = s[:member_id]
+        next s if members_seen.include?(this_member_id) # No point processing this member again
+        s.each do |k,v|
+          next k if k.is_a?(Symbol)
+          this_badge = this_date = this_level = nil
+          if v.eql?(:awarded)
+            # Found a badge which has been awarded
+            this_badge = @badges[k]
+            next k if this_badge.nil? # SHouldn't happen but we'll play if safe by checking
+            unless s["#{k}_date"].nil?
+              # The summary gave us the date too, lucky us
+              if !this_badge.has_levels? || !s["#{k}_level"].nil?
+                # The summary also gave us the level (or the badge doesn't have levels)
+                this_date = s["#{k}_date"]
+                this_level = s["#{k}_level"] if this_badge.has_levels?
               end
-            end # if data.awarded?
-          end # each data row for badge
-        end # badge in badges
-      end # each badge_type
-    end # term in terms
+            end
+            if this_date.nil?
+              # The summary didn't give us the date (or level), time to get it the long way
+              badge_data[k] ||= this_badge.get_data_for_section(osm_api, current_section, term) # no point getting it if we already had to
+              this_data = badge_data[k].find{ |d| d.member_id.eql?(this_member_id) }
+              next s if this_data.nil? # Shouldn't happen but if it does we can't go any further
+              this_date = this_data.awarded_date
+              this_level = this_data.awarded if this_badge.has_levels?
+            end # was date in the summary
+            # Add this data to the lists
+            if (this_date >= @start) && (this_date <= @finish)
+              @by_member[this_name] ||= { :core => [],  :staged => [],   :challenge => [],  :activity => [] }
+              @by_member[this_name][this_badge.type].push([this_badge.identifier, this_level])
+              @by_badge[this_badge.type][this_badge.identifier] ||= {}
+              @by_badge[this_badge.type][this_badge.identifier][this_level] ||= []
+              @by_badge[this_badge.type][this_badge.identifier][this_level].push(this_name)
+              @member_totals[this_name] ||= 0
+              @member_totals[this_name] += 1
+              @badge_totals[this_badge.type][this_badge.identifier] ||= 0
+              @badge_totals[this_badge.type][this_badge.identifier] += 1
+            end
+          end # item is one which has been awarded
+          members_seen.push this_member_id # Add this member to the list of ones we've seen
+        end # each item in the summary
+      end # each summary
+    end # each term
+
+
+    #  # Get data for interesting badges
+    #  @badge_types.keys.each do |badge_type|
+    #    badges = @badges[badge_type].select{ |b| badges_to_get.include?(b.identifier) }
+    #    badges.each do |badge|
+    #      @badge_names[badge.identifier] = badge.name
+    #      badge_data = badge.get_data_for_section(osm_api, current_section, term)
+    #      badge_data.each do |data|
+    #        if data.awarded_date? && (data.awarded_date >= @start) && (data.awarded_date <= @finish)
+    #          # It has been awarded
+    #          name = "#{data[:first_name]} #{data[:last_name]}"
+    #          badge_key = badge.identifier
+    #          badge_key_level = badge_type.eql?(:staged) ? "#{badge_key}_#{data.awarded}" : badge_key
+    #          @badge_names[badge_key_level] ||= badge_type.eql?(:staged) ? "#{badge.name} (Level #{data.awarded})" : badge.name
+    #          @by_member[name] ||= { :core => [],  :staged => [],   :challenge => [],  :activity => [] }
+    #          unless @by_member[name][badge_type].include?(badge_key_level)
+    #            @by_member[name][badge_type].push badge_key_level
+    #            @by_badge[badge_type][badge_key] ||= []
+    #            @by_badge[badge_type][badge_key].push badge_type.eql?(:staged) ? "#{name} (Level #{data.awarded})" : name
+    #            @member_totals[name] ||= 0
+    #            @member_totals[name] += 1
+    #            @badge_totals[badge_type][badge_key] ||= 0
+    #            @badge_totals[badge_type][badge_key] += 1
+    #          end
+    #        end # if data.awarded?
+    #      end # each data row for badge
+    #    end # badge in badges
+    #  end # each badge_type
+    #end # term in terms
     log_usage(:extra_details => {:start => @start, :finish => @finish})
   end
 
