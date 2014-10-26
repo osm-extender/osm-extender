@@ -22,8 +22,8 @@
             <ul>
               <%- if badges[type].count > 0 %>
                 <li><%= label %><ul>
-                  <%- badges[type].each do |badge| %>
-                    <li><%= @badge_names[badge] %></li>
+                  <%- badges[type].each do |(badge, level)| %>
+                    <li><%= @badges[badge].name %><% unless level.nil? %> (Level <%= level %>)<% end %></li>
                   <%- end %>
                 </ul>
               <%- end %>
@@ -38,13 +38,25 @@
       <%- @badge_types.each do |type, label| %>
         <li><%= label %> (<%= @badge_totals[type].values.sum %> awarded):
           <ul>
-            <%- @by_badge[type].each do |badge, members| %>
-              <li><%= @badge_names[badge] %> (<%= pluralize(@badge_totals[type][badge], 'member') %>):
-                <ul>
-                  <%- members.each do |member| %>
-                    <li><%= member %></li>
-                  <%- end %>
-                </ul>
+            <%- @by_badge[type].each do |badge, levels| %>
+              <li><%= @badges[badge].name %> (<%= pluralize(@badge_totals[type][badge], 'member') %>):
+                <%- levels.sort.each do |(level, members)| %>
+                  <ul>
+                    <%- if levels.size == 1 %>
+                        <%- members.each do |member| %>
+                          <li><%= member %><% unless level.nil? %> (Level <%= level %>)<% end %></li>
+                        <%- end %>
+                    <%- else %>
+                      <li>Level <%= level %> (<%= pluralize(members.size, 'member') %>):
+                        <ul>
+                          <%- members.each do |member| %>
+                            <li><%= member %></li>
+                          <%- end %>
+                        </ul>
+                      </li>
+                    <%- end %>
+                  </ul>
+                <%- end %>
               </li>
             <%- end %>
           </ul>

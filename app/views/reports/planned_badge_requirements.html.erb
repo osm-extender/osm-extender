@@ -61,8 +61,9 @@
   <p>
     The following badges will be completed if everyone turns up all the time.
     The process of working this out is fairly dumb, it doesn't take account of:<ul>
-      <li>Related badge requirements (unless they are also included in the programme)
       <li>Badges you have to add columns to (e.g. Nights away, Hikes, Time on the water)
+      <li>Badges which require an other badge to be completed (it will assume it'll be earnt even if the oter badge hasn't been earnt)
+      <li>Badges which require a requirement from another badge (it will assume it'll be earnt regardless of what's in that other badge's requirement)
     </ul>
     <%- unless (current_section.subscription_level > 1) %><b>Activity badges have been excluded as you need at least a Silver subscription in OSM to use them.</b><%- end %>
   </p>
@@ -71,8 +72,8 @@
     <ul>
       <%- @earnt_badges.sort.each do |(badge, level), member_names| %>
         <%- badge_name = "#{badge.type.to_s.titleize} - #{badge.name}" %>
-        <%- badge_name = badge.type.eql?(:staged) ? "#{badge_name} #{level}" : badge_name %>
-        <%- badge_stock = @badge_stock["#{badge.osm_long_key}_#{level}"] %>
+        <%- badge_name = badge.has_levels? ? "#{badge_name} #{level}" : badge_name %>
+        <%- badge_stock = @badge_stock["#{badge.id}_#{level}"] %>
         <li>
           <%= badge_name %> (x <%= member_names.count %>)
           <%- if @check_stock %><%= pos_neg((badge_stock >= member_names.count), "(you have #{badge_stock})") %><%- end %>

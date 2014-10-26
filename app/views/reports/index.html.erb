@@ -66,6 +66,8 @@
           <%- end %>
           <%= check_box_tag 'badge_completion_matrix[include_challenge]', 1, true %> <%= label_tag 'badge_completion_matrix[include_challenge]', 'Include challenge badges?' %><br/>
           <%= check_box_tag 'badge_completion_matrix[include_staged]', 1, true %> <%= label_tag 'badge_completion_matrix[include_staged]', 'Include staged activity and Partnership badges?' %><br/>
+          <%= check_box_tag 'badge_completion_matrix[hide_not_started]', 1, true %> <%= label_tag 'badge_completion_matrix[hide_not_started]', 'Hide badges noone has started' %><br/>
+          <%= check_box_tag 'badge_completion_matrix[hide_all_finished]', 1, true %> <%= label_tag 'badge_completion_matrix[hide_all_finished]', 'Hide badges everyone has finished' %><br/>
           <%= submit_tag 'Show badge completion matrix' %>
         <%- end %>
       <%- else %>
