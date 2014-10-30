@@ -38,7 +38,7 @@ class Report
             exclude ||= started[badge.identifier].eql?(0)
           end
           if options[:exclude_all_finished]
-            exclude the badge if everyone has finished it
+            # exclude the badge if everyone has finished it
             exclude ||= finished[badge.identifier].eql?(summary.count)
           end
           !exclude
