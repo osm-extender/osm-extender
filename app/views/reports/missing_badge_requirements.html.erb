@@ -28,8 +28,8 @@
                   <%- total_needed = 0 %>
                   <%- sections_in_badge = data.badge.modules.size %>
                   <%- data.badge.needed_per_module.each{ |section, needed| next unless section.is_a?(String); needed_in_section = (needed - data.gained_in_modules[section]); total_needed += needed_in_section if needed_in_section > 0} %>
-                  <%- total_needed = data.badge.completion_criteria[:min_requirements_completed] if data.badge.completion_criteria[:min_requirements_completed] > total_needed %>
-                  <%- sections_needed = data.badge.completion_criteria[:min_modules_required] - data.modules_gained.size %>
+                  <%- total_needed = data.badge.min_requirements_required if data.badge.min_requirements_required > total_needed %>
+                  <%- sections_needed = data.badge.min_modules_required - data.modules_gained.size %>
                   <%= data.badge.name %> (need to do <%= total_needed %>):
                   <ul>
                     <%- data.gained_in_modules.select{ |k,v| k.is_a?(String) }.each do |section, gained| %>

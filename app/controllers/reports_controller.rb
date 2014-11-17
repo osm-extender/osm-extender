@@ -352,7 +352,7 @@ class ReportsController < ApplicationController
       bs.each do |badge|
         @badge_names[type][badge.identifier] = badge.name
         badge.get_data_for_section(osm_api, current_section).each do |data|
-          next unless badge.completion_criteria[:add_columns_to_module].nil?
+          next if badge.add_columns?
           if data.started?
             @member_names[data.member_id] = "#{data[:first_name]} #{data[:last_name]}"
             @badge_data_by_member[data.member_id] ||= {}
@@ -487,8 +487,8 @@ class ReportsController < ApplicationController
     if @check_earnt
       # Get badges and datas
       badges = [Osm::CoreBadge, Osm::ActivityBadge, Osm::StagedBadge, Osm::ChallengeBadge].map{ |klass| klass.get_badges_for_section(osm_api, current_section) }.flatten
-      badges.select!{ |b| b.completion_criteria[:add_columns_to_module].nil? }
-      badges.select!{ |b| !b.name.eql?('Participation') }
+      badges.select!{ |b| !b.add_columns? }
+      badges.select!{ |b| b.requirements.size > 0 }
       datas = {} # key = "#{badge_id}_#{badge_version}" value = Array of datas
       requirements = {} # key = member_id value = shared requirements Hash
       badges.each do |badge|

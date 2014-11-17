@@ -11,11 +11,10 @@ gem 'cancan', '~> 1.6'
 
 
 # Misc
-#gem 'osm', '~> 1.2', '>= 1.2.14'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.15'       # For using the OSM API
 #gem 'osm', :path => '../../osm/code'
-gem 'osm', '1.2.15.dev.1'
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
-gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
+gem 'redcarpet', '~> 3.0', '< 3.2'    # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.6'       # Easily generate HTML emails (also does plain text counterpart)
   gem 'nokogiri', '~> 1.5', '>= 1.6.1'# Adapter for premailer
