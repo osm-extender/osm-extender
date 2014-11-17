@@ -11,7 +11,7 @@ class Report
       badges += Osm::StagedBadge.get_badges_for_section(user.osm_api, section) if options[:include_staged]
       badges += Osm::ChallengeBadge.get_badges_for_section(user.osm_api, section) if options[:include_challenge]
       badges += Osm::ActivityBadge.get_badges_for_section(user.osm_api, section) if options[:include_activity]
-      badges.select!{ |b| b.completion_criteria[:add_columns_to_module].nil? } # Skip badges we add columns to
+      badges.select!{ |b| !b.add_columns? } # Skip badges we add columns to
 
       unless badges.first.nil?
         data = badges.first.get_data_for_section(user.osm_api, section)
@@ -55,24 +55,26 @@ class Report
 
             # Workout if badge is completed or awarded
             if badge.has_levels? # Staged
-              met = :awarded if requirement.module_letter < ('a'..'z').to_a[i.awarded]
-              met ||= :completed if requirement.module_letter.eql?(('a'..'z').to_a[i.earnt - 1])
+              met = :awarded if requirement.mod.letter < ('a'..'z').to_a[i.awarded]
+              met ||= :completed if requirement.mod.letter.eql?(('a'..'z').to_a[i.earnt - 1])
             else # 'Normal'
               met = :awarded if i.awarded?
               met ||= :completed if i.earnt?
             end
 
             # Workout if the requirmeent is needed to complete the badge (if started)
-            if i.started?
-              unless badge.has_levels? && !requirement.module_letter.eql?(('a'..'z').to_a[i.started - 1])
-                if i.requirement_met?(requirement.field)
+            if met.nil? && i.started?
+              unless badge.has_levels? && !requirement.mod.letter.eql?(('a'..'z').to_a[i.started - 1])
+                if i.requirement_met?(requirement.id)
                   met = :yes
                 else
                   # Requirement not met but is it actually needed?
-                  needed_for_total = (i.total_gained < badge.completion_criteria[:min_requirements_completed])
-                  needed_for_module = !i.modules_gained.include?(requirement.module_letter)
-                  module_needed = true#(i.badge.completion_criteria[:requires] || []).select{ |a| a.include?(requirement.module_letter) }.map{ |a| a - [requirement.module_letter] }.map{ |a| a.map{ |b| i.modules_gained.include?(b) }.include?(true) }.include?(false)
-                  if needed_for_total || (needed_for_module && module_needed)
+                  needed_for_total = (i.total_gained < badge.min_requirements_required)
+                  modules_gained = i.modules_gained
+                  needed_for_module_total = (modules_gained.size < badge.min_modules_required)
+                  needed_for_module = !modules_gained.include?(requirement.mod.letter)
+                  modules_needed = i.badge.requires_modules.nil? ? [] : i.badge.requires_modules.select{ |a| !a.map{ |b| modules_gained.include?(b) }.include?(true) }.flatten
+                  if needed_for_total || (needed_for_module && needed_for_module_total) || (needed_for_module && modules_needed.include?(requirement.mod.letter))
                     met = :no
                   else
                     met = :not_needed
@@ -86,7 +88,7 @@ class Report
           matrix.push ([
             badge.type,
             badge.name,
-            (badge.has_levels? ? ('a'..'z').to_a.index(requirement.module_letter)+1 : requirement.module_letter),
+            (badge.has_levels? ? ('a'..'z').to_a.index(requirement.mod.letter)+1 : requirement.mod.letter),
             requirement.name,
             *met_data,
           ])

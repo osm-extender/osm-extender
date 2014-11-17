@@ -218,7 +218,7 @@
             <%= check_box_tag 'planned_badge_requirements[check_event_attendance]', 1, true %> <%= label_tag 'planned_badge_requirements[check_event_attendance]', 'Check event attendance? (those marked as "Yes", "Reserved", "Invited" or "Show in My.SCOUT" are assumed to be attending)' %>
           <%- end %>
           <br/>
-          <%= check_box_tag 'planned_badge_requirements[check_meeting_attendance]', 1, true %> <%= label_tag 'planned_badge_requirements[check_meeting_attendance]', 'Check meeting attendance? (those not marked as absent (either known or unknown) are assumed to be attending)' %>
+          <%= check_box_tag 'planned_badge_requirements[check_meeting_attendance]', 1, true %> <%= label_tag 'planned_badge_requirements[check_meeting_attendance]', 'Check meeting attendance? (those not marked as absent are assumed to be attending)' %>
           <br/>
           <%= submit_tag 'Show planned badge requirements' %>
         <%- end %>
