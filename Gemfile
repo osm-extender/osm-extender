@@ -35,7 +35,7 @@ gem 'daemon-spawn', '~> 0.4'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
-  gem 'libv8', '~> 3.16', '>= 3.16.14.03', '< 3.16.14.4'
+  gem 'libv8', '~> 3.16', '>= 3.16.14.7'
 gem 'jquery-rails', '~> 3.0'
 gem 'jquery-ui-rails', '~> 5.0'
 gem 'sass-rails', '~> 4.0'
@@ -50,7 +50,7 @@ group :development do
   gem 'better_errors', '~> 1.0'       # See nicer exception pages with more useful information
 # better_errors 2.0.0 requires ruby 2.0.0
   gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
-  gem 'meta_request', '~> 0.2.2'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+  gem 'meta_request', '~> 0.3.4'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
   gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
   gem 'debugger', '~> 1.6', :require=>false
 end
@@ -85,7 +85,7 @@ end
 
 group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring', '~> 1.1'
+  gem 'spring', '~> 1.2' 
   gem 'spring-commands-rspec', '~> 1.0'
   gem 'spring-commands-cucumber', '~> 1.0'
 end
