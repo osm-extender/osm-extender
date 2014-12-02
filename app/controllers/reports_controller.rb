@@ -182,7 +182,7 @@ class ReportsController < ApplicationController
       :challenge => 'Challenge',
       :staged => 'Staged Activity and Partnership',
     }
-    @badge_types[:activity] = 'Activity' unless (current_section.subscription_level < 2) # Bronze does not include activity badges
+    @badge_types[:activity] = 'Activity' unless current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
     @badges = {}
     @badge_types.keys.each do |badge_type|
       badge_clases[badge_type].get_badges_for_section(osm_api, current_section).each do |badge|
@@ -294,7 +294,7 @@ class ReportsController < ApplicationController
       :include_core => @my_params[:include_core].eql?('1'),
       :include_challenge => @my_params[:include_challenge].eql?('1'),
       :include_staged => @my_params[:include_staged].eql?('1'),
-      :include_activity => @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1), # Bronze does not include activity badges
+      :include_activity => @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
       :exclude_not_started => @my_params[:hide_not_started].eql?('1'),
       :exclude_all_finished => @my_params[:hide_all_finished].eql?('1'),
     }
@@ -335,7 +335,7 @@ class ReportsController < ApplicationController
     @badge_types[:core] = 'Core' if @my_params[:include_core].eql?('1')
     @badge_types[:challenge] = 'Challenge' if @my_params[:include_challenge].eql?('1')
     @badge_types[:staged] = 'Staged Activity and Partnership' if @my_params[:include_staged].eql?('1')
-    if @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+    if @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
       @badge_types[:activity] = 'Activity'
     end
 
@@ -362,14 +362,14 @@ class ReportsController < ApplicationController
             @badge_data_by_member[data.member_id][type].push data
             if badge.has_levels?
               # Get requirements for only the started level
-              requirements = badge.requirements.select{ |r| r.module_letter.eql?(('a'..'z').to_a[data.started-1])}
+              requirements = badge.requirements.select{ |r| r.mod.letter.eql?(('a'..'z').to_a[data.started-1])}
             else
               requirements = badge.requirements
             end
             requirements.each do |requirement|
-              unless data.requirement_met?(requirement.field)
-                @badge_data_by_badge[type][badge_key][requirement.field] ||= []
-                @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
+              unless data.requirement_met?(requirement.id)
+                @badge_data_by_badge[type][badge_key][requirement.id] ||= []
+                @badge_data_by_badge[type][badge_key][requirement.id].push data.member_id
               end
             end
           end
@@ -392,10 +392,8 @@ class ReportsController < ApplicationController
 
   def planned_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS or return
-    require_osm_permission(:read, [:badge, :member, :register]) or return
-    if @my_params[:check_event_attendance].eql?('1') && (current_section.subscription_level > 1) # Only for silver and above
-      require_osm_permission(:read, :events) or return
-    end
+    require_osm_permission(:read, :programme) or return
+    require_osm_permission(:read, :events) or return if current_section.subscription_at_least?(:silver)
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
@@ -406,10 +404,25 @@ class ReportsController < ApplicationController
     @start, @finish = dates.sort
     @check_stock = @my_params[:check_stock].eql?('1')
     @check_earnt = @my_params[:check_earnt].eql?('1')
+    check_participation = @my_params[:check_participation].eql?('1')
     check_event_attendance = @my_params[:check_event_attendance].eql?('1')
     check_meeting_attendance = @my_params[:check_meeting_attendance].eql?('1')
     @badge_stock = @check_stock ? Osm::Badges.get_stock(osm_api, current_section) : {}
     @badge_stock.default = 0
+
+    # Check OSM access for optional stuff
+    if @check_earnt
+      require_osm_permission(:read, :badge) or return
+    end
+    if check_event_attendance
+      require_section_subscription(:silver) or return
+    end
+    if check_meeting_attendance
+      require_osm_permission(:read, :register) or return
+    end
+    if check_participation
+      require_osm_permission(:read, :member) or return
+    end
 
     badge_by_type = {
       'activity' => Osm::ActivityBadge,
@@ -429,7 +442,7 @@ class ReportsController < ApplicationController
     @earnt_badges = {}
 
     terms = Osm::Term.get_for_section(osm_api, current_section).select{ |term| !(term.finish < @start) && !(term.start > @finish) }
-    events, meetings = Report.get_calendar_items_for_section(osm_api, current_section, start: @start, finish: @finish, include_events: (current_section.subscription_level > 1), include_meetings: true).values_at(:events, :meetings)
+    events, meetings = Report.get_calendar_items_for_section(osm_api, current_section, start: @start, finish: @finish, include_events: current_section.subscription_at_least?(:silver), include_meetings: true).values_at(:events, :meetings)
 
 
     # For events
@@ -529,8 +542,9 @@ class ReportsController < ApplicationController
           end
         end
       end
+    end # if @check_earnt
 
-      # Get participation badges
+    if check_participation
       badge = Osm::CoreBadge.get_badges_for_section(osm_api, current_section).select{ |b| b.name == 'Participation' }.first
       Osm::Member.get_for_section(osm_api, current_section).each do |member|
         next if member.grouping_id == -2  # Leaders don't get these participation badges
@@ -541,7 +555,7 @@ class ReportsController < ApplicationController
           @earnt_badges[key].push member.name
         end
       end
-    end # if @check_earnt
+    end # if check_participation
 
     log_usage
   end

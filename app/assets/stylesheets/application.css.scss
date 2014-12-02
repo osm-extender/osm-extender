@@ -3,7 +3,7 @@
  * Stylesheets (or manifests) for specific controllers should be
  * called <controller>.css(.scss), for example projects.css.
  *= require normalize-rails
- *= require jquery.ui.all
+ *= require jquery-ui
  *= require jquery.toastmessage
  *= require scaffolds
  *= require_self

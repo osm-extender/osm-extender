@@ -4,8 +4,13 @@ module ApplicationHelper
   # @param text the text in markdown format
   # @returns an interpreted html_safe string representation of text
   def markdown(text)
-    options = [:hard_wrap, :autolink, :no_intraemphasis, :filter_html]
-    RedcarpetCompat.new(text, *options).to_html.html_safe
+    unless defined?(@@markdown)
+      parse_options = {autolink: true, underline: true, hightlight: true, strikethrough: true, tables: true, no_intra_emphasis: true, fenced_code_blocks: true, disable_indented_code_blocks: true}
+      renderer_options = {escape_html: true, hard_wrap: true, prettify: true}
+      renderer = Redcarpet::Render::HTML.new(renderer_options)
+      @@markdown = Redcarpet::Markdown.new(renderer, parse_options)
+    end
+    @@markdown.render(text).html_safe
   end
 
   # Display either yes or no highlighted in green or red

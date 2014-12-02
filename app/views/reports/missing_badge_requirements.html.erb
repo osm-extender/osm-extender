@@ -27,7 +27,7 @@
                 <li>
                   <%- total_needed = 0 %>
                   <%- sections_in_badge = data.badge.modules.size %>
-                  <%- data.badge.needed_per_module.each{ |section, needed| next unless section.is_a?(String); needed_in_section = (needed - data.gained_in_modules[section]); total_needed += needed_in_section if needed_in_section > 0} %>
+                  <%- data.badge.needed_per_module.each{ |section, needed| next unless section.is_a?(String); needed_in_section = (needed - (data.gained_in_modules[section] || 0)); total_needed += needed_in_section if needed_in_section > 0} %>
                   <%- total_needed = data.badge.min_requirements_required if data.badge.min_requirements_required > total_needed %>
                   <%- sections_needed = data.badge.min_modules_required - data.modules_gained.size %>
                   <%= data.badge.name %> (need to do <%= total_needed %>):
@@ -40,8 +40,8 @@
                           Module <%= section.upcase %> (need to do <%= needed_from_section %>):
                           <ul>
 <%- end %>
-                            <%- data.badge.requirements.select{ |r| r.module_letter.eql?(section)}.each do |r| %>
-                              <%- unless data.requirement_met?(r.field) %>
+                            <%- data.badge.requirements.select{ |r| r.mod.letter.eql?(section)}.each do |r| %>
+                              <%- unless data.requirement_met?(r.id) %>
                                 <li>
                                   <%= r.name %>
                                 </li>
@@ -73,8 +73,8 @@
                 <%- stage = ('a'..'z').to_a[data.started - 1] %>
                 <%= data.badge.name %> <%= data.started %> (need to do <%= data.badge.needed_per_module[stage] - data.gained_in_modules[stage] %>):
                 <ul>
-                  <%- data.badge.requirements.select{ |r| r.module_letter.eql?(stage)}.each do |r| %>
-                    <%- unless data.requirement_met?(r.field) %>
+                  <%- data.badge.requirements.select{ |r| r.mod.letter.eql?(stage)}.each do |r| %>
+                    <%- unless data.requirement_met?(r.id) %>
                       <li>
                         <%= r.name %>
                       </li>

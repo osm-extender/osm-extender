@@ -1,6 +1,6 @@
 <%= page_title 'Due Badges Report' %>
 
-<%- if current_section.subscription_level < 2 %>
+<%- unless current_section.subscription_at_least?(:silver) %>
   <p>Activity badges have been excluded as the section does not have a silver (or higher) subscription in OSM.</p>
 <%- end %>
 

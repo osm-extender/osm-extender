@@ -110,8 +110,23 @@ class ApplicationController < ActionController::Base
     return 'No permissions'
   end
 
+  # Require that the section has a given subscription level (or higher)
+  # If not redirect them to my_page and set an error flash
+  # @param level [Fixnum, Symbol] the subscription level required
+  # @param section [Osm::Section, Fixnum, #to_i] the section to check
+  # @return [Boolean] Whether the section has that level of subscription
+  def require_section_subscription(level, section=current_section)
+    section = Osm::Section.get(api, section) unless section.is_a?(Osm::Section)
+    if section.nil? || !section.subscription_at_least?(level)
+      flash[:error] = "#{section.nil? ? 'Unknown section' : section.name} does not have the right subscription level for that (#{Osm::SUBSCRIPTION_LEVEL_NAMES[level]} subscription or better required)."
+      redirect_back_or_to(current_user ? my_page_path : signin_path)
+      return false
+    end
+    return true
+  end
+
   # Ensure the user has a given OSM permission
-  # if not redirect them to the osm permissions page and set an instruction flash
+  # if not redirect them to the osm permissions page and set an error flash
   # @param permission_to the action which is being checked (:read or :write)
   # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
   # @return [Boolean] Whether the user has been given the permission

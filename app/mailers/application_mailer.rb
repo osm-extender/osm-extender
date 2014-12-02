@@ -1,6 +1,6 @@
 class ApplicationMailer < ActionMailer::Base
   layout 'mail'
-  helper 'application'
+  helper ApplicationHelper
   helper_method :routes
 
   def routes

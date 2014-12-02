@@ -11,10 +11,10 @@ gem 'cancan', '~> 1.6'
 
 
 # Misc
-gem 'osm', '~> 1.2', '>= 1.2.15'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.16'       # For using the OSM API
 #gem 'osm', :path => '../../osm/code'
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
-gem 'redcarpet', '~> 3.0', '< 3.2'    # Format FAQ Answers, Announcements etc.
+gem 'redcarpet', '~> 3.2.0'           # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.6'       # Easily generate HTML emails (also does plain text counterpart)
   gem 'nokogiri', '~> 1.5', '>= 1.6.1'# Adapter for premailer
@@ -24,7 +24,7 @@ gem 'paper_trail', '~> 3.0.0'         # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in
-gem 'icalendar', '~> 1.5'             # Do stuff with ICS format files
+gem 'icalendar', '~> 2.2'             # Do stuff with ICS format files
 
 
 # Jobs in background
@@ -35,9 +35,9 @@ gem 'daemon-spawn', '~> 0.4'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
-  gem 'libv8', '~> 3.16', '>= 3.16.14.03', '< 3.16.14.4'
+  gem 'libv8', '~> 3.16', '>= 3.16.14.7'
 gem 'jquery-rails', '~> 3.0'
-gem 'jquery-ui-rails', '~> 4.0'
+gem 'jquery-ui-rails', '~> 5.0'
 gem 'sass-rails', '~> 4.0'
 gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 2.0'
@@ -50,7 +50,7 @@ group :development do
   gem 'better_errors', '~> 1.0'       # See nicer exception pages with more useful information
 # better_errors 2.0.0 requires ruby 2.0.0
   gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
-  gem 'meta_request', '~> 0.2.2'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+  gem 'meta_request', '~> 0.3.4'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
   gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
   gem 'debugger', '~> 1.6', :require=>false
 end
@@ -85,7 +85,7 @@ end
 
 group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring', '~> 1.1'
+  gem 'spring', '~> 1.2' 
   gem 'spring-commands-rspec', '~> 1.0'
   gem 'spring-commands-cucumber', '~> 1.0'
 end
