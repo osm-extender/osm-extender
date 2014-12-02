@@ -203,7 +203,7 @@
     <h2 class="ui-accordion-header"><a href="#">Planned Badge Requirements</a></h2>
     <div class="ui-accordion-content">
       <p>
-        This report allows you to see which badge requirements you are planning on covering between two dates.
+        This report allows you to see which badge requirements you are planning on covering between two dates as well as what badges will be earnt by your members.
       </p>
       <%- if has_osm_permission?(:read, [:programme, :events]) %>
         <%= form_tag planned_badge_requirements_report_path, :method=>:get do %>
@@ -236,6 +236,9 @@
             <%- if has_osm_permission?(:read, :member) %>
               <%= check_box_tag 'planned_badge_requirements[check_participation]', 1, true %>
               <%= label_tag 'planned_badge_requirements[check_participation]', 'Check who will earn paritipation badges' %>
+              <br/>
+              <%= check_box_tag 'planned_badge_requirements[check_birthday]', 1, true %>
+              <%= label_tag 'planned_badge_requirements[check_birthday]', 'Check who will earn birthday badges' %>
            <%- else %>
              <input type="checkbox" disabled="disabled">
              With read access to members you can additionally find which participation badges will be due.
