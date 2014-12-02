@@ -404,10 +404,25 @@ class ReportsController < ApplicationController
     @start, @finish = dates.sort
     @check_stock = @my_params[:check_stock].eql?('1')
     @check_earnt = @my_params[:check_earnt].eql?('1')
+    check_participation = @my_params[:check_participation].eql?('1')
     check_event_attendance = @my_params[:check_event_attendance].eql?('1')
     check_meeting_attendance = @my_params[:check_meeting_attendance].eql?('1')
     @badge_stock = @check_stock ? Osm::Badges.get_stock(osm_api, current_section) : {}
     @badge_stock.default = 0
+
+    # Check OSM access for optional stuff
+    if @check_earnt
+      require_osm_permission(:read, :badge) or return
+    end
+    if check_event_attendance
+      require_section_subscription(:silver) or return
+    end
+    if check_meeting_attendance
+      require_osm_permission(:read, :register) or return
+    end
+    if check_participation
+      require_osm_permission(:read, :member) or return
+    end
 
     badge_by_type = {
       'activity' => Osm::ActivityBadge,
@@ -427,7 +442,7 @@ class ReportsController < ApplicationController
     @earnt_badges = {}
 
     terms = Osm::Term.get_for_section(osm_api, current_section).select{ |term| !(term.finish < @start) && !(term.start > @finish) }
-    events, meetings = Report.get_calendar_items_for_section(osm_api, current_section, start: @start, finish: @finish, include_events: (current_section.subscription_level > 1), include_meetings: true).values_at(:events, :meetings)
+    events, meetings = Report.get_calendar_items_for_section(osm_api, current_section, start: @start, finish: @finish, include_events: current_section.subscription_at_least?(:silver), include_meetings: true).values_at(:events, :meetings)
 
 
     # For events
@@ -527,8 +542,9 @@ class ReportsController < ApplicationController
           end
         end
       end
+    end # if @check_earnt
 
-      # Get participation badges
+    if check_participation
       badge = Osm::CoreBadge.get_badges_for_section(osm_api, current_section).select{ |b| b.name == 'Participation' }.first
       Osm::Member.get_for_section(osm_api, current_section).each do |member|
         next if member.grouping_id == -2  # Leaders don't get these participation badges
@@ -539,7 +555,7 @@ class ReportsController < ApplicationController
           @earnt_badges[key].push member.name
         end
       end
-    end # if @check_earnt
+    end # if check_participation
 
     log_usage
   end

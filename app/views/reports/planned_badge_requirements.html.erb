@@ -64,7 +64,7 @@
       <li>Badges you have to add columns to (e.g. Nights away, Hikes, Time on the water)
       <li>Badges which require another badge to be completed (it will assume it'll be earnt even if the oter badge hasn't been earnt)
     </ul>
-    <%- unless (current_section.subscription_level > 1) %><b>Activity badges have been excluded as you need at least a Silver subscription in OSM to use them.</b><%- end %>
+    <%- unless current_section.subscription_at_least?(:silver) %><b>Activity badges have been excluded as you need at least a Silver subscription in OSM to use them.</b><%- end %>
   </p>
 
   <%- unless @earnt_badges.empty? %>

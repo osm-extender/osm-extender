@@ -7,7 +7,7 @@
       <li>Reports (Event attendance)</li>
       <li>Search Members</li>
       <li>OSM Export</li>
-      <li>Planned badge requirements report</li>
+      <li>Planned badge requirements report (check participation badges)</li>
     </ul></td>
     <td>Read</td>
     <td><%= pos_neg api_has_osm_permission?(:read, :member, current_user, section), osm_api_permission_human_friendly(:member, current_user, section) %></td>
@@ -23,6 +23,7 @@
         <li>Badge completion matrix</li>
         <li>Due badges</li>
         <li>Missing badge requirements</li>
+        <li>Planned badge requirements (check earnt badges)</li>
       </ul></li>
     </ul></td>
     <td>Read</td>
@@ -52,7 +53,7 @@
           <li>Not seen</li>
           <li>Advised absences</li>
         </ul></li>
-      <li>Planned badge requirements report</li>
+      <li>Planned badge requirements report (check meeting attendance)</li>
       </ul>
     </td>
     <td>Read</td>
@@ -69,7 +70,7 @@
       <li>OSM export</li>
       <li>Reports<ul>
         <li>Calendar</li>
-        <li>Planned badge requirements (slow method)</li>
+        <li>Planned badge requirements</li>
       </ul></li>
     </ul></td>
     <td>Read</td>
@@ -84,7 +85,7 @@
       <li>Reports:<ul>
         <li>Calendar</li>
         <li>Event attendance</li>
-        <li>Planned badge requirements</li>
+        <li>Planned badge requirements (unless you only have a Bronze subscription to OSM)</li>
       </li>
     </ul></td>
     <td>Read</td>
