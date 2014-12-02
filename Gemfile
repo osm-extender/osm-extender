@@ -11,7 +11,7 @@ gem 'cancan', '~> 1.6'
 
 
 # Misc
-gem 'osm', '~> 1.2', '>= 1.2.15'       # For using the OSM API
+gem 'osm', '~> 1.2', '>= 1.2.16'       # For using the OSM API
 #gem 'osm', :path => '../../osm/code'
 gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.2.0'           # Format FAQ Answers, Announcements etc.

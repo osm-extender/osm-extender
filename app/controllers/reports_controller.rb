@@ -182,7 +182,7 @@ class ReportsController < ApplicationController
       :challenge => 'Challenge',
       :staged => 'Staged Activity and Partnership',
     }
-    @badge_types[:activity] = 'Activity' unless (current_section.subscription_level < 2) # Bronze does not include activity badges
+    @badge_types[:activity] = 'Activity' unless current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
     @badges = {}
     @badge_types.keys.each do |badge_type|
       badge_clases[badge_type].get_badges_for_section(osm_api, current_section).each do |badge|
@@ -294,7 +294,7 @@ class ReportsController < ApplicationController
       :include_core => @my_params[:include_core].eql?('1'),
       :include_challenge => @my_params[:include_challenge].eql?('1'),
       :include_staged => @my_params[:include_staged].eql?('1'),
-      :include_activity => @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1), # Bronze does not include activity badges
+      :include_activity => @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
       :exclude_not_started => @my_params[:hide_not_started].eql?('1'),
       :exclude_all_finished => @my_params[:hide_all_finished].eql?('1'),
     }
@@ -335,7 +335,7 @@ class ReportsController < ApplicationController
     @badge_types[:core] = 'Core' if @my_params[:include_core].eql?('1')
     @badge_types[:challenge] = 'Challenge' if @my_params[:include_challenge].eql?('1')
     @badge_types[:staged] = 'Staged Activity and Partnership' if @my_params[:include_staged].eql?('1')
-    if @my_params[:include_activity].eql?('1') && (current_section.subscription_level > 1) # Bronze does not include activity badges
+    if @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
       @badge_types[:activity] = 'Activity'
     end
 
@@ -392,10 +392,8 @@ class ReportsController < ApplicationController
 
   def planned_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS or return
-    require_osm_permission(:read, [:badge, :member, :register]) or return
-    if @my_params[:check_event_attendance].eql?('1') && (current_section.subscription_level > 1) # Only for silver and above
-      require_osm_permission(:read, :events) or return
-    end
+    require_osm_permission(:read, :programme) or return
+    require_osm_permission(:read, :events) or return if current_section.subscription_at_least?(:silver)
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
