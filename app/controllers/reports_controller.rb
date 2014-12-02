@@ -362,14 +362,14 @@ class ReportsController < ApplicationController
             @badge_data_by_member[data.member_id][type].push data
             if badge.has_levels?
               # Get requirements for only the started level
-              requirements = badge.requirements.select{ |r| r.module_letter.eql?(('a'..'z').to_a[data.started-1])}
+              requirements = badge.requirements.select{ |r| r.mod.letter.eql?(('a'..'z').to_a[data.started-1])}
             else
               requirements = badge.requirements
             end
             requirements.each do |requirement|
-              unless data.requirement_met?(requirement.field)
-                @badge_data_by_badge[type][badge_key][requirement.field] ||= []
-                @badge_data_by_badge[type][badge_key][requirement.field].push data.member_id
+              unless data.requirement_met?(requirement.id)
+                @badge_data_by_badge[type][badge_key][requirement.id] ||= []
+                @badge_data_by_badge[type][badge_key][requirement.id].push data.member_id
               end
             end
           end
