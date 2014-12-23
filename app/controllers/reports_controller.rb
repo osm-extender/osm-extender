@@ -402,11 +402,12 @@ class ReportsController < ApplicationController
       return
     end
     @start, @finish = dates.sort
-    @check_stock = @my_params[:check_stock].eql?('1')
     @check_earnt = @my_params[:check_earnt].eql?('1')
-    check_participation = @my_params[:check_participation].eql?('1')
-    check_event_attendance = @my_params[:check_event_attendance].eql?('1')
-    check_meeting_attendance = @my_params[:check_meeting_attendance].eql?('1')
+    @check_stock = @my_params[:check_stock].eql?('1') && @check_earnt
+    check_participation = @my_params[:check_participation].eql?('1') && @check_earnt
+    check_birthday = @my_params[:check_birthday].eql?('1') && @check_earnt
+    check_event_attendance = @my_params[:check_event_attendance].eql?('1') && @check_earnt
+    check_meeting_attendance = @my_params[:check_meeting_attendance].eql?('1') && @check_earnt
     @badge_stock = @check_stock ? Osm::Badges.get_stock(osm_api, current_section) : {}
     @badge_stock.default = 0
 
@@ -420,7 +421,7 @@ class ReportsController < ApplicationController
     if check_meeting_attendance
       require_osm_permission(:read, :register) or return
     end
-    if check_participation
+    if check_participation || check_birthday
       require_osm_permission(:read, :member) or return
     end
 
@@ -430,8 +431,6 @@ class ReportsController < ApplicationController
       'challenge' => Osm::ChallengeBadge,
       'core' => Osm::CoreBadge,
     }
-    badges = {}
-    badge_data = {}
 
     @by_badge = {}
     @by_meeting = {}
@@ -501,10 +500,9 @@ class ReportsController < ApplicationController
       # Get badges and datas
       badges = [Osm::CoreBadge, Osm::ActivityBadge, Osm::StagedBadge, Osm::ChallengeBadge].map{ |klass| klass.get_badges_for_section(osm_api, current_section) }.flatten
       badges.select!{ |b| !b.add_columns? }
-      badges.select!{ |b| b.requirements.size > 0 }
       datas = {} # key = "#{badge_id}_#{badge_version}" value = Array of datas
       requirements = {} # key = member_id value = shared requirements Hash
-      badges.each do |badge|
+      badges.select{ |b| b.requirements.size > 0 }.each do |badge| # Each badge with requirements
         badge.get_data_for_section(osm_api, current_section).each do |data|
           # All datas for a member share a requirements hash 
           requirements[data.member_id] ||= DirtyHashy.new
@@ -542,20 +540,36 @@ class ReportsController < ApplicationController
           end
         end
       end
-    end # if @check_earnt
 
-    if check_participation
-      badge = Osm::CoreBadge.get_badges_for_section(osm_api, current_section).select{ |b| b.name == 'Participation' }.first
-      Osm::Member.get_for_section(osm_api, current_section).each do |member|
-        next if member.grouping_id == -2  # Leaders don't get these participation badges
-        next_level_due = ((Time.zone.now - member.started.to_time) / 1.year).ceil
-        if (@start..@finish).include?(member.started + next_level_due.years)
-          key = [badge, next_level_due]
-          @earnt_badges[key] ||= []
-          @earnt_badges[key].push member.name
+      if check_participation
+        badge = badges.select{ |b| b.name == 'Participation' }.first
+        (members ||= Osm::Member.get_for_section(osm_api, current_section)).each do |member|
+          next if member.grouping_id == -2  # Leaders don't get these participation badges
+          next_level_due = ((@start.to_time - member.started.to_time) / 1.year).ceil
+          if (@start..@finish).include?(member.started + next_level_due.years)
+            key = [badge, next_level_due]
+            @earnt_badges[key] ||= []
+            @earnt_badges[key].push member.name
+          end
         end
-      end
-    end # if check_participation
+      end # if check_participation
+
+      if check_birthday
+        birthday_badges = Hash[badges.select{ |b| !!b.name.match(/birthday/i) }.map{ |b| [b.name.match(/(\d+)(?:st|nd|th)/)[1].to_i, b] }]
+        (members ||= Osm::Member.get_for_section(osm_api, current_section)).each do |member|
+          next_birthday = ((@start.to_time - member.date_of_birth.to_time) / 1.year).ceil
+          if (@start..@finish).include?(member.date_of_birth + next_birthday.years)
+            badge = birthday_badges[next_birthday]
+            unless badge.nil?
+              key = [badge, 1]
+              @earnt_badges[key] ||= []
+              @earnt_badges[key].push member.name
+            end
+          end
+        end
+      end # check_birthday
+
+    end # if @check_earnt
 
     log_usage
   end
