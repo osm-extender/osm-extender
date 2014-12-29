@@ -2,7 +2,7 @@ namespace :scheduled  do
 
   def exception_raised(task, exception)
     puts "\t\tAn Exception was raised (#{exception.message})"
-    NotifierMailer.rake_exception(task, exception).deliver
+    NotifierMailer.rake_exception(task, exception).deliver_now
   end
 
   desc "Delete old sessions"
@@ -57,20 +57,20 @@ namespace :scheduled  do
           todays_hash = list.get_hash_of_addresses
           unless todays_hash.eql?(list.last_hash_of_addresses)
             list.update_attributes(:last_hash_of_addresses => todays_hash)
-            NotifierMailer.email_list_changed(list).deliver
+            NotifierMailer.email_list_changed(list).deliver_now
           end
         rescue Osm::Forbidden => exception
           puts "\t\tUser is fobidden from fetching data"
           forbidden_emails_sent[list.user_id] ||= []
           unless forbidden_emails_sent[list.user_id].include?(list.section_id)
-            NotifierMailer.email_list_changed__forbidden(list, exception).deliver
+            NotifierMailer.email_list_changed__forbidden(list, exception).deliver_now
             forbidden_emails_sent[list.user_id].push list.section_id
           end
         rescue Osm::Error::NoCurrentTerm => exception
           puts "\t\tNo current term for section"
           noterm_emails_sent[list.user_id] ||= []
           unless noterm_emails_sent[list.user_id].include?(list.section_id)
-            NotifierMailer.email_list_changed__no_current_term(list, exception).deliver
+            NotifierMailer.email_list_changed__no_current_term(list, exception).deliver_now
             noterm_emails_sent[list.user_id].push list.section_id
           end
         rescue Exception => exception

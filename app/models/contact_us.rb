@@ -13,7 +13,7 @@ class ContactUs
 
   def send_contact
     if valid?
-      return NotifierMailer.contact_form_submission(self).deliver
+      return NotifierMailer.contact_form_submission(self).deliver_now
     else
       return nil
     end

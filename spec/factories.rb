@@ -13,7 +13,7 @@ FactoryGirl.define do
   end
 
   factory :shared_event do
-    ignore do
+    transient do
       user_email_address 'alice@example.com'
     end
 
