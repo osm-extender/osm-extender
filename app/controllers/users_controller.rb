@@ -102,7 +102,7 @@ class UsersController < ApplicationController
     user.send((User.sorcery_config.activation_token_expires_at_attribute_name.to_s + '='), (Time.now.utc + User.sorcery_config.activation_token_expiration_period).to_datetime)
     user.save
 
-    if UserMailer.activation_needed(user).deliver
+    if UserMailer.activation_needed(user).deliver_now
       redirect_to(users_path, :notice => 'Activation instructions have been sent to the user.')
     else
       redirect_to(users_path, :error => 'Activation instructions have NOT been sent to the user.')

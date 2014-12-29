@@ -11,10 +11,7 @@ OSMExtender::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
-
-  # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
+  config.serve_static_files = false
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin

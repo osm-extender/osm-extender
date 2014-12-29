@@ -4,13 +4,7 @@ require 'rails/all'
 require 'csv'
 
 
-unless Rails.env.development? && File.basename($0).eql?('rails')
-  quietly do
-    Bundler.require(:default, Rails.env) if defined?(Bundler)
-  end
-else
-  Bundler.require(:default, Rails.env) if defined?(Bundler)
-end
+Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 
 module OSMExtender

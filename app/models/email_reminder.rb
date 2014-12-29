@@ -51,12 +51,12 @@ class EmailReminder < ActiveRecord::Base
           data = get_data
           send_to.each do |person|
             if person[:share].nil? || (person[:share].subscribed? || options[:skip_subscribed_check])
-              ReminderMailer.reminder_email(self, data, person).deliver
+              ReminderMailer.reminder_email(self, data, person).deliver_now
             end
           end
         rescue Exception => exception
-          ReminderMailer.failed(self).deliver
-          NotifierMailer.reminder_failed(self, exception).deliver
+          ReminderMailer.failed(self).deliver_now
+          NotifierMailer.reminder_failed(self, exception).deliver_now
         end
       end
     end
