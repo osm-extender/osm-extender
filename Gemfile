@@ -70,7 +70,7 @@ end
 
 
 group :test do
-  gem 'rspec-rails', '~> 2.11'
+  gem 'rspec-rails', '~> 3.1'
   gem 'factory_girl', '~> 4.1'
   gem 'cucumber-rails', '~> 1.3'
   gem 'webrat', '~> 0.7'
