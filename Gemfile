@@ -61,11 +61,25 @@ end
 
 
 group :staging, :production do
-  gem 'mysql2', '~> 0.3.11'           # Use a mysql database
   gem 'unicorn', '~> 4.3'             # Use unicorn as the web server
+  gem 'connection_pool', '~> 2.0'     # Allow dalli etc. to use a pool of connections
+end
+
+# Database choices (for production/staging)
+group :postgres do
+  gem 'pg', '~>0.18'                  # Use a postgresql database
+end
+group :mysql do
+  gem 'mysql2', '~> 0.3.11'           # Use a mysql database
+end
+
+# Cache choices (for production/staging)
+group :memcache do
   gem 'dalli', '~> 2.6'               # Using memcache as the cache store
   gem 'kgio', '~> 2.9'                # Give dalli a performace boost
-  gem 'connection_pool', '~> 2.0'     # Allow dalli to use a pool of connections
+end
+group :redis do
+  gem 'redis-rails', '~>4.0'          # Using redis as the cache store
 end
 
 

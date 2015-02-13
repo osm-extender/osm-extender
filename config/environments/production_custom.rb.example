@@ -17,10 +17,19 @@ OSMExtender::Application.configure do
   #}
   # For memcache              
   #config.cache_store = :dalli_store, 'server.name', {
-  #  :expires_in => 10.minutes,
-  #  :race_condition_ttl => 2.minutes,
-  #  :namespace => 'osmx.staging',
-  #  :pool_size => 5
+  #  expires_in: 10.minutes,
+  #  race_condition_ttl: 2.minutes,
+  #  namespace: 'osmx.production',
+  #  pool_size: 5
+  #}
+  # For redis
+  #config.cache_store = :redis_store, {
+  #  host: '',
+  #  port: ,
+  #  db: ,
+  #  password: '',
+  #  expires_in: 10.minutes,
+  #  namespace: 'osmx.production'
   #}
 end
 
