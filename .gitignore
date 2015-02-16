@@ -3,6 +3,7 @@ db/*.sqlite3
 db/*.sqlite3-journal
 log/*
 tmp/
+.rbenv-version
 .sass-cache/
 config/environments/*_custom.rb
 config/database.yml
