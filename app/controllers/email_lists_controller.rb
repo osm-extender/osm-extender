@@ -109,11 +109,13 @@ class EmailListsController < ApplicationController
     data = {}
     groupings = get_all_groupings
     Osm::Section.get_all(osm_api).each do |section|
-      data[section.id] = {
-        'fields' => section.column_names.select{ |k,v| [:email1, :email2, :email3, :email4].include?(k) },
-        'grouping_name' => get_grouping_name(section.type),
-        'groupings' => groupings[section.id],
-      }
+      if has_osm_permission?(:read, :member, current_user, section)
+        data[section.id] = {
+          'fields' => section.column_names.select{ |k,v| [:email1, :email2, :email3, :email4].include?(k) },
+          'grouping_name' => get_grouping_name(section.type),
+          'groupings' => groupings[section.id],
+        }
+      end
     end
     return data.to_json.gsub('"', '\"').html_safe
   end
