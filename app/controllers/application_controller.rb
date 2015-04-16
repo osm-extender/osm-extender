@@ -330,8 +330,10 @@ class ApplicationController < ActionController::Base
     @groupings = {}
     Osm::Section.get_all(osm_api).each do |section|
       @groupings[section.id] = {}
-      Osm::Grouping.get_for_section(osm_api, section).each do |grouping|
-        @groupings[section.id][grouping.name] = grouping.id
+      if has_osm_permission?(:read, :member, current_user, section)
+        Osm::Grouping.get_for_section(osm_api, section).each do |grouping|
+          @groupings[section.id][grouping.name] = grouping.id
+        end
       end
     end
     return @groupings
