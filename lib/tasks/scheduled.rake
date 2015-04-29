@@ -104,8 +104,9 @@ namespace :scheduled  do
       $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Paper Trails"
       deleted = 0
       [PaperTrail::Version, UserVersion].each do |model|
-        this_deleted = model.destroy_all ["created_at < ?", 1.year.ago].size
-        puts "deleted #{deleted} old #{model.name} versions."
+        this_deleted = model.destroy_all(["created_at < ?", 1.year.ago]).size
+        puts "deleted #{this_deleted} old #{model.name} versions."
+        deleted += this_deleted
       end
       puts "deleted #{deleted} total old versions."
     end
