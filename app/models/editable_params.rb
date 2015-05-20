@@ -14,6 +14,7 @@ class EditableParams < Struct.new(:for_user)
   def email_list
     [
       :name, :section_id, :email1, :email2, :email3, :email4,
+      :contact_member, :contact_primary, :contact_secondary, :contact_emergency,
       :match_type, :match_grouping, :notify_changed
     ]
   end

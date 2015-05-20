@@ -5,6 +5,12 @@
     <%= f.check_box emailN, {}, true, false %><%= f.label emailN, current_section.column_names[emailN] %><br/>
   <%- end %>
 
+  <%- contact_options = {'None'=>0, 'Only email 1'=>1, 'Only email 2'=>2, 'All emails'=>3, 'Enabled emails'=>4} %>
+  <%= f.select :contact_member, contact_options %> <%= f.label :contact_member, 'from member.' %><br/>
+  <%= f.select :contact_primary, contact_options %> <%= f.label :contact_primary, 'from primary contact 1.' %><br/>
+  <%= f.select :contact_secondary, contact_options %> <%= f.label :contact_secondary, 'from primary contact 2.' %><br/>
+  <%= f.select :contact_emergency, contact_options.except('Enabled emails') %> <%= f.label :contact_emergency, 'from emergency contact.' %><br/>
+
   For members who
   <%= f.select :match_type, {'are'=>true, 'are not'=>false} %>
   in the

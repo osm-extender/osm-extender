@@ -14,6 +14,10 @@ class EmailList < ActiveRecord::Base
   validates :email2, :inclusion => {:in => [true, false]}
   validates :email3, :inclusion => {:in => [true, false]}
   validates :email4, :inclusion => {:in => [true, false]}
+  validates :contact_member, :inclusion => {:in => 0..4}
+  validates :contact_primary, :inclusion => {:in => 0..4}
+  validates :contact_secondary, :inclusion => {:in => 0..4}
+  validates :contact_emergency, :inclusion => {:in => 0..3}
   validates :match_type, :inclusion => {:in => [true, false]}
 
   validates_presence_of :match_grouping
@@ -24,6 +28,12 @@ class EmailList < ActiveRecord::Base
 
 
   def get_list
+    # Values:
+    #   0 - None
+    #   1 - Only Email 1
+    #   2 - Only Email 2
+    #   3 - All Emails
+    #   4 - Enabled Emails (not applicable to emergency contact)
     emails = Array.new
     no_emails = Array.new
 
