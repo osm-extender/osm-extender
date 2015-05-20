@@ -57,6 +57,7 @@ end
 
 group :development, :test do
   gem 'sqlite3', '~> 1.3'             # Use the SQLite database
+  gem 'mv-sqlite', '~> 1.0'           # Use migration_validations
 end
 
 
@@ -68,9 +69,11 @@ end
 # Database choices (for production/staging)
 group :postgres do
   gem 'pg', '~>0.18'                  # Use a postgresql database
+  gem 'mv-postgresql', '~> 1.0'       # Use migration_validations
 end
 group :mysql do
   gem 'mysql2', '~> 0.3.11'           # Use a mysql database
+  gem 'mv-mysql', '~> 1.0'            # Use migration_validations
 end
 
 # Cache choices (for production/staging)
