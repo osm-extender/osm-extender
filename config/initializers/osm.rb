@@ -2,8 +2,8 @@ ActionDispatch::Callbacks.to_prepare do
   unless Rails.env.test?
     Osm::configure(
       :api => {
-        :default_site => :osm,
-        :osm => {
+        :default_site => :osm_staging,
+        :osm_staging => {
           :id    => Rails.application.secrets.osm_api[:id],
           :token => Rails.application.secrets.osm_api[:token],
           :name  => Rails.application.secrets.osm_api[:name],
