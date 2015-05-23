@@ -3,7 +3,7 @@
 <%= form_tag osm_search_members_results_path do %>
 
   <h2>Search fields</h2>
-  <table>
+  <table class="jquery-thead">
     <thead>
       <tr>
         <td></td>
@@ -16,20 +16,26 @@
       </tr>
     </thead>
     <tbody>
-      <%- @field_keys.each do |field_key| %>
+      <%- @columns.each do |key, values| %>
         <tr>
-          <td>
-            <%= check_box_tag "select_all_f[#{field_key}]", 1, false, {:class => 'select_all_field', :data => {'field-id' => field_key}, :title => '(Un)Select all for this field'} %>
-          </td>
-          <%- @section_ids.each do |section_id| %>
-            <td>
-              <%- unless @column_names[section_id][field_key].nil? %>
-                <%= check_box_tag "selected[#{section_id}][#{field_key}]", 1, false, {:class => "section-#{section_id} field-#{field_key}"} %>
-                <%= label_tag "selected[#{section_id}][#{field_key}]", @column_names[section_id][field_key] %>
-              <%- end %>
-            </td>
-          <%- end %>
+          <th colspan="<%= @section_ids.count + 1 %>">
+            <h3><%= @column_groups[key] %></h3>
+          </th>
         </tr>
+        <%- values.each do |value| %>
+          <%- field_key = "#{key}-#{value}" %>
+          <tr>
+            <td>
+              <%= check_box_tag "select_all_f[#{field_key}]", 1, false, {:class => 'select_all_field', :data => {'field-id' => field_key}, :title => '(Un)Select all for this field'} %>
+              <%= value.titleize %>
+            </td>
+            <%- @section_ids.each do |section_id| %>
+              <td>
+                <%= check_box_tag "selected[#{section_id}][#{key}[#{value}]]", 1, false, {:class => "section-#{section_id} field-#{field_key}"} %>
+              </td>
+            <%- end %>
+          </tr>
+        <%- end %>
       <%- end %>
     </tbody>
   </table>

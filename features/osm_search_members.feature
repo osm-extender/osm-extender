@@ -20,7 +20,7 @@ Feature: Search Members
 	    | term_id | name   |
 	    | 1       | Term 1 |
 	And an OSM request to get members for section 1 in term 1 will have the members
-	    | first_name | last_name | email1         |
+	    | first_name | last_name | contact_email1 |
 	    | A1         | Member    | a1@example.com |
 	    | A2         | Member    |                |
 	And an OSM request to get_api_access for section "1" will have the permissions
@@ -32,12 +32,15 @@ Feature: Search Members
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Search members"
         Then I should be on the osm_search_members_form page
-        When I check "selected_1_email1"
+        When I check "selected[1][contact[email_1]]"
         And I fill in "search_for" with "example.COM"
         And I press "Search"
         Then I should be on the osm_search_members_results page
         And I should see "Section 1"
+	And I should see "example.COM"
+	And I should see "1st Somewhere : Section 1"
         And I should see "A1 Member"
+	And I should see "Member: Email 1 - "
         And I should not see "A2 Member"
         And I should have 2 usage log
         And I should have the following usage log

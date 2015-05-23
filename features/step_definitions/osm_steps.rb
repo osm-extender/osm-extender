@@ -136,13 +136,14 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
       :first_name => hash['first_name'] || 'A',
       :last_name => hash['last_name'] || 'Member',
       :grouping_id => hash['grouping_id'],
-      :date_of_birth => hash['date_of_birth'].blank? ? 9.years.ago.strftime("%y-%m-%d") : hash['date_of_birth']
+      :date_of_birth => hash['date_of_birth'].blank? ? 9.years.ago.strftime("%y-%m-%d") : hash['date_of_birth'],
+      :contact_email1 => hash['contact_email1'],
     })
   end
 
   body = '{"data":{'
   members.each do |member|
-    body += '"' + member[:id].to_s + '":{"first_name":"' + member[:first_name] + '","last_name":"' + member[:last_name] + '","patrol_id":"' + member[:grouping_id].to_s + '","date_of_birth":"' + member[:date_of_birth] + '","custom_data":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{},"7":{}}},'
+    body += '"' + member[:id].to_s + '":{"first_name":"' + member[:first_name] + '","last_name":"' + member[:last_name] + '","patrol_id":"' + member[:grouping_id].to_s + '","date_of_birth":"' + member[:date_of_birth] + '","custom_data":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{"12":"' + member[:contact_email1] + '"},"7":{}}},'
   end
   body[-1] = '}'
   body += ',"meta":{"structure":[]}}'
