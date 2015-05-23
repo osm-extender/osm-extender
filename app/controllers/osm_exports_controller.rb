@@ -62,90 +62,122 @@ class OsmExportsController < ApplicationController
     require_osm_permission :read, :member
 
     members = Osm::Member.get_for_section(osm_api, current_section, params[:term_id])
-    groupings = get_current_section_groupings.invert
+
+    custom_fields_for = {member: [], contact: [], primary_contact: [], secondary_contact: [], emergency_contact: [], doctor: []}
+    custom_field_labels_for = {member: {}, contact: {}, primary_contact: {}, secondary_contact: {}, emergency_contact: {}, doctor: {}}
+    members.each do |member|
+      custom_fields_for[:member].push *member.custom.keys
+      custom_field_labels_for[:member].merge!(member.custom_labels)
+      [:contact, :primary_contact, :secondary_contact, :emergency_contact, :doctor].each do |contact|
+        custom_fields_for[contact].push *member.send(contact).custom.keys
+        custom_field_labels_for[contact].merge!(member.send(contact).custom_labels)
+      end
+    end
+    custom_fields_for.keys.each do |contact|
+      custom_fields_for[contact].uniq!
+    end
 
     headers = [
-      'ID',
+      'Member ID',
+      'Section ID',
+      'Grouping ID',
+      'Grouping Role',
       'First Name',
       'Last Name',
       'Grouping',
-      'Age',
-      current_section.column_names[:phone1],
-      current_section.column_names[:phone2],
-      current_section.column_names[:phone3],
-      current_section.column_names[:phone4],
-      current_section.column_names[:email1],
-      current_section.column_names[:email2],
-      current_section.column_names[:email3],
-      current_section.column_names[:email4],
-      current_section.column_names[:address],
-      current_section.column_names[:address2],
-      current_section.column_names[:parents],
-      current_section.column_names[:notes],
-      current_section.column_names[:medical],
-      current_section.column_names[:subs],
-      current_section.column_names[:religion],
-      current_section.column_names[:school],
-      current_section.column_names[:ethnicity],
-      current_section.column_names[:custom1],
-      current_section.column_names[:custom2],
-      current_section.column_names[:custom3],
-      current_section.column_names[:custom4],
-      current_section.column_names[:custom5],
-      current_section.column_names[:custom6],
-      current_section.column_names[:custom7],
-      current_section.column_names[:custom8],
-      current_section.column_names[:custom9],
-      'Date of Birth',
-      'Joined Scouting',
-      'Started Section',
-      'Section ID',
-      'Grouping ID',
       'Grouping Leader',
+      'Age',
+      'Date of Birth',
+      'Joined Movement',
+      'Started Section',
+      'Finished Section',
+      'Gender',
+      'Member - Address 1',
+      'Member - Address 2',
+      'Member - Address 3',
+      'Member - Address 4',
+      'Member - Postcode',
+      'Member - Phone 1',
+      'Member - Receieve Phone 1',
+      'Member - Phone 2',
+      'Member - Receieve Phone 2',
+      'Member - Email 1',
+      'Member - Receieve Email 1',
+      'Member - Email 2',
+      'Member - Receieve Email 2',
+      *custom_field_labels_for[:contact].values_at(*custom_fields_for[:contact]).map{ |l| "Member - #{l}"},
+      'Primary Contact 1 - First Name',
+      'Primary Contact 1 - Last Name',
+      'Primary Contact 1 - Address 1',
+      'Primary Contact 1 - Address 2',
+      'Primary Contact 1 - Address 3',
+      'Primary Contact 1 - Address 4',
+      'Primary Contact 1 - Postcode',
+      'Primary Contact 1 - Phone 1',
+      'Primary Contact 1 - Receieve Phone 1',
+      'Primary Contact 1 - Phone 2',
+      'Primary Contact 1 - Receieve Phone 2',
+      'Primary Contact 1 - Email 1',
+      'Primary Contact 1 - Receieve Email 1',
+      'Primary Contact 1 - Email 2',
+      'Primary Contact 1 - Receieve Email 2',
+      *custom_field_labels_for[:primary_contact].values_at(*custom_fields_for[:primary_contact]).map{ |l| "Primary Contact 1 - #{l}"},
+      'Primary Contact 2 - First Name',
+      'Primary Contact 2 - Last Name',
+      'Primary Contact 2 - Address 1',
+      'Primary Contact 2 - Address 2',
+      'Primary Contact 2 - Address 3',
+      'Primary Contact 2 - Address 4',
+      'Primary Contact 2 - Postcode',
+      'Primary Contact 2 - Phone 1',
+      'Primary Contact 2 - Receieve Phone 1',
+      'Primary Contact 2 - Phone 2',
+      'Primary Contact 2 - Receieve Phone 2',
+      'Primary Contact 2 - Email 1',
+      'Primary Contact 2 - Receieve Email 1',
+      'Primary Contact 2 - Email 2',
+      'Primary Contact 2 - Receieve Email 2',
+      *custom_field_labels_for[:secondary_contact].values_at(*custom_fields_for[:secondary_contact]).map{ |l| "Primary Contact 2 - #{l}"},
+      'Emergency Contact - First Name',
+      'Emergency Contact - Last Name',
+      'Emergency Contact - Surgery',
+      'Emergency Contact - Address 1',
+      'Emergency Contact - Address 2',
+      'Emergency Contact - Address 3',
+      'Emergency Contact - Address 4',
+      'Emergency Contact - Postcode',
+      'Emergency Contact - Phone 1',
+      'Emergency Contact - Phone 2',
+      'Emergency Contact - Email 1',
+      'Emergency Contact - Email 2',
+      *custom_field_labels_for[:emergency_contact].values_at(*custom_fields_for[:emergency_contact]).map{ |l| "Emergency Contact - #{l}"},
+      "Doctor's Surgery - First Name",
+      "Doctor's Surgery - Last Name",
+      "Doctor's Surgery - Address 1",
+      "Doctor's Surgery - Address 2",
+      "Doctor's Surgery - Address 3",
+      "Doctor's Surgery - Address 4",
+      "Doctor's Surgery - Postcode",
+      "Doctor's Surgery - Phone 1",
+      "Doctor's Surgery - Phone 2",
+      *custom_field_labels_for[:doctor].values_at(*custom_fields_for[:doctor]).map{ |l| "Doctor's Surgery - #{l}"},
+      *custom_field_labels_for[:member].values_at(*custom_fields_for[:member]),
     ]
 
     members.map! { |i|
-      member = i.attributes.values_at(
-        'id',
-        'first_name',
-        'last_name',
-        '', # Will be filled with grouping name later
-        'age',
-        'phone1',
-        'phone2',
-        'phone3',
-        'phone4',
-        'email1',
-        'email2',
-        'email3',
-        'email4',
-        'address',
-        'address2',
-        'parents',
-        'notes',
-        'medical',
-        'subs',
-        'religion',
-        'school',
-        'ethnicity',
-        'custom1',
-        'custom2',
-        'custom3',
-        'custom4',
-        'custom5',
-        'custom6',
-        'custom7',
-        'custom8',
-        'custom9',
-        'date_of_birth',
-        'joined',
-        'started',
-        'section_id',
-        'grouping_id',
-        'grouping_leader'
-      )
-      member[3] = groupings[i.grouping_id] # Grouping name
-      member
+      member = []
+      member.push *i.attributes.values_at(*%w{ id section_id grouping_id grouping_leader first_name last_name grouping_label grouping_leader_label age date_of_birth joined_movement started_section finished_section gender })
+      member.push *i.contact.attributes.values_at(*%w{ address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+      member.push *i.contact.custom.values_at(*custom_fields_for[:contact])
+      member.push *i.primary_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+      member.push *i.primary_contact.custom.values_at(*custom_fields_for[:primary_contact])
+      member.push *i.secondary_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+      member.push *i.secondary_contact.custom.values_at(*custom_fields_for[:secondary_contact])
+      member.push *i.emergency_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 phone_2 email_1 email_2 })
+      member.push *i.emergency_contact.custom.values_at(*custom_fields_for[:emergency_contact])
+      member.push *i.doctor.attributes.values_at(*%w{ first_name last_name surgery address_1 address_2 address_3 address_4 postcode phone_1 phone_2 })
+      member.push *i.doctor.custom.values_at(*custom_fields_for[:doctor])
+      member.push *i.custom.values_at(*custom_fields_for[:member])
     }
 
     send_csv('Members', headers, members)

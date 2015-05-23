@@ -143,10 +143,10 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
 
   body = '{"data":{'
   members.each do |member|
-    body += '"' + member[:id].to_s + '":{"first_name":"' + member[:first_name] + '","last_name":"' + member[:last_name] + '","patrol_id":"' + member[:grouping_id].to_s + '","date_of_birth":"' + member[:date_of_birth] + '","custom_data":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{"12":"' + member[:contact_email1] + '"},"7":{}}},'
+    body += '"' + member[:id].to_s + '":{"first_name":"' + member[:first_name].to_s + '","last_name":"' + member[:last_name].to_s + '","patrol_id":"' + member[:grouping_id].to_s + '","date_of_birth":"' + member[:date_of_birth].to_s + '","custom_data":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{"12":"' + member[:contact_email1].to_s + '"},"7":{}}},'
   end
   body[-1] = '}'
-  body += ',"meta":{"structure":[]}}'
+  body += ',"meta":{"structure":[{"group_id":1,"columns":[]},{"group_id":2,"columns":[]},{"group_id":3,"columns":[]},{"group_id":4,"columns":[]},{"group_id":6,"columns":[]},{"group_id":5,"columns":[]},{"group_id":7,"columns":[]}]}}'
 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body, :content_type => 'application/json')
 end

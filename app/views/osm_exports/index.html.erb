@@ -1,100 +1,110 @@
 <%= page_title 'OSM export' %>
 
-<h2>Flexi Record</h2>
-<%- if has_osm_permission?(:read, :flexi) %>
-  <%= form_tag osm_export_flexi_record_path, {:id => 'flexi_record'} do %>
-    <div>
-      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
-        <h3>File options</h3>
-        <%= render "file_options" %>
-      </div>
-      <div style="display: inline-block; vertical-align: top;">
-        <h3>Export options</h3>
-        <div class="field">
-          <%= label_tag :term_id, 'Term' %><br />
-          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
-        </div>
-        <div class="field">
-          <%= label_tag :flexi_record_id, 'Flexi record' %><br />
-          <%= select_tag :flexi_record_id, options_for_select(@flexi_records, params[:flexi_record_id]) %>
-        </div>
-        <div class="actions">
-          <%= submit_tag 'Export flexi record' %>
-        </div>
-      </div>
-    </div>
-  <%- end %>
-<%- else %>
-  You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to be able to export this data.
-<%- end %>
+<div class="ui-accordion accordion_exports">
 
+  <h2 class="ui-accordion-header"><a href="#">Flexi Record</a></h2>
+  <div class="ui-accordion-content">
+    <%- if has_osm_permission?(:read, :flexi) %>
+      <%= form_tag osm_export_flexi_record_path, {:id => 'flexi_record'} do %>
+        <div>
+          <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+            <h3>File options</h3>
+            <%= render "file_options" %>
+          </div>
+          <div style="display: inline-block; vertical-align: top;">
+            <h3>Export options</h3>
+            <div class="field">
+              <%= label_tag :term_id, 'Term' %><br />
+              <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+            </div>
+            <div class="field">
+              <%= label_tag :flexi_record_id, 'Flexi record' %><br />
+              <%= select_tag :flexi_record_id, options_for_select(@flexi_records, params[:flexi_record_id]) %>
+            </div>
+            <div class="actions">
+              <%= submit_tag 'Export flexi record' %>
+            </div>
+          </div>
+        </div>
+      <%- end %>
+    <%- else %>
+      You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to be able to export this data.
+    <%- end %>
+  </div>
 
-<h2>Members</h2>
-<%- if has_osm_permission?(:read, :member) %>
-  <%= form_tag osm_export_members_path, {:id => 'members'} do %>
-    <div>
-      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
-        <h3>File options</h3>
-        <%= render "file_options" %>
-      </div>
-      <div style="display: inline-block; vertical-align: top;">
-        <h3>Export options</h3>
-        <div class="field">
-          <%= label_tag :term_id, 'Term' %><br />
-          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+  
+  <h2 class="ui-accordion-header"><a href="#">Members</a></h2>
+  <div class="ui-accordion-content">
+    <%- if has_osm_permission?(:read, :member) %>
+      <%= form_tag osm_export_members_path, {:id => 'members'} do %>
+        <div>
+          <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+            <h3>File options</h3>
+            <%= render "file_options" %>
+          </div>
+          <div style="display: inline-block; vertical-align: top;">
+            <h3>Export options</h3>
+            <div class="field">
+              <%= label_tag :term_id, 'Term' %><br />
+              <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+            </div>
+            <div class="actions">
+              <%= submit_tag 'Export members' %>
+            </div>
+          </div>
         </div>
-        <div class="actions">
-          <%= submit_tag 'Export members' %>
-        </div>
-      </div>
-    </div>
-  <%- end %>
-<%- else %>
-  You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to be able to export this data.
-<%- end %>
+      <%- end %>
+    <%- else %>
+      You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to be able to export this data.
+    <%- end %>
+  </div>
 
+  
+  <h2 class="ui-accordion-header"><a href="#">Programme</a></h2>
+  <div class="ui-accordion-content">
+    <%- if has_osm_permission?(:read, :programme) %>
+      <h3>Meetings</h3>
+      <%= form_tag osm_export_programme_meetings_path, {:id => 'programme_meetings'} do %>
+        <div>
+          <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+            <h4>File options</h4>
+            <%= render "file_options" %>
+          </div>
+          <div style="display: inline-block; vertical-align: top;">
+            <h4>Export options</h4>
+            <div class="field">
+              <%= label_tag :term_id, 'Term' %><br />
+              <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+            </div>
+            <div class="actions">
+              <%= submit_tag 'Export programme meetings' %>
+            </div>
+          </div>
+        </div>
+      <%- end %>
+  
+      <h3>Activities</h3>
+      <%= form_tag osm_export_programme_activities_path, {:id => 'programme_activities'} do %>
+        <div>
+          <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
+            <h4>File options</h4>
+            <%= render "file_options" %>
+          </div>
+          <div style="display: inline-block; vertical-align: top;">
+            <h4>Export options</h4>
+            <div class="field">
+              <%= label_tag :term_id, 'Term' %><br />
+              <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
+            </div>
+            <div class="actions">
+              <%= submit_tag 'Export programme activities' %>
+            </div>
+          </div>
+        </div>
+      <%- end %>
+    <%- else %>
+      You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to be able to export this data.
+    <%- end %>
+  </div>
 
-<h2>Programme</h2>
-<%- if has_osm_permission?(:read, :programme) %>
-  <h3>Meetings</h3>
-  <%= form_tag osm_export_programme_meetings_path, {:id => 'programme_meetings'} do %>
-    <div>
-      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
-        <h4>File options</h4>
-        <%= render "file_options" %>
-      </div>
-      <div style="display: inline-block; vertical-align: top;">
-        <h4>Export options</h4>
-        <div class="field">
-          <%= label_tag :term_id, 'Term' %><br />
-          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
-        </div>
-        <div class="actions">
-          <%= submit_tag 'Export programme meetings' %>
-        </div>
-      </div>
-    </div>
-  <%- end %>
-
-  <h3>Activities</h3>
-  <%= form_tag osm_export_programme_activities_path, {:id => 'programme_activities'} do %>
-    <div>
-      <div style="margin-right: 40px; display: inline-block; vertical-align: top;">
-        <h4>File options</h4>
-        <%= render "file_options" %>
-      </div>
-      <div style="display: inline-block; vertical-align: top;">
-        <h4>Export options</h4>
-        <div class="field">
-          <%= label_tag :term_id, 'Term' %><br />
-          <%= select_tag :term_id, options_for_select(get_current_section_terms, params[:term_id]) %>
-        </div>
-        <div class="actions">
-          <%= submit_tag 'Export programme activities' %>
-        </div>
-      </div>
-    </div>
-  <%- end %>
-<%- else %>
-  You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> to be able to export this data.
-<%- end %>
+</div><!-- accordian -->
