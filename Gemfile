@@ -49,7 +49,7 @@ group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
   gem 'rack-mini-profiler', '~> 0.1'  # See how long a request takes and why
   gem 'better_errors', '~> 1.0'       # See nicer exception pages with more useful information
-# better_errors 2.0.0 requires ruby 2.0.0
+# better_errors 2.0.0 requires ruby 2
   gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
   gem 'meta_request', '~> 0.3.4'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
   gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
@@ -59,6 +59,7 @@ end
 group :development, :test do
   gem 'sqlite3', '~> 1.3'             # Use the SQLite database
   gem 'mv-sqlite', '~> 1.0'           # Use migration_validations
+# mv-sqlite 2.0.0 requires ruby 2
 end
 
 
@@ -71,10 +72,12 @@ end
 group :postgres do
   gem 'pg', '~>0.18'                  # Use a postgresql database
   gem 'mv-postgresql', '~> 1.0'       # Use migration_validations
+# mv-postgresql 2.0.0 requires ruby 2
 end
 group :mysql do
   gem 'mysql2', '~> 0.3.11'           # Use a mysql database
   gem 'mv-mysql', '~> 1.0'            # Use migration_validations
+# mv-mysql 2.0.0 requires ruby 2
 end
 
 # Cache choices (for production/staging)
