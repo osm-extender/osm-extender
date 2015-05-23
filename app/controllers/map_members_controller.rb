@@ -7,6 +7,9 @@ class MapMembersController < ApplicationController
   before_action :except=>:index do
     require_osm_permission :read, :member, current_user, @section
   end
+  before_action do
+    @addresses = {'Member' => 'contact', 'Primary contact 1' => 'primary_contact', 'Primary contact 2' => 'secondary_contact', 'Emergency contact' => 'emergency_contact', 'Doctor' => 'doctor'}
+  end
 
 
   def index
@@ -19,14 +22,17 @@ class MapMembersController < ApplicationController
   end
 
   def data
-    address_method = ['address', 'address2'].include?(params[:address]) ? params[:address] : 'address'
+    address_method = @addresses.values.include?(params[:address]) ? params[:address] : 'contact'
     members = Array.new
 
     Osm::Member.get_for_section(osm_api, @section).each do |member|
+      contact = member.send(address_method)
+      address = [contact.address_1, contact.address_2, contact.address_3, contact.address_4, contact.postcode]
+      address = address.select{ |i| !i.blank? }.join(', ')
       members.push ({
         :grouping_id => member.grouping_id,
         :name => member.name,
-        :address => member.send(address_method)
+        :address => address,
       })
     end
 

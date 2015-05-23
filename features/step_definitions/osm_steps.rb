@@ -125,40 +125,29 @@ end
 
 
 Given /^an OSM request to get members for section (\d+) in term (\d+) will have the members?$/ do |section_id, term_id, table|
-  url = "users.php?action=getUserDetails&sectionid=#{section_id}&termid=#{term_id}"
-  summary_url = "ext/members/contact/?action=getListOfMembers&sort=patrolid&sectionid=#{section_id}&termid=#{term_id}&section=cubs"
+  url = "ext/members/contact/grid/?action=getMembers"
 
   members = Array.new
   members_summary = Array.new
   table.hashes.each_with_index do |hash, index|
     id = index + 1
     members.push ({
-      'scoutid' => id,
+      :id => id,
       :first_name => hash['first_name'] || 'A',
       :last_name => hash['last_name'] || 'Member',
-      :email1 => hash['email1'],
-      :email2 => hash['email2'],
-      :email3 => hash['email3'],
-      :email4 => hash['email4'],
       :grouping_id => hash['grouping_id'],
       :date_of_birth => hash['date_of_birth'].blank? ? 9.years.ago.strftime("%y-%m-%d") : hash['date_of_birth']
     })
-    members_summary.push ({
-      'scoutid' => id,
-      'pic' => hash.has_key?('pic') ? hash['pic'] : (index%2 == 1),
-    })
   end
 
-  body = '{"identifier":"scoutid","items":['
+  body = '{"data":{'
   members.each do |member|
-    body += "{\"scoutid\":\"1\",\"sectionidO\":\"#{section_id}\",\"type\":\"\",\"firstname\":\"#{member[:first_name]}\",\"lastname\":\"#{member[:last_name]}\",\"email1\":\"#{member[:email1]}\",\"email2\":\"#{member[:email2]}\",\"email3\":\"#{member[:email3]}\",\"email4\":\"#{member[:email4]}\",\"phone1\":\"\",\"phone2\":\"\",\"phone3\":\"\",\"phone4\":\"\",\"address\":\"\",\"address2\":\"\",\"dob\":\"#{member[:date_of_birth]}\",\"started\":\"2006-01-01\",\"joining_in_yrs\":\"-1\",\"parents\":\"\",\"notes\":\"\",\"medical\":\"\",\"religion\":\"\",\"school\":\"\",\"ethnicity\":\"\",\"subs\":\"Male\",\"patrolidO\":\"#{member[:grouping_id]}\",\"patrolleaderO\":\"0\",\"patrolid\":\"#{member[:grouping_id]}\",\"patrolleader\":\"0\",\"joined\":\"2006-01-01\",\"age\":\"6 \\/ 0\",\"yrs\":9,\"patrol\":\"\"},"
+    body += '"' + member[:id].to_s + '":{"first_name":"' + member[:first_name] + '","last_name":"' + member[:last_name] + '","patrol_id":"' + member[:grouping_id].to_s + '","date_of_birth":"' + member[:date_of_birth] + '","custom_data":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{},"7":{}}},'
   end
-  body[-1] = ']'
-  body += '}'
-  summary_body = {'items' => members_summary}.to_json
+  body[-1] = '}'
+  body += ',"meta":{"structure":[]}}'
 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}", :body => body, :content_type => 'application/json')
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{summary_url}", :body => summary_body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get events for section (\d+) will have the events$/ do |section_id, table|
