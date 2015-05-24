@@ -58,8 +58,9 @@ end
 
 group :development, :test do
   gem 'sqlite3', '~> 1.3'             # Use the SQLite database
-  gem 'mv-sqlite', '~> 1.0'           # Use migration_validations
+  gem 'mv-sqlite', :path => File.join(File.dirname(__FILE__), 'vendor', 'gems', 'mv-sqlite-1.0.1')           # Use migration_validations
 # mv-sqlite 2.0.0 requires ruby 2
+  gem 'mv-core', :path => File.join(File.dirname(__FILE__), 'vendor', 'gems', 'mv-core-1.0.1') # Remove once upgraded to 2.0
 end
 
 
