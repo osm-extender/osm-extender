@@ -1,4 +1,9 @@
 PATH
+  remote: vendor/gems/mv-core-1.0.1
+  specs:
+    mv-core (1.0.1)
+
+PATH
   remote: vendor/gems/mv-sqlite-1.0.1
   specs:
     mv-sqlite (1.0.1)
@@ -177,10 +182,6 @@ GEM
     multi_test (0.1.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    mv-core (1.0.1)
-      activerecord (~> 4.1)
-      activesupport (~> 4.1)
-      i18n
     mv-mysql (1.0.1)
       mv-core (~> 1.0)
       mysql2 (~> 0.3)
@@ -389,6 +390,7 @@ DEPENDENCIES
   letter_opener (~> 1.0)
   libv8 (~> 3.16, >= 3.16.14.7)
   meta_request (~> 0.3.4)
+  mv-core!
   mv-mysql (~> 1.0)
   mv-postgresql (~> 1.0)
   mv-sqlite!
