@@ -26,7 +26,7 @@ namespace :ci do
       FileUtils.copy(database_yml_example, database_yml) unless File.exists?(database_yml)
 
       puts "Setting up database"
-      ['db:create', 'db:migrate', 'db:seed', 'db:seed', 'db:fixtures:load'].each do |task|
+      ['db:setup', 'db:migrate', 'db:seed', 'db:fixtures:load'].each do |task|
         Rake::Task[task].reenable
         Rake::Task[task].invoke
       end
