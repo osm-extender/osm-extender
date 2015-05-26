@@ -49,6 +49,8 @@ class EmailListsController < ApplicationController
     @email_list.assign_attributes(sanatised_params.email_list)
 
     if @email_list.invalid?
+      @groupings = get_all_groupings
+      @sections_data = get_sections_data
       render action: :edit, status: 422
     elsif @email_list.save
       redirect_to email_lists_path, notice: 'Email list was successfully updated.'
