@@ -24,9 +24,11 @@ class MapMembersController < ApplicationController
   def data
     address_method = @addresses.values.include?(params[:address]) ? params[:address] : 'contact'
     members = Array.new
+    message = nil
 
     Osm::Member.get_for_section(osm_api, @section).each do |member|
       contact = member.send(address_method)
+      break if contact.nil? # This contact is hidden in OSM so break out of the loop
       address = [contact.address_1, contact.address_2, contact.address_3, contact.address_4, contact.postcode]
       address = address.select{ |i| !i.blank? }.join(', ')
       members.push ({

@@ -41,8 +41,8 @@ class OsmSearchMembersController < ApplicationController
           (selected[contact] || {}).each do |column, sel|
             next unless @columns[contact].include?(column) # Whitelist the attributes that are allowed to be searched
             next unless sel.eql?('1')
-            value = member.send(contact).send(column)
-            if value.downcase.include?(search_for)
+            value = member.try(contact).try(column)
+            if !value.nil? && value.downcase.include?(search_for)
               @found[section_id] ||= []
               @found[section_id].push member unless @found[section_id].include?(member)
               @found_where[section_id] ||= {}
