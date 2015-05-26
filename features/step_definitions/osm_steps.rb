@@ -132,18 +132,25 @@ Given /^an OSM request to get members for section (\d+) in term (\d+) will have 
   table.hashes.each_with_index do |hash, index|
     id = index + 1
     members.push ({
-      :id => id,
+      :id => id.to_s,
       :first_name => hash['first_name'] || 'A',
       :last_name => hash['last_name'] || 'Member',
-      :grouping_id => hash['grouping_id'],
-      :date_of_birth => hash['date_of_birth'].blank? ? 9.years.ago.strftime("%y-%m-%d") : hash['date_of_birth'],
-      :contact_email1 => hash['contact_email1'],
+      :grouping_id => hash['grouping_id'].to_s,
+      :date_of_birth => hash['date_of_birth'].blank? ? 9.years.ago.strftime("%y-%m-%d") : hash['date_of_birth'].to_s,
+      :contact_email1 => hash['contact_email1'].to_s,
+      :contact_email2 => hash['contact_email2'].to_s,
+      :primary_email1 => hash['primary_email1'].to_s,
+      :primary_email2 => hash['primary_email2'].to_s,
+      :secondary_email1 => hash['secondary_email1'].to_s,
+      :secondary_email2 => hash['secondary_email2'].to_s,
+      :emergency_email1 => hash['emergency_email1'].to_s,
+      :emergency_email2 => hash['emergency_email2'].to_s,
     })
   end
 
   body = '{"data":{'
   members.each do |member|
-    body += '"' + member[:id].to_s + '":{"first_name":"' + member[:first_name].to_s + '","last_name":"' + member[:last_name].to_s + '","patrol_id":"' + member[:grouping_id].to_s + '","date_of_birth":"' + member[:date_of_birth].to_s + '","custom_data":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{"12":"' + member[:contact_email1].to_s + '"},"7":{}}},'
+    body += '"' + member[:id] + '":{"first_name":"' + member[:first_name] + '","last_name":"' + member[:last_name] + '","patrol_id":"' + member[:grouping_id] + '","date_of_birth":"' + member[:date_of_birth] + '","custom_data":{"1":{"12":"' + member[:primary_email1] + '","14":"' + member[:primary_email2] + '"},"2":{"12":"' + member[:secondary_email1] + '","14":"' + member[:secondary_email2] + '"},"3":{"12":"' + member[:emergency_email1] + '","14":"' + member[:emergency_email2] + '"},"4":{},"5":{},"6":{"12":"' + member[:contact_email1] + '","14":"' + member[:contact_email2] + '"},"7":{}}},'
   end
   body[-1] = '}'
   body += ',"meta":{"structure":[{"group_id":1,"columns":[]},{"group_id":2,"columns":[]},{"group_id":3,"columns":[]},{"group_id":4,"columns":[]},{"group_id":6,"columns":[]},{"group_id":5,"columns":[]},{"group_id":7,"columns":[]}]}}'
