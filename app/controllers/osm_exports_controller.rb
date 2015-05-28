@@ -112,7 +112,7 @@ class OsmExportsController < ApplicationController
         'Member - Receieve Email 1',
         'Member - Email 2',
         'Member - Receieve Email 2',
-        *custom_field_labels_for[:contact].values_at(*custom_fields_for[:contact]).map{ |l| "Member - #{l}"},
+        *custom_field_labels_for[:contact].values_at(*custom_fields_for[:contact]).map{ |l| "Member - #{l}"}
       )
     end
     if enabled_contacts[:primary_contact]
@@ -132,7 +132,7 @@ class OsmExportsController < ApplicationController
         'Primary Contact 1 - Receieve Email 1',
         'Primary Contact 1 - Email 2',
         'Primary Contact 1 - Receieve Email 2',
-        *custom_field_labels_for[:primary_contact].values_at(*custom_fields_for[:primary_contact]).map{ |l| "Primary Contact 1 - #{l}"},
+        *custom_field_labels_for[:primary_contact].values_at(*custom_fields_for[:primary_contact]).map{ |l| "Primary Contact 1 - #{l}"}
       )
     end
     if enabled_contacts[:secondary_contact]
@@ -152,14 +152,13 @@ class OsmExportsController < ApplicationController
         'Primary Contact 2 - Receieve Email 1',
         'Primary Contact 2 - Email 2',
         'Primary Contact 2 - Receieve Email 2',
-        *custom_field_labels_for[:secondary_contact].values_at(*custom_fields_for[:secondary_contact]).map{ |l| "Primary Contact 2 - #{l}"},
+        *custom_field_labels_for[:secondary_contact].values_at(*custom_fields_for[:secondary_contact]).map{ |l| "Primary Contact 2 - #{l}"}
       )
     end
     if enabled_contacts[:emergency_contact]
       headers.push(
         'Emergency Contact - First Name',
         'Emergency Contact - Last Name',
-        'Emergency Contact - Surgery',
         'Emergency Contact - Address 1',
         'Emergency Contact - Address 2',
         'Emergency Contact - Address 3',
@@ -169,13 +168,14 @@ class OsmExportsController < ApplicationController
         'Emergency Contact - Phone 2',
         'Emergency Contact - Email 1',
         'Emergency Contact - Email 2',
-        *custom_field_labels_for[:emergency_contact].values_at(*custom_fields_for[:emergency_contact]).map{ |l| "Emergency Contact - #{l}"},
+        *custom_field_labels_for[:emergency_contact].values_at(*custom_fields_for[:emergency_contact]).map{ |l| "Emergency Contact - #{l}"}
       )
     end
     if enabled_contacts[:doctor]
       headers.push(
         "Doctor's Surgery - First Name",
         "Doctor's Surgery - Last Name",
+        "Doctor's Surgert - Surgery",
         "Doctor's Surgery - Address 1",
         "Doctor's Surgery - Address 2",
         "Doctor's Surgery - Address 3",
@@ -183,7 +183,7 @@ class OsmExportsController < ApplicationController
         "Doctor's Surgery - Postcode",
         "Doctor's Surgery - Phone 1",
         "Doctor's Surgery - Phone 2",
-        *custom_field_labels_for[:doctor].values_at(*custom_fields_for[:doctor]).map{ |l| "Doctor's Surgery - #{l}"},
+        *custom_field_labels_for[:doctor].values_at(*custom_fields_for[:doctor]).map{ |l| "Doctor's Surgery - #{l}"}
       )
     end
     headers.push *custom_field_labels_for[:member].values_at(*custom_fields_for[:member])
