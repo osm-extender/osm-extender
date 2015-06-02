@@ -35,18 +35,18 @@ class OsmExportsController < ApplicationController
       return
     end
 
-    custom_fields = []
+    additional_information_fields = []
     system_fields = []
     flexi_record.get_columns(osm_api).each do |field|
       field.name = 'Date of Birth' if field.id.eql?('dob')
       if field.id.match(/\Af_\d+\Z/)
-        custom_fields.push field
+        additional_information_fields.push field
       else
         system_fields.push field
       end
     end
 
-    fields = [*system_fields, *custom_fields]
+    fields = [*system_fields, *additional_information_fields]
     headers = ['Member ID', *fields.map{ |f| f.name }]
     records = flexi_record.get_data(osm_api).map{ |r| [
       r.member_id,
@@ -63,22 +63,23 @@ class OsmExportsController < ApplicationController
 
     members = Osm::Member.get_for_section(osm_api, current_section, params[:term_id])
 
-    custom_fields_for = {member: [], contact: [], primary_contact: [], secondary_contact: [], emergency_contact: [], doctor: []}
-    custom_field_labels_for = {member: {}, contact: {}, primary_contact: {}, secondary_contact: {}, emergency_contact: {}, doctor: {}}
+    additional_information_fields_for = {member: [], contact: [], primary_contact: [], secondary_contact: [], emergency_contact: [], doctor: []}
+    additional_information_field_labels_for = {member: {}, contact: {}, primary_contact: {}, secondary_contact: {}, emergency_contact: {}, doctor: {}}
     enabled_contacts = {contact: false, primary_contact: false, secondary_contact: false, emergency_contact: false, doctor: false}
     members.each do |member|
-      custom_fields_for[:member].push *member.custom.keys
-      custom_field_labels_for[:member].merge!(member.custom_labels)
+      additional_information_fields_for[:member].push *member.additional_information.keys
+      additional_information_field_labels_for[:member].merge!(member.additional_information_labels)
       [:contact, :primary_contact, :secondary_contact, :emergency_contact, :doctor].each do |contact|
         unless member.send(contact).nil?
           enabled_contacts[contact] = true
-          custom_fields_for[contact].push *member.send(contact).custom.keys
-          custom_field_labels_for[contact].merge!(member.send(contact).custom_labels)
+          additional_information_fields_for[contact].push *member.send(contact).additional_information.keys
+          additional_information_field_labels_for[contact].merge!(member.send(contact).additional_information_labels)
         end
       end
     end
-    custom_fields_for.keys.each do |contact|
-      custom_fields_for[contact].uniq!
+
+    additional_information_fields_for.keys.each do |contact|
+      additional_information_fields_for[contact].uniq!
     end
 
     headers = [
@@ -86,6 +87,7 @@ class OsmExportsController < ApplicationController
       'Section ID',
       'Grouping ID',
       'Grouping Role',
+      'Title',
       'First Name',
       'Last Name',
       'Grouping',
@@ -112,11 +114,12 @@ class OsmExportsController < ApplicationController
         'Member - Receieve Email 1',
         'Member - Email 2',
         'Member - Receieve Email 2',
-        *custom_field_labels_for[:contact].values_at(*custom_fields_for[:contact]).map{ |l| "Member - #{l}"}
+        *additional_information_field_labels_for[:contact].values_at(*additional_information_fields_for[:contact]).map{ |l| "Member - #{l}"}
       )
     end
     if enabled_contacts[:primary_contact]
       headers.push(
+        'Primary Contact 1 - Title',
         'Primary Contact 1 - First Name',
         'Primary Contact 1 - Last Name',
         'Primary Contact 1 - Address 1',
@@ -132,11 +135,12 @@ class OsmExportsController < ApplicationController
         'Primary Contact 1 - Receieve Email 1',
         'Primary Contact 1 - Email 2',
         'Primary Contact 1 - Receieve Email 2',
-        *custom_field_labels_for[:primary_contact].values_at(*custom_fields_for[:primary_contact]).map{ |l| "Primary Contact 1 - #{l}"}
+        *additional_information_field_labels_for[:primary_contact].values_at(*additional_information_fields_for[:primary_contact]).map{ |l| "Primary Contact 1 - #{l}"}
       )
     end
     if enabled_contacts[:secondary_contact]
       headers.push(
+        'Primary Contact 2 - Title',
         'Primary Contact 2 - First Name',
         'Primary Contact 2 - Last Name',
         'Primary Contact 2 - Address 1',
@@ -152,11 +156,12 @@ class OsmExportsController < ApplicationController
         'Primary Contact 2 - Receieve Email 1',
         'Primary Contact 2 - Email 2',
         'Primary Contact 2 - Receieve Email 2',
-        *custom_field_labels_for[:secondary_contact].values_at(*custom_fields_for[:secondary_contact]).map{ |l| "Primary Contact 2 - #{l}"}
+        *additional_information_field_labels_for[:secondary_contact].values_at(*additional_information_fields_for[:secondary_contact]).map{ |l| "Primary Contact 2 - #{l}"}
       )
     end
     if enabled_contacts[:emergency_contact]
       headers.push(
+        'Emergency Contact - Title',
         'Emergency Contact - First Name',
         'Emergency Contact - Last Name',
         'Emergency Contact - Address 1',
@@ -168,11 +173,12 @@ class OsmExportsController < ApplicationController
         'Emergency Contact - Phone 2',
         'Emergency Contact - Email 1',
         'Emergency Contact - Email 2',
-        *custom_field_labels_for[:emergency_contact].values_at(*custom_fields_for[:emergency_contact]).map{ |l| "Emergency Contact - #{l}"}
+        *additional_information_field_labels_for[:emergency_contact].values_at(*additional_information_fields_for[:emergency_contact]).map{ |l| "Emergency Contact - #{l}"}
       )
     end
     if enabled_contacts[:doctor]
       headers.push(
+        "Doctor's Surgery - Title",
         "Doctor's Surgery - First Name",
         "Doctor's Surgery - Last Name",
         "Doctor's Surgert - Surgery",
@@ -183,35 +189,35 @@ class OsmExportsController < ApplicationController
         "Doctor's Surgery - Postcode",
         "Doctor's Surgery - Phone 1",
         "Doctor's Surgery - Phone 2",
-        *custom_field_labels_for[:doctor].values_at(*custom_fields_for[:doctor]).map{ |l| "Doctor's Surgery - #{l}"}
+        *additional_information_field_labels_for[:doctor].values_at(*additional_information_fields_for[:doctor]).map{ |l| "Doctor's Surgery - #{l}"}
       )
     end
-    headers.push *custom_field_labels_for[:member].values_at(*custom_fields_for[:member])
+    headers.push *additional_information_field_labels_for[:member].values_at(*additional_information_fields_for[:member])
 
     members.map! { |i|
       member = []
-      member.push *i.attributes.values_at(*%w{ id section_id grouping_id grouping_leader first_name last_name grouping_label grouping_leader_label age date_of_birth joined_movement started_section finished_section gender })
+      member.push *i.attributes.values_at(*%w{ id section_id grouping_id grouping_leader title first_name last_name grouping_label grouping_leader_label age date_of_birth joined_movement started_section finished_section gender })
       if enabled_contacts[:contact]
         member.push *i.contact.attributes.values_at(*%w{ address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
-        member.push *i.contact.custom.values_at(*custom_fields_for[:contact])
+        member.push *i.contact.additional_information.values_at(*additional_information_fields_for[:contact])
       end
       if enabled_contacts[:primary_contact]
-        member.push *i.primary_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
-        member.push *i.primary_contact.custom.values_at(*custom_fields_for[:primary_contact])
+        member.push *i.primary_contact.attributes.values_at(*%w{ title first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+        member.push *i.primary_contact.additional_information.values_at(*additional_information_fields_for[:primary_contact])
       end
       if enabled_contacts[:secondary_contact]
-        member.push *i.secondary_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
-        member.push *i.secondary_contact.custom.values_at(*custom_fields_for[:secondary_contact])
+        member.push *i.secondary_contact.attributes.values_at(*%w{ title first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+        member.push *i.secondary_contact.additional_information.values_at(*additional_information_fields_for[:secondary_contact])
       end
       if enabled_contacts[:emergency_contact]
-        member.push *i.emergency_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 phone_2 email_1 email_2 })
-        member.push *i.emergency_contact.custom.values_at(*custom_fields_for[:emergency_contact])
+        member.push *i.emergency_contact.attributes.values_at(*%w{ title first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 phone_2 email_1 email_2 })
+        member.push *i.emergency_contact.additional_information.values_at(*additional_information_fields_for[:emergency_contact])
       end
       if enabled_contacts[:doctor]
-        member.push *i.doctor.attributes.values_at(*%w{ first_name last_name surgery address_1 address_2 address_3 address_4 postcode phone_1 phone_2 })
-        member.push *i.doctor.custom.values_at(*custom_fields_for[:doctor])
+        member.push *i.doctor.attributes.values_at(*%w{ title first_name last_name surgery address_1 address_2 address_3 address_4 postcode phone_1 phone_2 })
+        member.push *i.doctor.additional_information.values_at(*additional_information_fields_for[:doctor])
       end
-      member.push *i.custom.values_at(*custom_fields_for[:member])
+      member.push *i.additional_information.values_at(*additional_information_fields_for[:member])
     }
 
     send_csv('Members', headers, members)
