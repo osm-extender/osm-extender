@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 # Rails
-gem 'rails', '~> 4.1', '>= 4.1.7'
+gem 'rails', '~> 4.1', '>= 4.2.2'
 gem 'activerecord-session_store', '~> 0.1'
 
 # Authentication / Authorisation
@@ -36,8 +36,8 @@ gem 'daemon-spawn', '~> 0.4'
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
   gem 'libv8', '~> 3.16', '>= 3.16.14.7'
-gem 'jquery-rails', '~> 4.0'
-gem 'jquery-ui-rails', '~> 5.0'
+gem 'jquery-rails', '~> 4.0', '>= 4.0.4'
+gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
 gem 'sass-rails', '~> 5.0'
 gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 2.0'
@@ -49,10 +49,10 @@ group :development do
   gem 'rack-mini-profiler', '~> 0.1'  # See how long a request takes and why
   gem 'better_errors', '~> 1.0'       # See nicer exception pages with more useful information
 # better_errors 2.0.0 requires ruby 2
-  gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
+#  gem 'binding_of_caller', '~> 0.6'   # Allow better_errors advaced features (REPL, local/instance variable inspection, pretty stack frame names)
   gem 'meta_request', '~> 0.3.4'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
-  gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
-  gem 'debugger', '~> 1.6', :require=>false
+#  gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
+#  gem 'debugger', '~> 1.6', :require=>false
 end
 
 group :development, :test do
