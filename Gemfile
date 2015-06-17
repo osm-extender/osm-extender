@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 # Rails
-gem 'rails', '~> 4.1', '>= 4.1.7'
+gem 'rails', '~> 4.1', '>= 4.2.2'
 gem 'activerecord-session_store', '~> 0.1'
 
 # Authentication / Authorisation
@@ -36,8 +36,8 @@ gem 'daemon-spawn', '~> 0.4'
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
   gem 'libv8', '~> 3.16', '>= 3.16.14.7'
-gem 'jquery-rails', '~> 4.0'
-gem 'jquery-ui-rails', '~> 5.0'
+gem 'jquery-rails', '~> 4.0', '>= 4.0.4'
+gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
 gem 'sass-rails', '~> 5.0'
 gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 2.0'
