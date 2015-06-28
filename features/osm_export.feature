@@ -39,7 +39,7 @@ Feature: Export OSM data
         And I select "Comma" from "Column separator" in the "members" form
         And I press "Export members" in the "members" form
         Then I should get a download with filename "1stSomewhere_Section1_Members.csv" and MIME type "text/csv"
-        And the body should contain ",,1,,,A,Member,,,,2000-01-01"
+        And the body should contain ",,1,,A,Member,,,,2000-01-01"
         And the body should not contain "First Name"
         And I should have 2 usage log records
         And I should have the following usage log

@@ -87,7 +87,6 @@ class OsmExportsController < ApplicationController
       'Section ID',
       'Grouping ID',
       'Grouping Role',
-      'Title',
       'First Name',
       'Last Name',
       'Grouping',
@@ -119,7 +118,6 @@ class OsmExportsController < ApplicationController
     end
     if enabled_contacts[:primary_contact]
       headers.push(
-        'Primary Contact 1 - Title',
         'Primary Contact 1 - First Name',
         'Primary Contact 1 - Last Name',
         'Primary Contact 1 - Address 1',
@@ -140,7 +138,6 @@ class OsmExportsController < ApplicationController
     end
     if enabled_contacts[:secondary_contact]
       headers.push(
-        'Primary Contact 2 - Title',
         'Primary Contact 2 - First Name',
         'Primary Contact 2 - Last Name',
         'Primary Contact 2 - Address 1',
@@ -161,7 +158,6 @@ class OsmExportsController < ApplicationController
     end
     if enabled_contacts[:emergency_contact]
       headers.push(
-        'Emergency Contact - Title',
         'Emergency Contact - First Name',
         'Emergency Contact - Last Name',
         'Emergency Contact - Address 1',
@@ -178,7 +174,6 @@ class OsmExportsController < ApplicationController
     end
     if enabled_contacts[:doctor]
       headers.push(
-        "Doctor's Surgery - Title",
         "Doctor's Surgery - First Name",
         "Doctor's Surgery - Last Name",
         "Doctor's Surgert - Surgery",
@@ -196,25 +191,25 @@ class OsmExportsController < ApplicationController
 
     members.map! { |i|
       member = []
-      member.push *i.attributes.values_at(*%w{ id section_id grouping_id grouping_leader title first_name last_name grouping_label grouping_leader_label age date_of_birth joined_movement started_section finished_section gender })
+      member.push *i.attributes.values_at(*%w{ id section_id grouping_id grouping_leader first_name last_name grouping_label grouping_leader_label age date_of_birth joined_movement started_section finished_section gender })
       if enabled_contacts[:contact]
         member.push *i.contact.attributes.values_at(*%w{ address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
         member.push *i.contact.additional_information.values_at(*additional_information_fields_for[:contact])
       end
       if enabled_contacts[:primary_contact]
-        member.push *i.primary_contact.attributes.values_at(*%w{ title first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+        member.push *i.primary_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
         member.push *i.primary_contact.additional_information.values_at(*additional_information_fields_for[:primary_contact])
       end
       if enabled_contacts[:secondary_contact]
-        member.push *i.secondary_contact.attributes.values_at(*%w{ title first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
+        member.push *i.secondary_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 receive_phone_1 phone_2 receive_phone_2 email_1 receive_email_1 email_2 receive_email_2 })
         member.push *i.secondary_contact.additional_information.values_at(*additional_information_fields_for[:secondary_contact])
       end
       if enabled_contacts[:emergency_contact]
-        member.push *i.emergency_contact.attributes.values_at(*%w{ title first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 phone_2 email_1 email_2 })
+        member.push *i.emergency_contact.attributes.values_at(*%w{ first_name last_name address_1 address_2 address_3 address_4 postcode phone_1 phone_2 email_1 email_2 })
         member.push *i.emergency_contact.additional_information.values_at(*additional_information_fields_for[:emergency_contact])
       end
       if enabled_contacts[:doctor]
-        member.push *i.doctor.attributes.values_at(*%w{ title first_name last_name surgery address_1 address_2 address_3 address_4 postcode phone_1 phone_2 })
+        member.push *i.doctor.attributes.values_at(*%w{ first_name last_name surgery address_1 address_2 address_3 address_4 postcode phone_1 phone_2 })
         member.push *i.doctor.additional_information.values_at(*additional_information_fields_for[:doctor])
       end
       member.push *i.additional_information.values_at(*additional_information_fields_for[:member])
