@@ -1,4 +1,4 @@
-@osm_export
+@osm_exports
 @osm
 
 Feature: Export OSM data
@@ -34,7 +34,7 @@ Feature: Export OSM data
 	    | first_name | last_name | grouping_id | date_of_birth |
 	    | A          | Member    | 1           | 2000-01-01    |
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "OSM export"
+        And I follow "OSM exports"
         And I uncheck "Include header line" in the "members" form
         And I select "Comma" from "Column separator" in the "members" form
         And I press "Export members" in the "members" form
@@ -54,7 +54,7 @@ Feature: Export OSM data
 	    | first_name | last_name | grouping_id | date_of_birth |
 	    | A          | Member    | 1           | 2000-01-01    |
         When I signin as "alice@example.com" with password "P@55word"
-        And I go to the osm_export page
+        And I go to the osm_exports page
         And I check "Include header line" in the "members" form
         And I select "Tab" from "Column separator" in the "members" form
         And I press "Export members" in the "members" form
@@ -70,7 +70,7 @@ Feature: Export OSM data
     Scenario: Export Programme Meetings
 	Given an OSM request to get programme for section 1 term 1 will have 2 programme items
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "OSM export"
+        And I follow "OSM exports"
         And I press "Export programme meetings" in the "programme_meetings" form
         Then I should get a download with filename "1stSomewhere_Section1_ProgrammeMeetings.csv" and MIME type "text/csv"
         And the body should contain "19:15,20:30,Weekly Meeting 1,"","","","","""
@@ -88,7 +88,7 @@ Feature: Export OSM data
 	And an OSM request to get activity 21 will have tags "belief, values"
 	And an OSM request to get activity 22 will have tags "global, outdoors"
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "OSM export"
+        And I follow "OSM exports"
         And I press "Export programme activities" in the "programme_activities" form
         Then I should get a download with filename "1stSomewhere_Section1_ProgrammeActivities.csv" and MIME type "text/csv"
         And the body should contain "1,11,Activity 11,"""
@@ -109,7 +109,7 @@ Feature: Export OSM data
 	    | firstname | lastname | f_01 |
 	    | John      | Smith    | A    |
         When I signin as "alice@example.com" with password "P@55word"
-        And I follow "OSM export"
+        And I follow "OSM exports"
         And I check "Include header line" in the "flexi_record" form
         And I press "Export flexi record" in the "flexi_record" form
         Then I should get a download with filename "1stSomewhere_Section1_Flexi1.csv" and MIME type "text/csv"

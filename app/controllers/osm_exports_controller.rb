@@ -31,7 +31,7 @@ class OsmExportsController < ApplicationController
     end
     if flexi_record.nil? # Record isn't accessible by this user
       flash[:error] = "You don't have access to that flexi record."
-      redirect_back_or_to osm_export_path
+      redirect_back_or_to osm_exports_path
       return
     end
 
