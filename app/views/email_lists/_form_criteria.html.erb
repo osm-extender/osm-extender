@@ -1,9 +1,6 @@
   I would like these email addresses for members of
   <%= f.select :section_id, Osm::Section.get_all(current_user.osm_api).select{ |section| has_osm_permission?(:read, :member, current_user, section)}.map{ |section| ["#{section.group_name} : #{section.name}", section.id] } %>
   <br/>
-  <%- [:email1, :email2, :email3, :email4].each do |emailN| %>
-    <%= f.check_box emailN, {}, true, false %><%= f.label emailN, current_section.column_names[emailN] %><br/>
-  <%- end %>
 
   <%- contact_options = {'None'=>0, 'Only email 1'=>1, 'Only email 2'=>2, 'All emails'=>3, 'Enabled emails'=>4} %>
   <%= f.select :contact_member, contact_options %> <%= f.label :contact_member, 'from member.' %><br/>

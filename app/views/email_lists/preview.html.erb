@@ -3,22 +3,26 @@
 <%= render 'list' %>
 
 <h2>List Options</h2>
-You asked for these email addresses<ul>
-<%- [:email1, :email2, :email3, :email4].each do |emailN| %>
-  <% if @email_list.send(emailN) %><li><%= current_section.column_names[emailN] %></li><% end %>
-<%- end %>
-</ul>
-For members who
+You asked for these email addresses
+for members who
 <%= @email_list.match_type ? 'are' : 'are not' %>
 in the
 <%- @groupings[@email_list.section_id].merge({'Any'=>0}).each do |key, value| %>
   <%= key.downcase if value.to_i == @email_list.match_grouping %>
 <%- end %>
-<%= get_grouping_name(current_section.type) %>.
+<%= get_grouping_name(current_section.type) %>:
+<ul>
+<%- selection_labels = ['No emails', 'Only email 1', 'Only email 2', 'All emails', 'Enabled emails'] %>
+<%- contact_labels = {contact_member: 'member', contact_primary: 'primary contact 1', contact_secondary: 'primary contact 2', contact_emergency: 'emergency_contact'} %>
+<%- [:contact_member, :contact_primary, :contact_secondary, :contact_emergency].each do |contact| %>
+  <% if @email_list.send(contact) > 0 %><li><%= selection_labels[@email_list.send(contact)] %> from <%= contact_labels[contact] %>.</li><% end %>
+<%- end %>
+</ul>
+
 
 <h2>Save List</h2>
 <%= form_for @email_list do |f| %>
-  <%- [:email1, :email2, :email3, :email4, :contact_member, :contact_primary, :contact_secondary, :contact_emergency, :match_type, :match_grouping, :section_id].each do |key| %>
+  <%- [:contact_member, :contact_primary, :contact_secondary, :contact_emergency, :match_type, :match_grouping, :section_id].each do |key| %>
     <%= f.hidden_field key %>
   <%- end %>
 

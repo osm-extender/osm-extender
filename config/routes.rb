@@ -79,9 +79,6 @@ OSMExtender::Application.routes.draw do
   get 'osm_flexi_records/:section_id' => 'osm_flexi_records#index_for_section', :as => 'osm_flexi_records_for_section'
   get 'osm_flexi_records/:section_id/:record_id' => 'osm_flexi_records#show', :as => 'osm_flexi_record'
 
-  get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
-  post 'osm_details/show' => 'osm_details#show', :as => 'osm_details_show'
-
   get 'osm_search_members' => 'osm_search_members#search_form', :as => 'osm_search_members_form'
   post 'osm_search_members' => 'osm_search_members#search_results', :as => 'osm_search_members_results'
 

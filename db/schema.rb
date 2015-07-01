@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150520175712) do
+ActiveRecord::Schema.define(version: 20150523195547) do
 
   create_table "announcements", force: :cascade do |t|
     t.datetime "emailed_at"
@@ -60,10 +60,6 @@ ActiveRecord::Schema.define(version: 20150520175712) do
     t.text     "name"
     t.integer  "user_id"
     t.integer  "section_id"
-    t.boolean  "email1"
-    t.boolean  "email2"
-    t.boolean  "email3"
-    t.boolean  "email4"
     t.boolean  "match_type"
     t.integer  "match_grouping"
     t.datetime "created_at"
@@ -77,6 +73,7 @@ ActiveRecord::Schema.define(version: 20150520175712) do
   end
 
   add_index "email_lists", ["notify_changed"], name: "index_email_lists_on_notify_changed"
+  add_index "email_lists", ["section_id"], name: "index_email_lists_on_section_id"
 
   create_table "email_reminder_items", force: :cascade do |t|
     t.integer  "email_reminder_id"
@@ -156,6 +153,57 @@ ActiveRecord::Schema.define(version: 20150520175712) do
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at"
+
+  create_table "shared_event_attendances", force: :cascade do |t|
+    t.integer  "shared_event_id", null: false
+    t.integer  "user_id",         null: false
+    t.integer  "section_id",      null: false
+    t.integer  "event_id",        null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "shared_event_attendances", ["shared_event_id"], name: "index_shared_event_attendances_on_shared_event_id"
+  add_index "shared_event_attendances", ["user_id"], name: "index_shared_event_attendances_on_user_id"
+
+  create_table "shared_event_field_data", force: :cascade do |t|
+    t.integer  "shared_event_field_id",                  null: false
+    t.integer  "shared_event_attendance_id",             null: false
+    t.string   "source_type",                limit: 255, null: false
+    t.integer  "source_id"
+    t.string   "source_field",               limit: 255, null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "shared_event_field_data", ["shared_event_attendance_id"], name: "index_shared_event_field_data_on_shared_event_attendance_id"
+  add_index "shared_event_field_data", ["shared_event_field_id"], name: "index_shared_event_field_data_on_shared_event_field_id"
+
+  create_table "shared_event_fields", force: :cascade do |t|
+    t.integer  "shared_event_id",             null: false
+    t.string   "name",            limit: 255, null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "shared_event_fields", ["shared_event_id"], name: "index_shared_event_fields_on_shared_event_id"
+
+  create_table "shared_events", force: :cascade do |t|
+    t.string   "name",            limit: 255, null: false
+    t.date     "start_date"
+    t.string   "start_time",      limit: 255
+    t.date     "finish_date"
+    t.string   "finish_time",     limit: 255
+    t.string   "cost",            limit: 255
+    t.string   "location",        limit: 255
+    t.text     "notes"
+    t.integer  "user_id",                     null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.date     "confirm_by_date"
+  end
+
+  add_index "shared_events", ["user_id"], name: "index_shared_events_on_user_id"
 
   create_table "statistics", force: :cascade do |t|
     t.date     "date",                         null: false

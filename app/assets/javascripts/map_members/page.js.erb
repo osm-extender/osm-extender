@@ -134,14 +134,20 @@ function plot(section_id) {
     success: function(data, status, jqXHR) {
       groupings = data['groupings'];
       membersAll = data['members'].length;
-      for (var index in data['members']) {
-        var member = data['members'][index];
-        if (member.address.length > 0) {
-          setTimeout(geocodeMember(member), (index * 1000));   // Don't hammer the API too fast
-        } else {
-          appendError(member.name + ' not included (does not have selected address)');
-        }
-      }
+      if (membersAll == 0) {
+        message = 'No members in the section have the selected contact.';
+        appendError(message);
+        alert(message + ' Please select a different contact and try again.');
+      } else {
+        for (var index in data['members']) {
+          var member = data['members'][index];
+          if (member.address.length > 0) {
+            setTimeout(geocodeMember(member), (index * 1000));   // Don't hammer the API too fast
+          } else {
+            appendError(member.name + ' not included (does not have selected address)');
+          }
+        } // for each member
+      } // if there are members
     }
   });
 }
