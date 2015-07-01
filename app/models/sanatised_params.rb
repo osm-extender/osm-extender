@@ -4,7 +4,11 @@ class SanatisedParams < Struct.new(:params, :for_user)
 
   def method_missing(method, *args, &block)
     if METHODS_AVAILABLE.include?(method)
-      params[method].permit(*editable_params.send(method))
+      unless params[method].nil?
+        params[method].permit(*editable_params.send(method))
+      else
+        {}
+      end
     else
       super
     end

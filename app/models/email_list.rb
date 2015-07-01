@@ -10,10 +10,6 @@ class EmailList < ActiveRecord::Base
   validates_numericality_of :section_id, :only_integer=>true, :greater_than_or_equal_to=>0
 
   validates_presence_of :name
-  validates :email1, :inclusion => {:in => [true, false]}
-  validates :email2, :inclusion => {:in => [true, false]}
-  validates :email3, :inclusion => {:in => [true, false]}
-  validates :email4, :inclusion => {:in => [true, false]}
   validates :contact_member, :inclusion => {:in => 0..4}
   validates :contact_primary, :inclusion => {:in => 0..4}
   validates :contact_secondary, :inclusion => {:in => 0..4}
@@ -23,40 +19,42 @@ class EmailList < ActiveRecord::Base
   validates_presence_of :match_grouping
   validates_numericality_of :match_grouping, :only_integer=>true
   validate :match_grouping_ok
+  validate :at_least_one_contact
 
   before_save :set_hash_of_addresses
 
 
   def get_list
-    # Values:
-    #   0 - None
-    #   1 - Only Email 1
-    #   2 - Only Email 2
-    #   3 - All Emails
-    #   4 - Enabled Emails (not applicable to emergency contact)
     emails = Array.new
     no_emails = Array.new
-
     section = Osm::Section.get(user.osm_api, section_id)
     raise Osm::Forbidden if section.nil?
+
     Osm::Member.get_for_section(user.osm_api, section).each do |member|
-      if ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
-        added_address_for_member = false
-        [:email1, :email2, :email3, :email4].each do |emailN|
-          email = member.send(emailN).downcase
-          if self.send(emailN) && !email.blank?
-          #  collecting this email?  not blank
-            emails.push email unless emails.include?(email)
-            added_address_for_member = true
-          end
-        end
-        no_emails.push member.name unless added_address_for_member
+      next unless ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
+
+      methods = {1 => :email_1, 2 => :email_2, 3 => :all_emails, 4 => :enabled_emails}
+      member_emails = []
+      [
+        [:contact, methods[contact_member]],
+        [:primary_contact, methods[contact_primary]],
+        [:secondary_contact, methods[contact_secondary]],
+        [:emergency_contact, methods[contact_emergency]],
+      ].each do |(cont, meth)|
+        member_emails.push(*member.try(cont).try(meth)) unless meth.nil?
       end
-    end
+      member_emails.select!{ |i| !i.blank? }
+
+      if member_emails.empty?
+        no_emails.push member.name
+      else
+        emails.push *member_emails
+      end
+    end # each member
 
     return {
-      :emails => emails,
-      :no_emails => no_emails
+      :emails => emails.map{ |e| e.downcase }.uniq,
+      :no_emails => no_emails.uniq
     }
   end
 
@@ -76,6 +74,10 @@ class EmailList < ActiveRecord::Base
   private
   def match_grouping_ok
     errors.add(:match_grouping, "Can't be negative") if (match_grouping < 0  &&  ![-2].include?(match_grouping))
+  end
+
+  def at_least_one_contact
+    errors.add(:base, "At least one contact must have some addresses selected") if [contact_member, contact_primary, contact_secondary, contact_emergency].uniq.eql?([0])
   end
 
   def set_hash_of_addresses

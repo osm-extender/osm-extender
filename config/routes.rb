@@ -79,17 +79,14 @@ OSMExtender::Application.routes.draw do
   get 'osm_flexi_records/:section_id' => 'osm_flexi_records#index_for_section', :as => 'osm_flexi_records_for_section'
   get 'osm_flexi_records/:section_id/:record_id' => 'osm_flexi_records#show', :as => 'osm_flexi_record'
 
-  get 'osm_details/select_fields' => 'osm_details#select_fields', :as => 'osm_details_fields'
-  post 'osm_details/show' => 'osm_details#show', :as => 'osm_details_show'
-
   get 'osm_search_members' => 'osm_search_members#search_form', :as => 'osm_search_members_form'
   post 'osm_search_members' => 'osm_search_members#search_results', :as => 'osm_search_members_results'
 
-  get 'osm_export' => 'osm_exports#index', :as => 'osm_export'
-  post 'osm_export/flexi_record' => 'osm_exports#flexi_record', :as => 'osm_export_flexi_record'
-  post 'osm_export/members' => 'osm_exports#members', :as => 'osm_export_members'
-  post 'osm_export/programme_activities' => 'osm_exports#programme_activities', :as => 'osm_export_programme_activities'
-  post 'osm_export/programme_meetings' => 'osm_exports#programme_meetings', :as => 'osm_export_programme_meetings'
+  get 'osm_exports' => 'osm_exports#index', :as => 'osm_exports'
+  post 'osm_exports/flexi_record' => 'osm_exports#flexi_record', :as => 'osm_exports_flexi_record'
+  post 'osm_exports/members' => 'osm_exports#members', :as => 'osm_exports_members'
+  post 'osm_exports/programme_activities' => 'osm_exports#programme_activities', :as => 'osm_exports_programme_activities'
+  post 'osm_exports/programme_meetings' => 'osm_exports#programme_meetings', :as => 'osm_exports_programme_meetings'
 
   get 'osm_myscout_payments/calculator' => 'osm_myscout_payments#calculator', :as => 'osm_myscout_payments_calculator'
 

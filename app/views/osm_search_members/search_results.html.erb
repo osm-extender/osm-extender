@@ -1,13 +1,21 @@
-<%= page_title "Search members for \"#{params[:search_for]}\"" %>
+<%= page_title 'Search members (results)' %>
 
 <%- if @found.size > 0 %>
+  <p>Found "<%= params[:search_for] %>" in the following places:</p>
   <ul>
   <%- @found.each_key do |section_id| %>
     <li>
       <%= get_section_names[section_id] %>
       <ul>
         <%- @found[section_id].each do |member| %>
-          <li><%= member.name %></li>
+          <li>
+            <%= member.name %>
+            <ul>
+              <%- @found_where[section_id][member.id].each do |where| %>
+                <li><%= where %></li>
+              <%- end %>
+            </ul>
+          </li>
         <%- end %>
       </ul>
     </li>

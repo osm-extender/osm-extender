@@ -546,8 +546,8 @@ class ReportsController < ApplicationController
         unless badge.nil?
           (members ||= Osm::Member.get_for_section(osm_api, current_section)).each do |member|
             next if member.grouping_id == -2  # Leaders don't get these participation badges
-            next_level_due = ((@start.to_time - member.started.to_time) / 1.year).ceil
-            if (@start..@finish).include?(member.started + next_level_due.years)
+            next_level_due = ((@start.to_time - member.joined_movement.to_time) / 1.year).ceil
+            if (@start..@finish).include?(member.joined_movement + next_level_due.years)
               key = [badge, next_level_due]
               @earnt_badges[key] ||= []
               @earnt_badges[key].push member.name

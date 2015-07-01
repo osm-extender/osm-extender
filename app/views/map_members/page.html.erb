@@ -12,10 +12,11 @@
     <%- end %>
 
     <h3>Which address?</h3>
-    Use the <%= select_tag 'address', options_from_collection_for_select({:address=>current_section.column_names[:address], :address2=>current_section.column_names[:address2]}, :first, :last) %> Address.
+
+    Use the address for <%= select_tag 'address', options_for_select(@addresses, (params['contact'] || 'contact')) %>
 
     <h3>Where do you meet?</h3>
-    <%= text_field_tag 'base' %>(optional)
+    <%= text_field_tag 'base', params[:base] %>(optional)
 
     <h2>Plot your members</h2>
     <%= button_tag 'Plot members', :name=>'plot', :type => :button, :onClick => "plot(#{params[:section_id]});" %>
