@@ -1,4 +1,5 @@
 class UserMailer < ApplicationMailer
+  helper ApplicationHelper
 
   def activation_needed(user)
     @user = user

@@ -89,7 +89,7 @@ class UsersController < ApplicationController
   def reset_password
     user = User.find(params[:id])
 
-    if user.deliver_reset_password_instructions!
+    if user.deliver_reset_password_instructions!(expiration: 48.hours)
       redirect_to(users_path, :notice => 'Password reset instructions have been sent to the user.')
     else
       redirect_to(users_path, :error => 'Password reset instructions have NOT been sent to the user.')
