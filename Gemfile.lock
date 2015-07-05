@@ -245,6 +245,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     raindrops (0.14.0)
     rake (10.4.2)
+    rb-readline (0.5.3)
     recaptcha (0.4.0)
     redcarpet (3.3.2)
     redis (3.2.1)
@@ -391,6 +392,7 @@ DEPENDENCIES
   pry (~> 0.9)
   rack-mini-profiler (~> 0.1)
   rails (~> 4.1, >= 4.2.2)
+  rb-readline
   recaptcha (~> 0.3)
   redcarpet (~> 3.0)
   redis-rails (~> 4.0)

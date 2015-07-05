@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 # Rails
 gem 'rails', '~> 4.1', '>= 4.2.2'
 gem 'activerecord-session_store', '~> 0.1'
+gem 'rb-readline'
 
 # Authentication / Authorisation
 gem 'sorcery', '~> 0.8', '>= 0.8.5'
