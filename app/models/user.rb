@@ -72,6 +72,21 @@ class User < ActiveRecord::Base
   end
 
 
+  def deliver_reset_password_instructions!(options={})
+    config = sorcery_config
+    # hammering protection
+    return false if config.reset_password_time_between_emails.present? && self.send(config.reset_password_email_sent_at_attribute_name) && self.send(config.reset_password_email_sent_at_attribute_name) > config.reset_password_time_between_emails.seconds.ago.utc
+    self.class.sorcery_adapter.transaction do
+      generate_reset_password_token!
+      if options[:expiration]
+        self.reset_password_token_expires_at = options[:expiration].seconds.from_now
+        self.save!
+      end
+      send_reset_password_email! unless config.reset_password_mailer_disabled
+    end
+  end
+
+
   def gravatar_id
     return Digest::MD5.hexdigest(read_attribute(:email_address).downcase)
   end

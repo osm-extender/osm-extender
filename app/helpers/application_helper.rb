@@ -46,6 +46,22 @@ module ApplicationHelper
     return date.strftime(format_string.gsub(/\%d/, date.strftime('%e').to_i.ordinalize.to_s))
   end
 
+  # Convert a time to duration to finish a sentance fragment starting "do this by"
+  # @param time the time to convert to words 
+  # @returns a string
+  def do_by_time(time)
+    if time.today?
+      return time.strftime('%H:%M today')
+    end
+    if time.to_date == Date.tomorrow
+      return time.strftime('%H:%M tomorrow')
+    end
+    if time.to_date <= (Date.today + 6.days)
+      return time.strftime('%H:%M on %A')
+    end
+    return ordinalized_date(time, '%H:%M on %A %d %B')
+  end
+
   # Create a link for sorting a table by a given column from the model
   # @param column a string identifying the column to sort by
   # @param title (optional) the column title to use in the link, f not provided the title is generated from column
