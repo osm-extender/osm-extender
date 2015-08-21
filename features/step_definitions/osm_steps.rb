@@ -68,8 +68,7 @@ Given /^an OSM request to get_api_access for section "([^"]*)" will have the per
   body[-1] = '}'
   body += '}]}'
 
-  url = get_osm_url('get_api_access')
-  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/#{url}&sectionid=#{section}", :body => body, :content_type => 'application/json') unless url.nil?
+  FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/ext/settings/access/?action=getAPIAccess&sectionid=#{section}", :body => body, :content_type => 'application/json')
 end
 
 Given /^an OSM request to get_flexi_record_fields for section "(\d+)" flexi "(\d+)" will have the fields$/ do |section, flexi, table|
