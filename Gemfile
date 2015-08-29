@@ -41,7 +41,7 @@ gem 'jquery-rails', '~> 4.0', '>= 4.0.4'
 gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
 gem 'sass-rails', '~> 5.0'
 gem 'coffee-rails', '~> 4.0'
-gem 'uglifier', '~> 2.0'
+gem 'uglifier', '~> 2.0', '>= 2.7.2'
 gem 'normalize-rails', '~> 3.0'
 
 
