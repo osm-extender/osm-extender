@@ -330,7 +330,7 @@ GEM
       ansi
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.7.1)
+    uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unf (0.1.4)
@@ -407,7 +407,7 @@ DEPENDENCIES
   therubyracer (~> 0.12)
   timecop (~> 0.5)
   turn (~> 0.9)
-  uglifier (~> 2.0)
+  uglifier (~> 2.0, >= 2.7.2)
   unicorn (~> 4.3)
   webrat (~> 0.7)
   will_paginate (~> 3.0)
