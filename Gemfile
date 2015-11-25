@@ -14,7 +14,8 @@ gem 'cancan', '~> 1.6'
 # Misc
 gem 'osm', '~> 1.2', '>= 1.2.20'       # For using the OSM API
 #gem 'osm', :path => '../../osm/code'
-gem 'recaptcha', '~> 0.3'             # Used to confirm non-logged in users are human (i.e. on contact form)
+gem 'recaptcha', '~> 0.3', '< 0.5.0'  # Used to confirm non-logged in users are human (i.e. on contact form)
+# recaptcha 0.5.0 requires ruby 2
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.6'       # Easily generate HTML emails (also does plain text counterpart)
