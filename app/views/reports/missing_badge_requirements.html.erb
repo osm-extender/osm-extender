@@ -104,7 +104,7 @@
               <li><%= @badge_names[type][badge_key] %>:
                 <ul>
                   <%- requirements.each do |r_key, members| %>
-                    <li><%= '@badge_requirement_labels[type][badge_key][r_key]' %>:
+                    <li><%= @badge_requirement_labels[type][badge_key][r_key] %>:
                       <ul>
                         <%- members.each do |member_id| %>
                           <li><%= @member_names[member_id] %></li>
