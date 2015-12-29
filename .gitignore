@@ -5,6 +5,7 @@ db/*.sqlite3-journal
 log/*
 tmp/
 .rbenv-version
+.ruby-version
 .sass-cache/
 config/environments/*_custom.rb
 config/database.yml
