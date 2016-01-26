@@ -7,13 +7,13 @@
 
   <%= stylesheet_link_tag 'application', :media => :all %>
   <%= stylesheet_link_tag 'application__print', :media=>:print %>
-  <%= stylesheet_link_tag params[:controller], :media=>:all if OSMExtender::Application.assets.find_asset("#{params[:controller]}.css") %>
-  <%= stylesheet_link_tag "#{params[:controller]}__print", :media=>:print if OSMExtender::Application.assets.find_asset("#{params[:controller]}__print.css") %>
+  <%= stylesheet_link_tag params[:controller], :media=>:all %>
+  <%= stylesheet_link_tag "#{params[:controller]}__print", :media=>:print %>
 
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
   <%= javascript_include_tag 'https://maps.googleapis.com/maps/api/js?sensor=false' if content_for?(:use_maps) %>
   <%= javascript_include_tag 'application' %>
-  <%= javascript_include_tag "#{params[:controller]}/#{params[:action]}" if OSMExtender::Application.assets.find_asset("#{params[:controller]}/#{params[:action]}.js") %>
+  <%= javascript_include_tag "#{params[:controller]}/#{params[:action]}" %>
 
   <%- if Rails.application.secrets.ga_tracking_id %>
     <script>
