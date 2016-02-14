@@ -20,11 +20,19 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
     not_seen = []
     register.each do |row|
-      not_seen.push ({
-        :first_name => row.first_name,
-        :last_name => row.last_name,
-      }) if not_seen_member_in?(row.attendance, dates_to_check)
-    end
+      unless configuration[:include_leaders]  # User has chosen to exclude leaders
+        if row.grouping_id.eql?(-2)           # Member this row represents is in the leaders patrol
+          next row
+        end
+      end
+
+      if not_seen_member_in?(row.attendance, dates_to_check)
+        not_seen.push ({
+          :first_name => row.first_name,
+          :last_name => row.last_name,
+        })
+      end
+    end # each row
     return not_seen
   end
 
@@ -42,19 +50,22 @@ class EmailReminderItemNotSeen < EmailReminderItem
 
   def self.configuration_labels
     {
-      :the_last_n_weeks => 'For how many weeks?',
+      the_last_n_weeks: 'For how many weeks?',
+      include_leaders: 'Include leaders?'
     }
   end
 
   def self.default_configuration
     {
-      :the_last_n_weeks => 2,
+      the_last_n_weeks: 2,
+      include_leaders: true
     }
   end
 
   def self.configuration_types
     {
-      :the_last_n_weeks => :positive_integer,
+      the_last_n_weeks: :positive_integer,
+      include_leaders: :boolean
     }
   end
 
@@ -63,7 +74,8 @@ class EmailReminderItemNotSeen < EmailReminderItem
   end
 
   def human_configuration
-    "In the last #{configuration[:the_last_n_weeks]} #{"week".pluralize(configuration[:the_last_n_weeks])}."
+    "In the last #{configuration[:the_last_n_weeks]} #{"week".pluralize(configuration[:the_last_n_weeks])}" +
+    "#{', excluding leaders' unless configuration[:include_leaders]}."
   end
 
 

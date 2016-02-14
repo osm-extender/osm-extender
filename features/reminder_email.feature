@@ -121,9 +121,10 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "Members not seen"
         And I fill in "For how many weeks?" with "1"
+		And I uncheck "Include leaders?"
         And I press "Create members not seen item"
         Then I should see "Item was successfully added"
-        And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
+        And I should see "In the last 1 week, excluding leaders." in the "Configuration" column of the "Members not seen" row
 
     Scenario: Add advised absences item to reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
@@ -194,7 +195,7 @@ Feature: Reminder Email
         And I go to the list of email_reminders
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Events" row
-	And I check "Include attendance breakdown?"
+		And I check "Include attendance breakdown?"
         And I fill in "How many months into the future?" with "6"
         And I press "Update events item"
         Then I should see "Item was successfully updated"
@@ -220,9 +221,11 @@ Feature: Reminder Email
         And I follow "[Edit]" in the "Actions" column of the "Tuesday" row
         And I follow "[Edit]" in the "Actions" column of the "Members not seen" row
         And I fill in "For how many weeks?" with "1"
+		And I check "Include leaders?"
         And I press "Update members not seen item"
         Then I should see "Item was successfully updated"
         And I should see "In the last 1 week." in the "Configuration" column of the "Members not seen" row
+        And I should not see "excluding leaders." in the "Configuration" column of the "Members not seen" row
 
     Scenario: Edit advised absences item in reminder email
         Given "alice@example.com" has a reminder email for section 1 on "Tuesday"
