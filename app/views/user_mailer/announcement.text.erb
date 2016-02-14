@@ -1,0 +1,10 @@
+<%- unless @announcement.title.empty? %>
+<%= @announcement.title %>
+<%= "=" * @announcement.title.size %>
+
+<%- end %>
+<%= @user.name %> an important announcement was just posted to the site, so important that we're emailing it to you too.
+
+<%= @announcement.message %>
+
+Thanks for taking the time to read the announcement.

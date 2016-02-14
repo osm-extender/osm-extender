@@ -11,83 +11,75 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150523195547) do
+ActiveRecord::Schema.define(version: 20160214133714) do
 
   create_table "announcements", force: :cascade do |t|
-    t.text     "message",                        null: false
-    t.datetime "start",                          null: false
-    t.datetime "finish",                         null: false
-    t.boolean  "public",         default: false, null: false
-    t.boolean  "prevent_hiding", default: false, null: false
     t.datetime "emailed_at"
+    t.text     "message"
+    t.datetime "start"
+    t.datetime "finish"
+    t.boolean  "public"
+    t.boolean  "prevent_hiding"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "title"
   end
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
-    t.string   "auditable_type"
+    t.string   "auditable_type",  limit: 255
     t.integer  "associated_id"
-    t.string   "associated_type"
+    t.string   "associated_type", limit: 255
     t.integer  "user_id"
-    t.string   "user_type"
-    t.string   "username"
-    t.string   "action"
+    t.string   "user_type",       limit: 255
+    t.string   "username",        limit: 255
+    t.string   "action",          limit: 255
     t.text     "audited_changes"
-    t.integer  "version",         default: 0
-    t.string   "comment"
-    t.string   "remote_address"
+    t.integer  "version"
+    t.string   "comment",         limit: 255
+    t.string   "remote_address",  limit: 255
     t.datetime "created_at"
   end
 
-  add_index "audits", ["associated_id", "associated_type"], name: "associated_index"
-  add_index "audits", ["auditable_id", "auditable_type"], name: "auditable_index"
-  add_index "audits", ["created_at"], name: "index_audits_on_created_at"
-  add_index "audits", ["user_id", "user_type"], name: "user_index"
-
   create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   default: 0
-    t.integer  "attempts",   default: 0
+    t.integer  "priority",               default: 0
+    t.integer  "attempts",               default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "locked_by",  limit: 255
+    t.string   "queue",      limit: 255
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
   create_table "email_lists", force: :cascade do |t|
+    t.text     "name"
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "name"
     t.boolean  "match_type"
     t.integer  "match_grouping"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "notify_changed",                    default: false, null: false
-    t.string   "last_hash_of_addresses", limit: 64, default: "",    null: false
-    t.integer  "contact_member",                    default: 0,     null: false
-    t.integer  "contact_primary",                   default: 0,     null: false
-    t.integer  "contact_secondary",                 default: 0,     null: false
-    t.integer  "contact_emergency",                 default: 0,     null: false
+    t.boolean  "notify_changed"
+    t.string   "last_hash_of_addresses", limit: 64
+    t.integer  "contact_member"
+    t.integer  "contact_primary"
+    t.integer  "contact_secondary"
+    t.integer  "contact_emergency"
   end
-
-  add_index "email_lists", ["notify_changed"], name: "index_email_lists_on_notify_changed"
-  add_index "email_lists", ["section_id"], name: "index_email_lists_on_section_id"
-  add_index "email_lists", ["user_id"], name: "index_email_lists_on_user_id"
 
   create_table "email_reminder_items", force: :cascade do |t|
     t.integer  "email_reminder_id"
-    t.string   "type"
+    t.string   "type",              limit: 255
     t.text     "configuration"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "position",          default: 0, null: false
+    t.integer  "position",                      default: 0, null: false
   end
 
   add_index "email_reminder_items", ["email_reminder_id"], name: "index_email_reminder_items_on_email_reminder_id"
@@ -95,12 +87,12 @@ ActiveRecord::Schema.define(version: 20150523195547) do
 
   create_table "email_reminder_shares", force: :cascade do |t|
     t.integer  "reminder_id",                                   null: false
-    t.string   "email_address",                                 null: false
-    t.string   "name",                                          null: false
+    t.string   "email_address", limit: 255,                     null: false
+    t.string   "name",          limit: 255,                     null: false
     t.string   "state",         limit: 16,  default: "pending", null: false
-    t.string   "auth_code",     limit: 128,                     null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "auth_code",     limit: 64,                      null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
   end
 
   add_index "email_reminder_shares", ["auth_code"], name: "index_email_reminder_shares_on_auth_code"
@@ -113,18 +105,14 @@ ActiveRecord::Schema.define(version: 20150523195547) do
     t.integer  "send_on"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "section_name", null: false
+    t.string   "section_name", limit: 255, null: false
   end
-
-  add_index "email_reminders", ["section_id"], name: "index_email_reminders_on_section_id"
-  add_index "email_reminders", ["send_on"], name: "index_email_reminders_on_send_on"
-  add_index "email_reminders", ["user_id"], name: "index_email_reminders_on_user_id"
 
   create_table "emailed_announcements", force: :cascade do |t|
     t.integer  "announcement_id"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   add_index "emailed_announcements", ["announcement_id"], name: "index_emailed_announcements_on_announcement_id"
@@ -133,8 +121,8 @@ ActiveRecord::Schema.define(version: 20150523195547) do
   create_table "hidden_announcements", force: :cascade do |t|
     t.integer  "user_id",         null: false
     t.integer  "announcement_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   add_index "hidden_announcements", ["announcement_id", "user_id"], name: "index_hidden_announcements_on_announcement_id_and_user_id", unique: true
@@ -143,19 +131,19 @@ ActiveRecord::Schema.define(version: 20150523195547) do
   add_index "hidden_announcements", ["user_id"], name: "index_hidden_announcements_on_user_id"
 
   create_table "programme_review_balanced_caches", force: :cascade do |t|
-    t.integer  "term_id",      null: false
-    t.integer  "section_id",   null: false
+    t.integer  "section_id"
+    t.integer  "term_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "last_used_at"
     t.text     "data"
-    t.string   "term_name",    null: false
-    t.date     "term_start",   null: false
-    t.date     "term_finish",  null: false
+    t.string   "term_name",    limit: 255, null: false
+    t.date     "term_start",               null: false
+    t.date     "term_finish",              null: false
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", null: false
+    t.string   "session_id", limit: 255, null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -170,25 +158,25 @@ ActiveRecord::Schema.define(version: 20150523195547) do
     t.integer  "email_reminders"
     t.text     "email_reminders_by_day"
     t.text     "email_reminders_by_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.text     "email_reminder_shares_by_day"
     t.text     "usage"
   end
 
-  add_index "statistics", ["date"], name: "index_statistics_on_date", unique: true
+  add_index "statistics", ["date"], name: "index_statistics_caches_on_date", unique: true
 
   create_table "usage_logs", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "section_id"
-    t.string   "controller",     null: false
-    t.string   "action",         null: false
-    t.string   "sub_action"
-    t.string   "result"
+    t.string   "controller",     limit: 255, null: false
+    t.string   "action",         limit: 255, null: false
+    t.string   "sub_action",     limit: 255
+    t.string   "result",         limit: 255
     t.text     "extra_details"
-    t.datetime "at",             null: false
-    t.integer  "at_day_of_week", null: false
-    t.integer  "at_hour",        null: false
+    t.datetime "at",                         null: false
+    t.integer  "at_day_of_week",             null: false
+    t.integer  "at_hour",                    null: false
   end
 
   add_index "usage_logs", ["action"], name: "index_usage_logs_on_action"
@@ -197,10 +185,10 @@ ActiveRecord::Schema.define(version: 20150523195547) do
   add_index "usage_logs", ["user_id"], name: "index_usage_logs_on_user_id"
 
   create_table "user_versions", force: :cascade do |t|
-    t.string   "item_type",  null: false
-    t.integer  "item_id",    null: false
-    t.string   "event",      null: false
-    t.string   "whodunnit"
+    t.string   "item_type",  limit: 255, null: false
+    t.integer  "item_id",                null: false
+    t.string   "event",      limit: 255, null: false
+    t.string   "whodunnit",  limit: 255
     t.text     "object"
     t.datetime "created_at"
   end
@@ -208,52 +196,43 @@ ActiveRecord::Schema.define(version: 20150523195547) do
   add_index "user_versions", ["item_type", "item_id"], name: "index_user_versions_on_item_type_and_item_id"
 
   create_table "users", force: :cascade do |t|
-    t.string   "email_address",                                              null: false
-    t.string   "crypted_password"
-    t.string   "salt"
+    t.string   "email_address",                   limit: 255
+    t.string   "crypted_password",                limit: 255
+    t.string   "salt",                            limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "activation_state"
-    t.string   "activation_token"
+    t.string   "activation_state",                limit: 255
+    t.string   "activation_token",                limit: 255
     t.datetime "activation_token_expires_at"
-    t.string   "reset_password_token"
+    t.string   "reset_password_token",            limit: 255
     t.datetime "reset_password_token_expires_at"
     t.datetime "reset_password_email_sent_at"
-    t.integer  "failed_logins_count",                        default: 0
+    t.integer  "failed_logins_count"
     t.datetime "lock_expires_at"
-    t.string   "name"
-    t.boolean  "can_administer_users",                       default: false
+    t.string   "name",                            limit: 255
+    t.boolean  "can_administer_users"
     t.text     "osm_userid",                      limit: 6
     t.text     "osm_secret",                      limit: 32
-    t.boolean  "can_view_statistics",                        default: false
-    t.integer  "startup_section",                            default: 0,     null: false
-    t.boolean  "can_administer_announcements",               default: false
-    t.boolean  "can_administer_delayed_job",                 default: false
-    t.boolean  "can_become_other_user",                      default: false
-    t.integer  "custom_row_height",                          default: 0
-    t.integer  "custom_text_size",                           default: 0
-    t.string   "unlock_token"
+    t.boolean  "can_view_statistics",                         default: false
+    t.integer  "startup_section",                             default: 0,     null: false
+    t.boolean  "can_administer_announcements",                default: false
+    t.boolean  "can_administer_delayed_job",                  default: false
+    t.boolean  "can_become_other_user",                       default: false
+    t.integer  "custom_row_height",                           default: 0
+    t.integer  "custom_text_size",                            default: 0
+    t.string   "unlock_token",                    limit: 255
   end
 
-  add_index "users", ["activation_token"], name: "index_users_on_activation_token"
-  add_index "users", ["email_address"], name: "index_users_on_email_address", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token"
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token"
 
   create_table "versions", force: :cascade do |t|
-    t.string   "item_type",  null: false
-    t.integer  "item_id",    null: false
-    t.string   "event",      null: false
-    t.string   "whodunnit"
+    t.string   "item_type",  limit: 255, null: false
+    t.integer  "item_id",                null: false
+    t.string   "event",      limit: 255, null: false
+    t.string   "whodunnit",  limit: 255
     t.text     "object"
     t.datetime "created_at"
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
 
-  validates("email_lists", "contact_member", inclusion: { in: 0..4 })
-  validates("email_lists", "contact_primary", inclusion: { in: 0..4 })
-  validates("email_lists", "contact_secondary", inclusion: { in: 0..4 })
-  validates("email_lists", "contact_emergency", inclusion: { in: 0..3 })
-
-end

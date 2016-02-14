@@ -113,6 +113,9 @@
         <div id="announcements">
           <%- current_announcements.each do |announcement| %>
             <div id="announcement-<%= announcement.id %>">
+              <%- unless announcement.title.blank? %>
+                <h3><%= announcement.title %></h3>
+              <%- end %>
               <%= markdown(announcement.message) %>
               <%- if current_user && announcement.hideable? %>
                 <p><%= link_to '[Hide this announcement]', '#', {:class => 'hide_link', :data => {'announcement-id' => announcement.id, 'csrf-token' => form_authenticity_token.to_s}} %></p>

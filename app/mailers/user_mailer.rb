@@ -37,7 +37,7 @@ class UserMailer < ApplicationMailer
     @user = user
     @announcement = announcement
     mail ({
-      :subject => build_subject('Announcement'),
+      :subject => build_subject("Announcement#{ " - #{announcement.title}" unless announcement.title.empty? }"),
       :to => @user.email_address_with_name
     })
   end
