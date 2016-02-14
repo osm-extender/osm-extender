@@ -63,6 +63,9 @@
             <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('Statistics', statistics_path) %></div><%- end %>
           </div><!-- secondary_menu_admin -->
           <div id="secondary_menu_all">
+            <div class="secondary_menu_section_label">
+              Multiple sections / Section independent
+            </div>
             <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
             <%- if current_user.connected_to_osm? && current_section %>
               <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
@@ -72,7 +75,7 @@
               <div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div>
               <div class="menu_item"><%= link_to 'Check OSM setup', check_osm_setup_path %></div>
             </div>
-            <div id="current_section">
+            <div id="secondary_menu_current_section" class="secondary_menu_section_label">
               Current section: <%= "#{current_section.name} (#{current_section.group_name})" %>
               <%= link_to '[change]', my_page_path %>
             </div>
