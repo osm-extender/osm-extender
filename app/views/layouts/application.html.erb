@@ -66,6 +66,7 @@
             <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
             <%- if current_user.connected_to_osm? && current_section %>
               <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
+              <div class="menu_item"><%= link_to 'Map members', map_members_multiple_path %></div>
               <div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div>
               <div class="menu_item"><%= link_to 'Search members', osm_search_members_form_path %></div>
               <div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div>

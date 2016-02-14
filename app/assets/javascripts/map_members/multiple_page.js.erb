@@ -42,6 +42,7 @@ var mapOptions = {
 var map = null;
 var bounds = null;
 var geocoder = new google.maps.Geocoder();
+var groupings = null;
 var markers = null;
 var membersAll = 0;
 var membersDone = 0;
@@ -56,13 +57,13 @@ var plotMember = function(member) {
         var marker = new google.maps.Marker({
           position: location,
           map: map,
-          icon: pins[document.getElementById('pin-' + member.grouping_id).value][1],
+          icon: pins[document.getElementById('pin-' + member.section_id).value][1],
           shadow: pinShadow,
           clickable: true,
           title: member.name
         });
         marker.info = new google.maps.InfoWindow({
-          content: member.name + " (" + member.grouping_name + ")"
+          content: member.name + " (" + member.section_name + " - " + member.grouping_name + ")"
         });
         google.maps.event.addListener(marker, 'click', function() {
           marker.info.open(map, marker);
@@ -72,13 +73,13 @@ var plotMember = function(member) {
       } else { // We've already seen this location;
         members[location].push(member);
         var listOfMembers = '';
-        var membersInSameGrouping = members[location][0].grouping_id;
+        var membersInSameSection = members[location][0].section_id;
         for(var index in members[location]) {
           var this_member = members[location][index];
-          listOfMembers += '<li>' + this_member.name + " (" + this_member.grouping_name + ")" + '</li>';
-          if (this_member.grouping_id != membersInSameGrouping) {membersInSameGrouping = null;}
+          listOfMembers += '<li>' + this_member.name + " (" + this_member.section_name + " - " + this_member.grouping_name + ")" + '</li>';
+          if (this_member.section_id != membersInSameSection) {membersInSameSection = null;}
         }
-        var colour = (membersInSameGrouping == null) ? 'AAAAFF' : document.getElementById('pin-' + member.grouping_id).value;
+        var colour = (membersInSameSection == null) ? 'AAAAFF' : document.getElementById('pin-' + member.section_id).value;
         markers[location].setIcon(pins[colour][members[location].length]);
         markers[location].setTitle('Multiple members.');
         markers[location].info = new google.maps.InfoWindow({
@@ -99,7 +100,7 @@ var geocodeMember = function(member) {
   }
 }
 
-function plot(section_id) {
+function plot() {
   bounds = new google.maps.LatLngBounds();
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
   markers = {};
@@ -126,11 +127,22 @@ function plot(section_id) {
       }
     });
   }
+  var checked_sections = $(":checkbox:checked").map(function() {
+      parts = this.id.split("-");
+      if (parts[0] == "include") {
+        return "include[" + parts[1] + "]=1"
+      } else {
+        return ""
+      }
+  }).get().join("&");
   $.ajax({
-    url: '<%= CGI.unescape OSMExtender::Application.routes.url_helpers.map_members_data_path(section_id: '[[section_id]]')  %>'.replace('[[section_id]]', section_id) + '?address=' + document.getElementById('address').value,
+    url: '<%= CGI.unescape OSMExtender::Application.routes.url_helpers.map_members_multiple_data_path  %>' + '?address=' + document.getElementById('address').value + "&" + checked_sections,
     dataType:'json',
     async: false,
     success: function(data, status, jqXHR) {
+      for (var index in data['errors']) {
+        appendError(data['errors'][index])
+      }
       membersAll = data['members'].length;
       if (membersAll == 0) {
         message = 'No members in the section have the selected contact.';
