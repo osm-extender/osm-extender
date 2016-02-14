@@ -30,7 +30,7 @@ Feature: Flexi Records
             | flexi      | read    |
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Flexi records" within "#secondary_menu_all"
-And I go to the osm_flexi_records page
+        And I go to the osm_flexi_records page
         Then I should be on the osm_flexi_records page
         And I should see "1st Somewhere : Section 1"
         And I should see "1st Somewhere : Section 2"
@@ -41,7 +41,7 @@ And I go to the osm_flexi_records page
    Scenario: Get list of flexi records (one section has no permission)
        When I signin as "alice@example.com" with password "P@55word"
         And I follow "Flexi records" within "#secondary_menu_all"
-And I go to the osm_flexi_records page
+        And I go to the osm_flexi_records page
         Then I should be on the osm_flexi_records page
         And I should see "1st Somewhere : Section 1"
         And I should see "1st Somewhere : Section 2"
@@ -54,7 +54,7 @@ And I go to the osm_flexi_records page
     Scenario: Get list of flexi records for a section
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Flexi records" within "#secondary_menu_current"
-And I go to the osm_flexi_records_for_section 1 page
+        And I go to the osm_flexi_records_for_section 1 page
         Then I should be on the osm_flexi_records_for_section 1 page
         And I should see "Flexi records for Section 1 (1st Somewhere)"
         And I should not see "Section 2"
@@ -75,7 +75,7 @@ And I go to the osm_flexi_records_for_section 1 page
 
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Flexi records" within "#secondary_menu_current"
-And I go to the osm_flexi_records_for_section 1 page
+        And I go to the osm_flexi_records_for_section 1 page
         And I follow "Flexi 1"
         Then I should see "Flexi 1 for Section 1 (1st Somewhere)"
         And I should see "First name"

@@ -2,7 +2,7 @@ class EditableParams < Struct.new(:for_user)
 
   def announcement
     [
-      :start, :finish, :message, :prevent_hiding, :public,
+      :start, :finish, :title, :message, :prevent_hiding, :public,
       :start_date, :start_time, :finish_date, :finish_time
     ]
   end

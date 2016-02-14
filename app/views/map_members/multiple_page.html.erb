@@ -1,0 +1,45 @@
+<%= page_title "Map Members for multiple sections" %>
+<% provide :use_maps, true %>
+
+<div style="width: 710px; margin-left: auto; margin-right: auto;">
+  <div id="setup" style="max-width: 300px; margin-top: 0px; display: inline-block; vertical-align: middle;">
+    <h2>Setup Map</h2>
+
+    <h3>Pin colours for each section</h3>
+    <table>
+      <tr>
+        <th>Section</th>
+        <th>Include</th>
+        <th>Colour</th>
+      </tr>
+      <%- @sections.each_with_index do |section, index| %>
+        <tr>
+          <td><%= get_section_names[section.id] %></td>
+          <%- if has_osm_permission?(:read, :member, current_user, section) %>
+            <td><%= check_box_tag "include-#{section.id}", 1, true %></td>
+            <td><%= select_tag "pin-#{section.id}", options_from_collection_for_select(@pin_colours, :downcase, :capitalize, @pin_colours[index % @pin_colours.size]) %></td>
+          <%- else %>
+            <td colspan="2">You don't have permission to get members for this section.</td>
+          <%- end %>
+        </tr>
+      <%- end %>
+    </table>
+
+    <h3>Which address?</h3>
+
+    Use the address for <%= select_tag 'address', options_for_select(@addresses, (params['contact'] || 'contact')) %>
+
+    <h3>Where do you meet?</h3>
+    <%= text_field_tag 'base', params[:base] %>(optional)
+
+    <h2>Plot your members</h2>
+    <%= button_tag 'Plot members', :name=>'plot', :type => :button, :onClick => "plot();" %>
+  </div>
+
+  <div style="display: inline-block; vertical-align: middle; text-align: center; margin-left: 10px;">
+    <div id="map" style="width: 400px; height: 400px; margin-bottom: 10px;"></div>
+    <div id="progress" style="width: 100%; background-color: #8888ff; text-align: left;"></div>
+    <div id="errors" style="width: 100%; background-color: #ff8888; text-align: left; font-weight: bold;"></div>
+  </div>
+
+</div>

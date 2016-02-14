@@ -84,11 +84,13 @@
 #secondary_menu_admin .menu_item a:hover {
     color:              #feff7e;
 }
-#current_section {
-    font-weight:        bolder;
+
+#secondary_menu_current_section {
     a {
         font-weight:        lighter !important;
         text-decoration:    none !important;
     }
 }
-
+.secondary_menu_section_label {
+    font-weight:        bolder;
+}

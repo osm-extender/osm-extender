@@ -1,5 +1,9 @@
 <%= page_title 'Map members' %>
 
+<h2>Get members for  multiple sections</h2>
+<p><%= link_to "Get a map for members from multiple sections", map_members_multiple_path %>.</p>
+
+<h2>Get members for one section</h2>
 <ul>
 <%- @sections.each do |section| %>
   <li>
