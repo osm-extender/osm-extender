@@ -2,6 +2,7 @@
 # The inheriting class MUST provide the following methods:
 # * get_data method - to return the data to be provided to the email template
 # * get_fake_data - to will return a fake version of the data for use in previewing the data without accessing OSM
+# * self.required_permissions - permission arguments for user.has_osm_permission?, eg [:read, :register] [[:read, :write], :register] or [:read, [:member, :register]] etc
 # * self.human_name - to return a user friendly name for the class (e.g. Missed Scouts)
 # * self.default_configuration - to return a complete configuration hash with default values
 # * Unless default_configuration returns an empty hash
@@ -32,6 +33,10 @@ class EmailReminderItem < ActiveRecord::Base
 
   def get_fake_data
     raise "The get_fake_data method must be overridden"
+  end
+
+  def required_permissions
+    raise "The required_permissions method must be overridden"
   end
 
 
@@ -121,6 +126,12 @@ class EmailReminderItem < ActiveRecord::Base
     email_reminder.section_id
   end
 
+  def self.has_permissions?(user, section)
+    return true if required_permissions.eql?([])
+    return true if required_permissions[0].eql?([])
+    return true if required_permissions[1].eql?([])
+    user.has_osm_permission?(section, *required_permissions)
+  end
 
   private
   def only_one_of_each_type

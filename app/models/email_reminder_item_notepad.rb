@@ -8,6 +8,10 @@ class EmailReminderItemNotepad < EmailReminderItem
     return Faker::Lorem.paragraph(1 + rand(3))
   end
 
+  def self.required_permissions
+    []
+  end
+
   def self.default_configuration
     {
     }

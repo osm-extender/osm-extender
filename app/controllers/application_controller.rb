@@ -140,39 +140,18 @@ class ApplicationController < ActionController::Base
   end
 
   # Check if the user and API have a given OSM permission
-  # @param permission_to the action which is being checked (:read or :write), this can be an array in which case the user must be able to perform all actions to the object
-  # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
   def has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    user_can = user_has_osm_permission?(permission_to, permission_on, user, section)
-    api_can = api_has_osm_permission?(permission_to, permission_on, user, section)
-    return user_can && api_can
+    user.has_osm_permission?(section, permission_to, permission_on)
   end
 
   # Check if the user has a given OSM permission
   def user_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    permissions = user.osm_api.get_user_permissions
-    permissions = permissions[section.to_i] || {}
-    [*permission_on].each do |on|
-      [*permission_to].each do |to|
-        unless (permissions[on] || []).include?(to)
-          return false
-        end
-      end
-    end
-    return true
+    user.user_has_osm_permission?(section, permission_to, permission_on)
   end
 
   # Check if the API has a given OSM permission
   def api_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
-    permissions = Osm::ApiAccess.get_ours(user.osm_api, section.to_i).permissions
-    [*permission_on].each do |on|
-      [*permission_to].each do |to|
-        unless (permissions[on] || []).include?(to)
-          return false
-        end
-      end
-    end
-    return true
+    user.api_has_osm_permission?(section, permission_to, permission_on)
   end
 
 

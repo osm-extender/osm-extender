@@ -9,8 +9,8 @@
       <li>Planned badge requirements report (check participation badges)</li>
     </ul></td>
     <td>Read</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :member, current_user, section), osm_api_permission_human_friendly(:member, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :member, current_user, section), osm_user_permission_human_friendly(:member, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :member), osm_api_permission_human_friendly(:member, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :member), osm_user_permission_human_friendly(:member, current_user, section) %></td>
   </tr>
 
   <tr id="badge">
@@ -26,8 +26,8 @@
       </ul></li>
     </ul></td>
     <td>Read</td>
-    <td rowspan="2"><%= pos_neg api_has_osm_permission?(:read, :badge, current_user, section), osm_api_permission_human_friendly(:badge, current_user, section) %></td>
-    <td rowspan="2"><%= pos_neg user_has_osm_permission?(:read, :badge, current_user, section), osm_user_permission_human_friendly(:badge, current_user, section) %></td>
+    <td rowspan="2"><%= pos_neg current_user.api_has_osm_permission?(section, :read, :badge), osm_api_permission_human_friendly(:badge, current_user, section) %></td>
+    <td rowspan="2"><%= pos_neg current_user.user_has_osm_permission?(section, :read, :badge), osm_user_permission_human_friendly(:badge, current_user, section) %></td>
   </tr>
   <tr>
     <td>Planned badge requirements (fast method)</td>
@@ -39,8 +39,8 @@
     <td>OSM Administration</td>
     <td>Reports (Audit leader access)</td>
     <td>Administer</td>
-    <td><%= pos_neg api_has_osm_permission?(:administer, :user, current_user, section), osm_api_permission_human_friendly(:user, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:administer, :user, current_user, section), osm_user_permission_human_friendly(:user, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :administer, :user), osm_api_permission_human_friendly(:user, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :administer, :user), osm_user_permission_human_friendly(:user, current_user, section) %></td>
   </tr>
 
 
@@ -56,8 +56,8 @@
       </ul>
     </td>
     <td>Read</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :register, current_user, section), osm_api_permission_human_friendly(:register, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :register, current_user, section), osm_user_permission_human_friendly(:register, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :register), osm_api_permission_human_friendly(:register, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :register), osm_user_permission_human_friendly(:register, current_user, section) %></td>
     </td>
   </tr>
 
@@ -73,8 +73,8 @@
       </ul></li>
     </ul></td>
     <td>Read</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :programme, current_user, section), osm_api_permission_human_friendly(:programme, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :programme, current_user, section), osm_user_permission_human_friendly(:programme, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :programme), osm_api_permission_human_friendly(:programme, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :programme), osm_user_permission_human_friendly(:programme, current_user, section) %></td>
   </tr>
 
   <tr id="events">
@@ -88,8 +88,8 @@
       </li>
     </ul></td>
     <td>Read</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :events, current_user, section), osm_api_permission_human_friendly(:events, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :events, current_user, section), osm_user_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :events), osm_api_permission_human_friendly(:events, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :events), osm_user_permission_human_friendly(:events, current_user, section) %></td>
   </tr>
 <!--  <tr>
     <td>Something</td>
@@ -102,8 +102,8 @@
       Flexi Records
     </td>
     <td>Read</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :flexi, current_user, section), osm_api_permission_human_friendly(:flexi, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :flexi, current_user, section), osm_user_permission_human_friendly(:flexi, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :flexi), osm_api_permission_human_friendly(:flexi, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :flexi), osm_user_permission_human_friendly(:flexi, current_user, section) %></td>
   </tr>
 
   <!--
@@ -111,8 +111,8 @@
     <td>Finances</td>
     <td>Feature(s)</td>
     <td>Read or Read/Write</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :finance, current_user, section), osm_api_permission_human_friendly(:finance, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :finance, current_user, section), osm_user_permission_human_friendly(:finance, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :finance), osm_api_permission_human_friendly(:finance, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :finance), osm_user_permission_human_friendly(:finance, current_user, section) %></td>
   </tr>
   -->
 
@@ -121,7 +121,7 @@
     <td>Quartermaster&#39;s Database</td>
     <td>Feature(s)</td>
     <td>Read or Read/Write</td>
-    <td><%= pos_neg api_has_osm_permission?(:read, :quartermaster, current_user, section), osm_api_permission_human_friendly(:quartermaster, current_user, section) %></td>
-    <td><%= pos_neg user_has_osm_permission?(:read, :quartermaster, current_user, section), osm_user_permission_human_friendly(:quartermaster, current_user, section) %></td>
+    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :quartermaster), osm_api_permission_human_friendly(:quartermaster, current_user, section) %></td>
+    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :quartermaster), osm_user_permission_human_friendly(:quartermaster, current_user, section) %></td>
   </tr>
   -->

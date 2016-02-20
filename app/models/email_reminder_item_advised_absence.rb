@@ -72,6 +72,10 @@ class EmailReminderItemAdvisedAbsence < EmailReminderItem
     return data
   end
 
+  def self.required_permissions
+    [:read, :register]
+  end
+
   def self.configuration_labels
     {
       :the_next_n_weeks => 'For how many weeks?',

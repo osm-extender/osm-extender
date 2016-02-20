@@ -48,6 +48,11 @@ class EmailReminderItemNotSeen < EmailReminderItem
     return data
   end
 
+
+  def self.required_permissions
+    [:read, :register]
+  end
+
   def self.configuration_labels
     {
       the_last_n_weeks: 'For how many weeks?',
