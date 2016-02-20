@@ -5,6 +5,7 @@
     <a href="#online_scout_manager_extender">[Online Scout Manager Extender]</a>
     <a href="#features">[Features]</a>
     <a href="#email_reminders">[Email Reminders]</a>
+    <a href="#automation_tasks">[Automation Tasks]</a>
 </div>
 
 
@@ -96,6 +97,24 @@
       <p>This allows you to view a selection of your flexi records' data in a way which allows you to change text and column sizes to allow for easier reading / filling in of the printed text.</p>
     </div>
 
+    <h3 class="ui-accordion-header"><a href="#">What are Automation tasks?</a></h3>
+    <div class="ui-accordion-content">
+      <p>The automation tasks are run each night and allow things like ensuring the sixer badge is due for members who have been marked as sixers or filling in the earn 6 badges of the Chief Scout&#39;s award. The available items are:</p>
+      <ul>
+        <li>Birthday badges - Mark selected badges as due on a member&#x27;s birthday.</li>
+        <li>Synchronise the following leadership values for SPL/PL/APL etc.:
+          <ul>
+            <li>Status in personal details.</li>
+            <li>SPL/PL/APL badge.</li>
+            <li>Section leadership part of challenge badges.</li>
+          </ul>
+        </li>
+        <li>Populate the first aid part of the outdoors challenge based on emergency aid staged badge completion.</li>
+        <li>Populate the complete 6 badges part of the Chief Scout&#x27;s Award based on number of earnt badges.</li>
+      </ul>
+      <p>To simplify multiple leaders running the same section anyone with the appropriate pemrissions to a section will be able to change the configuration of the tasks (since they'd be able to do the actions manually if they wanted to anyway). OSM Extender will perform the actions as the OSM user who last changed the configuration for the section.</p>
+    </div>
+
   </div>
 
 
@@ -126,3 +145,41 @@
     </div>
   </div>
 
+
+  <a name="automation_tasks"><h2>Automation Tasks</h2>
+  <div id="accordion-email_reminders" class="ui-accordion accordion_faqs" style="width: 90%; margin-right: auto; margin-left:auto;">
+
+    <h3 class="ui-accordion-header"><a href="#">What are Automation tasks?</a></h3>
+    <div class="ui-accordion-content">
+      <p>The automation tasks are run each night and allow things like ensuring the sixer badge is due for members who have been marked as sixers or filling in the earn 6 badges of the Chief Scout&#39;s award. The available items are:</p>
+      <ul>
+        <li>Birthday badges - Mark selected badges as due on a member&#x27;s birthday.</li>
+        <li>Synchronise the following leadership values for SPL/PL/APL etc.:
+          <ul>
+            <li>Status in personal details.</li>
+            <li>SPL/PL/APL badge.</li>
+            <li>Section leadership part of challenge badges.</li>
+          </ul>
+        </li>
+        <li>Populate the first aid part of the outdoors challenge based on emergency aid staged badge completion.</li>
+        <li>Populate the complete 6 badges part of the Chief Scout&#x27;s Award based on number of earnt badges.</li>
+      </ul>
+      <p>To simplify multiple leaders running the same section anyone with the appropriate pemrissions to a section will be able to change the configuration of the tasks (since they'd be able to do the actions manually if they wanted to anyway). OSM Extender will perform the actions as the OSM user who last changed the configuration for the section.</p>
+    </div>
+
+    <h3 class="ui-accordion-header"><a href="#">How do we change which leader the tasks are run as?</a></h3>
+    <div class="ui-accordion-content">
+      <p>If the leader who last changed the tasks has their access to the section removed then the tasks will fail, any other leader can simply update the configuration (they need not make any changes, simply saving changes will do) and the tasks will now be run as them.</p>
+    </div>
+
+    <h3 class="ui-accordion-header"><a href="#">Can I see what changes were made?</a></h3>
+    <div class="ui-accordion-content">
+      <p>Not through the website but you can elect to have a log of each nights run emailed to you, you can choose not to have empty emails sent if you want to cut down on email noise.</p>
+    </div>
+
+    <h3 class="ui-accordion-header"><a href="#">How do I change the settings for a task?</a></h3>
+    <div class="ui-accordion-content">
+      <p>Go to the automation tasks page for the section you want to adjust and you'll see a list of all the tasks and their current settings. Click the edit link on the row of the item you wish to change, update the settings and click the save button. You may see a message instead of the edit link if you do not have the correct permissions to update the settings.</p>
+    </div>
+
+  </div>
