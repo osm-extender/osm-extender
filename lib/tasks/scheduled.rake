@@ -26,6 +26,8 @@ namespace :scheduled  do
     desc "Send the reminder emails"
     task :reminder_emails => :environment do
       $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
+      noterm_emails_sent = {}
+      forbidden_emails_sent = {}
       puts "Sending Reminder Emails"
       reminders = EmailReminder.where(:send_on => Date.today.wday).order('section_id')
       count = reminders.size
@@ -35,6 +37,20 @@ namespace :scheduled  do
         begin
           puts "\tSending #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{reminder.id})"
           reminder.send_email
+        rescue Osm::Forbidden => exception
+          puts "\t\tUser is fobidden from fetching data"
+          forbidden_emails_sent[list.user_id] ||= []
+          unless forbidden_emails_sent[list.user_id].include?(list.section_id)
+            NotifierMailer.forbidden(list, exception).deliver_now
+            forbidden_emails_sent[list.user_id].push list.section_id
+          end
+        rescue Osm::Error::NoCurrentTerm => exception
+          puts "\t\tNo current term for section"
+          noterm_emails_sent[list.user_id] ||= []
+          unless noterm_emails_sent[list.user_id].include?(list.section_id)
+            NotifierMailer.no_current_term(list, exception).deliver_now
+            noterm_emails_sent[list.user_id].push list.section_id
+          end
         rescue Exception => exception
           exception_raised("Reminder Email (id: #{reminder.id})", exception)
         end

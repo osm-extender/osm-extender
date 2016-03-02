@@ -45,4 +45,34 @@ class ReminderMailer < ApplicationMailer
     })
   end
 
+  def no_current_term(reminder, exception)
+    @reminder = reminder
+    user = reminder.user
+
+    unless user.nil? || !user.connected_to_osm? || @reminder.section_id.nil?
+      api = user.osm_api
+      @next_term = nil
+      @last_term = nil
+      terms = Osm::Term.get_for_section(api, @email_list.section)
+      terms.each do |term|
+        @last_term = term if term.past? && (@last_term.nil? || term.finish > @last_term.finish)
+        @next_term = term if term.future? && (@next_term.nil? || term.start < @next_term.start)
+      end
+    end
+
+    mail ({
+      :subject => build_subject('Preparing Email Reminder FAILED'),
+      :to => @reminder.user.email_address_with_name
+    })
+  end
+
+  def forbidden(reminder, exception)
+    @reminder = reminder
+
+    mail ({
+      :subject => build_subject('Preparing Email Reminder FAILED'),
+      :to => @reminder.user.email_address_with_name
+    })
+  end
+
 end
