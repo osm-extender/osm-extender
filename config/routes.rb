@@ -106,6 +106,8 @@ OSMExtender::Application.routes.draw do
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 
   resources :automation_tasks, as: 'automation_tasks', except: [:show]
+  resources :automation_task_birthday_badges, as: 'automation_task_birthday_badges', path: 'automation_tasks/birthday_badges', except: [:show]
+  post 'automation_tasks/birthday_badges/perform_task' => 'automation_task_birthday_badges#perform_task', :as => 'automation_task_birthday_badge_perform'
 
   get 'statistics' => 'statistics#index', :as => 'statistics'
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
