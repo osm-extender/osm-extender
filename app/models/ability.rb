@@ -42,6 +42,11 @@ class Ability
         share.reminder.user == user  &&  share.pending?
       end
 
+      can [:create, :index], AutomationTask
+      can [:administer, :perform_task], AutomationTask do |item|
+        item.class.has_permissions?(user, item.section_id)
+      end
+
       can [:create, :preview], EmailList
       can [:administer, :get_addresses, :multiple], EmailList do |list|
         list.user == user

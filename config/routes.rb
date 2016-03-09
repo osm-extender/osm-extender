@@ -105,6 +105,8 @@ OSMExtender::Application.routes.draw do
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 
+  resources :automation_tasks, as: 'automation_tasks', except: [:show]
+
   get 'statistics' => 'statistics#index', :as => 'statistics'
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'

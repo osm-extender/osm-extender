@@ -85,6 +85,7 @@
               <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
               <div class="menu_item"><%= link_to 'OSM exports', osm_exports_path %></div>
               <%- unless current_section.waiting? %><div class="menu_item"><%= link_to 'Reports', reports_path %></div><%- end %>
+              <%- unless current_section.waiting? || current_section.adults? %><div class="menu_item"><%= link_to 'Automation tasks', automation_tasks_path %></div><%- end %>
               <%- unless  current_section.waiting? \
                           || (current_section.youth_section? && has_osm_permission?(:read, [:member, :flexi, :events, :programme]) && has_osm_permission?(:write, [:events])) \
                           || (current_section.adults? && has_osm_permission?(:read, [:member, :flexi]) && has_osm_permission?([:read, :write], :events))
@@ -131,7 +132,8 @@
 
       <%- if flash %>
         <div id="notices">
-          <%- flash.each do |key, message| %>
+          <%- flash_sort_order = %w{instruction error warning notice information} %>
+          <%- flash.sort_by{|k,v| flash_sort_order.find_index(k) || 10 }.each do |key, message| %>
             <%= content_tag :div, message, :id => "notices_#{key}" %>
           <%- end %>
         </div><!-- notices -->

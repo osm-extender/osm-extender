@@ -1,0 +1,36 @@
+<%= page_title "Automation tasks for #{current_section.name} (#{current_section.group_name})" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Active</th>
+      <th>Configuration</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%- @tasks.each do |task| %>
+      <tr>
+        <td><%= task.human_name %></td>
+        <td><%= yes_no task.active? %></td>
+        <td><%= task.human_configuration %></td>
+        <td>
+          <%= link_to '[Run now]', self.send("#{task.class.name.singularize.underscore}_perform_path"), method: :post %>
+          <%= link_to '[Edit]', self.send("edit_#{task.class.name.singularize.underscore}_path", task) %>
+          <%= link_to '[Unconfigure]', self.send("#{task.class.name.singularize.underscore}_path", task), data: {:confirm => 'Are you sure?'}, method: :delete %>
+        </td>
+      </tr>
+    <%- end %>
+
+    <%- @unused_tasks.each do |task| %>
+      <%- task, allowed = task.values_at(:type, :has_permissions) %>
+      <tr>
+        <td><%= task.human_name %></td>
+        <td colspan="2">Not yet configured.</td>
+        <td><%= link_to '[Configure]', self.send("new_#{task.name.singularize.underscore}_path"), {:id => "add_#{task.name.singularize.underscore}"} %></td>
+      </tr>
+    <%- end %>
+  </tbody>
+</table>

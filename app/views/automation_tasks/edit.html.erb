@@ -1,0 +1,5 @@
+<%= page_title "Update #{@task.human_name.downcase} automation task" %>
+
+<%= form_for @task, :method=>:patch do |f| %>
+  <%= render 'form', :f=>f %>
+<% end %>
