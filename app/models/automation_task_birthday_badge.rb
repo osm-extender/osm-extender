@@ -99,8 +99,8 @@ class AutomationTaskBirthdayBadge < AutomationTask
     unless birthdays.empty?
       badges = Osm::CoreBadge.get_badges_for_section(user.osm_api, section_id)
       badges.select!{ |badge| configuration.values_at(:badge_6, :badge_7, :badge_8, :badge_9, :badge_10).include?(badge.id) }
-      badge_datas = badges.map{ |badge| [badge.id, badge.get_data_for_section(user.osm_api, section_id)] }.to_h
-      badges = badges.map{ |badge| [badge.id, badge] }.to_h
+      badge_datas = Hash[ badges.map{ |badge| [badge.id, badge.get_data_for_section(user.osm_api, section_id)] } ]
+      badges = Hash[ badges.map{ |badge| [badge.id, badge] } ]
 
       birthdays.each do |birthday|
         member = birthday[:member]

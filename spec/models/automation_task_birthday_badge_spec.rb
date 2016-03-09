@@ -20,6 +20,14 @@ describe "Birthday Badge automation task" do
 
 
   describe "Perform task" do
+    before :each do
+      Timecop.freeze(DateTime.new(2016, 3, 8, 13, 30))
+    end
+
+    after :each do
+      Timecop.return
+    end
+    
     it "Works" do
       section_id = 300
       user = FactoryGirl.build(:user_connected_to_osm)
