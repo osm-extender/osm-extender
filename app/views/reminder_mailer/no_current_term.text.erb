@@ -1,0 +1,18 @@
+Whilst trying to prepare your email reminder for <%= @reminder.section_name %> an error occured- you can't access data in the section.
+This is a problem because when we ask OSM for data for your section we need to tell OSM what term we want the details for. Since today is not in a term we couldn't work out what term to give to OSM. Please correct this by following the instructions below.
+
+* Login to <%= link_to 'OSM', 'https://www.onlinescoutmanager.co.uk' %>.
+* Make sure you are using the <%= @task.section_name %> section.
+* From the term selector choose "Configure terms".
+<%- if @next_term.nil? && @last_term.nil? %>
+* Add some terms.
+<%- elsif @next_term.nil? %>
+* Add a term after <%= @last_term.name %> or change its finish date.
+<%- elsif @last_term.nil? %>
+* Add a term before <%= @next_term.name %> or change its start date.
+<%- else %>
+* Remove the gap between <%= @last_term.name %> and <%= @next_term.name %> by either:
+  * Making <%= @last_term.name %> finish on <%= ordinalized_date((@next_term.start - 1), "%d of %b %Y") %>
+  * Making <%= @next_term.name %> start on <%= ordinalized_date((@last_term.finish + 1), "%d of %b %Y") %>
+  * Changing the finish date of <%= @last_term.name %> and the start date of <%= @next_term.name %> so there is no gap between them.
+<%- end %>

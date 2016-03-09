@@ -51,6 +51,10 @@ class EmailReminderItem < ActiveRecord::Base
     raise "The self.default_configuration method must be overridden"
   end
 
+  def self.required_permissions
+    raise "The self.required_permissions method must be overridden"
+  end
+
   def self.configuration_labels
     if self.default_configuration.empty?
       return {}
@@ -88,7 +92,7 @@ class EmailReminderItem < ActiveRecord::Base
     default = self.class.default_configuration
 
     # Ensure only keys in the default_configuration exist in configuration
-    config.select {|k,v| default.has_key?(k) && default[k] != v}
+    config.select! {|k,v| default.has_key?(k) && default[k] != v}
 
     # Make any type conversions required
     config.each_key do |key|
@@ -127,10 +131,11 @@ class EmailReminderItem < ActiveRecord::Base
   end
 
   def self.has_permissions?(user, section)
-    return true if required_permissions.eql?([])
-    return true if required_permissions[0].eql?([])
-    return true if required_permissions[1].eql?([])
-    user.has_osm_permission?(section, *required_permissions)
+    rp = required_permissions
+    return true if rp.eql?([])
+    return true if rp[0].eql?([])
+    return true if rp[1].eql?([])
+    user.has_osm_permission?(section, *rp)
   end
 
   private
