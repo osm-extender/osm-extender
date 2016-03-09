@@ -29,7 +29,7 @@ namespace :scheduled  do
     noterm_emails_sent = {}
     forbidden_emails_sent = {}
     puts "Performing Automation Tasks"
-    tasks = AutomationTask.all.order('section_id')
+    tasks = AutomationTask.where(active: true).order('section_id')
     count = tasks.size
     count_length = count.to_s.length
     puts "\tNo tasks to perform" if count == 0
