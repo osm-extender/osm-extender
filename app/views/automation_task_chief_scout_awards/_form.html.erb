@@ -1,0 +1,32 @@
+<% if @task.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+    <ul>
+    <% @task.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<div class="field">
+  <input type="hidden" name="automation_task[active]" id="active" value="0"/>
+  <input type="checkbox" name="automation_task[active]" id="active" value="1" <%- if @task.active %>checked="checked"<%- end %>/>
+  <label for="active">Active</label>
+</div>
+
+<div class="field">
+  <label for="unachieved_action">When the number of badges requirement is unmet, what should the value be set to?</label><br/>
+  <%= select_tag "automation_task_config[unachieved_action]", options_for_select(@task.class::UNACHIEVED_ACTIONS.each_with_index.map {|v, i| [v, i]}, @task.configuration[:unachieved_action]), {id: :unachieved_action} %>
+</div>
+
+<div class="field">
+  <label for="achieved_action">When the number of badges requirement is met, what should the value be set to?</label><br/>
+  <%= select_tag "automation_task_config[achieved_action]", options_for_select(@task.class::ACHIEVED_ACTIONS.each_with_index.map {|v, i| [v, i]}, @task.configuration[:achieved_action]), {id: :achieved_action} %>
+</div>
+
+
+<div class="actions">
+  <%= f.submit "Update #{@task.human_name.downcase} task" %>
+</div>

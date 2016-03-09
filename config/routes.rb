@@ -108,6 +108,8 @@ OSMExtender::Application.routes.draw do
   resources :automation_tasks, as: 'automation_tasks', except: [:show]
   resources :automation_task_birthday_badges, as: 'automation_task_birthday_badges', path: 'automation_tasks/birthday_badges', except: [:show]
   post 'automation_tasks/birthday_badges/perform_task' => 'automation_task_birthday_badges#perform_task', :as => 'automation_task_birthday_badge_perform'
+  resources :automation_task_chief_scout_awards, as: 'automation_task_chief_scout_awards', path: 'automation_tasks/chief_scout_awards', except: [:show]
+  post 'automation_tasks/chief_scout_awards/perform_task' => 'automation_task_chief_scout_awards#perform_task', :as => 'automation_task_chief_scout_award_perform'
 
   get 'statistics' => 'statistics#index', :as => 'statistics'
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
