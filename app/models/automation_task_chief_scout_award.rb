@@ -86,18 +86,27 @@ class AutomationTaskChiefScoutAward < AutomationTask
     member_badge_data = Hash[badge.get_data_for_section(user.osm_api, section).map{ |d| [d.member_id, d] } ]
 
     member_start_dates = Hash[ Osm::Member.get_for_section(user.osm_api, section).map{ |m| [m.id, m.started_section] } ]
-    badge_identifiers = Osm::ActivityBadge.get_badges_for_section(user.osm_api, section).map{ |i| i.identifier }
-    badge_identifiers += Osm::StagedBadge.get_badges_for_section(user.osm_api, section).map{ |i| i.identifier }
+    badge_identifiers = Osm::ActivityBadge.get_badges_for_section(user.osm_api, section).map{ |i| [i.identifier, :activity] }
+    badge_identifiers += Osm::StagedBadge.get_badges_for_section(user.osm_api, section).map{ |i| [i.identifier, :staged] }
 
     badge_summaries = Osm::Badge.get_summary_for_section(user.osm_api, section)
     badge_summaries.each do |badge_summary|
       count_for_member = 0
 
-      # Get identifiers of badges which matter
-      identifiers =  badge_summary.keys.select{ |k| badge_identifiers.include?(k) }
-      identifiers.each do |identifier|
-        next identifier unless badge_summary[identifier].eql?(:awarded)
-        next identifier if badge_summary["#{identifier}_date"] < member_start_dates[badge_summary[:member_id]]
+
+      # Count earnt badges
+      badge_identifiers.each do |identifier, type|
+        case badge_summary[identifier]
+        when :awarded
+          # Don;t want to count staged badge awarded in previous section
+          next identifier if type.eql?(:staged) && badge_summary["#{identifier}_date"] < member_start_dates[badge_summary[:member_id]]
+        when :due
+          # Nothing - we always want to count it
+        else
+          # Badge summary is not a state we want to count
+          next identifier
+        end
+
         count_for_member += 1
       end # each identifier
 

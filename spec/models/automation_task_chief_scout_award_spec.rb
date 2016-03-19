@@ -73,7 +73,6 @@ describe "Chief Scout's Award automation task" do
           '402_0'=>:awarded, '402_0_date'=>Date.new(2010, 1, 2),
           '403_0'=>:awarded, '403_0_date'=>Date.new(2010, 1, 3),
           '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 4),
-          '502_0'=>:awarded, '502_0_date'=>Date.new(2009, 12, 31),
         }] }
         Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
         Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0'), Osm::ActivityBadge.new(identifier: '402_0'), Osm::ActivityBadge.new(identifier: '403_0')] }
@@ -102,7 +101,7 @@ describe "Chief Scout's Award automation task" do
           '402_0'=>:awarded, '402_0_date'=>Date.new(2010, 1, 2),
           '403_0'=>:awarded, '403_0_date'=>Date.new(2010, 1, 3),
           '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 4),
-          '502_0'=>:awarded, '502_0_date'=>Date.new(2010, 6, 1),
+          '502_0'=>:awarded, '502_0_date'=>Date.new(2010, 1, 4),
         }] }
         Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
         Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0'), Osm::ActivityBadge.new(identifier: '402_0'), Osm::ActivityBadge.new(identifier: '403_0')] }
@@ -387,6 +386,76 @@ describe "Chief Scout's Award automation task" do
         task.send(:perform_task)
         badge_data.requirements.should == {114339=>"x1 of 6"}
       end
+    end
+
+
+    describe "Counts correct badges" do
+
+      before :each do
+        user = FactoryGirl.build(:user_connected_to_osm)
+        @task = AutomationTaskChiefScoutAward.new(user: user, section_id: @section_id)
+        @task.configuration = {unachieved_action: 3}
+
+        @section_id = 300
+        Osm::Section.stub(:get){ Osm::Section.new(id: @section_id, type: :beavers) }
+
+        badge_data = Osm::Badge::Data.new(member_id: 201)
+        badge = Osm::ChallengeBadge.new(id: 1529)
+        badge.stub(:get_data_for_section){ [badge_data] }
+        Osm::ChallengeBadge.stub(:get_badges_for_section){ [badge] }
+
+        Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
+      end
+
+      it "Activity badge has been awarded" do
+        Osm::Badge.stub(:get_summary_for_section){ [{
+          member_id: 201,
+          '401_0'=>:awarded, '401_0_date'=>Date.new(2010, 1, 1),
+        }] }
+        Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0')] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [] }
+
+        ret_val = @task.send(:perform_task)
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
+      end
+
+      it "Activity badge is due" do
+        Osm::Badge.stub(:get_summary_for_section){ [{
+          member_id: 201,
+          '401_0'=>:due,
+        }] }
+        Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0')] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [] }
+
+        ret_val = @task.send(:perform_task)
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
+      end
+
+      it "Staged activity badge has been awarded since joining section" do
+        Osm::Badge.stub(:get_summary_for_section){ [{
+          member_id: 201,
+          '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 1),
+          '502_0'=>:awarded, '502_0_date'=>Date.new(2009, 12, 31),
+        }] }
+        Osm::ActivityBadge.stub(:get_badges_for_section){ [] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0'), Osm::StagedBadge.new(identifier: '502_0')] }
+
+        ret_val = @task.send(:perform_task)
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
+      end
+
+      it "Staged activity badge is due" do
+        Osm::Badge.stub(:get_summary_for_section){ [{
+          member_id: 201,
+          '501_0'=>:due,
+        }] }
+        Osm::ActivityBadge.stub(:get_badges_for_section){ [] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
+
+        ret_val = @task.send(:perform_task)
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
+      end
+
     end
 
 
