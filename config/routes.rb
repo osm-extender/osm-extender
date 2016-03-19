@@ -111,7 +111,9 @@ OSMExtender::Application.routes.draw do
   resources :automation_task_chief_scout_awards, as: 'automation_task_chief_scout_awards', path: 'automation_tasks/chief_scout_awards', except: [:show]
   post 'automation_tasks/chief_scout_awards/perform_task' => 'automation_task_chief_scout_awards#perform_task', :as => 'automation_task_chief_scout_award_perform'
   resources :automation_task_first_aids, as: 'automation_task_first_aids', path: 'automation_tasks/first_aids', except: [:show]
-  post 'automation_tasks/chief_first_aids/perform_task' => 'automation_task_first_aids#perform_task', :as => 'automation_task_first_aid_perform'
+  post 'automation_tasks/first_aids/perform_task' => 'automation_task_first_aids#perform_task', :as => 'automation_task_first_aid_perform'
+  resources :automation_task_leaderships, as: 'automation_task_leaderships', path: 'automation_tasks/leaderships', except: [:show]
+  post 'automation_tasks/leaderships/perform_task' => 'automation_task_leaderships#perform_task', :as => 'automation_task_leadership_perform'
 
   get 'statistics' => 'statistics#index', :as => 'statistics'
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'

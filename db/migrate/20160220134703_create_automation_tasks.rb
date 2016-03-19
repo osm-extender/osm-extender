@@ -5,8 +5,8 @@ class CreateAutomationTasks < ActiveRecord::Migration
       t.integer :section_id, index: true, null: false
       t.string :type, :null => false
       t.boolean :active, index: true, null: false, default: true
-      t.text :configuration
-      t.string :section_name, :null => false
+      t.text :configuration, null: true
+      t.string :section_name, null: false
 
       t.timestamps null: false
 
