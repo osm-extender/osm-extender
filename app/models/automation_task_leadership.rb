@@ -13,7 +13,7 @@ class AutomationTaskLeadership < AutomationTask
   }
 
   def self.required_permissions
-    [ [:read, :member], [:write, :badge] ]
+    [ [:write, :member], [:write, :badge] ]
   end
 
   def self.configuration_labels

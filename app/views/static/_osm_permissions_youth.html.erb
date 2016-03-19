@@ -1,16 +1,24 @@
   <tr id="member">
-    <td>Contact Details</td>
+    <td rowspan="2">Contact Details</td>
     <td><ul>
       <li>Email Lists</li>
       <li>Email Reminders (Birthdays)</li>
       <li>Reports (Event attendance)</li>
+      <li>Automation Tasks:<ul>
+        <% if AutomationTaskBirthdayBadge::ALLOWED_SECTIONS.include?(section.type) %><li>Birthday Badges</li><% end %>
+        <% if AutomationTaskChiefScoutAward::ALLOWED_SECTIONS.include?(section.type) %><li>Chief Scout's Awards</li><% end %>
+      </ul></li>
       <li>Search Members</li>
       <li>OSM Exports</li>
       <li>Planned badge requirements report (check participation badges)</li>
     </ul></td>
     <td>Read</td>
-    <td><%= pos_neg current_user.api_has_osm_permission?(section, :read, :member), osm_api_permission_human_friendly(:member, current_user, section) %></td>
-    <td><%= pos_neg current_user.user_has_osm_permission?(section, :read, :member), osm_user_permission_human_friendly(:member, current_user, section) %></td>
+    <td rowspan="2"><%= pos_neg current_user.api_has_osm_permission?(section, :read, :member), osm_api_permission_human_friendly(:member, current_user, section) %></td>
+    <td rowspan="2"><%= pos_neg current_user.user_has_osm_permission?(section, :read, :member), osm_user_permission_human_friendly(:member, current_user, section) %></td>
+  </tr>
+  <tr>
+    <td>Automation tasks (Leadership badges)</td>
+    <td>Read and Write</td>
   </tr>
 
   <tr id="badge">
@@ -30,7 +38,15 @@
     <td rowspan="2"><%= pos_neg current_user.user_has_osm_permission?(section, :read, :badge), osm_user_permission_human_friendly(:badge, current_user, section) %></td>
   </tr>
   <tr>
-    <td>Planned badge requirements (fast method)</td>
+    <td><ul>
+      <li>Planned badge requirements (fast method)</li>
+      <li>Automation Tasks:<ul>
+        <% if AutomationTaskBirthdayBadge::ALLOWED_SECTIONS.include?(section.type) %><li>Birthday Badges</li><% end %>
+        <% if AutomationTaskChiefScoutAward::ALLOWED_SECTIONS.include?(section.type) %><li>Chief Scout's Awards</li><% end %>
+        <% if AutomationTaskFirstAid::ALLOWED_SECTIONS.include?(section.type) %><li>First Aid in Badges</li><% end %>
+        <% if AutomationTaskLeadership::ALLOWED_SECTIONS.include?(section.type) %><li>Leadership badges</li><% end %>
+      </ul></li>
+    </ul></td>
     <td>Read and Write</td>
   </tr>
 
