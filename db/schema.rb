@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160220134703) do
+ActiveRecord::Schema.define(version: 20160321111358) do
 
   create_table "announcements", force: :cascade do |t|
     t.text     "message",                        null: false
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 20160220134703) do
     t.datetime "updated_at"
     t.text     "email_reminder_shares_by_day"
     t.text     "usage"
+    t.text     "automation_tasks"
   end
 
   add_index "statistics", ["date"], name: "index_statistics_on_date", unique: true

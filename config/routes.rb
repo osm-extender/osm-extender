@@ -120,6 +120,7 @@ OSMExtender::Application.routes.draw do
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
   get 'statistics/sections' => 'statistics#sections', :as => 'sections_statistics'
   get 'statistics/usage' => 'statistics#usage', :as => 'usage_statistics'
+  get 'statistics/automation_tasks' => 'statistics#automation_tasks', :as => 'automation_tasks_statistics'
 
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
 
