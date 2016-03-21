@@ -7,7 +7,7 @@ describe "Leadership automation task" do
   end
 
   it "Requires correct permissions" do
-    AutomationTaskLeadership.required_permissions.should == [ [:read, :member], [:write, :badge] ]
+    AutomationTaskLeadership.required_permissions.should == [ [:write, :member], [:write, :badge] ]
   end
 
   it "Has a human name" do
