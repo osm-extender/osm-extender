@@ -121,7 +121,7 @@ class EmailListsController < ApplicationController
     data = {}
     groupings = get_all_groupings
     Osm::Section.get_all(osm_api).each do |section|
-      if has_osm_permission?(:read, :member, current_user, section)
+      if current_user.has_osm_permission?(section, :read, :member)
         data[section.id] = {
           'grouping_name' => get_grouping_name(section.type),
           'groupings' => groupings[section.id],

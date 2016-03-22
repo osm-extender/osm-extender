@@ -4,6 +4,11 @@ FactoryGirl.define do
     password 'P@55word'
     password_confirmation { |u| u.password }
     name { |u| u.email_address.match(/[^@]*/)[0].capitalize } # Take before the @
+
+    factory :user_connected_to_osm do
+      osm_userid 100
+      osm_secret 200
+    end
   end
 
   factory :announcement do
@@ -22,6 +27,14 @@ FactoryGirl.define do
     confirm_by_date 1.day.from_now
     user_id { User.find_by_email_address(user_email_address).id }
     cost 1.23
+  end
+
+  factory :automation_task do
+    user { create :user_connected_to_osm }
+    section_id 123
+    section_name 'Unknown'
+    type 'AutomationTaskTestItem'
+    configuration { Hash.new }
   end
 
 end

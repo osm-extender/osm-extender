@@ -18,36 +18,52 @@ Feature: Statistics
     Scenario: Get user statistics
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Statistics"
-	And I follow "User statistics"
+    	And I follow "User statistics"
         Then I should be on the user_statistics page
 
     Scenario: Get user statistics (not signed in)
-	When I go to the user_statistics page
-	Then I should see "You must be signed in"
-	And I should be on the signin page
+    	When I go to the user_statistics page
+    	Then I should see "You must be signed in"
+    	And I should be on the signin page
 
     Scenario: Get user statistics (not authorised)
         When I signin as "bob@example.com" with password "P@55word"
-        Then I should not see "User statistics"
-	When I go to the user_statistics page
-	Then I should see "You are not allowed to do that"
-	And I should be on the my_page page
+    	When I go to the user_statistics page
+    	Then I should see "You are not allowed to do that"
+    	And I should be on the my_page page
 
 
     Scenario: Get reminder email statistics
         When I signin as "alice@example.com" with password "P@55word"
-	And I follow "Statistics"
+    	And I follow "Statistics"
         And I follow "Reminder email statistics"
         Then I should be on the email_reminders_statistics page
 
     Scenario: Get reminder email statistics (not signed in)
-	When I go to the email_reminders_statistics page
-	Then I should see "You must be signed in"
-	And I should be on the signin page
+    	When I go to the email_reminders_statistics page
+    	Then I should see "You must be signed in"
+    	And I should be on the signin page
 
     Scenario: Get reminder email statistics (not authorised)
         When I signin as "bob@example.com" with password "P@55word"
-        Then I should not see "Reminder email statistics"
-	When I go to the email_reminders_statistics page
-	Then I should see "You are not allowed to do that"
-	And I should be on the my_page page
+    	When I go to the email_reminders_statistics page
+    	Then I should see "You are not allowed to do that"
+    	And I should be on the my_page page
+
+
+    Scenario: Get automation tasks statistics
+        When I signin as "alice@example.com" with password "P@55word"
+    	And I follow "Statistics"
+        And I follow "Automation task statistics"
+        Then I should be on the automation_tasks_statistics page
+
+    Scenario: Get automation tasks statistics (not signed in)
+    	When I go to the automation_tasks_statistics page
+    	Then I should see "You must be signed in"
+    	And I should be on the signin page
+
+    Scenario: Get automation tasks (not authorised)
+        When I signin as "bob@example.com" with password "P@55word"
+    	When I go to the automation_tasks_statistics page
+    	Then I should see "You are not allowed to do that"
+    	And I should be on the my_page page

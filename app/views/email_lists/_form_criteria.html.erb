@@ -1,5 +1,5 @@
   I would like these email addresses for members of
-  <%= f.select :section_id, Osm::Section.get_all(current_user.osm_api).select{ |section| has_osm_permission?(:read, :member, current_user, section)}.map{ |section| ["#{section.group_name} : #{section.name}", section.id] } %>
+  <%= f.select :section_id, Osm::Section.get_all(current_user.osm_api).select{ |section| current_user.has_osm_permission?(section, :read, :member)}.map{ |section| ["#{section.group_name} : #{section.name}", section.id] } %>
   <br/>
 
   <%- contact_options = {'None'=>0, 'Only email 1'=>1, 'Only email 2'=>2, 'All emails'=>3, 'Enabled emails'=>4} %>

@@ -15,7 +15,7 @@
       <%- @sections.each_with_index do |section, index| %>
         <tr>
           <td><%= get_section_names[section.id] %></td>
-          <%- if has_osm_permission?(:read, :member, current_user, section) %>
+          <%- if current_user.has_osm_permission?(section, :read, :member) %>
             <td><%= check_box_tag "include-#{section.id}", 1, true %></td>
             <td><%= select_tag "pin-#{section.id}", options_from_collection_for_select(@pin_colours, :downcase, :capitalize, @pin_colours[index % @pin_colours.size]) %></td>
           <%- else %>

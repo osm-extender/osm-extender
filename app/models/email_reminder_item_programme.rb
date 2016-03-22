@@ -46,6 +46,10 @@ class EmailReminderItemProgramme < EmailReminderItem
   end
 
 
+  def self.required_permissions
+    [:read, :programme]
+  end
+
   def self.configuration_labels
     {
       :the_next_n_weeks => 'How many weeks into the future?',

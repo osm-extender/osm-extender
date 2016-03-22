@@ -18,7 +18,7 @@ class OsmFlexiRecordsController < ApplicationController
 
     sections.each do |section|
       @section_ids.push section.id
-      if has_osm_permission?(:read, :flexi, current_user, section)
+      if current_user.has_osm_permission?(section, :read, :flexi)
         records = section.flexi_records.sort
         @records[section.id] = records
       else

@@ -1,0 +1,38 @@
+<% if @task.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+    <ul>
+    <% @task.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<div class="field">
+  <input type="hidden" name="automation_task[active]" id="active" value="0"/>
+  <input type="checkbox" name="automation_task[active]" id="active" value="1" <%- if @task.active %>checked="checked"<%- end %>/>
+  <label for="active">Active</label>
+</div>
+
+<%- @task.class.configuration_labels.keys.sort.each do |key| %>
+<div class="field">
+  <%- case @task.class.configuration_types[key] %>
+    <%- when :integer, :positive_integer %>
+      <label for="<%= key %>"><%= @task.class.configuration_labels[key] %></label><br/>
+      <input type="text" name="automation_task_config[<%= key %>]" id="<%= key %>" value="<%= @task.configuration[key] %>"/>
+    <%- when :boolean %>
+      <input type="hidden" name="automation_task_config[<%= key %>]" id="<%= key %>" value="0"/>
+      <input type="checkbox" name="automation_task_config[<%= key %>]" id="<%= key %>" value="1" <%- if @task.configuration[key] %>checked="checked"<%- end %>/>
+      <label for="<%= key %>"><%= @task.class.configuration_labels[key] %></label>
+    <%- else %>
+      <label for="<%= key %>"><%= @task.class.configuration_labels[key] %></label><br/>
+      <input type="text" name="automation_task_config[<%= key %>]" id="<%= key %>" value="<%= @task.configuration[key] %>"/>
+  <%- end %>
+</div>
+<%- end %>
+
+<div class="actions">
+  <%= f.submit "Update #{@task.human_name.downcase} task" %>
+</div>

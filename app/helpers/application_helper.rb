@@ -25,7 +25,7 @@ module ApplicationHelper
     end
   end
 
-  # Display texto highlighted in green or red
+  # Display text highlighted in green or red
   # @param value the boolean value being represented
   # @param positive_value (optional, default true) the value to be considered positive (and displayed in green)
   # @param text the text to display
@@ -84,6 +84,39 @@ module ApplicationHelper
   def page_title(title)
     provide :title, title
     content_tag 'h1', title
+  end
+
+
+  # Convert an array of (string or array of string) into a set of li tags for display to the user
+  def html_from_log_lines(lines)
+    content_tag :ol do
+      lines.each do |line|
+        next line if line.empty?
+        if line.is_a?(Array)
+          concat html_from_log_lines(line)
+        else
+          concat content_tag(:li, line)
+        end
+      end # each line
+    end # content_tag :ol
+  end
+
+  # Convert an array of (string or array of string) into a set of bulleted lines
+  def text_from_log_lines(lines, level=0)
+    output = ''
+    bullets = "*+>-"
+    lines.each do |line|
+      next line if line.empty?
+      if line.is_a?(Array)
+        output += text_from_log_lines(line, level+1)
+      else
+        output += ' ' * (4 * level)
+        output += bullets[level % bullets.size] + ' '
+        output += line
+        output += "\n"
+      end     
+    end # each line
+    return output
   end
 
 end

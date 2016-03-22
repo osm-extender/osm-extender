@@ -32,6 +32,13 @@ class StatisticsController < ApplicationController
     end
   end
 
+  def automation_tasks
+    respond_to do |format|
+      format.html # automated_tasks.html.erb
+      format.json { render json: Statistics.get_automation_tasks_data(Date.today) }
+    end
+  end
+
 
   private
   def users_data

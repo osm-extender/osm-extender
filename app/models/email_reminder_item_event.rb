@@ -76,6 +76,10 @@ class EmailReminderItemEvent < EmailReminderItem
   end
 
 
+  def self.required_permissions
+    [:read, :events]
+  end
+
   def self.configuration_labels
     {
       :the_next_n_months => 'How many months into the future?',
