@@ -168,7 +168,7 @@ namespace :scheduled  do
   end
 
   task :monthly => ['clean:all']
-  task :daily => [:automation_tasks, :reminder_emails, :email_Lists, :statistics]
+  task :daily => [:automation_tasks, :reminder_emails, :email_lists, :statistics]
   task :hourly => [:delete_old_sessions]
 
 end
