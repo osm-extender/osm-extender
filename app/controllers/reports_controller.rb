@@ -330,6 +330,7 @@ class ReportsController < ApplicationController
     @badge_data_by_badge = {}
     @member_names = {}
     @badge_names = {:core => {}, :staged => {}, :activity => {}, :challenge => {}} #TODO flatten
+    @badge_requirement_labels = {}
 
     @badge_types = {}
     @badge_types[:core] = 'Core' if @my_params[:include_core].eql?('1')
@@ -349,6 +350,7 @@ class ReportsController < ApplicationController
     badges.each do |type, bs|
       badge_data[type] = []
       @badge_data_by_badge[type] = {}
+      @badge_requirement_labels[type] ||= {}
       bs.each do |badge|
         @badge_names[type][badge.identifier] = badge.name
         badge.get_data_for_section(osm_api, current_section).each do |data|
@@ -358,6 +360,7 @@ class ReportsController < ApplicationController
             @badge_data_by_member[data.member_id] ||= {}
             @badge_data_by_member[data.member_id][type] ||= []
             badge_key = badge.type.eql?(:staged) ? "#{badge.identifier}_#{data.started}" : badge.identifier
+            @badge_requirement_labels[type][badge_key] ||= {}
             @badge_data_by_badge[type][badge_key] ||= {}
             @badge_data_by_member[data.member_id][type].push data
             if badge.has_levels?
@@ -370,6 +373,7 @@ class ReportsController < ApplicationController
               unless data.requirement_met?(requirement.id)
                 @badge_data_by_badge[type][badge_key][requirement.id] ||= []
                 @badge_data_by_badge[type][badge_key][requirement.id].push data.member_id
+                @badge_requirement_labels[type][badge_key][requirement.id] = requirement.name
               end
             end
           end
