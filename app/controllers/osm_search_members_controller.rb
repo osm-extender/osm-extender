@@ -17,7 +17,7 @@ class OsmSearchMembersController < ApplicationController
       'doctor' => "Doctor's Surgery",
     }
     @section_ids = Osm::Section.get_all(osm_api)
-    @section_ids.select!{ |section| has_osm_permission?(:read, :member, current_user, section) }
+    @section_ids.select!{ |section| current_user.has_osm_permission?(section, :read, :member) }
     @section_ids.map!{ |section| section.id }
   end
 

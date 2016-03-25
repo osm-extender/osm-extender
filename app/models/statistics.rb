@@ -4,6 +4,7 @@ class Statistics < ActiveRecord::Base
   serialize :email_reminder_shares_by_day, Array
   serialize :email_reminders_by_type, Hash
   serialize :usage, Hash
+  serialize :automation_tasks, Hash
 
   validates_presence_of :date
   validates_uniqueness_of :date
@@ -27,10 +28,13 @@ class Statistics < ActiveRecord::Base
     data[:users] = User.where(['created_at < ?', date + 1]).count
 
     # Email Reminders
-    get_email_reminders_data(data)
+    get_email_reminders_data(date, data)
 
     # Usage
     data[:usage] = get_usage_data(date)
+
+    # Automation Tasks
+    data[:automation_tasks] = get_automation_tasks_data(date)
 
     record = (date < Date.today) ? create(data) : new(data) # Create (and save) only if date is in the past
     record.attributes.deep_dup
@@ -83,24 +87,24 @@ class Statistics < ActiveRecord::Base
   end
 
   private
-  def self.get_email_reminders_data(data)
-    data[:email_reminders] = EmailReminder.where(['created_at < ?', data[:date] + 1]).count
+  def self.get_email_reminders_data(date, data)
+    data[:email_reminders] = EmailReminder.where(['created_at < ?', date + 1]).count
 
     by_day = Array.new(7, 0)
     shared_by_day = Array.new(7)
     (0..6).each do |i|
       shared_by_day[i] = {"pending"=>0, "subscribed"=>0, "unsubscribed"=>0}
     end
-    EmailReminder.where(['created_at < ?', data[:date] + 1]).each do |reminder|
+    EmailReminder.where(['created_at < ?', date + 1]).each do |reminder|
       by_day[reminder.send_on] += 1
-      reminder.shares.where(['created_at < ?', data[:date] + 1]).group(:state).count.each do |state, count|
+      reminder.shares.where(['created_at < ?', date + 1]).group(:state).count.each do |state, count|
         shared_by_day[reminder.send_on][state] += count
       end
     end
     data[:email_reminders_by_day] = by_day
     data[:email_reminder_shares_by_day] = shared_by_day
 
-    data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', data[:date] + 1]).group(:type).count
+    data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', date + 1]).group(:type).count
   end
 
   def self.get_usage_data(date)
@@ -130,6 +134,26 @@ class Statistics < ActiveRecord::Base
       'unique_all' => unique_all,
       'unique_usersection' => unique_usersection,
       'nonunique' => nonunique,
+    }
+  end
+
+  def self.get_automation_tasks_data(date)
+    Rails.application.eager_load! unless Rails.application.config.cache_classes  # cache_clases is off in dev and on in prod
+    types = Module.constants.map{ |i| i=eval(i.to_s) }
+    types.select!{ |i| !i.nil? && i.is_a?(Class) && i.superclass.eql?(AutomationTask) }
+
+    items = {data: {}, max_value: 0}
+    items_count = AutomationTask.where(['created_at < ?', date + 1]).group(:type).count
+    types.each do |type|
+      count = items_count[type.to_s] || 0
+      items[:data][type.human_name] = count
+      items[:max_value] = count if count > items[:max_value]
+    end
+
+    return {
+      users_count: AutomationTask.where(['created_at < ?', date + 1]).distinct(:user_id).count,
+      sections_count: AutomationTask.where(['created_at < ?', date + 1]).distinct(:section_id).count,
+      items: items
     }
   end
 

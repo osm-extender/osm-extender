@@ -22,7 +22,7 @@ class EmailRemindersController < ApplicationController
 
   def edit
     @email_reminder = current_user.email_reminders.find(params[:id])
-    @available_items = get_available_items(@email_reminder.section_id)
+    @available_items = @email_reminder.unused_items
   end
 
   def create
@@ -34,7 +34,7 @@ class EmailRemindersController < ApplicationController
     elsif @email_reminder.save
       flash[:instruction] = 'You must now add some items to your reminder.'
       flash[:notice] = 'Email reminder was successfully created.'
-      @available_items = get_available_items(@email_reminder.section_id)
+      @available_items = @email_reminder.unused_items
       render action: 'edit'
 
     else
@@ -95,34 +95,6 @@ class EmailRemindersController < ApplicationController
     else
       redirect_to email_reminders_path, error: 'Email reminder could not be sent.'
     end
-  end
-
-
-  private
-  def get_available_items(section_id)
-    items = []
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemBirthday')
-      items.push ({:type => EmailReminderItemBirthday, :as_link => has_osm_permission?(:read, :member, current_user, section_id)})
-    end
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemEvent')
-      items.push ({:type => EmailReminderItemEvent, :as_link => has_osm_permission?(:read, :events, current_user, section_id)})
-    end
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemProgramme')
-      items.push ({:type => EmailReminderItemProgramme, :as_link => has_osm_permission?(:read, :programme, current_user, section_id)})
-    end
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotSeen')
-      items.push ({:type => EmailReminderItemNotSeen, :as_link => has_osm_permission?(:read, :register, current_user, section_id)})
-    end
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemAdvisedAbsence')
-      items.push ({:type => EmailReminderItemAdvisedAbsence, :as_link => has_osm_permission?(:read, :register, current_user, section_id)})
-    end
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemDueBadge')
-      items.push ({:type => EmailReminderItemDueBadge, :as_link => has_osm_permission?(:read, :badge, current_user, section_id)})
-    end
-    unless @email_reminder.has_an_item_of_type?('EmailReminderItemNotepad')
-      items.push ({:type => EmailReminderItemNotepad, :as_link => true})
-    end
-    return items
   end
 
 end

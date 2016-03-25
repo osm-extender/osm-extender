@@ -2,6 +2,7 @@
 # The inheriting class MUST provide the following methods:
 # * get_data method - to return the data to be provided to the email template
 # * get_fake_data - to will return a fake version of the data for use in previewing the data without accessing OSM
+# * self.required_permissions - permission arguments for user.has_osm_permission?, eg [:read, :register] [[:read, :write], :register] or [:read, [:member, :register]] etc
 # * self.human_name - to return a user friendly name for the class (e.g. Missed Scouts)
 # * self.default_configuration - to return a complete configuration hash with default values
 # * Unless default_configuration returns an empty hash
@@ -34,6 +35,10 @@ class EmailReminderItem < ActiveRecord::Base
     raise "The get_fake_data method must be overridden"
   end
 
+  def required_permissions
+    raise "The required_permissions method must be overridden"
+  end
+
 
   def self.human_name
     raise "The self.human_name method must be overridden"
@@ -44,6 +49,10 @@ class EmailReminderItem < ActiveRecord::Base
 
   def self.default_configuration
     raise "The self.default_configuration method must be overridden"
+  end
+
+  def self.required_permissions
+    raise "The self.required_permissions method must be overridden"
   end
 
   def self.configuration_labels
@@ -83,7 +92,7 @@ class EmailReminderItem < ActiveRecord::Base
     default = self.class.default_configuration
 
     # Ensure only keys in the default_configuration exist in configuration
-    config.select {|k,v| default.has_key?(k) && default[k] != v}
+    config.select! {|k,v| default.has_key?(k) && default[k] != v}
 
     # Make any type conversions required
     config.each_key do |key|
@@ -121,6 +130,13 @@ class EmailReminderItem < ActiveRecord::Base
     email_reminder.section_id
   end
 
+  def self.has_permissions?(user, section)
+    rp = required_permissions
+    return true if rp.eql?([])
+    return true if rp[0].eql?([])
+    return true if rp[1].eql?([])
+    user.has_osm_permission?(section, *rp)
+  end
 
   private
   def only_one_of_each_type

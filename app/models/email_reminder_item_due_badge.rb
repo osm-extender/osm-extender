@@ -41,6 +41,10 @@ class EmailReminderItemDueBadge < EmailReminderItem
   end
 
 
+  def self.required_permissions
+    [:read, :badge]
+  end
+
   def self.configuration_labels
     {
       :show_stock => 'Show stock level of badges?',

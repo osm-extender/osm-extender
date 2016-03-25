@@ -105,11 +105,22 @@ OSMExtender::Application.routes.draw do
   resources :announcements
   post 'announcements/:id/hide' => 'announcements#hide', :as => 'hide_announcement'
 
+  resources :automation_tasks, as: 'automation_tasks', except: [:show]
+  resources :automation_task_birthday_badges, as: 'automation_task_birthday_badges', path: 'automation_tasks/birthday_badges', except: [:show]
+  post 'automation_tasks/birthday_badges/perform_task' => 'automation_task_birthday_badges#perform_task', :as => 'automation_task_birthday_badge_perform'
+  resources :automation_task_chief_scout_awards, as: 'automation_task_chief_scout_awards', path: 'automation_tasks/chief_scout_awards', except: [:show]
+  post 'automation_tasks/chief_scout_awards/perform_task' => 'automation_task_chief_scout_awards#perform_task', :as => 'automation_task_chief_scout_award_perform'
+  resources :automation_task_first_aids, as: 'automation_task_first_aids', path: 'automation_tasks/first_aids', except: [:show]
+  post 'automation_tasks/first_aids/perform_task' => 'automation_task_first_aids#perform_task', :as => 'automation_task_first_aid_perform'
+  resources :automation_task_leaderships, as: 'automation_task_leaderships', path: 'automation_tasks/leaderships', except: [:show]
+  post 'automation_tasks/leaderships/perform_task' => 'automation_task_leaderships#perform_task', :as => 'automation_task_leadership_perform'
+
   get 'statistics' => 'statistics#index', :as => 'statistics'
   get 'statistics/users' => 'statistics#users', :as => 'user_statistics'
   get 'statistics/email_reminders' => 'statistics#email_reminders', :as => 'email_reminders_statistics'
   get 'statistics/sections' => 'statistics#sections', :as => 'sections_statistics'
   get 'statistics/usage' => 'statistics#usage', :as => 'usage_statistics'
+  get 'statistics/automation_tasks' => 'statistics#automation_tasks', :as => 'automation_tasks_statistics'
 
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
 

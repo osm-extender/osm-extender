@@ -1,0 +1,40 @@
+<% if @task.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+    <ul>
+    <% @task.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<div class="field">
+  <input type="hidden" name="automation_task[active]" id="active" value="0"/>
+  <input type="checkbox" name="automation_task[active]" id="active" value="1" <%- if @task.active %>checked="checked"<%- end %>/>
+  <label for="active">Active</label>
+</div>
+
+<div class="field">
+  <label for="the_last_n_days">How many days into the past?</label><br/>
+  <input type="text" name="automation_task_config[the_last_n_days]" id="the_last_n_days" value="<%= @task.configuration[:the_last_n_days] %>"/>
+</div>
+<div class="field">
+  <label for="the_next_n_days">How many days into the future?</label><br/>
+  <input type="text" name="automation_task_config[the_next_n_days]" id="the_next_n_days" value="<%= @task.configuration[:the_next_n_days] %>"/>
+</div>
+
+<p>Use the drop down boxes below to select which badges to award for what birthday. For a badge to appear in these dropdowns it must be added to core badges for your section in OSM and have the word "birthday" in it's name (case doesn't matter).</p>
+<%- @task.class::BIRTHDAYS_FOR_SECTION[current_section.type].each do |birthday| %>
+  <div class="field">
+    <label for="badge_#{birthday}">Use which badge for the member's <%= birthday %>th birthday?</label><br/>
+    <%= select_tag "automation_task_config[badge_#{birthday}]", options_for_select([["None", -1], *@badges], @task.configuration["badge_#{birthday}".to_sym]), {id: "badge_#{birthday}"} %>
+  </div>
+<%- end %>
+
+
+
+<div class="actions">
+  <%= f.submit "Update #{@task.human_name.downcase} task" %>
+</div>

@@ -1,0 +1,54 @@
+google.load("visualization", "1", {packages:["corechart"]});
+
+google.setOnLoadCallback(function () {
+  setTimeout(drawCharts, 500);
+});
+
+function drawCharts() {
+  $.ajax({
+    url: '<%= OSMExtender::Application.routes.url_helpers.automation_tasks_statistics_path(format: :json) %>',
+    dataType:"json",
+    async: false,
+    success: function(data, status, jqXHR) {
+      $("#counts").html("There are " + data["users_count"] + " users who have created automation tasks for a total of " + data["sections_count"] + " sections.");
+
+      var item_desired_steps = 5;
+
+      var item_chart = new google.visualization.BarChart(document.getElementById('item_chart'));
+
+      var item_options = {
+        focusTarget: 'category',
+        hAxis: {
+          minValue: 0,
+          gridlines: {
+            count: graphGridLines(data['items']['max_value'], item_desired_steps)
+          }
+        },
+        legend: {position: 'none'},
+        width: 1000, height: 350
+      };
+      item_options.hAxis.maxValue = graphStepSize(data['items']['max_value'], item_desired_steps) * (item_options.hAxis.gridlines.count - 1);
+
+
+      drawItemChart(data['items']['data'], item_options, item_chart);
+    }
+  })
+}
+
+function drawItemChart(data, options, chart) {
+  data_table = new google.visualization.DataTable();
+  data_table.addColumn({
+    type: 'string',
+    label: 'Item'
+  });
+  data_table.addColumn({
+    type: 'number',
+    label: 'Used'
+  });
+
+  for(var key in data) {
+    data_table.addRow([key, data[key]]);
+  }
+
+  chart.draw(data_table, options);
+}

@@ -5,7 +5,7 @@
   <h2 class="ui-accordion-header"><a href="#">Audit Leader Access</a></h2>
   <div class="ui-accordion-content">
     <p>This report allows you to see what access has been granted to who.</p>
-    <%- sections = @sections.select{ |s| has_osm_permission?(:administer, :user, current_user, s) } %>
+    <%- sections = @sections.select{ |s| current_user.has_osm_permission?(s, :administer, :user) } %>
     <%- unless sections.empty? %>
       <%= form_tag leader_access_audit_path, :method=>:get do %>
         <ul style="list-style-type: none;">
@@ -100,11 +100,11 @@
                 <%= label_tag "calendar_select_all_section-#{section.id}", get_section_names[section.id] %>
               </td>
               <td style="text-align: center;">
-                <%= check_box_tag("calendar[programme[#{section.id}]]", 1, true, {:class => "calendar_section-#{section.id} calendar_programme"}) if has_osm_permission?(:read, :programme, current_user, section) %>
+                <%= check_box_tag("calendar[programme[#{section.id}]]", 1, true, {:class => "calendar_section-#{section.id} calendar_programme"}) if current_user.has_osm_permission?(section, :read, :programme) %>
               </td>
               <td style="text-align: center;">
                 <%- if section.subscription_at_least?(:silver)  # Silver or higher %>
-                  <%= check_box_tag("calendar[events[#{section.id}]]", 1, true, {:class => "calendar_section-#{section.id} calendar_events"}) if has_osm_permission?(:read, :events, current_user, section) %>
+                  <%= check_box_tag("calendar[events[#{section.id}]]", 1, true, {:class => "calendar_section-#{section.id} calendar_events"}) if current_user.has_osm_permission?(section, :read, :events) %>
                 <%- end %>
               </td>
             </tr>

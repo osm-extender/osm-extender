@@ -7,7 +7,7 @@
 <ul>
 <%- @sections.each do |section| %>
   <li>
-    <%- if has_osm_permission?(:read, :member, current_user, section) %>
+    <%- if current_user.has_osm_permission?(section, :read, :member) %>
       <%= link_to get_section_names[section.id], map_members_path(section.id) %>
     <%- else %>
       <%= get_section_names[section.id] %> - You don't have permission to get members for this section.
