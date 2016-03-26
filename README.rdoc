@@ -15,7 +15,7 @@ Staging branch:
 \OSM Extender was created to add some personally desired features to {the Online Scout Manager}[https://www.onlinescoutmanager.co.uk], since it took little extra effort to allow other people to also benefit from these features the project was born. Currently the features that \OSM Extender provides are:
 
 ===Email reminders
-Allows you to keep upto date by having information emailed to you on a day of your choosing each week, you can choose from:
+Allow you to keep upto date by having information emailed to you on a day of your choosing each week, you can choose from:
 - Who's due badges (and have you got enough)
 - Who hasn't been for the last few weeks
 - Who's said they won't be present
@@ -24,6 +24,13 @@ Allows you to keep upto date by having information emailed to you on a day of yo
 - Who's got a birthday around now
 - The contents of your section's notepad
 Email reminders may be shared with other users, regardless of whether they use OSMX or not.
+
+===Automation Tasks
+Allow you to have certain actions performed for you each night:
+- Birthday badges - mark as due on/near a member's birthday
+- Chief Scout's Award - insert a count of the number of activity/staged badges earnt by each member
+- First Aid in Badges - mark the first aid column of the outdoors challenge as complete based on completion of the emergency aid badge
+- Leadership badges - syncronise the leadership stripes and member's details
 
 ===Reports
 Allow you to easily make sense of the data in OSM.
