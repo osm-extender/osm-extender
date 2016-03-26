@@ -10,7 +10,7 @@ function drawCharts() {
     dataType:"json",
     async: false,
     success: function(data, status, jqXHR) {
-      $("#counts").html("There are " + data["users_count"] + " users who have created automation tasks for a total of " + data["sections_count"] + " sections.");
+      $("#counts").html("There are " + data["tasks_count"] + " tasks, which have been created by " + data["users_count"] + " users for " + data["sections_count"] + " different sections.");
 
       var item_desired_steps = 5;
 
