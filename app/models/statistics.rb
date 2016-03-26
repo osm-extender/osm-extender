@@ -151,8 +151,9 @@ class Statistics < ActiveRecord::Base
     end
 
     return {
-      users_count: AutomationTask.where(['created_at < ?', date + 1]).distinct(:user_id).count,
-      sections_count: AutomationTask.where(['created_at < ?', date + 1]).distinct(:section_id).count,
+      users_count: AutomationTask.where(['created_at < ?', date + 1]).select(:user_id).distinct.count,
+      sections_count: AutomationTask.where(['created_at < ?', date + 1]).select(:section_id).distinct.count,
+      tasks_count: AutomationTask.where(['created_at < ?', date + 1]).count,
       items: items
     }
   end
