@@ -456,6 +456,17 @@ describe "Chief Scout's Award automation task" do
         ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
       end
 
+      it "Staged activity badge has a nil date" do
+        Osm::Badge.stub(:get_summary_for_section){ [{
+          member_id: 201,
+          '501_0'=>:awarded, '501_0_date'=>nil,
+        }] }
+        Osm::ActivityBadge.stub(:get_badges_for_section){ [] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
+
+        ret_val = @task.send(:perform_task)
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
+      end
     end
 
 
