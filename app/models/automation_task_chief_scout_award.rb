@@ -99,7 +99,7 @@ class AutomationTaskChiefScoutAward < AutomationTask
         case badge_summary[identifier]
         when :awarded
           # Don't want to count staged badge awarded in previous section
-          next identifier if type.eql?(:staged) && badge_summary["#{identifier}_date"] < member_start_dates[badge_summary[:member_id]]
+          next identifier if type.eql?(:staged) && badge_summary["#{identifier}_date"].is_a?(Date) && badge_summary["#{identifier}_date"] < member_start_dates[badge_summary[:member_id]]
         when :due
           # Nothing - we always want to count it
         else
