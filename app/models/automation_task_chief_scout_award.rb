@@ -86,37 +86,46 @@ class AutomationTaskChiefScoutAward < AutomationTask
     member_badge_data = Hash[badge.get_data_for_section(user.osm_api, section).map{ |d| [d.member_id, d] } ]
 
     member_start_dates = Hash[ Osm::Member.get_for_section(user.osm_api, section).map{ |m| [m.id, m.started_section] } ]
-    badge_identifiers = Osm::ActivityBadge.get_badges_for_section(user.osm_api, section).map{ |i| [i.identifier, :activity] }
-    badge_identifiers += Osm::StagedBadge.get_badges_for_section(user.osm_api, section).map{ |i| [i.identifier, :staged] }
+    activity_badges = Hash[ Osm::ActivityBadge.get_badges_for_section(user.osm_api, section).map{ |b| [b.identifier, b] } ]
+    staged_badges = Hash[ Osm::StagedBadge.get_badges_for_section(user.osm_api, section).map{ |b| [b.identifier, b] } ]
 
     badge_summaries = Osm::Badge.get_summary_for_section(user.osm_api, section)
     badge_summaries.each do |badge_summary|
       count_for_member = 0
 
+      activity_badges.keys.each do |identifier|
+        if [:awarded, :due].include?(badge_summary[identifier])
+          count_for_member += 1
+        end        
+      end # each activity badge identifier
 
-      # Count earnt badges
-      badge_identifiers.each do |identifier, type|
-        case badge_summary[identifier]
-        when :awarded
+      staged_badges.keys.each do |identifier|
+        if badge_summary[identifier].eql?(:awarded)
           # Don't want to count staged badge awarded in previous section
-          if type.eql?(:staged)
-            member_date = member_start_dates[badge_summary[:member_id]]
-            award_date = badge_summary["#{identifier}_date"]
-            next identifier unless member_date.is_a?(Date) # Can't do the comparrison
-            next identifier unless award_date.is_a?(Date)  # Can't do the comparrison
-            next identifier if award_date < member_date    # Awarded before starting section
-          end
-        when :due
-          # Nothing - we always want to count it
-        else
-          # Badge summary is not ina state we want to count
-          next identifier
-        end
+          start_date = member_start_dates[badge_summary[:member_id]]
+          award_date = badge_summary["#{identifier}_date"]
 
-        count_for_member += 1
-      end # each identifier
+          unless start_date.is_a?(Date) # Can't do the comparrison
+            errors.push "Couldn't get started section date for #{badge_summary[:name]}."
+            next identifier
+          end
+          unless award_date.is_a?(Date)  # Can't do the comparrison
+            errors.push "Couldn't get awarded date for #{badge_summary[:name]}'s #{staged_badges[identifier].name} badge."
+            next identifier
+          end
+
+          if start_date <= award_date    # Awarded after starting section
+            count_for_member += 1
+          end
+
+        elsif badge_summary[identifier].eql?(:due)
+          # Always want to count a due badge
+          count_for_member += 1
+        end
+      end # each staged badge identifier
 
       log_lines.push "#{badge_summary[:name]} has achieved #{count_for_member} of #{BADGE_COUNTS[section.type]} activity/staged activity badges."
+
       set_data_to = ''
       if count_for_member >= BADGE_COUNTS[section.type]
         # Member has achieved required number of badges since joining section
@@ -128,6 +137,7 @@ class AutomationTaskChiefScoutAward < AutomationTask
         when 2
           set_data_to = '[YES]'
         end
+
       else
         # Member has NOT achieved required number of badges since joining section
         case configuration[:unachieved_action]
@@ -139,11 +149,11 @@ class AutomationTaskChiefScoutAward < AutomationTask
           if count_for_member > 0
             set_data_to = "#{'x' * count_for_member}#{'_' * (BADGE_COUNTS[section.type] - count_for_member)}"
           end
-          
         when 3
           set_data_to = ''
         end
-      end
+
+      end # if achieved
 
       # Update data value if it changed
       badge_data = member_badge_data[badge_summary[:member_id]]

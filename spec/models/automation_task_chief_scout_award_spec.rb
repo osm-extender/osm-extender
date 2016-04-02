@@ -459,27 +459,27 @@ describe "Chief Scout's Award automation task" do
 
       it "Staged activity badge - summary has a nil date" do
         Osm::Badge.stub(:get_summary_for_section){ [{
-          member_id: 201,
+          member_id: 201, name: 'M',
           '501_0'=>:awarded, '501_0_date'=>nil,
         }] }
         Osm::ActivityBadge.stub(:get_badges_for_section){ [] }
-        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0', name: 'B')] }
 
         ret_val = @task.send(:perform_task)
-        ret_val.should == {:success=>true, :log_lines=>[" has achieved 0 of 4 activity/staged activity badges."], :errors=>[]}
+        ret_val.should == {:success=>false, :log_lines=>["M has achieved 0 of 4 activity/staged activity badges."], :errors=>["Couldn't get awarded date for M's B badge."]}
       end
 
       it "Staged activity badge - member has a nil date" do
         @member.started_section = nil
         Osm::Badge.stub(:get_summary_for_section){ [{
-          member_id: 201,
+          member_id: 201, name: 'M',
           '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 1),
         }] }
         Osm::ActivityBadge.stub(:get_badges_for_section){ [] }
         Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
 
         ret_val = @task.send(:perform_task)
-        ret_val.should == {:success=>true, :log_lines=>[" has achieved 0 of 4 activity/staged activity badges."], :errors=>[]}
+        ret_val.should == {:success=>false, :log_lines=>["M has achieved 0 of 4 activity/staged activity badges."], :errors=>["Couldn't get started section date for M."]}
       end
     end
 
