@@ -404,7 +404,8 @@ describe "Chief Scout's Award automation task" do
         badge.stub(:get_data_for_section){ [badge_data] }
         Osm::ChallengeBadge.stub(:get_badges_for_section){ [badge] }
 
-        Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
+        @member = Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))
+        Osm::Member.stub(:get_for_section){ [@member] }
       end
 
       it "Activity badge has been awarded" do
@@ -456,7 +457,7 @@ describe "Chief Scout's Award automation task" do
         ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
       end
 
-      it "Staged activity badge has a nil date" do
+      it "Staged activity badge - summary has a nil date" do
         Osm::Badge.stub(:get_summary_for_section){ [{
           member_id: 201,
           '501_0'=>:awarded, '501_0_date'=>nil,
@@ -465,10 +466,22 @@ describe "Chief Scout's Award automation task" do
         Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
 
         ret_val = @task.send(:perform_task)
-        ret_val.should == {:success=>true, :log_lines=>[" has achieved 1 of 4 activity/staged activity badges."], :errors=>[]}
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 0 of 4 activity/staged activity badges."], :errors=>[]}
+      end
+
+      it "Staged activity badge - member has a nil date" do
+        @member.started_section = nil
+        Osm::Badge.stub(:get_summary_for_section){ [{
+          member_id: 201,
+          '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 1),
+        }] }
+        Osm::ActivityBadge.stub(:get_badges_for_section){ [] }
+        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
+
+        ret_val = @task.send(:perform_task)
+        ret_val.should == {:success=>true, :log_lines=>[" has achieved 0 of 4 activity/staged activity badges."], :errors=>[]}
       end
     end
-
 
     describe "Errors" do
       it "Getting section" do
