@@ -93,6 +93,12 @@ class AutomationTaskChiefScoutAward < AutomationTask
     badge_summaries.each do |badge_summary|
       count_for_member = 0
 
+      start_date = member_start_dates[badge_summary[:member_id]]
+      unless start_date.is_a?(Date) # Can't do the comparrison
+        errors.push "Couldn't get started section date for #{badge_summary[:name]}."
+        next badge_summary
+      end
+
       activity_badges.keys.each do |identifier|
         if [:awarded, :due].include?(badge_summary[identifier])
           count_for_member += 1
@@ -102,13 +108,7 @@ class AutomationTaskChiefScoutAward < AutomationTask
       staged_badges.keys.each do |identifier|
         if badge_summary[identifier].eql?(:awarded)
           # Don't want to count staged badge awarded in previous section
-          start_date = member_start_dates[badge_summary[:member_id]]
           award_date = badge_summary["#{identifier}_date"]
-
-          unless start_date.is_a?(Date) # Can't do the comparrison
-            errors.push "Couldn't get started section date for #{badge_summary[:name]}."
-            next identifier
-          end
           unless award_date.is_a?(Date)  # Can't do the comparrison
             errors.push "Couldn't get awarded date for #{badge_summary[:name]}'s #{staged_badges[identifier].name} badge."
             next identifier
