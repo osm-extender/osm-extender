@@ -159,10 +159,14 @@ class AutomationTaskChiefScoutAward < AutomationTask
       badge_data = member_badge_data[badge_summary[:member_id]]
       unless (badge_data.requirements[REQUIREMENT_IDS[section.type]] || '').eql?(set_data_to)
         badge_data.requirements[REQUIREMENT_IDS[section.type]] = set_data_to    
-        if badge_data.update(user.osm_api)
-          log_lines.push(["Updated data in OSM to \"#{set_data_to}\"."])
-        else
-          errors.push "Couldn't update #{badge_summary[:name]}'s data to \"#{set_data_to}\"."
+        begin
+          if badge_data.update(user.osm_api)
+            log_lines.push(["Updated data in OSM to \"#{set_data_to}\"."])
+          else
+            errors.push "Couldn't update #{badge_summary[:name]}'s data to \"#{set_data_to}\"."
+          end
+        rescue Osm::Error => exception
+          errors.push "Couldn't update #{badge_summary[:name]}'s data to \"#{set_data_to}\". OSM said \"#{exception.message}\"."
         end
       end
 

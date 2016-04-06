@@ -56,7 +56,7 @@ namespace :scheduled  do
             noterm_emails_sent[task.user_id].push task.section_id
           end
         rescue Exception => exception
-          exception_raised("Automation Task (id: #{task.id})", exception)
+          exception_raised("Automation Task (id: #{task.id}, user: #{task.user_id}, section: #{task.section_id})", exception)
       end
     end
   end
@@ -91,7 +91,7 @@ namespace :scheduled  do
           noterm_emails_sent[list.user_id].push list.section_id
         end
       rescue Exception => exception
-        exception_raised("Reminder Email (id: #{reminder.id})", exception)
+        exception_raised("Reminder Email (id: #{reminder.id}, user: #{reminder.user_id}, section: #{reminder.section_id})", exception)
       end
     end
   end
@@ -131,7 +131,7 @@ namespace :scheduled  do
         end
       rescue Exception => exception
         puts "\t\tAn Exception was raised (#{exception.message})"
-        exception_raised("Checking list for changed address (id: #{list.id})", exception)
+        exception_raised("Checking list for changed address (id: #{list.id}, user: #{list.user_id}, section: #{list.section_id})", exception)
       end
     end
   end
