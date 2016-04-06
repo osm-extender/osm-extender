@@ -107,7 +107,7 @@ class AutomationTaskChiefScoutAward < AutomationTask
 
           unless start_date.is_a?(Date) # Can't do the comparrison
             errors.push "Couldn't get started section date for #{badge_summary[:name]}."
-            next identifier
+            next badge_summary
           end
           unless award_date.is_a?(Date)  # Can't do the comparrison
             errors.push "Couldn't get awarded date for #{badge_summary[:name]}'s #{staged_badges[identifier].name} badge."
