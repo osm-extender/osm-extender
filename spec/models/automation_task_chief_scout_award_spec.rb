@@ -503,30 +503,59 @@ describe "Chief Scout's Award automation task" do
         task.send(:perform_task).should == {:success=>false, :errors=>["Could not retrieve Chief Scout's Award badge from OSM."]}
       end
 
-      it "Updating badge data" do
+      describe "Updating badge data" do
+        it "Returned false" do
+          section_id = 300
+          user = FactoryGirl.build(:user_connected_to_osm)
+          task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
+          task.configuration = {unachieved_action: 2}
+  
+          badge = Osm::ChallengeBadge.new(id: 1529)
+          badge_data = Osm::Badge::Data.new(member_id: 201)
+          badge_data.stub(:update){ false }
+  
+          Osm::Section.stub(:get){ Osm::Section.new(id: section_id, type: :beavers) }
+          Osm::ChallengeBadge.stub(:get_badges_for_section){ [badge] }
+          badge.stub(:get_data_for_section){ [badge_data] }
+          Osm::Badge.stub(:get_summary_for_section){ [{
+            member_id: 201, name: 'A Member',
+            '401_0'=>:awarded, '401_0_date'=>Date.new(2010, 1, 1),
+            '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 4),
+          }] }
+          Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
+          Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0'), Osm::ActivityBadge.new(identifier: '402_0'), Osm::ActivityBadge.new(identifier: '403_0')] }
+          Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
+  
+          ret_val = task.send(:perform_task)
+          ret_val.should == {:success=>false,  :errors=>["Couldn't update A Member's data to \"xx__\"."], :log_lines=>["A Member has achieved 2 of 4 activity/staged activity badges."]}
+        end
+
+        it "Raised an Osm::Error" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
-        task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
-        task.configuration = {unachieved_action: 2}
+          user = FactoryGirl.build(:user_connected_to_osm)
+          task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
+          task.configuration = {unachieved_action: 2}
+  
+          badge = Osm::ChallengeBadge.new(id: 1529)
+          badge_data = Osm::Badge::Data.new(member_id: 201)
+          badge_data.stub(:update){ raise Osm::Error, "OSM Error message" }
+  
+          Osm::Section.stub(:get){ Osm::Section.new(id: section_id, type: :beavers) }
+          Osm::ChallengeBadge.stub(:get_badges_for_section){ [badge] }
+          badge.stub(:get_data_for_section){ [badge_data] }
+          Osm::Badge.stub(:get_summary_for_section){ [{
+            member_id: 201, name: 'A Member',
+            '401_0'=>:awarded, '401_0_date'=>Date.new(2010, 1, 1),
+            '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 4),
+          }] }
+          Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
+          Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0'), Osm::ActivityBadge.new(identifier: '402_0'), Osm::ActivityBadge.new(identifier: '403_0')] }
+          Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
+  
+          ret_val = task.send(:perform_task)
+          ret_val.should == {:success=>false,  :errors=>["Couldn't update A Member's data to \"xx__\". OSM said \"OSM Error message\"."], :log_lines=>["A Member has achieved 2 of 4 activity/staged activity badges."]}
+        end
 
-        badge = Osm::ChallengeBadge.new(id: 1529)
-        badge_data = Osm::Badge::Data.new(member_id: 201)
-        badge_data.stub(:update){ false }
-
-        Osm::Section.stub(:get){ Osm::Section.new(id: section_id, type: :beavers) }
-        Osm::ChallengeBadge.stub(:get_badges_for_section){ [badge] }
-        badge.stub(:get_data_for_section){ [badge_data] }
-        Osm::Badge.stub(:get_summary_for_section){ [{
-          member_id: 201, name: 'A Member',
-          '401_0'=>:awarded, '401_0_date'=>Date.new(2010, 1, 1),
-          '501_0'=>:awarded, '501_0_date'=>Date.new(2010, 1, 4),
-        }] }
-        Osm::Member.stub(:get_for_section){ [Osm::Member.new(id: 201, started_section: Date.new(2010, 1, 1))] }
-        Osm::ActivityBadge.stub(:get_badges_for_section){ [Osm::ActivityBadge.new(identifier: '401_0'), Osm::ActivityBadge.new(identifier: '402_0'), Osm::ActivityBadge.new(identifier: '403_0')] }
-        Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
-
-        ret_val = task.send(:perform_task)
-        ret_val.should == {:success=>false,  :errors=>["Couldn't update A Member's data to \"xx__\"."], :log_lines=>["A Member has achieved 2 of 4 activity/staged activity badges."]}
       end
     end
 
