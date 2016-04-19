@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :email_reminders, dependent: :destroy, inverse_of: :user
   has_many :email_reminder_shares, through: :email_reminders, source: :shares
   has_many :email_lists, dependent: :destroy, inverse_of: :user
+  has_many :automation_tasks, dependent: :destroy, inverse_of: :user
   has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
   has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
   has_many :usage_log, inverse_of: :user
