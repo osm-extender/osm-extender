@@ -65,6 +65,7 @@ class MyAccountController < ApplicationController
     @currently_have = Hash.new
     @currently_have['reminder email'] = current_user.email_reminders.count if current_user.email_reminders.count > 0
     @currently_have['email list'] = current_user.email_lists.count if current_user.email_lists.count > 0
+    @currently_have['automation task'] = current_user.automation_tasks.count if current_user.automation_tasks.count > 0
 
     @confirmation_code = SecureRandom.hex(32)
     session[:delete_my_account_confrmation_code] = @confirmation_code

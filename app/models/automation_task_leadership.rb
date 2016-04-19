@@ -76,7 +76,6 @@ class AutomationTaskLeadership < AutomationTask
  
         if data.awarded? || data.due?
           bd_level = idx
-          badge_data = data
         end
       end # each leadership_badges
 
@@ -90,11 +89,16 @@ class AutomationTaskLeadership < AutomationTask
         # Update personal details
         if level > pd_level
           member.grouping_leader = level
-          if member.update(user.osm_api)
-            member_lines.push "Updated personal details."
-          else
-            member_lines.push "Couldn't update personal details."
-            errors.push "Couldn't update personal details for #{member.name}."
+          begin
+            if member.update(user.osm_api)
+              member_lines.push "Updated personal details."
+            else
+              member_lines.push "Couldn't update personal details."
+              errors.push "Couldn't update personal details for #{member.name}."
+            end
+          rescue Osm::Error => exception
+            member_lines.push "Couldn't update personal details. OSM said \"#{exception.message}\"."
+            errors.push "Couldn't update personal details for #{member.name}. OSM said \"#{exception.message}\"."
           end
         end # Update personal details
 
@@ -104,11 +108,16 @@ class AutomationTaskLeadership < AutomationTask
           unless badge.nil?
             badge_data = leadership_badge_datas[BADGE_IDS[section.type][level]][member.id]
             unless badge_data.nil?
-              if badge_data.mark_due(user.osm_api)
-                member_lines.push "Marked the \"#{badge.name}\" badge as due."
-              else
-              member_lines.push "Couldn't mark the \"#{badge.name}\" badge as due."
-              errors.push "Couldn't mark badge as due for \"#{badge.name}\" & \"#{member.name}\""
+              begin
+                if badge_data.mark_due(user.osm_api)
+                  member_lines.push "Marked the \"#{badge.name}\" badge as due."
+                else
+                  member_lines.push "Couldn't mark the \"#{badge.name}\" badge as due."
+                  errors.push "Couldn't mark badge as due for \"#{badge.name}\" & \"#{member.name}\"."
+                end
+              rescue Osm::Error => exception
+                member_lines.push "Couldn't mark the \"#{badge.name}\" badge as due. OSM said \"#{exception.message}\"."
+                errors.push "Couldn't mark badge as due for \"#{badge.name}\" & \"#{member.name}\". OSM said \"#{exception.message}\"."
               end
             else
               member_lines.push "Couldn't mark the \"#{badge.name}\" badge as due - couldn't find badge data for #{member.name}."

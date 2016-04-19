@@ -289,27 +289,52 @@ describe "First Aid automation task" do
         task.send(:perform_task).should == {:success=>false, :errors=>["Could not retrieve Outdoors Challenge badge from OSM."]}
       end
 
-      it "Updating badge data" do
-        section_id = 300
-        section = Osm::Section.new(id: section_id, type: :beavers)
-        ea_badge = Osm::StagedBadge.new(id: 1643)
-        oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
-        oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
-        user = FactoryGirl.build(:user_connected_to_osm)
-        task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
+      describe "Updating badge data" do
+        it "Returns false" do
+          section_id = 300
+          section = Osm::Section.new(id: section_id, type: :beavers)
+          ea_badge = Osm::StagedBadge.new(id: 1643)
+          oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
+          oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
+          user = FactoryGirl.build(:user_connected_to_osm)
+          task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
+  
+          Osm::Section.stub(:get).with(user.osm_api, section_id){ section }
+          Osm::StagedBadge.stub(:get_badges_for_section).with(user.osm_api, section){ [ea_badge] }
+          Osm::ChallengeBadge.stub(:get_badges_for_section).with(user.osm_api, section){ [oc_badge_beavers, oc_badge_cubs] }
+  
+          ea_data = Osm::Badge::Data.new(first_name: 'A', last_name: 'Member', section_id: @section_id, requirements: {115860 => 'Yes'})
+          oc_data = Osm::Badge::Data.new(first_name: 'A', last_name: 'Member', section_id: @section_id,  requirements: {20989 => ''})
+          oc_data.stub(:update){ false }
+          ea_badge.stub(:get_data_for_section).with(user.osm_api, section){ [ea_data] }
+          oc_badge_beavers.stub(:get_data_for_section).with(user.osm_api, section){ [oc_data] }
+  
+          task.send(:perform_task).should == {:success=>false, :log_lines=>["A Member:", ["Completed 1 of 1 requirement.", "Couldn't update challenge badge."]], :errors=>["Couldn't update challenge badge for A Member."]}
+        end
 
-        Osm::Section.stub(:get).with(user.osm_api, section_id){ section }
-        Osm::StagedBadge.stub(:get_badges_for_section).with(user.osm_api, section){ [ea_badge] }
-        Osm::ChallengeBadge.stub(:get_badges_for_section).with(user.osm_api, section){ [oc_badge_beavers, oc_badge_cubs] }
-
-        ea_data = Osm::Badge::Data.new(first_name: 'A', last_name: 'Member', section_id: @section_id, requirements: {115860 => 'Yes'})
-        oc_data = Osm::Badge::Data.new(first_name: 'A', last_name: 'Member', section_id: @section_id,  requirements: {20989 => ''})
-        oc_data.stub(:update){ false }
-        ea_badge.stub(:get_data_for_section).with(user.osm_api, section){ [ea_data] }
-        oc_badge_beavers.stub(:get_data_for_section).with(user.osm_api, section){ [oc_data] }
-
-        task.send(:perform_task).should == {:success=>false, :log_lines=>["A Member:", ["Completed 1 of 1 requirement.", "Couldn't update challenge badge."]], :errors=>["Couldn't update challenge badge for A Member"]}
+        it "Raises Osm::Error" do
+          section_id = 300
+          section = Osm::Section.new(id: section_id, type: :beavers)
+          ea_badge = Osm::StagedBadge.new(id: 1643)
+          oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
+          oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
+          user = FactoryGirl.build(:user_connected_to_osm)
+          task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
+  
+          Osm::Section.stub(:get).with(user.osm_api, section_id){ section }
+          Osm::StagedBadge.stub(:get_badges_for_section).with(user.osm_api, section){ [ea_badge] }
+          Osm::ChallengeBadge.stub(:get_badges_for_section).with(user.osm_api, section){ [oc_badge_beavers, oc_badge_cubs] }
+  
+          ea_data = Osm::Badge::Data.new(first_name: 'A', last_name: 'Member', section_id: @section_id, requirements: {115860 => 'Yes'})
+          oc_data = Osm::Badge::Data.new(first_name: 'A', last_name: 'Member', section_id: @section_id,  requirements: {20989 => ''})
+          oc_data.stub(:update){ raise Osm::Error, "A message" }
+          ea_badge.stub(:get_data_for_section).with(user.osm_api, section){ [ea_data] }
+          oc_badge_beavers.stub(:get_data_for_section).with(user.osm_api, section){ [oc_data] }
+  
+          task.send(:perform_task).should == {:success=>false, :log_lines=>["A Member:", ["Completed 1 of 1 requirement.", "Couldn't update challenge badge. OSM said \"A message\"."]], :errors=>["Couldn't update challenge badge for A Member. OSM said \"A message\"."]}
+        end
       end
+
     end # Errors
 
   end

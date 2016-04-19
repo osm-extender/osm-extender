@@ -111,11 +111,16 @@ class AutomationTaskBirthdayBadge < AutomationTask
         unless data.awarded?
           unless data.due?
 
-            if data.mark_due(user.osm_api, 1)
-              birthday_lines.push "#{badge.name} has been marked due for #{member.name}."
-            else
-              birthday_lines.push "Error marking #{badge.name} as due for #{member.name}."
-              ret_val[:errors].push "Error marking #{badge.name} as due for #{member.name}."
+            begin
+              if data.mark_due(user.osm_api, 1)
+                birthday_lines.push "#{badge.name} has been marked due for #{member.name}."
+              else
+                birthday_lines.push "Error marking #{badge.name} as due for #{member.name}."
+                ret_val[:errors].push "Error marking #{badge.name} as due for #{member.name}."
+              end
+            rescue Osm::Error => exception
+              birthday_lines.push "Error marking #{badge.name} as due for #{member.name}. OSM said \"#{exception.message}\"."
+              ret_val[:errors].push "Error marking #{badge.name} as due for #{member.name}. OSM said \"#{exception.message}\"."
             end
 
           else # already due

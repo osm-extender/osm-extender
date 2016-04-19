@@ -136,13 +136,24 @@ describe "Leadership automation task" do
           end
         end
 
-        it "Errors" do
-          @core_badges[0].stub(:get_data_for_section){ [Osm::Badge::Data.new(member_id: @member_id, awarded: 1)] }
-          @member.should_receive(:update){ false }
+        describe "Error updating" do
+          it "Returns false" do
+            @core_badges[0].stub(:get_data_for_section){ [Osm::Badge::Data.new(member_id: @member_id, awarded: 1)] }
+            @member.should_receive(:update){ false }
 
-          ret_val = @task.send(:perform_task)
-          ret_val.should == { success: false, log_lines: ["A Member is a \"Seconder\".", ["Couldn't update personal details."]], errors: ["Couldn't update personal details for A Member."] }
-        end
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Seconder\".", ["Couldn't update personal details."]], errors: ["Couldn't update personal details for A Member."] }
+          end
+
+          it "Raises an Osm::Error" do
+            @core_badges[0].stub(:get_data_for_section){ [Osm::Badge::Data.new(member_id: @member_id, awarded: 1)] }
+            @member.should_receive(:update){ raise Osm::Error, 'Message from OSM' }
+
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Seconder\".", ["Couldn't update personal details. OSM said \"Message from OSM\"."]], errors: ["Couldn't update personal details for A Member. OSM said \"Message from OSM\"."] }
+          end
+
+        end # Error updating
       end # Updates personal details
 
 
@@ -187,16 +198,28 @@ describe "Leadership automation task" do
           ret_val.should == { success: true, log_lines: ["A Member is a \"Senior Sixer\".", ["Marked the \"Senior Sixer\" badge as due."]], errors: [] }
         end
 
-        it "Errors" do
-          @member.grouping_leader = 1
-          badge_data = Osm::Badge::Data.new(member_id: @member_id)
-          badge_data.should_receive(:mark_due).with(@user.osm_api){ false }
-          @core_badges[0].stub(:get_data_for_section){ [badge_data] }
+        describe "Error marking as due" do
+          it "Returns false" do
+            @member.grouping_leader = 1
+            badge_data = Osm::Badge::Data.new(member_id: @member_id)
+            badge_data.should_receive(:mark_due).with(@user.osm_api){ false }
+            @core_badges[0].stub(:get_data_for_section){ [badge_data] }
 
-          ret_val = @task.send(:perform_task)
-          ret_val.should == { success: false, log_lines: ["A Member is a \"Seconder\".", ["Couldn't mark the \"Seconder\" badge as due."]], errors: ["Couldn't mark badge as due for \"Seconder\" & \"A Member\""] }
-        end
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Seconder\".", ["Couldn't mark the \"Seconder\" badge as due."]], errors: ["Couldn't mark badge as due for \"Seconder\" & \"A Member\"."] }
+          end
 
+          it "Raises an Osm::Error" do
+            @member.grouping_leader = 1
+            badge_data = Osm::Badge::Data.new(member_id: @member_id)
+            badge_data.should_receive(:mark_due).with(@user.osm_api){ raise Osm::Error, 'A message' }
+            @core_badges[0].stub(:get_data_for_section){ [badge_data] }
+
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Seconder\".", ["Couldn't mark the \"Seconder\" badge as due. OSM said \"A message\"."]], errors: ["Couldn't mark badge as due for \"Seconder\" & \"A Member\". OSM said \"A message\"."] }
+          end
+
+        end # Error marking as due
       end # Updates badges
 
     end # Cubs
@@ -317,14 +340,24 @@ describe "Leadership automation task" do
           end
         end
 
-        it "Errors" do
-          @core_badges[0].stub(:get_data_for_section){ [Osm::Badge::Data.new(member_id: @member_id, awarded: 1)] }
-          @member.should_receive(:update){ false }
+        describe "Error updating" do
+          it "Returns false" do
+            @core_badges[0].stub(:get_data_for_section){ [Osm::Badge::Data.new(member_id: @member_id, awarded: 1)] }
+            @member.should_receive(:update){ false }
 
-          ret_val = @task.send(:perform_task)
-          ret_val.should == { success: false, log_lines: ["A Member is a \"Assistant Patrol Leader\".", ["Couldn't update personal details."]], errors: ["Couldn't update personal details for A Member."] }
-        end
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Assistant Patrol Leader\".", ["Couldn't update personal details."]], errors: ["Couldn't update personal details for A Member."] }
+          end
 
+          it "Raises an Osm::Error" do
+            @core_badges[0].stub(:get_data_for_section){ [Osm::Badge::Data.new(member_id: @member_id, awarded: 1)] }
+            @member.should_receive(:update){ raise Osm::Error, 'Message' }
+
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Assistant Patrol Leader\".", ["Couldn't update personal details. OSM said \"Message\"."]], errors: ["Couldn't update personal details for A Member. OSM said \"Message\"."] }
+          end
+
+        end # Error updating
       end # Updates personal details
 
       describe "Marks badge as due" do
@@ -368,16 +401,28 @@ describe "Leadership automation task" do
           ret_val.should == { success: true, log_lines: ["A Member is a \"Senior Patrol Leader\".", ["Marked the \"Senior Patrol Leader\" badge as due."]], errors: [] }
         end
 
-        it "Errors" do
-          @member.grouping_leader = 1
-          badge_data = Osm::Badge::Data.new(member_id: @member_id)
-          badge_data.should_receive(:mark_due).with(@user.osm_api){false }
-          @core_badges[0].stub(:get_data_for_section){ [badge_data] }
+        describe "Error marking as due" do
+          it "Returns false" do
+            @member.grouping_leader = 1
+            badge_data = Osm::Badge::Data.new(member_id: @member_id)
+            badge_data.should_receive(:mark_due).with(@user.osm_api){ false }
+            @core_badges[0].stub(:get_data_for_section){ [badge_data] }
 
-          ret_val = @task.send(:perform_task)
-          ret_val.should == { success: false, log_lines: ["A Member is a \"Assistant Patrol Leader\".", ["Couldn't mark the \"Assistant Patrol Leader\" badge as due."]], errors: ["Couldn't mark badge as due for \"Assistant Patrol Leader\" & \"A Member\""] }
-        end
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Assistant Patrol Leader\".", ["Couldn't mark the \"Assistant Patrol Leader\" badge as due."]], errors: ["Couldn't mark badge as due for \"Assistant Patrol Leader\" & \"A Member\"."] }
+          end
 
+          it "Raises an Osm::Error" do
+            @member.grouping_leader = 1
+            badge_data = Osm::Badge::Data.new(member_id: @member_id)
+            badge_data.should_receive(:mark_due).with(@user.osm_api){ raise Osm::Error, 'Reason' }
+            @core_badges[0].stub(:get_data_for_section){ [badge_data] }
+
+            ret_val = @task.send(:perform_task)
+            ret_val.should == { success: false, log_lines: ["A Member is a \"Assistant Patrol Leader\".", ["Couldn't mark the \"Assistant Patrol Leader\" badge as due. OSM said \"Reason\"."]], errors: ["Couldn't mark badge as due for \"Assistant Patrol Leader\" & \"A Member\". OSM said \"Reason\"."] }
+          end
+
+        end # Error marking due
       end # Updates badges
 
     end # Scouts

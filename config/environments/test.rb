@@ -68,6 +68,10 @@ OSMExtender::Application.configure do
     :from => 'reminder-mailer@example.com',         # Can be in the format - "Name" <email_address>
     'return-path' => 'reminder-mailer@example.com', # Should be the email address portion of from
   }
+  AutomationTaskMailer.send :default, {
+    :from => 'automation-task-mailer@example.com',  # Can be in the format - "Name" <email_address>
+    'return-path' => 'automation-task-mailer@example.com', # Should be the email address portion of from
+  }
   UserMailer.send :default, {
     :from => 'user-mailer@example.com',             # Can be in the format - "Name" <email_address>
     'return-path' => 'user-mailer@example.com',     # Should be the email address portion of from

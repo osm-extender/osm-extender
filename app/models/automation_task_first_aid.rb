@@ -111,11 +111,16 @@ class AutomationTaskFirstAid < AutomationTask
 
           unless current_data.eql?(new_data)
             oc_data.requirements[CHALLENGE_REQUIREMENT_ID[section.type]] = new_data
-            if oc_data.update(user.osm_api)
-              member_lines.push "Updated challenge badge."
-            else
-              member_lines.push "Couldn't update challenge badge."
-              errors.push "Couldn't update challenge badge for #{member_name}"
+            begin
+              if oc_data.update(user.osm_api)
+                member_lines.push "Updated challenge badge."
+              else
+                member_lines.push "Couldn't update challenge badge."
+                errors.push "Couldn't update challenge badge for #{member_name}."
+              end
+            rescue Osm::Error => exception
+              member_lines.push "Couldn't update challenge badge. OSM said \"#{exception.message}\"."
+              errors.push "Couldn't update challenge badge for #{member_name}. OSM said \"#{exception.message}\"."
             end
           else
             # member_lines.push "Didn't update challenge badge as existing data is what would have been set."

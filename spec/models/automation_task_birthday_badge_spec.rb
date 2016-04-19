@@ -117,28 +117,55 @@ describe "Birthday Badge automation task" do
         }
       end
 
-      it "Couldn't mark badge as due" do
-        section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
-        task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
-        task.configuration = {badge_6: 6, badge_7: 7, badge_8: 8, badge_9: 9, badge_10: 10}
+      describe "Couldn't mark badge as due" do
+        it "Returned false" do
+          section_id = 300
+          user = FactoryGirl.build(:user_connected_to_osm)
+          task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
+          task.configuration = {badge_6: 6, badge_7: 7, badge_8: 8, badge_9: 9, badge_10: 10}
+    
+          Osm::Member.stub(:get_for_section).with(user.osm_api, section_id){ [
+            Osm::Member.new(id: 405, first_name: 'E', last_name: 'Smith', grouping_id: 2003, date_of_birth: 9.years.ago),
+          ] }
+    
+          badge_9 = Osm::CoreBadge.new(id: 9, name: '9th Birthday badge')
+          badge_data_9 = Osm::Badge::Data.new(member_id: 405, badge: badge_9)
   
-        Osm::Member.stub(:get_for_section).with(user.osm_api, section_id){ [
-          Osm::Member.new(id: 405, first_name: 'E', last_name: 'Smith', grouping_id: 2003, date_of_birth: 9.years.ago),
-        ] }
-  
-        badge_9 = Osm::CoreBadge.new(id: 9, name: '9th Birthday badge')
-        badge_data_9 = Osm::Badge::Data.new(member_id: 405, badge: badge_9)
+          Osm::CoreBadge.stub(:get_badges_for_section).with(user.osm_api, section_id){ [badge_9] }
+          badge_9.stub(:get_data_for_section).with(user.osm_api, section_id) { [badge_data_9] }
+          badge_data_9.should_receive(:mark_due).with(user.osm_api, 1).exactly(1).times { false }
+    
+          task.send(:perform_task).should == {
+            success: false,
+            errors: ["Error marking 9th Birthday badge as due for E Smith."],
+            log_lines: ["Checking members", ["E Smith's 9th bithday is on 8 March"], "Found 1 birthday.", ["Error marking 9th Birthday badge as due for E Smith."]]
+          }
+        end
 
-        Osm::CoreBadge.stub(:get_badges_for_section).with(user.osm_api, section_id){ [badge_9] }
-        badge_9.stub(:get_data_for_section).with(user.osm_api, section_id) { [badge_data_9] }
-        badge_data_9.should_receive(:mark_due).with(user.osm_api, 1).exactly(1).times { false }
+        it "Raised an Osm::Error" do
+          section_id = 300
+          user = FactoryGirl.build(:user_connected_to_osm)
+          task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
+          task.configuration = {badge_6: 6, badge_7: 7, badge_8: 8, badge_9: 9, badge_10: 10}
+    
+          Osm::Member.stub(:get_for_section).with(user.osm_api, section_id){ [
+            Osm::Member.new(id: 405, first_name: 'E', last_name: 'Smith', grouping_id: 2003, date_of_birth: 9.years.ago),
+          ] }
+    
+          badge_9 = Osm::CoreBadge.new(id: 9, name: '9th Birthday badge')
+          badge_data_9 = Osm::Badge::Data.new(member_id: 405, badge: badge_9)
   
-        task.send(:perform_task).should == {
-          success: false,
-          errors: ["Error marking 9th Birthday badge as due for E Smith."],
-          log_lines: ["Checking members", ["E Smith's 9th bithday is on 8 March"], "Found 1 birthday.", ["Error marking 9th Birthday badge as due for E Smith."]]
-        }
+          Osm::CoreBadge.stub(:get_badges_for_section).with(user.osm_api, section_id){ [badge_9] }
+          badge_9.stub(:get_data_for_section).with(user.osm_api, section_id) { [badge_data_9] }
+          badge_data_9.should_receive(:mark_due).with(user.osm_api, 1).exactly(1).times { raise Osm::Error, "Message from OSM" }
+    
+          task.send(:perform_task).should == {
+            success: false,
+            errors: ["Error marking 9th Birthday badge as due for E Smith. OSM said \"Message from OSM\"."],
+            log_lines: ["Checking members", ["E Smith's 9th bithday is on 8 March"], "Found 1 birthday.", ["Error marking 9th Birthday badge as due for E Smith. OSM said \"Message from OSM\"."]]
+          }
+        end
+
       end
     end
   end
