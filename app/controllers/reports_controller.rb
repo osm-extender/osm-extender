@@ -197,7 +197,7 @@ class ReportsController < ApplicationController
     members_seen = [] # IDs of members we've already processed, allows skipping of terms (saving API use) if we won't get more information by quering for it's badge data
 
     terms = Osm::Term.get_for_section(osm_api, current_section).sort
-    terms = terms.select!{ |t| !((t.finish < @start) || (t.start > @finish)) }
+    terms.select!{ |t| !((t.finish < @start) || (t.start > @finish)) }
     terms = [terms[-1], *terms[0..-2]] # Check last, first then other terms - more chance of getting all members in least API traffic
     terms.each do |term|
       # Get summaries to check which badges we're interested in
