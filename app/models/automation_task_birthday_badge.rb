@@ -100,13 +100,25 @@ class AutomationTaskBirthdayBadge < AutomationTask
       badges = Osm::CoreBadge.get_badges_for_section(user.osm_api, section_id)
       badges.select!{ |badge| configuration.values_at(:badge_6, :badge_7, :badge_8, :badge_9, :badge_10).include?(badge.id) }
       badge_datas = Hash[ badges.map{ |badge| [badge.id, badge.get_data_for_section(user.osm_api, section_id)] } ]
+      badge_datas.default = []
       badges = Hash[ badges.map{ |badge| [badge.id, badge] } ]
 
       birthdays.each do |birthday|
         member = birthday[:member]
         age = birthday[:age]
+
         badge = badges[configuration["badge_#{age}".to_sym]]
+        if badge.nil?
+          birthday_lines.push "No badge selected for a member's #{age}th birthday."
+          next birthday
+        end
+ 
         data = badge_datas[badge.id].select{ |d| d.member_id.eql?(member.id) }.first
+        if data.nil?
+          birthday_lines.push "Error fetching data for #{badge.name}."
+          ret_val[:errors].push "Error fetching data for #{badge.name}." unless ret_val[:errors].include?("Error fetching data for #{badge.name}.")
+          next birthday
+        end
 
         unless data.awarded?
           unless data.due?

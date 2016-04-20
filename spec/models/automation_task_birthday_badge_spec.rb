@@ -104,6 +104,28 @@ describe "Birthday Badge automation task" do
       ]
     end
 
+    it "Handles no badge" do
+      section_id = 300
+      user = FactoryGirl.build(:user_connected_to_osm)
+      task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
+
+      Osm::Member.stub(:get_for_section).with(user.osm_api, section_id){ [
+        Osm::Member.new(id: 401, first_name: 'A', last_name: 'Smith', grouping_id: 2, date_of_birth: Date.new(2009, 3, 8)),
+      ] }
+
+      badge_6 = Osm::CoreBadge.new(id: 6, name: '6th Birthday badge')
+      badge_7 = Osm::CoreBadge.new(id: 7, name: '7th Birthday badge')
+      badge_8 = Osm::CoreBadge.new(id: 8, name: '8th Birthday badge')
+      badge_9 = Osm::CoreBadge.new(id: 9, name: '9th Birthday badge')
+      badge_10 = Osm::CoreBadge.new(id: 10, name: '10th Birthday badge')
+      Osm::CoreBadge.stub(:get_badges_for_section).with(user.osm_api, section_id){ [badge_6, badge_7, badge_8, badge_9, badge_10] }
+
+      ret_val = task.send(:perform_task)
+      ret_val[:success].should == true
+      ret_val[:errors].should == []
+      ret_val[:log_lines].should == ["Checking members", ["A Smith's 7th bithday is on 8 March"], "Found 1 birthday.", ["No badge selected for a member's 7th birthday."]]
+    end
+
 
     describe "Errors" do
       it "Couldn't get members" do
