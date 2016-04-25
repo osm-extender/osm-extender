@@ -43,8 +43,7 @@ class StaticController < ApplicationController
       @term_problems[section.id] = []
       terms = Osm::Term.get_for_section(osm_api, section).sort
       @term_problems[section.id].push "Has no terms." if terms.empty?
-      terms[0..-2].each_with_index do |a, b|
-        b = terms[b + 1]
+      terms.each_cons(2) do |a, b|
         if (a.finish + 1.day) < b.start
           # FOUND A GAP
           size = (b.start - a.finish).numerator
