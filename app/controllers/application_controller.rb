@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery :with => :exception
   before_action :require_login
+  before_action :set_paper_trail_whodunnit
   add_flash_types :information, :error, :warning, :notice, :instruction
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
                 :api_has_osm_permission?, :get_section_names, :get_group_names, :get_grouping_name,
