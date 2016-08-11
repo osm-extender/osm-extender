@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 # Rails
-gem 'rails', '~> 4.1', '>= 4.2.5.2'
+gem 'rails', '~> 4.1', '>= 4.2.7.1'
 gem 'activerecord-session_store', '~> 0.1'
 gem 'rb-readline'
 
