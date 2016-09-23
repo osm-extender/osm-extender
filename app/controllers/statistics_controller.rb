@@ -68,14 +68,12 @@ class StatisticsController < ApplicationController
       end
     end
     signins = []
-    signins_hash = 
-    UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').group('DATE(at)').count(:user_id, :distinct => true)
     earliest_signin = UsageLog.minimum(:at).to_date
     (earliest_signin..Date.today).each do |date|
-      value = signins_hash[date] || signins_hash[date.strftime('%Y-%m-%d')] # Key is a Date from mysql, a String from sqlite
+      value = UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').where('DATE(AT) == ?', date).distinct(:user_id).count
       signins.push({
         :date => date,
-        :total => (value ? value : 0),
+        :total => value,
       })
     end
 
@@ -93,7 +91,7 @@ class StatisticsController < ApplicationController
       },
       'signins' => {
         'data' => signins,
-        'max_value' => signins_hash.values.max,
+        'max_value' => signins.map{ |i| i[:total]}.max,
       }
     }
   end
