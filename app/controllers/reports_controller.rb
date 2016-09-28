@@ -322,6 +322,42 @@ class ReportsController < ApplicationController
   end
 
 
+  def badge_stock_check
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
+    require_osm_permission(:read, :events) or return
+
+    options = {
+      :include_core => @my_params[:include_core].eql?('1'),
+      :include_challenge => @my_params[:include_challenge].eql?('1'),
+      :include_staged => @my_params[:include_staged].eql?('1'),
+      :include_activity => @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
+      :hide_no_stock => @my_params[:hide_no_stock].eql?('1'),
+    }
+
+    @data = Report.badge_stock_check(current_user, current_section, options)
+
+    respond_to do |format|
+      format.html # html
+      format.csv do
+        send_sv_file({:col_sep => ',', :headers => ['Badge Type', 'Group Name', 'Badge', 'Level', 'Stock']}, 'BadgeStock.csv', 'text/csv') do |csv|
+          @data.each do |item|
+            csv << item
+          end
+        end
+      end # csv
+      format.tsv do
+        send_sv_file({:col_sep => "\t", :headers => ['Badge Type', 'Group Name', 'Badge', 'Level', 'Stock']}, 'BadgeStock.tsv', 'text/tsv') do |csv|
+          @data.each do |item|
+            csv << item
+          end
+        end
+      end # tsv
+    end
+
+    log_usage(:sub_action => request.format.to_s, :extra_details => @options)
+  end
+
+
   def missing_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS or return
     require_osm_permission(:read, :badge) or return

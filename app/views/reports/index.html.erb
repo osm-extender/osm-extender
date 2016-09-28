@@ -76,6 +76,30 @@
     </div>
   <%- end %>
 
+  <%- if current_section.youth_section? %>
+    <h2 class="ui-accordion-header"><a href="#">Badge Stock Check</a></h2>
+    <div class="ui-accordion-content">
+      <p>
+        This report allows you to perform a stock check of your badges, ensuring that your box and OSM agree on how many you have.
+      </p>
+      <%- if has_osm_permission?(:read, :badge) %>
+        <%= form_tag badge_stock_check_report_path, :method=>:get do %>
+          <%= check_box_tag 'badge_stock_check[include_core]', 1, true %> <%= label_tag 'badge_stock_check[include_core]', 'Include core badges?' %><br/>
+          <%- if current_section.subscription_at_least?(:silver) # Bronze does not include activity badges %>
+            <%= check_box_tag 'badge_stock_check[include_activity]', 1, true %> <%= label_tag 'badge_stock_check[include_activity]', 'Include activity badges?' %><br/>
+          <%- else %>
+            You need at least a silver subscription in OSM to include activity badges</br>
+          <%- end %>
+          <%= check_box_tag 'badge_stock_check[include_challenge]', 1, true %> <%= label_tag 'badge_stock_check[include_challenge]', 'Include challenge badges?' %><br/>
+          <%= check_box_tag 'badge_stock_check[include_staged]', 1, true %> <%= label_tag 'badge_stock_check[include_staged]', 'Include staged activity and Partnership badges?' %><br/>
+          <%= check_box_tag 'badge_stock_check[hide_no_stock]', 1, true %> <%= label_tag 'badge_stock_check[hide_no_stock]', "Hide badges OSM thinks you don't have" %><br/>
+          <%= submit_tag 'Show badge stock check' %>
+        <%- end %>
+      <%- else %>
+        You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
+      <%- end %>
+    </div>
+  <%- end %>
 
     <h2 class="ui-accordion-header"><a href="#">Calendar</a></h2>
     <div class="ui-accordion-content">
