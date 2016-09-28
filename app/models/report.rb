@@ -99,6 +99,41 @@ class Report
     end
   end
 
+  def self.badge_stock_check(user, section, options)
+    Rails.cache.fetch("user#{user.id}-report-badge_stock_check-data-#{options.inspect}", :expires_in => 10.minutes) do
+
+      badges = []
+      badges += Osm::CoreBadge.get_badges_for_section(user.osm_api, section) if options[:include_core]
+      badges += Osm::StagedBadge.get_badges_for_section(user.osm_api, section) if options[:include_staged]
+      badges += Osm::ChallengeBadge.get_badges_for_section(user.osm_api, section) if options[:include_challenge]
+      badges += Osm::ActivityBadge.get_badges_for_section(user.osm_api, section) if options[:include_activity]
+
+      stock = Osm::Badges.get_stock(user.osm_api, section)
+      stock.default = 0
+
+      data = [] # Contains [badge_type, badge_group, badge.name, level, stock]
+
+      badges.each do |badge|
+        badge_group = badge.group_name.empty? ? nil : badge.group_name
+        this_data = [badge.type.to_s.titleize, badge_group, badge.name]
+
+        if badge.levels?
+          badge.levels.each do |level|
+            next level if level < 1
+            data.push this_data + [level, stock["#{badge.id}_#{level}"]]
+          end # each level
+        else # has no levels
+          data.push this_data + [nil, stock["#{badge.id}_1"]]
+        end # has levels?
+      end # each badge
+
+      # Remove badges with no stock if the hide_no_stock option is selected
+      data.select!{ |i| i[4] > 0 } if options[:hide_no_stock]
+
+      return data
+    end
+  end
+
   def self.calendar(user, options)
     Rails.cache.fetch("user#{user.id}-report-calendar-data-#{options.inspect}", :expires_in => 10.minutes) do
       items = []

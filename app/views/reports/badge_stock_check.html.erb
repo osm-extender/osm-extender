@@ -1,0 +1,33 @@
+<%= page_title 'Badge Stock Check' %>
+
+<div id="data_table">
+  <table class="jquery-thead">
+    <thead style="display: table-header-group;">
+      <tr>
+        <th style="vertical-align: bottom;">Badge type</th>
+        <th style="vertical-align: bottom;">Badge group</th>
+        <th style="vertical-align: bottom;">Badge name</th>
+        <th style="vertical-align: bottom;">Level</th>
+        <th style="vertical-align: bottom;">Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @data.each do |row| %>
+        <tr>
+          <%- row.each do |cell| %>
+            <td><%= cell %></td>
+          <%- end %>
+        <tr>
+      <%- end %>
+    </tbody>
+  </table>
+</div>
+
+<%= link_to '[Export as CSV]', badge_stock_check_report_path(params.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', badge_stock_check_report_path(params.merge(:format => :tsv)) %><br/>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#data_table').thead();
+  });
+</script>
