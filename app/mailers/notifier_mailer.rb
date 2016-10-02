@@ -2,9 +2,9 @@ class NotifierMailer < ApplicationMailer
   helper_method :inspect_object
 
   def self.options=(options)
-    raise ArgumentError 'options is not a Hash' unless options.is_a?(Hash)
+    fail ArgumentError 'options is not a Hash' unless options.is_a?(Hash)
     [:contact_form__to, :reminder_failed__to, :exception__to].each do |option|
-      raise ArgumentError "options must contain a value for :#{option}" unless options.has_key?(option)
+      fail ArgumentError "options must contain a value for :#{option}" unless options.has_key?(option)
     end
     @@options = options
   end

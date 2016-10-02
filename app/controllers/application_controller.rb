@@ -261,7 +261,7 @@ class ApplicationController < ActionController::Base
 
 
   def set_current_section(section)
-    raise ArgumentError unless section.is_a?(Osm::Section)
+    fail ArgumentError unless section.is_a?(Osm::Section)
     session[:current_section_id] = section.id
     @current_section = section
   end

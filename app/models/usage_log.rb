@@ -11,8 +11,8 @@ class UsageLog < ActiveRecord::Base
   validates_presence_of :at_day_of_week
 
   before_validation :set_times, :on => :create
-  before_update { raise ActiveRecord::ReadOnlyRecord }
-  before_destroy { raise ActiveRecord::ReadOnlyRecord }
+  before_update { fail ActiveRecord::ReadOnlyRecord }
+  before_destroy { fail ActiveRecord::ReadOnlyRecord }
 
 
   private

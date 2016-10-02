@@ -41,7 +41,7 @@ class AutomationTask < ActiveRecord::Base
 
 
   def self.human_name
-    raise "The self.human_name method must be overridden"
+    fail "The self.human_name method must be overridden"
   end
   def human_name
     self.class.human_name
@@ -55,7 +55,7 @@ class AutomationTask < ActiveRecord::Base
     if default_configuration.empty?
       return {}
     else
-      raise "The self.configuration_labels method must be overridden"
+      fail "The self.configuration_labels method must be overridden"
     end
   end
 
@@ -63,12 +63,12 @@ class AutomationTask < ActiveRecord::Base
     if default_configuration.empty?
       return {}
     else
-      raise "The self.configuration_types method must be overridden"
+      fail "The self.configuration_types method must be overridden"
     end
   end
 
   def self.required_permissions
-    raise "The self.required_permissions method must be overridden"
+    fail "The self.required_permissions method must be overridden"
   end
 
 
@@ -76,7 +76,7 @@ class AutomationTask < ActiveRecord::Base
     if self.class.default_configuration.empty?
       return "There are no settings for this item."
     else
-      raise "The human_configuration method must be overridden"
+      fail "The human_configuration method must be overridden"
     end
   end
 
@@ -164,7 +164,7 @@ class AutomationTask < ActiveRecord::Base
   end
 
   def perform_task(user=self.user)
-    raise "The perform_task method must be overridden"
+    fail "The perform_task method must be overridden"
   end
 
 end

@@ -28,38 +28,38 @@ class EmailReminderItem < ActiveRecord::Base
 
 
   def get_data
-    raise "The get_data method must be overridden"
+    fail "The get_data method must be overridden"
   end
 
   def get_fake_data
-    raise "The get_fake_data method must be overridden"
+    fail "The get_fake_data method must be overridden"
   end
 
   def required_permissions
-    raise "The required_permissions method must be overridden"
+    fail "The required_permissions method must be overridden"
   end
 
 
   def self.human_name
-    raise "The self.human_name method must be overridden"
+    fail "The self.human_name method must be overridden"
   end
   def human_name
     self.class.human_name
   end
 
   def self.default_configuration
-    raise "The self.default_configuration method must be overridden"
+    fail "The self.default_configuration method must be overridden"
   end
 
   def self.required_permissions
-    raise "The self.required_permissions method must be overridden"
+    fail "The self.required_permissions method must be overridden"
   end
 
   def self.configuration_labels
     if self.default_configuration.empty?
       return {}
     else
-      raise "The self.configuration_labels method must be overridden"
+      fail "The self.configuration_labels method must be overridden"
     end
   end
 
@@ -67,7 +67,7 @@ class EmailReminderItem < ActiveRecord::Base
     if self.default_configuration.empty?
       return {}
     else
-      raise "This method must be overridden"
+      fail "This method must be overridden"
     end
   end
 
@@ -76,7 +76,7 @@ class EmailReminderItem < ActiveRecord::Base
     if self.class.default_configuration.empty?
       return "There are no settings for this item."
     else
-      raise "The human_configuration method must be overridden"
+      fail "The human_configuration method must be overridden"
     end
   end
 
