@@ -205,7 +205,7 @@ class Report
   # @return [Hash]
   def self.get_calendar_items_for_section(api, section, options)
     [:start, :finish, :include_meetings, :include_events].each do |attr|
-      raise ArgumentError, "options doesn't contain a value for :#{attr}" unless options.has_key?(attr)
+      fail ArgumentError, "options doesn't contain a value for :#{attr}" unless options.has_key?(attr)
     end
 
     # Fetch options

@@ -55,7 +55,7 @@ namespace :ci do
           failed_commands.push commands[index] unless value.eql?('0')
         end
         puts "#{failed_commands.size} #{'command'.pluralize(failed_commands.size)} failed! - #{failed_commands.to_sentence}"
-        raise "Something failed"
+        fail "Something failed"
       end
     end
 

@@ -36,7 +36,7 @@ namespace :scheduled  do
     tasks.each_with_index do |task, index|
       begin
         puts "\tDoing #{(index + 1).to_s.rjust(count_length, ' ')} of #{count} (id: #{task.id})"
-        raise Osm::Forbidden unless task.has_permissions?
+        fail Osm::Forbidden unless task.has_permissions?
         ret_val = task.do_task
         unless ret_val[:success]
           AutomationTaskMailer.errors(task, ret_val[:errors]).deliver_now

@@ -28,7 +28,7 @@ class EmailList < ActiveRecord::Base
     emails = Array.new
     no_emails = Array.new
     section = Osm::Section.get(user.osm_api, section_id)
-    raise Osm::Forbidden if section.nil?
+    fail Osm::Forbidden if section.nil?
 
     Osm::Member.get_for_section(user.osm_api, section).each do |member|
       next unless ((match_grouping == 0) || (member.grouping_id == match_grouping)) ==  match_type
