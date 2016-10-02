@@ -197,6 +197,19 @@
   <%- end %>
 
 
+  <h2 class="ui-accordion-header"><a href="#">Member's Photos</a></h2>
+  <div class="ui-accordion-content">
+    <p>This report allows you to see what the members of your section look like.</p>
+    <%- if has_osm_permission?(:read, :member) %>
+      <%= form_tag members_photos_report_path, :method=>:get do %>
+        <br/><%= submit_tag 'Show photos' %>
+      <%- end #form %>
+    <% else %>
+      You need to fix your <%= link_to 'OSM permissions', check_osm_setup_path %> in order to use this report.
+    <%- end #sections.empty? %>
+  </div>
+
+
   <%- if current_section.youth_section? %>
     <h2 class="ui-accordion-header"><a href="#">Missing Badge Requirements</a></h2>
     <div class="ui-accordion-content">

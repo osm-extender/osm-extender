@@ -1,0 +1,16 @@
+<%= page_title "Member's Photos" %>
+
+<%- @members_by_grouping.each do |grouping, members| %>
+  <h2><%= grouping %></h2>
+  <div class="members_for_grouping">
+    <%- members.sort.each do |member| %>
+      <div class="member" style="display: inline-block; margin: 10px; text-align: center; width: 150px; height: 150px;">
+        <%- photo = member.get_photo(current_user.osm_api) %>
+        <%- image_src = "data:#{MimeMagic.by_magic(photo)};base64,#{Base64.encode64(photo)}" unless photo.nil? %>
+        <%- image_src = image_path "NoPhoto.png" if photo.nil? %>
+        <img alt="<%= member.name %>" width="100px" height="100px" src="<%= image_src %>"><br/>
+        <%= member.name %>
+      </div> <!-- member -->
+    <%- end %>
+  </div> <!-- members_for_grouping -->
+<%- end %>
