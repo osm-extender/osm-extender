@@ -70,7 +70,7 @@ class StatisticsController < ApplicationController
     signins = []
     earliest_signin = UsageLog.minimum(:at).to_date
     (earliest_signin..Date.today).each do |date|
-      value = UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').where('DATE(AT) == ?', date).distinct(:user_id).count
+      value = UsageLog.where(:controller => 'SessionsController', :action => 'create', :result => 'success').where('DATE(AT) = ?', date).distinct(:user_id).count
       signins.push({
         :date => date,
         :total => value,
