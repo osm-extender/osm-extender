@@ -27,7 +27,7 @@ gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a
 gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in
 gem 'icalendar', '~> 2.2'             # Do stuff with ICS format files
 gem 'mimemagic', '~> 0.3.2'           # Get type of image file returned by OSM
-
+gem 'figaro', '~> 1.1'                # Use config/application.yml to hold environment variables for easier testing/development
 
 # Jobs in background
 gem 'delayed_job_active_record', '~> 4.0'
