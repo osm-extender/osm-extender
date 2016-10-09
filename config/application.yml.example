@@ -22,7 +22,7 @@ recaptcha_private_key:  PRIVATE KEY FOR RECAPTCHA
 ga_tracking_id:         GOOGLE ANALYTICS TRACKING ID (or ~ if you don't want to use Google Anayltics)
 
 
-# Values for the test environment - don't change these
+# Values for the test environment - don't change these, remember to also add to .travis.yml
 test:
   secret_key_base:        USE 'bundle exec rake secret' TO GENERATE THIS
   osm_api_name:           Test API
