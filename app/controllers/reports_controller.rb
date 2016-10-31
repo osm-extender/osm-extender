@@ -288,7 +288,7 @@ class ReportsController < ApplicationController
 
   def badge_completion_matrix
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
-    require_osm_permission(:read, :events) or return
+    require_osm_permission(:read, :badge) or return
 
     options = {
       :include_core => @my_params[:include_core].eql?('1'),
@@ -661,6 +661,20 @@ class ReportsController < ApplicationController
     end
 
     log_usage
+  end
+
+
+  def members_photos
+    require_osm_permission(:read, :member) or return
+    members = Osm::Member.get_for_section(current_user.osm_api, current_section).group_by{ |i| i.grouping_id }
+    grouping_names = Osm::Grouping.get_for_section(current_user.osm_api, current_section).map{ |i| [i.id, i.name] }.to_h
+    grouping_names.default = 'Members not in a grouping'
+
+    # Create members_by_grouping - a hash of grouping name to array of members
+    @members_by_grouping = {}
+    members.keys.sort.each do |grouping_id|
+      @members_by_grouping[grouping_names[grouping_id]] = members[grouping_id]
+    end
   end
 
 

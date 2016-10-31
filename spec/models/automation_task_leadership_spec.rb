@@ -456,6 +456,7 @@ describe "Leadership automation task" do
       describe "Doesn't get core badges" do
         it "Nil" do
           Osm::Section.stub(:get){ @section }
+          Osm::Member.stub(:get_for_section){ [] }
           Osm::CoreBadge.stub(:get_badges_for_section){ nil }
           ret_val = @task.send(:perform_task)
           ret_val.should == { success: false, errors: ["Could not retrieve core badges from OSM."] }
@@ -463,6 +464,7 @@ describe "Leadership automation task" do
 
         it "Empty array" do
           Osm::Section.stub(:get){ @section }
+          Osm::Member.stub(:get_for_section){ [] }
           Osm::CoreBadge.stub(:get_badges_for_section){ [] }
           ret_val = @task.send(:perform_task)
           ret_val.should == { success: false, errors: ["Could not retrieve core badges from OSM."] }

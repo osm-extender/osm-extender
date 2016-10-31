@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - 2.2.1
+  - 2.2.5
   - 2.3.0
 branches:
   only:
@@ -8,3 +8,11 @@ branches:
     - staging
     - /gh(?:\d)+(?:-.+)?/
 script: bundle exec rake ci:travis
+env:
+  global:
+    - secret_key_base="abcd1234"
+    - osm_api_name="Test API"
+    - osm_api_id="12"
+    - osm_api_token="1234567890"
+    - recaptcha_public_key="11223344556677889900"
+    - recaptcha_private_key="00998877665544332211"

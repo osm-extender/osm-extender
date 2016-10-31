@@ -7,9 +7,9 @@ tmp/
 .rbenv-version
 .ruby-version
 .sass-cache/
+config/application.yml
 config/environments/*_custom.rb
 config/database.yml
-config/secrets.yml
 config/unicorn.conf
 coverage
 doc/app

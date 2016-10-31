@@ -50,17 +50,33 @@ class AutomationTaskLeadership < AutomationTask
       return {success: false, errors: ['Could not retrieve section from OSM.']}
     end
 
-    core_badges = Osm::CoreBadge.get_badges_for_section(user.osm_api, section)
-    if core_badges.nil? || core_badges.empty?
-      return {success: false, errors: ['Could not retrieve core badges from OSM.']}
+    members = []
+    begin
+      members= Osm::Member.get_for_section(user.osm_api, section)
+    rescue Osm::Error::NoCurrentTerm => exception
+      return {success: false, errors: ["The section doesn't have a current term."]}
     end
-    core_badges = Hash[ core_badges.select{ |b| BADGE_IDS[section.type].include?(b.id) }.map{ |b| [b.id, b] } ]
 
+    core_badges = []
+    begin
+      core_badges = Osm::CoreBadge.get_badges_for_section(user.osm_api, section)
+      if core_badges.nil? || core_badges.empty?
+        return {success: false, errors: ['Could not retrieve core badges from OSM.']}
+      end
+      core_badges = Hash[ core_badges.select{ |b| BADGE_IDS[section.type].include?(b.id) }.map{ |b| [b.id, b] } ]
+    rescue ArgumentError => exception
+      intercept_messages = ["That badge does't exist (bad ID).", "That badge does't exist (bad version)."]
+      if intercept_messages.include?(exception.mnessage)
+        return {success: false, errors: ["Could not find the leadership badges under core badges in OSM."]}
+      else
+        raise exception
+      end
+    end
     leadership_badges = BADGE_IDS[section.type].map{ |i| core_badges[i] }
     leadership_badge_datas = leadership_badges.select{ |b| !b.nil? }
     leadership_badge_datas = Hash[ leadership_badge_datas.map{ |b| [b.id, Hash[ b.get_data_for_section(user.osm_api, section).map{ |d| [d.member_id, d] } ]] } ]
 
-    Osm::Member.get_for_section(user.osm_api, section).each do |member|
+    members.each do |member|
       next member if member.leader?
       # Get leadership level from personal details
       pd_level = member.grouping_leader || 0

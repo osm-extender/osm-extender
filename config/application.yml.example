@@ -1,0 +1,33 @@
+# Add configuration values here, as shown below.
+#
+# pusher_app_id: "2954"
+# pusher_key: 7381a978f7dd7f9a1117
+# pusher_secret: abdc3b896a0ffb85d373
+# stripe_api_key: sk_test_2J0l093xOyW72XUYJHE4Dv2r
+# stripe_publishable_key: pk_test_ro9jV5SNwGb1yYlQfzG17LHK
+#
+# production:
+#   stripe_api_key: sk_live_EeHnL644i6zo4Iyq4v1KdV9H
+#   stripe_publishable_key: pk_live_9lcthxpSIHbGwmdO941O1XVU
+#
+# Setting a value of ~ will remove the setting
+
+
+secret_key_base:        USE 'bundle exec rake secret' TO GENERATE THIS
+osm_api_name:           YOU'LL HAVE GIVEN THIS TO ED AT OSM
+osm_api_id:             YOU'LL GET THIS FROM ED AT OSM
+osm_api_token:          YOU'LL GET THIS FROM ED AT OSM
+recaptcha_public_key:   PUBLIC KEY FOR RECAPTCHA
+recaptcha_private_key:  PRIVATE KEY FOR RECAPTCHA
+ga_tracking_id:         GOOGLE ANALYTICS TRACKING ID (or ~ if you don't want to use Google Anayltics)
+
+
+# Values for the test environment - don't change these, remember to also add to .travis.yml
+test:
+  secret_key_base:        USE 'bundle exec rake secret' TO GENERATE THIS
+  osm_api_name:           Test API
+  osm_api_id:             "12"
+  osm_api_token:          "1234567890"
+  recaptcha_public_key:   "11223344556677889900"
+  recaptcha_private_key:  "00998877665544332211"
+  ga_tracking_id:         ~
