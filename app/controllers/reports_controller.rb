@@ -288,7 +288,7 @@ class ReportsController < ApplicationController
 
   def badge_completion_matrix
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
-    require_osm_permission(:read, :events) or return
+    require_osm_permission(:read, :badge) or return
 
     options = {
       :include_core => @my_params[:include_core].eql?('1'),
