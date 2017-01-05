@@ -26,12 +26,12 @@
   <%- if @user %>
     <div class="field">
       Activated account?<br/>
-      <%= yes_no @user.active? %>
+      <%= yes_no @user.activated? %>
     </div>
     <div class="field">
-      Locked account?<br/>
-      <%= yes_no @user.locked?, false %>
-      <%- if @user.locked? %>
+      Login locked?<br/>
+      <%= yes_no @user.login_locked?, false %>
+      <%- if @user.login_locked? %>
         (Lock expires at <%= @user.lock_expires_at %>)
         <%= link_to 'Unlock', unlock_user_path(@user), :method=>:post %>
       <% end %>

@@ -77,7 +77,7 @@ class UsersController < ApplicationController
   def unlock_account
     user = User.load_from_unlock_token(params[:token].to_s)
 
-    if user && user.unlock!
+    if user && user.login_unlock!
       flash[:notice] = 'Your account was successfully unlocked.'
       redirect_to signin_path
     else
@@ -111,7 +111,7 @@ class UsersController < ApplicationController
 
   def unlock
     user = User.find(params[:id])
-    if user.unlock!
+    if user.login_unlock!
       redirect_to users_path, :notice => 'The user was unlocked.'
     else
       render :action => :edit

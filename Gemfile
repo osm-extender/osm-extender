@@ -1,13 +1,26 @@
+# OUTSTANDING UPDATES
+# jquery-ui-rails (5.0.5)   --->   6.0.1
+# paper_trail (5.2.3)       --->   6.0.2
+# premailer (1.8.7)         --->   1.9.5
+# recaptcha (1.3.0)         --->   4.0.1
+# mv-mysql (2.2.6)          --->   3.0.0
+# mv-postgresql (2.2.7)     --->   3.0.0
+# mv-sqlite (2.2.6)         --->   3.0.0
+# redis-rails (4.0.0)       --->   5.0.0
+# spring (1.7.2)            --->   2.0.0
+# turn (0.9.6)              --->   0.9.7
+
+
 source 'http://rubygems.org'
 #source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
 
 # Rails
 gem 'rails', '~> 4.1', '>= 4.2.7.1'
-gem 'activerecord-session_store', '~> 0.1'
+gem 'activerecord-session_store', '~> 1.0'
 gem 'rb-readline'
 
 # Authentication / Authorisation
-gem 'sorcery', '~> 0.8', '>= 0.8.5'
+gem 'sorcery', '~> 0.10'
 gem 'cancan', '~> 1.6'
 
 

@@ -5,7 +5,7 @@
     <th><%= sortable_link 'name' %></th>
     <th><%= sortable_link 'email_address' %></th>
     <th>Actions</th>
-    <th>Account<br/>Locked?</th> 
+    <th>Login<br/>Locked?</th> 
     <th>Connected<br/>to OSM?</th>
     <th>Email<br/>reminders</th>
     <th>Email<br/>lists</th>
@@ -26,7 +26,7 @@
         <%- if can? :resend_activation, user %>
           <%= link_to 'Resend activation email', resend_activation_user_path(user) %><br/>
         <%- end %>
-        <%- if user.locked? && can?(:unlock, user) %>
+        <%- if user.login_locked? && can?(:unlock, user) %>
           <%= link_to 'Unlock user', unlock_user_path(user), :method=>:post %><br/>
         <%- end %>
         <%- if can? :become, user %>
@@ -37,8 +37,8 @@
         <%- end %>
       </td>
       <td>
-        <%= yes_no user.locked?, false %>
-        <%- if user.locked? %>
+        <%= yes_no user.login_locked?, false %>
+        <%- if user.login_locked? %>
           <br/><%= user.lock_expires_at %>
           <br/><%= distance_of_time_in_words_to_now(user.lock_expires_at) %> remaining
         <%- end %>
