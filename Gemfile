@@ -1,14 +1,10 @@
 # OUTSTANDING UPDATES
 # jquery-ui-rails (5.0.5)   --->   6.0.1
-# paper_trail (5.2.3)       --->   6.0.2
-# premailer (1.8.7)         --->   1.9.5
-# recaptcha (1.3.0)         --->   4.0.1
-# mv-mysql (2.2.6)          --->   3.0.0
-# mv-postgresql (2.2.7)     --->   3.0.0
-# mv-sqlite (2.2.6)         --->   3.0.0
-# redis-rails (4.0.0)       --->   5.0.0
-# spring (1.7.2)            --->   2.0.0
-# turn (0.9.6)              --->   0.9.7
+# mv-mysql (2.2.6)          --->   3.0.0   requires rails 5
+# mv-postgresql (2.2.7)     --->   3.0.0   requires rails 5
+# mv-sqlite (2.2.6)         --->   3.0.0   requires rails 5
+# redis-rails (4.0.0)       --->   5.0.0   requires rails 5
+# spring (1.7.2)            --->   2.0.0   requires rails 5
 
 
 source 'http://rubygems.org'
@@ -27,14 +23,14 @@ gem 'cancan', '~> 1.6'
 # Misc
 gem 'osm', '~> 1.3'                   # For using the OSM API
 #gem 'osm', :path => '../../osm/code'
-gem 'recaptcha', '~> 1.3', require: 'recaptcha/rails'   # Used to confirm non-logged in users are human (i.e. on contact form)
+gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
-gem 'premailer-rails', '~> 1.6'       # Easily generate HTML emails (also does plain text counterpart)
+gem 'premailer-rails', '~> 1.9'       # Easily generate HTML emails (also does plain text counterpart)
   gem 'nokogiri', '~> 1.5', '>= 1.6.7.1' # Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.1'          # Makes lists of items orderable
-gem 'paper_trail', '~> 5.0'           # Track changes to (selected) models
+gem 'paper_trail', '~> 6.0'           # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in

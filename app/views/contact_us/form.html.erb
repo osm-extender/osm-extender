@@ -27,7 +27,7 @@
   <%- unless current_user %>
   <div class="field">
     <%= f.label :recaptcha %><br/>
-    <%= recaptcha_tags :ssl=>true %>
+    <%= recaptcha_tags %>
   </div>  
   <%- end %>
 
