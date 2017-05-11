@@ -1,5 +1,5 @@
 class EmailReminderItemProgrammesController < EmailReminderItemsController
-  before_action { require_osm_permission :read, :member }
+  before_action { require_osm_permission :read, :programme }
 
   private
   def model
