@@ -44,6 +44,8 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  config.infer_spec_type_from_file_location!
+
   config.before(:each) do
     FakeWeb.clean_registry
     Timecop.return
