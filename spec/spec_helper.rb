@@ -1,5 +1,3 @@
-puts "Loading spec_helper.rb"
-
 # Generate test coverage report
 if Gem::Specification::find_all_by_name('simplecov').any?
   require 'simplecov'
