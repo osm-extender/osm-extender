@@ -124,6 +124,8 @@ OSMExtender::Application.routes.draw do
   get 'statistics/usage' => 'statistics#usage', :as => 'usage_statistics'
   get 'statistics/automation_tasks' => 'statistics#automation_tasks', :as => 'automation_tasks_statistics'
 
+  get 'status' => 'status#index', :as => 'status'
+
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
 
   root :to => 'static#welcome'
