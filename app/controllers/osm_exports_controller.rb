@@ -68,12 +68,12 @@ class OsmExportsController < ApplicationController
     enabled_contacts = {contact: false, primary_contact: false, secondary_contact: false, emergency_contact: false, doctor: false}
     members.each do |member|
       additional_information_fields_for[:member].push *member.additional_information.keys
-      additional_information_field_labels_for[:member].merge!(member.additional_information_labels)
+      additional_information_field_labels_for[:member].merge!(member.additional_information_labels || {})
       [:contact, :primary_contact, :secondary_contact, :emergency_contact, :doctor].each do |contact|
         unless member.send(contact).nil?
           enabled_contacts[contact] = true
           additional_information_fields_for[contact].push *member.send(contact).additional_information.keys
-          additional_information_field_labels_for[contact].merge!(member.send(contact).additional_information_labels)
+          additional_information_field_labels_for[contact].merge!(member.send(contact).additional_information_labels || {})
         end
       end
     end
