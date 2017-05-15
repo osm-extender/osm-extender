@@ -65,8 +65,5 @@ module OSMExtender
 
     config.active_record.raise_in_transactional_callbacks = true
 
-    # Prefix cookie names
-    config.middleware.insert_before 0, 'CookieNamePrefixer', (Rails.env.production? ? 'osmx_' : "osmx_#{Rails.env.downcase}_"), !['production', 'test'].include?(Rails.env)
-
   end
 end
