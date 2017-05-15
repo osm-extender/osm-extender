@@ -113,8 +113,8 @@ class ApplicationController < ActionController::Base
 
   # Require that the section has a given subscription level (or higher)
   # If not redirect them to my_page and set an error flash
-  # @param level [Fixnum, Symbol] the subscription level required
-  # @param section [Osm::Section, Fixnum, #to_i] the section to check
+  # @param level [Integer, Symbol] the subscription level required
+  # @param section [Osm::Section, Integer, #to_i] the section to check
   # @return [Boolean] Whether the section has that level of subscription
   def require_section_subscription(level, section=current_section)
     section = Osm::Section.get(api, section) unless section.is_a?(Osm::Section)
