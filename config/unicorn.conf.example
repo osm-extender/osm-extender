@@ -1,5 +1,7 @@
 app_directory = "/var/www/rails-apps/osmx.staging"
 
+require 'unicorn/autoscaling'
+
 # Sample verbose configuration file for Unicorn (not Rack)
 #
 # This configuration file documents many features of Unicorn
@@ -13,6 +15,22 @@ app_directory = "/var/www/rails-apps/osmx.staging"
 # Use at least one worker per core if you're on a dedicated server,
 # more will usually help for _short_ waits on databases/caches.
 worker_processes 2
+
+# Perform autoscaling of workers (default false)
+autoscaling true
+# Minimum average idle time before decreasing number of workers (default 60)
+autoscale_idle_time_decrement 30
+# Maximum average idle time before increasing number of workers (default 10)
+autoscale_idle_time_increment 10
+# How many requests are used to calculate the average idle time (default 50)
+autoscale_idle_time_samples 20
+# How often to check if scaling should be performed (default 30)
+autoscale_check_interval 30
+# Set the minimum number of worker processes (default 1)
+autoscale_min_workers 2
+# Set the maximum number of worker processes (default nil)
+autoscale_max_workers 4
+
 
 # Since Unicorn is never exposed to outside clients, it does not need to
 # run on the standard HTTP port (80), there is no reason to start Unicorn
@@ -112,4 +130,3 @@ after_fork do |server, worker|
 
   Redis.connect if defined?(Redis)
 end
-

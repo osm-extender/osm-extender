@@ -350,6 +350,8 @@ GEM
     unicorn (5.3.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
+    unicorn-autoscaling (0.0.2)
+      unicorn
     unicorn-worker-killer (0.4.4)
       get_process_mem (~> 0)
       unicorn (>= 4, < 6)
@@ -423,6 +425,7 @@ DEPENDENCIES
   turn (~> 0.9)
   uglifier (~> 3.0)
   unicorn (~> 5.0)
+  unicorn-autoscaling (~> 0.0)
   unicorn-worker-killer (~> 0.4)
   webrat (~> 0.7)
   will_paginate (~> 3.0)
