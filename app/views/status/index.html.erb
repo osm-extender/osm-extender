@@ -1,7 +1,7 @@
 <%= page_title 'Status' %>
 
 <h2>Unicorn Workers</h2>
-<p>Unicorn currently has <%= @unicorn_workers %> workers.</p>
+<p>Unicorn currently has <%= pluralize(@unicorn_workers, 'worker') %>.</p>
 
 <h2>Sessions</h2>
-<p>There are a total of <%= @sessions[:total] %> sessions.</p>
+<p>There are a total of <%= pluralize(@sessions[:total], 'session') %>.</p>
