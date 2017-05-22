@@ -61,6 +61,7 @@
             <%- if can?(:administer, Announcement) %><div class="menu_item"><%= link_to('Administer announcements', announcements_path) %></div><%- end %>
             <%- if current_user.can_administer_delayed_job? %><div class="menu_item"><%= link_to('Administer delayed job', delayed_jobs_path) %></div><%- end %>
             <%- if current_user.can_view_statistics? %><div class="menu_item"><%= link_to('Statistics', statistics_path) %></div><%- end %>
+            <%- if current_user.can_view_status? %><div class="menu_item"><%= link_to('Status', status_path) %></div><%- end %>
           </div><!-- secondary_menu_admin -->
           <div id="secondary_menu_all">
             <div class="secondary_menu_section_label">
@@ -156,6 +157,7 @@
       <h2>Params</h2>
       <%= debug(params) %>
       <h2>Session values</h2>
+      <%= session.id %>
       <%- longest_key_length = session.keys.sort { |a,b| a.length <=> b.length }.last.length %>
       <%= debug session.keys.map{ |key| "#{key.ljust((longest_key_length + 2), ' .')} #{session[key].inspect}" }.join("\n") %>
     </div>

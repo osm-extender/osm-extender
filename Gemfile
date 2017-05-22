@@ -16,7 +16,7 @@ gem 'activerecord-session_store', '~> 1.0'
 gem 'rb-readline'
 
 # Authentication / Authorisation
-gem 'sorcery', '~> 0.10'
+gem 'sorcery', '~> 0.11'
 gem 'cancan', '~> 1.6'
 
 
@@ -27,10 +27,10 @@ gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-lo
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.9'       # Easily generate HTML emails (also does plain text counterpart)
-  gem 'nokogiri', '~> 1.5', '>= 1.7.1' # Adapter for premailer
+  gem 'nokogiri', '~> 1.5', '>= 1.7.2' # Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.9.5'        # Makes lists of items orderable
-gem 'paper_trail', '~> 6.0'           # Track changes to (selected) models
+gem 'paper_trail', '~> 7.0'           # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in

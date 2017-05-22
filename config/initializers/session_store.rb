@@ -6,3 +6,5 @@
 # which shouldn't be used to store highly confidential information
 # (create the session table with "rails generate session_migration")
 OSMExtender::Application.config.session_store :active_record_store
+
+#ActionDispatch::Session::ActiveRecordStore.session_class = Session
