@@ -182,7 +182,8 @@ class ReportsController < ApplicationController
       :challenge => 'Challenge',
       :staged => 'Staged Activity and Partnership',
     }
-    @badge_types[:activity] = 'Activity' unless current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
+    @badge_types[:activity] = 'Activity' if current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
+
     @badges = {}
     @badge_types.keys.each do |badge_type|
       badge_clases[badge_type].get_badges_for_section(osm_api, current_section).each do |badge|
