@@ -19,6 +19,8 @@ gem 'rb-readline'
 gem 'sorcery', '~> 0.11'
 gem 'cancan', '~> 1.6'
 
+# Services used
+gem 'redis-rails', '~>4.0'          # Using redis as the cache store
 
 # Misc
 gem 'osm', '~> 1.3'                   # For using the OSM API
@@ -54,7 +56,6 @@ gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 3.0'
 gem 'normalize-rails', '~> 4.1'
 
-
 group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
   gem 'rack-mini-profiler', '~> 0.9'  # See how long a request takes and why
@@ -70,12 +71,14 @@ group :development, :test do
   gem 'mv-sqlite', '~> 2.2'           # Use migration_validations
 end
 
-
+# Uniocorn webserver
+gem 'unicorn', '~> 5.0'               # Use unicorn as the web server
+group :development do
+  gem 'unicorn-rails', '~> 2.2.0'     # rails server command will use unicorn by default
+end
 group :staging, :production do
-  gem 'unicorn', '~> 5.0'             # Use unicorn as the web server
   gem 'unicorn-worker-killer', '~> 0.4' # Worker self killing based on requests served or memory usage
   gem 'unicorn-autoscaling', '~> 0.0' # Auto scale the number of unicorn workers
-  gem 'connection_pool', '~> 2.0'     # Allow dalli etc. to use a pool of connections
 end
 
 # Database choices (for production/staging)
@@ -86,15 +89,6 @@ end
 group :mysql do
   gem 'mysql2', '~> 0.4'              # Use a mysql database
   gem 'mv-mysql', '~> 2.2'            # Use migration_validations
-end
-
-# Cache choices (for production/staging)
-group :memcache do
-  gem 'dalli', '~> 2.6'               # Using memcache as the cache store
-  gem 'kgio', '~> 2.9'                # Give dalli a performace boost
-end
-group :redis do
-  gem 'redis-rails', '~>4.0'          # Using redis as the cache store
 end
 
 

@@ -6,23 +6,7 @@ OSMExtender::Application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-  # Which sort of cache to use
-  # For in memory
-  #config.cache_store = :memory_store, {
-  #  :size => 32 * (1024 * 1024), #MiB
-  #  :compress => true,
-  #  :compress_threshold => 1 * (1024 * 1024), #MiB
-  #  :expires_in => 30.minutes,
-  #  :race_condition_ttl => 2.minutes
-  #}
-  # For memcache              
-  #config.cache_store = :dalli_store, 'server.name', {
-  #  expires_in: 10.minutes,
-  #  race_condition_ttl: 2.minutes,
-  #  namespace: 'osmx.production',
-  #  pool_size: 5
-  #}
-  # For redis
+  # Setup cache
   #config.cache_store = :redis_store, {
   #  host: '',
   #  port: ,

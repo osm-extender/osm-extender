@@ -1,7 +1,7 @@
 # This file is used by Rack-based servers to start the application.
 
 
-if defined?(Unicorn)
+if defined?(Unicorn::WorkerKiller)
   # Unicorn self-process killer
   require 'unicorn/worker_killer'
   # Max requests per worker
