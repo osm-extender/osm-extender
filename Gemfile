@@ -19,6 +19,8 @@ gem 'rb-readline'
 gem 'sorcery', '~> 0.11'
 gem 'cancan', '~> 1.6'
 
+# Services used
+gem 'redis-rails', '~>4.0'          # Using redis as the cache store
 
 # Misc
 gem 'osm', '~> 1.3'                   # For using the OSM API
@@ -54,7 +56,6 @@ gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 3.0'
 gem 'normalize-rails', '~> 4.1'
 
-
 group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
   gem 'rack-mini-profiler', '~> 0.9'  # See how long a request takes and why
@@ -86,15 +87,6 @@ end
 group :mysql do
   gem 'mysql2', '~> 0.4'              # Use a mysql database
   gem 'mv-mysql', '~> 2.2'            # Use migration_validations
-end
-
-# Cache choices (for production/staging)
-group :memcache do
-  gem 'dalli', '~> 2.6'               # Using memcache as the cache store
-  gem 'kgio', '~> 2.9'                # Give dalli a performace boost
-end
-group :redis do
-  gem 'redis-rails', '~>4.0'          # Using redis as the cache store
 end
 
 

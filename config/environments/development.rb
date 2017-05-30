@@ -30,13 +30,14 @@ OSMExtender::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
-  # Which sort of cache to use
-  config.cache_store = :memory_store, {
-    :size => 8 * (1024 * 1024), #MiB
-    :compress => true,
-    :compress_threshold => 1 * (1024 * 1024), #MiB
-    :expires_in => 30.minutes,
-    :race_condition_ttl => 2.minutes
+  # Setup cache
+  config.cache_store = :redis_store, {
+    host: '127.0.0.1',
+    port: 6379,
+    db: 0,
+    password: nil,
+    expires_in: 10.minutes,
+    namespace: 'osmx.production'
   }
 
   # Don't deliver emails, open them in a new window instead

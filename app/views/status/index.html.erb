@@ -1,7 +1,14 @@
 <%= page_title 'Status' %>
 
 <h2>Unicorn Workers</h2>
-<p>Unicorn currently has <%= pluralize(@unicorn_workers, 'worker') %>.</p>
+<p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>
+
+<h2>Redis Cache</h2>
+<%- used = @status.cache_used %>
+<%- maximum = @status.cache_maximum %>
+<p>Using <%= number_to_human_size(used) %> of <%= number_to_human_size(maximum) %> (<%= number_to_percentage((used*100/maximum), precision: 1) %>).</p>
+<p>There are <%= @status.cache_keys %> keys in the cache.</p>
+<p>There have been <%= @status.cache_hits %> cache hits and <%= @status.cache_misses %> cache misses.</p>
 
 <h2>Sessions</h2>
-<p>There are a total of <%= pluralize(@sessions[:total], 'session') %>.</p>
+<p>There are a total of <%= pluralize(@status.total_sessions, 'session') %>.</p>
