@@ -71,12 +71,14 @@ group :development, :test do
   gem 'mv-sqlite', '~> 2.2'           # Use migration_validations
 end
 
-
+# Uniocorn webserver
+gem 'unicorn', '~> 5.0'               # Use unicorn as the web server
+group :development do
+  gem 'unicorn-rails', '~> 2.2.0'     # rails server command will use unicorn by default
+end
 group :staging, :production do
-  gem 'unicorn', '~> 5.0'             # Use unicorn as the web server
   gem 'unicorn-worker-killer', '~> 0.4' # Worker self killing based on requests served or memory usage
   gem 'unicorn-autoscaling', '~> 0.0' # Auto scale the number of unicorn workers
-  gem 'connection_pool', '~> 2.0'     # Allow dalli etc. to use a pool of connections
 end
 
 # Database choices (for production/staging)

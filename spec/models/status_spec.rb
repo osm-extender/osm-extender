@@ -4,7 +4,7 @@ describe "Status fetching" do
 
   it "Gets number of unicorn workers" do
     status = Status.new
-    expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'server.pid')).and_return('1234')
+    expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
     expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
     expect(status.unicorn_workers).to eq 3
   end

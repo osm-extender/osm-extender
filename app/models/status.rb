@@ -1,8 +1,7 @@
 class Status
 
   def unicorn_workers
-    pid_file = defined?(Unicorn) ? 'unicorn.pid' : 'server.pid'
-    pid_file = File.join(Rails.root, 'tmp', 'pids', pid_file)
+    pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
     `pgrep -cP #{IO.read(pid_file)}`.to_i
   end
 

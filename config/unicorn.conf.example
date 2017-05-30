@@ -46,6 +46,8 @@ working_directory app_directory # available in 0.94.0+
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
 #listen "/tmp/.sock", :backlog => 64
+#listen "127.0.0.1:3000"
+#listen "[::1]:3000"
 listen "#{app_directory}/tmp/unicorn.sock"
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
