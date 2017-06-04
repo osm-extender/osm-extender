@@ -1,9 +1,12 @@
 <%= page_title 'Status' %>
 
-<h2>Unicorn Workers</h2>
+<h2>Sessions</h2>
+<p>There are a total of <%= number_with_delimiter(@status.total_sessions) %> <%= "session".pluralize(@status.total_sessions) %>.</p>
+
+<h2>Unicorn</h2>
 <p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>
 
-<h2>Redis Cache</h2>
+<h2>Redis</h2>
 <%- used = @status.cache_used %>
 <%- maximum = @status.cache_maximum %>
 <p>Using <%= number_to_human_size(used) %> of <%= number_to_human_size(maximum) %> (<%= number_to_percentage((used*100/maximum), precision: 1) %>).</p>
@@ -13,5 +16,25 @@
 <%- cache_attempts = cache_hits + cache_misses %>
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage((cache_hits*100/cache_attempts), precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage((cache_misses*100/cache_attempts), precision: 1) %>) cache misses.</p>
 
-<h2>Sessions</h2>
-<p>There are a total of <%= number_with_delimiter(@status.total_sessions) %> <%= "session".pluralize(@status.total_sessions) %>.</p>
+<h2>Database</h2>
+<table id="database-sizes">
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Table</th>
+      <th>Count</th>
+      <th colspan="2">Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @status.database_size.each do |item| %>
+      <tr>
+        <td><%= item[:model] %></td>
+        <td><%= item[:table] %></td>
+        <td><%= item[:count] %></td>
+        <td><%= item[:size] %></td>
+        <td><%= number_to_human_size(item[:size]) %></td>
+      </tr>
+    <%- end %>
+  </tbody>
+</table>
