@@ -1,8 +1,6 @@
 # OUTSTANDING UPDATES
 # jquery-ui-rails (5.0.5)   --->   6.0.1
-# mv-mysql (2.2.6)          --->   3.0.0   requires rails 5
 # mv-postgresql (2.2.7)     --->   3.0.0   requires rails 5
-# mv-sqlite (2.2.6)         --->   3.0.0   requires rails 5
 # redis-rails (4.0.0)       --->   5.0.0   requires rails 5
 # spring (1.7.2)            --->   2.0.0   requires rails 5
 
@@ -21,6 +19,8 @@ gem 'cancan', '~> 1.6'
 
 # Services used
 gem 'redis-rails', '~>4.0'          # Using redis as the cache store
+gem 'pg', '~>0.18'                  # Use a postgresql database
+gem 'mv-postgresql', '~> 2.2'       # Use migration_validations
 
 # Misc
 gem 'osm', '~> 1.3'                   # For using the OSM API
@@ -51,6 +51,7 @@ gem 'therubyracer', '~> 0.12'
 #  gem 'libv8', '~> 3.16', '>= 3.16.14.7'
 gem 'jquery-rails', '~> 4.0', '>= 4.0.4'
 gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
+gem 'jquery-tablesorter', '~> 1.23'
 gem 'sass-rails', '~> 5.0'
 gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 3.0'
@@ -66,11 +67,6 @@ group :development do
 #  gem 'debugger', '~> 1.6', :require=>false
 end
 
-group :development, :test do
-  gem 'sqlite3', '~> 1.3'             # Use the SQLite database
-  gem 'mv-sqlite', '~> 2.2'           # Use migration_validations
-end
-
 # Uniocorn webserver
 gem 'unicorn', '~> 5.0'               # Use unicorn as the web server
 group :development do
@@ -80,17 +76,6 @@ group :staging, :production do
   gem 'unicorn-worker-killer', '~> 0.4' # Worker self killing based on requests served or memory usage
   gem 'unicorn-autoscaling', '~> 0.0' # Auto scale the number of unicorn workers
 end
-
-# Database choices (for production/staging)
-group :postgres do
-  gem 'pg', '~>0.18'                  # Use a postgresql database
-  gem 'mv-postgresql', '~> 2.2'       # Use migration_validations
-end
-group :mysql do
-  gem 'mysql2', '~> 0.4'              # Use a mysql database
-  gem 'mv-mysql', '~> 2.2'            # Use migration_validations
-end
-
 
 group :test do
   gem 'rspec-rails', '~> 3.1'

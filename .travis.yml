@@ -17,3 +17,8 @@ env:
     - osm_api_token="1234567890"
     - recaptcha_public_key="11223344556677889900"
     - recaptcha_private_key="00998877665544332211"
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - cp config/database.yml.travis config/database.yml

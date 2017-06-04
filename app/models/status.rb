@@ -29,6 +29,19 @@ class Status
     cache_info['keyspace_misses'].to_i
   end
 
+  def database_size
+    sizes = []
+    #tables = ActiveRecord::Base.connection.tables - ['schema_migrations']
+    tables = ActiveRecord::Base.connection.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;")
+    tables.map{ |t| t['tablename'] }.each do |table|
+      next if ['schema_migrations', 'migration_validators'].include?(table)
+      sql = "SELECT pg_total_relation_size('#{table}') AS size, COUNT(#{table}) AS count FROM #{table};"
+      res = ActiveRecord::Base.connection.execute(sql).first
+      #sizes[table.classify.constantize] = res.first['pg_total_relation_size']
+      sizes.push res.symbolize_keys.merge(model: table.classify, table: table)
+    end
+    sizes
+  end
 
   private
   def cache_info

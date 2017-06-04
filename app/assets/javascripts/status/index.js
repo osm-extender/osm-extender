@@ -1,0 +1,3 @@
+$(function() {
+  $('#database-sizes').tablesorter();
+});

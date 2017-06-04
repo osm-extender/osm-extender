@@ -8,7 +8,7 @@ class RemoveDevelopmentMailInterceptor < ActiveRecord::Migration
 
   def self.up
     if Rails.env.development?
-      SettingValue.find_by_key('Mail Server - Development recipient').delete
+      SettingValue.find_by_key('Mail Server - Development recipient').try(:delete)
     end
   end
 
