@@ -8,7 +8,6 @@ Master branch:
 Staging branch:
 {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=staging"/>}[http://travis-ci.org/robertgauld/OSMExtender]
 {<img src="https://coveralls.io/repos/robertgauld/OSMExtender/badge.png?branch=staging" />}[https://coveralls.io/r/robertgauld/OSMExtender]
-{<img src="https://codeclimate.com/github/robertgauld/OSMExtender.png?branch=staging" />}[https://codeclimate.com/github/robertgauld/OSMExtender]
 
 
 ==Welcome to \OSM Extender
