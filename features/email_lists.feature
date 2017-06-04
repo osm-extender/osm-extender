@@ -208,8 +208,8 @@ Feature: Email Lists
 	Given "alice@example.com" has a saved email list "Test list" for section "1"
 	And "alice@example.com" has a saved email list "Test list 2" for section "1"
 	And "alice@example.com" has a saved email list "Test list 3" for section "1"
-        When I signin as "alice@example.com" with password "P@55word"
-        And I go to the email_lists page
+    When I signin as "alice@example.com" with password "P@55word"
+    And I go to the email_lists page
 	And I check "email_list_1_selected"
 	And I check "email_list_2_selected"
 	And I press "selected_get_addresses"
