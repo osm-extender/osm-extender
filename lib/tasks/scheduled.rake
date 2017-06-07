@@ -72,15 +72,15 @@ namespace :scheduled  do
       rescue Osm::Forbidden => exception
         puts "\t\tUser is fobidden from fetching data"
         forbidden_emails_sent[list.user_id] ||= []
-        unless forbidden_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.forbidden(list, exception).deliver_now
-          forbidden_emails_sent[list.user_id].push list.section_id
+        unless forbidden_emails_sent[reminder.user_id].include?(reminder.section_id)
+          EmailReminderMailer.forbidden(reminder, exception).deliver_now
+          forbidden_emails_sent[reminder.user_id].push reminder.section_id
         end
       rescue Osm::Error::NoCurrentTerm => exception
         puts "\t\tNo current term for section"
         noterm_emails_sent[list.user_id] ||= []
         unless noterm_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.no_current_term(list, exception).deliver_now
+          EmailReminderMailer.no_current_term(list, exception).deliver_now
           noterm_emails_sent[list.user_id].push list.section_id
         end
       rescue Exception => exception
@@ -106,20 +106,20 @@ namespace :scheduled  do
         todays_hash = list.get_hash_of_addresses
         unless todays_hash.eql?(list.last_hash_of_addresses)
           list.update_attributes(:last_hash_of_addresses => todays_hash)
-          NotifierMailer.email_list_changed(list).deliver_now
+          EmailListMailer.changed(list).deliver_now
         end
       rescue Osm::Forbidden => exception
         puts "\t\tUser is fobidden from fetching data"
         forbidden_emails_sent[list.user_id] ||= []
         unless forbidden_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.email_list_changed__forbidden(list, exception).deliver_now
+          EmailListMailer.forbidden(list, exception).deliver_now
           forbidden_emails_sent[list.user_id].push list.section_id
         end
       rescue Osm::Error::NoCurrentTerm => exception
         puts "\t\tNo current term for section"
         noterm_emails_sent[list.user_id] ||= []
         unless noterm_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.email_list_changed__no_current_term(list, exception).deliver_now
+          EmailListMailer.no_current_term(list, exception).deliver_now
           noterm_emails_sent[list.user_id].push list.section_id
         end
       rescue Exception => exception
