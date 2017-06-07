@@ -4,7 +4,7 @@
 <%- @data[:display_items].each do |item| %>
   <h1><%= item[:item].human_name.titleize %></h1>
 <%- unless item[:data].nil? %>
-<%= render "#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
+<%= render "email_reminder_mailer/#{item[:item].type.underscore}", :data => item[:data], :configuration => item[:item].configuration %>
 <%- else %>
   <p>There is no information to display.</p>
 <%- end %>
