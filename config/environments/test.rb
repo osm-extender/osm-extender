@@ -64,7 +64,7 @@ OSMExtender::Application.configure do
     :reminder_failed__to => 'reminder-mailer-failed@example.com',
     :exception__to => 'exceptions@example.com',
   }
-  ReminderMailer.send :default, {
+  EmailReminderMailer.send :default, {
     :from => 'reminder-mailer@example.com',         # Can be in the format - "Name" <email_address>
     'return-path' => 'reminder-mailer@example.com', # Should be the email address portion of from
   }
