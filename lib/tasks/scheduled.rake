@@ -26,8 +26,8 @@ namespace :scheduled  do
 
   task :automation_tasks => :environment do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Perform Automation Tasks"
+    noterm_emails_sent = {}
     forbidden_emails_sent = {}
-    nobadge_emails_sent = {}
     puts "Performing Automation Tasks"
     tasks = AutomationTask.where(active: true).order('section_id')
     count = tasks.size
@@ -47,6 +47,13 @@ namespace :scheduled  do
           unless forbidden_emails_sent[task.user_id].include?(task.section_id)
             AutomationTaskMailer.forbidden(task, exception).deliver_now
             forbidden_emails_sent[task.user_id].push task.section_id
+          end
+        rescue Osm::Error::NoCurrentTerm => exception
+          puts "\t\tNo current term for section"
+          noterm_emails_sent[task.user_id] ||= []
+          unless noterm_emails_sent[task.user_id].include?(task.section_id)
+            AutomationTaskMailer.no_current_term(task, exception).deliver_now
+            noterm_emails_sent[task.user_id].push task.section_id
           end
         rescue Exception => exception
           exception_raised("Automation Task (id: #{task.id}, user: #{task.user_id}, section: #{task.section_id})", exception)
@@ -72,15 +79,15 @@ namespace :scheduled  do
       rescue Osm::Forbidden => exception
         puts "\t\tUser is fobidden from fetching data"
         forbidden_emails_sent[list.user_id] ||= []
-        unless forbidden_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.forbidden(list, exception).deliver_now
-          forbidden_emails_sent[list.user_id].push list.section_id
+        unless forbidden_emails_sent[reminder.user_id].include?(reminder.section_id)
+          EmailReminderMailer.forbidden(reminder, exception).deliver_now
+          forbidden_emails_sent[reminder.user_id].push reminder.section_id
         end
       rescue Osm::Error::NoCurrentTerm => exception
         puts "\t\tNo current term for section"
         noterm_emails_sent[list.user_id] ||= []
         unless noterm_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.no_current_term(list, exception).deliver_now
+          EmailReminderMailer.no_current_term(list, exception).deliver_now
           noterm_emails_sent[list.user_id].push list.section_id
         end
       rescue Exception => exception
@@ -106,20 +113,20 @@ namespace :scheduled  do
         todays_hash = list.get_hash_of_addresses
         unless todays_hash.eql?(list.last_hash_of_addresses)
           list.update_attributes(:last_hash_of_addresses => todays_hash)
-          NotifierMailer.email_list_changed(list).deliver_now
+          EmailListMailer.changed(list).deliver_now
         end
       rescue Osm::Forbidden => exception
         puts "\t\tUser is fobidden from fetching data"
         forbidden_emails_sent[list.user_id] ||= []
         unless forbidden_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.email_list_changed__forbidden(list, exception).deliver_now
+          EmailListMailer.forbidden(list, exception).deliver_now
           forbidden_emails_sent[list.user_id].push list.section_id
         end
       rescue Osm::Error::NoCurrentTerm => exception
         puts "\t\tNo current term for section"
         noterm_emails_sent[list.user_id] ||= []
         unless noterm_emails_sent[list.user_id].include?(list.section_id)
-          NotifierMailer.email_list_changed__no_current_term(list, exception).deliver_now
+          EmailListMailer.no_current_term(list, exception).deliver_now
           noterm_emails_sent[list.user_id].push list.section_id
         end
       rescue Exception => exception

@@ -1,4 +1,4 @@
-class ReminderMailer < ApplicationMailer
+class EmailReminderMailer < ApplicationMailer
 
   def reminder_email(reminder, data, send_to)
     @reminder = reminder
