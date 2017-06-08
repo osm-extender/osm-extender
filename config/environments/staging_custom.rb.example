@@ -39,6 +39,10 @@ ActionDispatch::Callbacks.to_prepare do
     :from => ,                # Can be in the format - "Name" <email_address>
     'return-path' => ,        # Should be the email address portion of from
   }
+  EmailListMailer.send :default, {
+    :from => ,                # Can be in the format - "Name" <email_address>
+    'return-path' => ,        # Should be the email address portion of from
+  }
   NotifierMailer.send :default, {
     :from => ,                # Can be in the format - "Name" <email_address>
     'return-path' => ,        # Should be the email address portion of from
