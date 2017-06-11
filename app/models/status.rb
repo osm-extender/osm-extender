@@ -31,16 +31,20 @@ class Status
 
   def database_size
     sizes = []
-    #tables = ActiveRecord::Base.connection.tables - ['schema_migrations']
+    totals = {count: 0, size: 0}
     tables = ActiveRecord::Base.connection.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;")
     tables.map{ |t| t['tablename'] }.each do |table|
-      next if ['schema_migrations', 'migration_validators'].include?(table)
       sql = "SELECT pg_total_relation_size('#{table}') AS size, COUNT(#{table}) AS count FROM #{table};"
       res = ActiveRecord::Base.connection.execute(sql).first
-      #sizes[table.classify.constantize] = res.first['pg_total_relation_size']
-      sizes.push res.symbolize_keys.merge(model: table.classify, table: table)
+      table = {model: table.classify, table: table, size: res['size'].to_i, count: res['count'].to_i}
+      sizes.push table
+      totals[:count] += table[:count]
+      totals[:size] += table[:size]
     end
-    sizes
+    {
+      tables: sizes,
+      totals: totals
+    }
   end
 
   private
