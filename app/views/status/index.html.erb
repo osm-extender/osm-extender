@@ -17,6 +17,8 @@
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage((cache_hits*100/cache_attempts), precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage((cache_misses*100/cache_attempts), precision: 1) %>) cache misses.</p>
 
 <h2>Database</h2>
+<%- database_size = @status.database_size %>
+<%- totals = database_size[:totals] %>
 <table id="database-sizes">
   <thead>
     <tr>
@@ -27,7 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    <%- @status.database_size.each do |item| %>
+    <%- database_size[:tables].each do |item| %>
       <tr>
         <td><%= item[:model] %></td>
         <td><%= item[:table] %></td>
@@ -37,4 +39,21 @@
       </tr>
     <%- end %>
   </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2" style="text-align: right;">Total (accross <%= database_size[:tables].length %> tables):</td>
+      <td><%= totals[:count] %></td>
+      <td><%= totals[:size] %></td>
+      <td><%= number_to_human_size(totals[:size]) %></td>
+    </tr>
+  </tfoot>
 </table>
+
+<h2>Users</h2>
+<%- users = @status.users %>
+<p>There are a total of <%= users[:total] %> users.</p>
+<ul>
+  <li><%= pluralize users[:pending_activation], 'has', 'have' %> not yet activated their account.</li>
+  <li><%= pluralize users[:activated_unlinked], 'has', 'have' %> activated their account but not yet linked it to OSM.</li>
+  <li><%= pluralize users[:activated_linked], 'has', 'have' %> activated their account and linked it to OSM.</li>
+</ul>
