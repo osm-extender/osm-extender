@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe SessionHelper do
 
   describe "#show_paypal_donation?" do

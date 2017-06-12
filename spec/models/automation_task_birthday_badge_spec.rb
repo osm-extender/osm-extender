@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Birthday Badge automation task" do
 
   it "Only allowed for Beavers and Cubs" do

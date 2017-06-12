@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Status fetching" do
 
   it "Gets number of unicorn workers" do

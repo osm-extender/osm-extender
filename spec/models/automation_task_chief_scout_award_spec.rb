@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Chief Scout's Award automation task" do
 
   it "Only allowed for Beavers to Scouts" do
