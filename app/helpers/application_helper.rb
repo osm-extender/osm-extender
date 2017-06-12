@@ -119,4 +119,16 @@ module ApplicationHelper
     return output
   end
 
+  def stylesheet_link_tag_if_exists(path, opts = {})
+    if Rails.application.assets.find_asset("#{path}.css")
+      stylesheet_link_tag(path, opts)
+    end
+  end
+
+  def javascript_include_tag_if_exists(path, opts = {})
+    if Rails.application.assets.find_asset("#{path}.js")
+      javascript_include_tag(path, opts)
+    end
+  end
+
 end
