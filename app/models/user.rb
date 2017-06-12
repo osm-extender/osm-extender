@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
   has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
   has_many :usage_log, inverse_of: :user
+  has_many :sessions, inverse_of: :user
 
   validates_presence_of :name
 

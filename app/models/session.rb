@@ -1,4 +1,7 @@
 class Session < ActiveRecord::Base
+  serialize :data, Base64MarshalSerializer
+  belongs_to :user
+
 
   def self.delete_old_sessions(inactive_for=1.hour, total_age=6.hours)
     if inactive_for.is_a?(String)
