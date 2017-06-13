@@ -65,4 +65,53 @@ describe "Status fetching" do
 
   end # describe cache status
 
+
+  it '#database_size' do
+    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;").and_return([
+      {'tablename' => 'table1s'},
+      {'tablename' => 'table2s'}
+    ])
+    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table1s') AS size, COUNT(table1s) AS count FROM table1s;").and_return([{'count' => '100', 'size' => '1024'}])
+    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table2s') AS size, COUNT(table2s) AS count FROM table2s;").and_return([{'count' => '200', 'size' => '2000'}])
+    expect(Status.new.database_size).to eq ({
+      tables: [
+        {model: 'Table1', table: 'table1s', size: 1024, count: 100},
+        {model: 'Table2', table: 'table2s', size: 2000, count: 200}
+      ],
+      totals: {
+        count: 300,
+        size: 3024
+      }
+    })
+  end
+
+  it '#users' do
+    # Privide registered but not activated users
+    pending_users = double(User)
+    expect(User).to receive(:where).with(activation_state: 'pending').and_return(pending_users)
+    expect(pending_users).to receive(:count).and_return(1)
+    # Privide activated but not connected to OSM users
+    activated_users = double(User)
+    expect(User).to receive(:where).with(activation_state: 'active', osm_userid: nil).and_return(activated_users)
+    expect(activated_users).to receive(:count).and_return(2)
+    # Privide activated and connected to OSM users
+    connected_users = double(User)
+    connected_users_where = double(User)
+    connected_users_where_not = double(User)
+    expect(User).to receive(:where).with(activation_state: 'active').and_return(connected_users)
+    expect(connected_users).to receive(:where).and_return(connected_users_where)
+    expect(connected_users_where).to receive(:not).with(:osm_userid=>nil).and_return(connected_users_where_not)
+    expect(connected_users_where_not).to receive(:count).and_return(3)
+    # Privide all users
+    expect(User).to receive(:count).and_return(6)
+
+    # Actually get them
+    expect(Status.new.users).to eq ({
+      pending: 1,
+      activated: 2,
+      connected: 3,
+      total: 6
+    })
+  end
+
 end

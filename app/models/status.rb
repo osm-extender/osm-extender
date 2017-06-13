@@ -49,9 +49,9 @@ class Status
 
   def users
     {
-      pending_activation: User.where(activation_state: 'pending').count,
-      activated_unlinked: User.where(activation_state: 'active', osm_userid: nil).count,
-      activated_linked: User.where(activation_state: 'active').where.not(osm_userid: nil).count,
+      pending: User.where(activation_state: 'pending').count,
+      activated: User.where(activation_state: 'active', osm_userid: nil).count,
+      connected: User.where(activation_state: 'active').where.not(osm_userid: nil).count,
       total: User.count
     }
   end
