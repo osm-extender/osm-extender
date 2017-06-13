@@ -1,16 +1,10 @@
 describe "Status fetching" do
 
-  it "Gets number of unicorn workers" do
+  it "#unicorn_workers" do
     status = Status.new
     expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
     expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
     expect(status.unicorn_workers).to eq 3
-  end
-
-  it "Gets total sessions" do
-    status = Status.new
-    expect(Session).to receive(:count).and_return(4)
-    expect(status.total_sessions).to eq 4
   end
 
   describe "Cache status" do
@@ -102,7 +96,7 @@ describe "Status fetching" do
     expect(connected_users).to receive(:where).and_return(connected_users_where)
     expect(connected_users_where).to receive(:not).with(:osm_userid=>nil).and_return(connected_users_where_not)
     expect(connected_users_where_not).to receive(:count).and_return(3)
-    # Privide all users
+    # All users
     expect(User).to receive(:count).and_return(6)
 
     # Actually get them
@@ -111,6 +105,33 @@ describe "Status fetching" do
       activated: 2,
       connected: 3,
       total: 6
+    })
+  end
+
+  it '#sessions' do
+    # Guests
+    guests = double(Session)
+    expect(Session).to receive(:where).with(user_id: nil).and_return(guests)
+    expect(guests).to receive(:count).and_return(5)
+    # Users
+    users_where = double(Session)
+    users_where_not = double(Session)
+    expect(Session).to receive(:where).and_return(users_where)
+    expect(users_where).to receive(:not).with(user_id: nil).and_return(users_where_not)
+    expect(users_where_not).to receive(:count).and_return(10)
+    # All sessions
+    expect(Session).to receive(:count).and_return(15)
+    # Newest & Oldest
+    expect(Session).to receive(:first).and_return(Session.new(id: 1))
+    expect(Session).to receive(:last).and_return(Session.new(id: 2))
+
+    # Actually get them
+    expect(Status.new.sessions).to eq ({
+      guests: 5,
+      users: 10,
+      total: 15,
+      oldest: Session.new(id: 1),
+      newest: Session.new(id: 2),
     })
   end
 

@@ -1,7 +1,14 @@
 <%= page_title 'Status' %>
 
 <h2>Sessions</h2>
-<p>There are a total of <%= number_with_delimiter(@status.total_sessions) %> <%= "session".pluralize(@status.total_sessions) %>.</p>
+<%- sessions = @status.sessions %>
+<p>There are a total of <%= number_with_delimiter(sessions[:total]) %> <%= "session".pluralize(sessions[:total]) %>.</p>
+<ul>
+  <li><%= pluralize sessions[:users], 'user' %>.</li>
+  <li><%= pluralize sessions[:guests], 'guest' %>.</li>
+  <li>The oldest session is <%= time_ago_in_words(sessions[:oldest].created_at) %> old.</li>
+  <li>The newest session is <%= time_ago_in_words(sessions[:newest].created_at) %> old.</li>
+</ul>
 
 <h2>Unicorn</h2>
 <p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>

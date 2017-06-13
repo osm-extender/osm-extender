@@ -5,10 +5,6 @@ class Status
     `pgrep -cP #{IO.read(pid_file)}`.to_i
   end
 
-  def total_sessions
-    Session.count
-  end
-
   def cache_used
     cache_info['used_memory'].to_i
   end
@@ -53,6 +49,16 @@ class Status
       activated: User.where(activation_state: 'active', osm_userid: nil).count,
       connected: User.where(activation_state: 'active').where.not(osm_userid: nil).count,
       total: User.count
+    }
+  end
+
+  def sessions
+    {
+      guests: Session.where(user_id: nil).count,
+      users: Session.where.not(user_id: nil).count,
+      total: Session.count,
+      oldest: Session.first,
+      newest: Session.last
     }
   end
 
