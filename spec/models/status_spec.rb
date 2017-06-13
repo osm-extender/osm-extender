@@ -7,58 +7,21 @@ describe "Status fetching" do
     expect(status.unicorn_workers).to eq 3
   end
 
-  describe "Cache status" do
-    before :each do
-      @cache = Struct.new(:cache, :data).new
-    end
-
-    it "cache_used" do
-      status = Status.new
-      expect(status).to receive(:cache_info).and_return({'used_memory'=>'1234'})
-      expect(status.cache_used).to eq(1234)
-    end
-
-    it "cache_maximum" do
-      status = Status.new
-      expect(Rails.cache).to receive(:data).and_return(@cache)
-      expect(@cache).to receive(:config).with(:get, 'maxmemory').and_return({'maxmemory'=>'2345'})
-      expect(status.cache_maximum).to eq(2345)
-    end
-
-    it "cache_keys" do
-      status = Status.new
-      expect(Rails.cache).to receive(:data).and_return(@cache)
-      expect(@cache).to receive(:dbsize).and_return(3456)
-      expect(status.cache_keys).to eq(3456)
-    end
-
-    it "cache_hits" do
-      status = Status.new
-      expect(status).to receive(:cache_info).and_return({'keyspace_hits'=>'4567'})
-      expect(status.cache_hits).to eq(4567)
-    end
-
-    it "cache_misses" do
-      status = Status.new
-      expect(status).to receive(:cache_info).and_return({'keyspace_misses'=>'567'})
-      expect(status.cache_misses).to eq(567)
-    end
-
-    it "Doesn't make multiple calls to redis.info" do
-      status = Status.new
-      expect(Rails.cache).to receive(:data).and_return(@cache)
-      expect(@cache).to receive(:info).once.and_return({
-        'used_memory'=>'123',
-        'keyspace_hits'=>'456',
-        'keyspace_misses'=>'789',
-      })
-      expect(status.cache_used).to eq(123)
-      expect(status.cache_hits).to eq(456)
-      expect(status.cache_misses).to eq(789)      
-    end
-
-  end # describe cache status
-
+  it '#cache' do
+    redis = double
+    expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+    expect(redis).to receive(:config).with(:get, 'maxmemory').and_return('maxmemory'=>'2345')
+    expect(redis).to receive(:info).and_return('used_memory'=>'1234', 'keyspace_hits'=>'4567', 'keyspace_misses'=>'567')
+    expect(redis).to receive(:dbsize).and_return(3456)
+    expect(Status.new.cache).to eq ({
+      ram_max: 2345,
+      ram_used: 1234,
+      keys: 3456,
+      cache_hits: 4567,
+      cache_misses: 567,
+      cache_attempts: 5134,
+    })
+  end
 
   it '#database_size' do
     expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;").and_return([

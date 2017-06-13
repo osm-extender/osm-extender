@@ -13,14 +13,15 @@
 <h2>Unicorn</h2>
 <p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>
 
-<h2>Redis</h2>
-<%- used = @status.cache_used %>
-<%- maximum = @status.cache_maximum %>
+<h2>Cache</h2>
+<%- cache = @status.cache %>
+<%- used = cache[:ram_used] %>
+<%- maximum = cache[:ram_max] %>
 <p>Using <%= number_to_human_size(used) %> of <%= number_to_human_size(maximum) %> (<%= number_to_percentage((used*100/maximum), precision: 1) %>).</p>
-<p>There are <%= @status.cache_keys %> keys in the cache.</p>
-<%- cache_hits = @status.cache_hits %>
-<%- cache_misses = @status.cache_misses %>
-<%- cache_attempts = cache_hits + cache_misses %>
+<p>There are <%= cache[:keys] %> keys in the cache.</p>
+<%- cache_hits = cache[:cache_hits] %>
+<%- cache_misses = cache[:cache_misses] %>
+<%- cache_attempts = cache[:cache_attempts] %>
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage((cache_hits*100/cache_attempts), precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage((cache_misses*100/cache_attempts), precision: 1) %>) cache misses.</p>
 
 <h2>Database</h2>

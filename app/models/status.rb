@@ -6,25 +6,21 @@ class Status
     `pgrep -cP #{IO.read(pid_file)}`.to_i
   end
 
-  def cache_used
-    @cache_used ||= cache_info['used_memory'].to_i
+
+  def cache
+    return @cache unless @cache.nil?
+    redis = Rails.cache.data
+    info = redis.info
+    @cache = {
+      ram_max: redis.config(:get, 'maxmemory')['maxmemory'].to_i,
+      ram_used: info['used_memory'].to_i,
+      keys: redis.dbsize,
+      cache_hits: info['keyspace_hits'].to_i,
+      cache_misses: info['keyspace_misses'].to_i,
+      cache_attempts: info['keyspace_hits'].to_i + info['keyspace_misses'].to_i
+    }
   end
 
-  def cache_maximum
-    @cache_maximum ||= Rails.cache.data.config(:get, 'maxmemory')['maxmemory'].to_i
-  end
-
-  def cache_keys
-    @cache_keys ||= Rails.cache.data.dbsize
-  end
-
-  def cache_hits
-    @cache_hits ||= cache_info['keyspace_hits'].to_i
-  end
-
-  def cache_misses
-    @cache_misses ||= cache_info['keyspace_misses'].to_i
-  end
 
   def database_size
     return @database_size unless @database_size.nil?
@@ -45,6 +41,7 @@ class Status
     }
   end
 
+
   def users
     @users ||= {
       unactivated: User.unactivated.count,
@@ -54,6 +51,7 @@ class Status
     }
   end
 
+
   def sessions
     @sessions ||= {
       guests: Session.guests.count,
@@ -62,11 +60,6 @@ class Status
       oldest: Session.first,
       newest: Session.last
     }
-  end
-
-  private
-  def cache_info
-    @cache_info ||= Rails.cache.data.info
   end
 
 end
