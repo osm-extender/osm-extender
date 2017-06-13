@@ -1,31 +1,33 @@
 class Status
 
   def unicorn_workers
+    return @unicorn_workers unless @unicorn_workers.nil?
     pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
     `pgrep -cP #{IO.read(pid_file)}`.to_i
   end
 
   def cache_used
-    cache_info['used_memory'].to_i
+    @cache_used ||= cache_info['used_memory'].to_i
   end
 
   def cache_maximum
-    Rails.cache.data.config(:get, 'maxmemory')['maxmemory'].to_i
+    @cache_maximum ||= Rails.cache.data.config(:get, 'maxmemory')['maxmemory'].to_i
   end
 
   def cache_keys
-    Rails.cache.data.dbsize
+    @cache_keys ||= Rails.cache.data.dbsize
   end
 
   def cache_hits
-    cache_info['keyspace_hits'].to_i
+    @cache_hits ||= cache_info['keyspace_hits'].to_i
   end
 
   def cache_misses
-    cache_info['keyspace_misses'].to_i
+    @cache_misses ||= cache_info['keyspace_misses'].to_i
   end
 
   def database_size
+    return @database_size unless @database_size.nil?
     sizes = []
     totals = {count: 0, size: 0}
     tables = ActiveRecord::Base.connection.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;")
@@ -37,14 +39,14 @@ class Status
       totals[:count] += table[:count]
       totals[:size] += table[:size]
     end
-    {
+    @database_size = {
       tables: sizes,
       totals: totals
     }
   end
 
   def users
-    {
+    @users ||= {
       unactivated: User.unactivated.count,
       activated: User.activated.not_connected_to_osm.count,
       connected: User.activated.connected_to_osm.count,
@@ -53,7 +55,7 @@ class Status
   end
 
   def sessions
-    {
+    @sessions ||= {
       guests: Session.guests.count,
       users: Session.users.count,
       total: Session.count,
