@@ -45,17 +45,17 @@ class Status
 
   def users
     {
-      pending: User.where(activation_state: 'pending').count,
-      activated: User.where(activation_state: 'active', osm_userid: nil).count,
-      connected: User.where(activation_state: 'active').where.not(osm_userid: nil).count,
+      unactivated: User.unactivated.count,
+      activated: User.activated.not_connected_to_osm.count,
+      connected: User.activated.connected_to_osm.count,
       total: User.count
     }
   end
 
   def sessions
     {
-      guests: Session.where(user_id: nil).count,
-      users: Session.where.not(user_id: nil).count,
+      guests: Session.guests.count,
+      users: Session.users.count,
       total: Session.count,
       oldest: Session.first,
       newest: Session.last

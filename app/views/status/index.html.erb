@@ -60,7 +60,7 @@
 <%- users = @status.users %>
 <p>There are a total of <%= users[:total] %> users.</p>
 <ul>
-  <li><%= pluralize users[:pending], 'has', 'have' %> not yet activated their account.</li>
+  <li><%= pluralize users[:unactivated], 'has', 'have' %> not yet activated their account.</li>
   <li><%= pluralize users[:activated], 'has', 'have' %> activated their account but not yet linked it to OSM.</li>
   <li><%= pluralize users[:connected], 'has', 'have' %> activated their account and linked it to OSM.</li>
 </ul>

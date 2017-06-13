@@ -80,28 +80,16 @@ describe "Status fetching" do
   end
 
   it '#users' do
-    # Privide registered but not activated users
-    pending_users = double(User)
-    expect(User).to receive(:where).with(activation_state: 'pending').and_return(pending_users)
-    expect(pending_users).to receive(:count).and_return(1)
-    # Privide activated but not connected to OSM users
-    activated_users = double(User)
-    expect(User).to receive(:where).with(activation_state: 'active', osm_userid: nil).and_return(activated_users)
-    expect(activated_users).to receive(:count).and_return(2)
-    # Privide activated and connected to OSM users
-    connected_users = double(User)
-    connected_users_where = double(User)
-    connected_users_where_not = double(User)
-    expect(User).to receive(:where).with(activation_state: 'active').and_return(connected_users)
-    expect(connected_users).to receive(:where).and_return(connected_users_where)
-    expect(connected_users_where).to receive(:not).with(:osm_userid=>nil).and_return(connected_users_where_not)
-    expect(connected_users_where_not).to receive(:count).and_return(3)
-    # All users
+    activated = double(ActiveRecord::Relation)
+    expect(User).to receive_message_chain(:unactivated, :count).and_return(1)
+    expect(User).to receive(:activated).and_return(activated).twice
+    expect(activated).to receive_message_chain(:not_connected_to_osm, :count).and_return(2)
+    expect(activated).to receive_message_chain(:connected_to_osm, :count).and_return(3)
     expect(User).to receive(:count).and_return(6)
 
     # Actually get them
     expect(Status.new.users).to eq ({
-      pending: 1,
+      unactivated: 1,
       activated: 2,
       connected: 3,
       total: 6
@@ -109,19 +97,9 @@ describe "Status fetching" do
   end
 
   it '#sessions' do
-    # Guests
-    guests = double(Session)
-    expect(Session).to receive(:where).with(user_id: nil).and_return(guests)
-    expect(guests).to receive(:count).and_return(5)
-    # Users
-    users_where = double(Session)
-    users_where_not = double(Session)
-    expect(Session).to receive(:where).and_return(users_where)
-    expect(users_where).to receive(:not).with(user_id: nil).and_return(users_where_not)
-    expect(users_where_not).to receive(:count).and_return(10)
-    # All sessions
+    expect(Session).to receive_message_chain(:guests, :count).and_return(5)
+    expect(Session).to receive_message_chain(:users, :count).and_return(10)
     expect(Session).to receive(:count).and_return(15)
-    # Newest & Oldest
     expect(Session).to receive(:first).and_return(Session.new(id: 1))
     expect(Session).to receive(:last).and_return(Session.new(id: 2))
 

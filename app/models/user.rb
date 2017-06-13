@@ -11,6 +11,11 @@ class User < ActiveRecord::Base
   has_many :usage_log, inverse_of: :user
   has_many :sessions, inverse_of: :user
 
+  scope :activated, -> { where(sorcery_config.activation_state_attribute_name => 'active') }
+  scope :unactivated, -> { where(sorcery_config.activation_state_attribute_name => 'pending') }
+  scope :connected_to_osm, -> { where.not(osm_userid: nil, osm_secret: nil) }
+  scope :not_connected_to_osm, -> { where(osm_userid: nil, osm_secret: nil) }
+
   validates_presence_of :name
 
   validates_presence_of :email_address
@@ -41,9 +46,17 @@ class User < ActiveRecord::Base
     send(sorcery_config.activation_state_attribute_name).eql?('active')
   end
 
+  def unactivated?
+    send(sorcery_config.activation_state_attribute_name).eql?('pending')
+  end
+
 
   def connected_to_osm?
-    return (osm_userid.present? && osm_secret.present?)
+    osm_userid.present? && osm_secret.present?
+  end
+
+  def not_connected_to_osm?
+    !connected_to_osm?
   end
 
   def connect_to_osm(email, password)
