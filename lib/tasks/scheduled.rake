@@ -10,7 +10,15 @@ namespace :scheduled  do
   task :delete_old_sessions => :environment do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Delete old sessions"
     deleted = Session.delete_old_sessions.size
-    puts "#{deleted} entries deleted."
+    puts "#{ActionController::Base.helpers.pluralize(deleted, 'session')} deleted."
+  end
+
+
+  desc "Remove nonactivated users whose activation tokens have expired"
+  task :delete_nonactivated_users => :environment do
+    $PROGRAM_NAME = "OSMX #{Rails.env} - Removing nonactivated users"
+    deleted = User.activation_expired.destroy_all.size
+    puts "#{ActionController::Base.helpers.pluralize(deleted, 'user')} deleted"
   end
 
 
@@ -169,6 +177,6 @@ namespace :scheduled  do
 
   task :monthly => ['clean:all']
   task :daily => [:automation_tasks, :reminder_emails, :email_lists, :statistics]
-  task :hourly => [:delete_old_sessions]
+  task :hourly => [:delete_old_sessions, :delete_nonactivated_users]
 
 end
