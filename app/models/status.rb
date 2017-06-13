@@ -1,5 +1,16 @@
 class Status
 
+  def all
+    {
+      unicorn_workers: unicorn_workers,
+      cache: cache,
+      database_size: database_size,
+      users: users,
+      sessions: sessions
+    }
+  end
+
+
   def unicorn_workers
     return @unicorn_workers unless @unicorn_workers.nil?
     pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
