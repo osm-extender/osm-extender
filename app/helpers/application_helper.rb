@@ -120,14 +120,24 @@ module ApplicationHelper
   end
 
   def stylesheet_link_tag_if_exists(path, opts = {})
-    if Rails.application.assets.find_asset("#{path}.css")
+    if asset_exists?("#{path}.css")
       stylesheet_link_tag(path, opts)
     end
   end
 
   def javascript_include_tag_if_exists(path, opts = {})
-    if Rails.application.assets.find_asset("#{path}.js")
+    if asset_exists?("#{path}.js")
       javascript_include_tag(path, opts)
+    end
+  end
+
+  def asset_exists?(path)
+    if Rails.application.config.assets.compile
+      # Development type environment
+      !!Rails.application.assets.find_asset(path)
+    else
+      # Production type environment
+      !!Rails.application.assets_manifest.files.values.find{ |v| v['logical_path'].eql?(path) }
     end
   end
 
