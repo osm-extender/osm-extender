@@ -9,6 +9,13 @@ class User < ActiveRecord::Base
   has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
   has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
   has_many :usage_log, inverse_of: :user
+  has_many :sessions, inverse_of: :user
+
+  scope :activated, -> { where(sorcery_config.activation_state_attribute_name => 'active') }
+  scope :unactivated, -> { where(sorcery_config.activation_state_attribute_name => 'pending') }
+  scope :activation_expired, -> { unactivated.where("\"#{sorcery_config.activation_token_expires_at_attribute_name}\" < ?", Time.now) }
+  scope :connected_to_osm, -> { where.not(osm_userid: nil, osm_secret: nil) }
+  scope :not_connected_to_osm, -> { where(osm_userid: nil, osm_secret: nil) }
 
   validates_presence_of :name
 
@@ -40,9 +47,17 @@ class User < ActiveRecord::Base
     send(sorcery_config.activation_state_attribute_name).eql?('active')
   end
 
+  def unactivated?
+    send(sorcery_config.activation_state_attribute_name).eql?('pending')
+  end
+
 
   def connected_to_osm?
-    return (osm_userid.present? && osm_secret.present?)
+    osm_userid.present? && osm_secret.present?
+  end
+
+  def not_connected_to_osm?
+    !connected_to_osm?
   end
 
   def connect_to_osm(email, password)

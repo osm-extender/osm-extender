@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "First Aid automation task" do
 
   it "Only allowed for Beavers to Cubs" do

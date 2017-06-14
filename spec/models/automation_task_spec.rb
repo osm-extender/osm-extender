@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Automation Task" do
   it "Has a valid factory" do
     task = FactoryGirl.build(:automation_task, user_id: 321)

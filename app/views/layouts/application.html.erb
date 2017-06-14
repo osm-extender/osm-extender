@@ -7,13 +7,14 @@
 
   <%= stylesheet_link_tag 'application', :media => :all %>
   <%= stylesheet_link_tag 'application__print', :media=>:print %>
-  <%= stylesheet_link_tag params[:controller], :media=>:all %>
-  <%= stylesheet_link_tag "#{params[:controller]}__print", :media=>:print %>
+  <%= stylesheet_link_tag_if_exists params[:controller], :media=>:all %>
+  <%= stylesheet_link_tag_if_exists "#{params[:controller]}__print", :media=>:print %>
 
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
   <%= javascript_include_tag 'https://maps.googleapis.com/maps/api/js?sensor=false' if content_for?(:use_maps) %>
   <%= javascript_include_tag 'application' %>
-  <%= javascript_include_tag "#{params[:controller]}/#{params[:action]}" %>
+  <%= javascript_include_tag_if_exists "#{params[:controller]}" %>
+  <%= javascript_include_tag_if_exists "#{params[:controller]}/#{params[:action]}" %>
 
   <%- if Figaro.env.ga_tracking_id %>
     <script>

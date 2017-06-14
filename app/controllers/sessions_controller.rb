@@ -11,17 +11,6 @@ class SessionsController < ApplicationController
       user.clear_reset_password_token
       user.save!
 
-      # prevent session fixation attack
-      old_session = {}
-      keys_to_preserve = [:user_id, :return_to_url, :last_action_time, :login_time]
-      keys_to_preserve.each do |key|
-        old_session[key] = session[key] unless session[key].nil?
-      end
-      reset_session
-      old_session.each do |key, value|
-        session[key] = value
-      end
-
       # Set current section
       if current_user.connected_to_osm?
         sections = Osm::Section.get_all(osm_api)

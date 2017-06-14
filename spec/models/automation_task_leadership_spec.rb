@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Leadership automation task" do
 
   it "Only allowed for Beavers to Cubs" do
