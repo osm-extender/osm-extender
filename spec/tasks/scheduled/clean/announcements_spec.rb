@@ -4,20 +4,10 @@ describe 'rake scheduled:clean:announcements' do
     expect(task.prerequisites).to include 'environment'
   end
 
-  describe 'Executes' do
-
-    before :each do
-      expect(Announcement).to receive(:delete_old).and_return([:a])
-    end
-
-    it 'Destroys relevant users' do
-      expect { task.execute }.not_to raise_error
-    end
-
-    it 'Logs to stdout' do
-      expect { task.execute }.to output("1 announcements deleted.\n").to_stdout
-    end
-
-  end # describe Executes
+  it 'Executes' do
+    expect(Announcement).to receive(:delete_old).and_return([:a])
+    expect(STDOUT).to receive(:puts).with('1 announcements deleted.')
+    expect { task.execute }.not_to raise_error
+  end
 
 end

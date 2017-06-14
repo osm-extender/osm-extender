@@ -36,8 +36,8 @@ namespace :scheduled  do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Perform Automation Tasks"
     noterm_emails_sent = {}
     forbidden_emails_sent = {}
-    puts "Performing Automation Tasks"
-    tasks = AutomationTask.where(active: true).order('section_id')
+    puts "Performing automation tasks"
+    tasks = AutomationTask.where(active: true).order(:section_id)
     count = tasks.size
     count_length = count.to_s.length
     puts "\tNo tasks to perform" if count == 0
@@ -75,8 +75,8 @@ namespace :scheduled  do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Send Reminder Emails"
     noterm_emails_sent = {}
     forbidden_emails_sent = {}
-    puts "Sending Reminder Emails"
-    reminders = EmailReminder.where(:send_on => Date.today.wday).order('section_id')
+    puts "Sending reminder emails"
+    reminders = EmailReminder.where(:send_on => Date.today.wday).order(:section_id)
     count = reminders.size
     count_length = count.to_s.length
     puts "\tNo emails to send" if count == 0
@@ -86,17 +86,17 @@ namespace :scheduled  do
         reminder.send_email
       rescue Osm::Forbidden => exception
         puts "\t\tUser is fobidden from fetching data"
-        forbidden_emails_sent[list.user_id] ||= []
+        forbidden_emails_sent[reminder.user_id] ||= []
         unless forbidden_emails_sent[reminder.user_id].include?(reminder.section_id)
           EmailReminderMailer.forbidden(reminder, exception).deliver_now
           forbidden_emails_sent[reminder.user_id].push reminder.section_id
         end
       rescue Osm::Error::NoCurrentTerm => exception
         puts "\t\tNo current term for section"
-        noterm_emails_sent[list.user_id] ||= []
-        unless noterm_emails_sent[list.user_id].include?(list.section_id)
-          EmailReminderMailer.no_current_term(list, exception).deliver_now
-          noterm_emails_sent[list.user_id].push list.section_id
+        noterm_emails_sent[reminder.user_id] ||= []
+        unless noterm_emails_sent[reminder.user_id].include?(reminder.section_id)
+          EmailReminderMailer.no_current_term(reminder, exception).deliver_now
+          noterm_emails_sent[reminder.user_id].push reminder.section_id
         end
       rescue Exception => exception
         exception_raised("Reminder Email (id: #{reminder.id}, user: #{reminder.user_id}, section: #{reminder.section_id})", exception)
@@ -138,7 +138,6 @@ namespace :scheduled  do
           noterm_emails_sent[list.user_id].push list.section_id
         end
       rescue Exception => exception
-        puts "\t\tAn Exception was raised (#{exception.message})"
         exception_raised("Checking list for changed address (id: #{list.id}, user: #{list.user_id}, section: #{list.section_id})", exception)
       end
     end
@@ -166,10 +165,10 @@ namespace :scheduled  do
       deleted = 0
       [PaperTrail::Version, UserVersion].each do |model|
         this_deleted = model.destroy_all(["created_at < ?", 1.year.ago]).size
-        puts "deleted #{this_deleted} old #{model.name} versions."
+        puts "#{this_deleted} old #{model.name} deleted."
         deleted += this_deleted
       end
-      puts "deleted #{deleted} total old versions."
+      puts "#{deleted} total old versions deleted."
     end
 
     task :all => [:balanced_programme_cache, :announcements, :paper_trails]
