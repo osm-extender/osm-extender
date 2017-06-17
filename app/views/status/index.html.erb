@@ -21,7 +21,7 @@
 <p>There are <%= cache[:keys] %> keys in the cache.</p>
 <%- cache_hits = cache[:cache_hits] %>
 <%- cache_misses = cache[:cache_misses] %>
-<%- cache_attempts = cache[:cache_attempts] %>
+<%- cache_attempts = cache[:cache_attempts].to_f %>
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage((cache_hits*100/cache_attempts), precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage((cache_misses*100/cache_attempts), precision: 1) %>) cache misses.</p>
 
 <h2>Database</h2>
