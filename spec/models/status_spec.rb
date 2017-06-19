@@ -76,17 +76,35 @@ describe "Status fetching" do
   end
 
   it '#sessions' do
-    expect(Session).to receive_message_chain(:guests, :count).and_return(5)
-    expect(Session).to receive_message_chain(:users, :count).and_return(10)
-    expect(Session).to receive(:count).and_return(15)
+    Timecop.freeze
+    expect(Session).to receive_message_chain(:guests, :count).and_return(1)
+    expect(Session).to receive_message_chain(:users, :count).and_return(2)
+    expect(Session).to receive(:count).and_return(3)
     expect(Session).to receive(:first).and_return(Session.new(id: 1))
     expect(Session).to receive(:last).and_return(Session.new(id: 2))
+    expect(Session).to receive(:pluck).with(:user_id, :created_at, :updated_at).and_return([
+      [1, 10.minutes.ago, 8.minutes.ago],
+      [2, 8.minutes.ago, 4.minutes.ago],
+      [nil, 15.minutes.ago, 14.minutes.ago],
+    ])
 
     # Actually get them
     expect(Status.new.sessions).to eq ({
-      guests: 5,
-      users: 10,
-      total: 15,
+      totals: {
+        all: 3,
+        users: 2,
+        guests: 1,
+      },
+      average_durations: {
+        all: 2.minutes + 20.seconds,
+        users: 3.minutes,
+        guests: 1.minutes,
+      },
+      average_ages: {
+        all: 11.minutes,
+        users: 9.minutes,
+        guests: 15.minutes,
+      },
       oldest: Session.new(id: 1),
       newest: Session.new(id: 2),
     })
