@@ -1,20 +1,14 @@
 class Status
 
-  def all
-    {
-      unicorn_workers: unicorn_workers,
-      cache: cache,
-      database_size: database_size,
-      users: users,
-      sessions: sessions
-    }
-  end
-
-
   def unicorn_workers
     return @unicorn_workers unless @unicorn_workers.nil?
-    pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
-    `pgrep -cP #{IO.read(pid_file)}`.to_i
+    begin
+      pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
+      pid = IO.read(pid_file)
+      @unicorn_workers = `pgrep -cP #{pid}`.to_i
+    rescue Errno::ENOENT
+      return 0
+    end
   end
 
 

@@ -1,27 +1,20 @@
 describe "Status fetching" do
 
-  it '#all' do
-    status = Status.new
-    expect(status).to receive(:unicorn_workers).and_return('DATA FOR UNICORN WORKERS')
-    expect(status).to receive(:cache).and_return('DATA FOR CACHE')
-    expect(status).to receive(:database_size).and_return('DATA FOR DATABASE SIZE')
-    expect(status).to receive(:users).and_return('DATA FOR USERS')
-    expect(status).to receive(:sessions).and_return('DATA FOR SESSIONS')
-    expect(status.all).to eq ({
-      unicorn_workers: 'DATA FOR UNICORN WORKERS',
-      cache: 'DATA FOR CACHE',
-      database_size: 'DATA FOR DATABASE SIZE',
-      users: 'DATA FOR USERS',
-      sessions: 'DATA FOR SESSIONS',
-    })
-  end
+  describe '#unicorn_workers' do
+    it 'Returns number of workers' do
+      status = Status.new
+      expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
+      expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
+      expect(status.unicorn_workers).to eq 3
+    end
 
-  it "#unicorn_workers" do
-    status = Status.new
-    expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
-    expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
-    expect(status.unicorn_workers).to eq 3
-  end
+    it 'Handles missing PID file' do
+      status = Status.new
+      expect(IO).to receive(:read){ fail Errno::ENOENT, 'No such file or directory' }
+      expect(status).to_not receive('`')
+      expect(status.unicorn_workers).to eq 0
+    end
+  end # describe #unicorn_workers
 
   it '#cache' do
     redis = double

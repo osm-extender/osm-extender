@@ -45,6 +45,9 @@ gem 'delayed_job_active_record', '~> 4.0'
 gem 'daemons', '~> 1.1'
 gem 'daemon-spawn', '~> 0.4'
 
+# Monitoring
+gem 'cachd', '~> 0.0.3'
+gem 'snmp_pass', '~> 0.0.4'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
