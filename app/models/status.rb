@@ -78,8 +78,8 @@ class Status
       average_durations[:all] += duration
       average_durations[user_type] += duration
     end
-    average_ages.each_key { |key| average_ages[key] /= totals[key] } # turn the gathered sums into an average
-    average_durations.each_key { |key| average_durations[key] /= totals[key] } # turn the gathered sums into an average
+    average_ages.each_key { |key| average_ages[key] /= totals[key] unless totals[key].eql?(0) } # turn the gathered sums into an average
+    average_durations.each_key { |key| average_durations[key] /= totals[key] unless totals[key].eql?(0) } # turn the gathered sums into an average
 
     @sessions = {
       totals: totals,
