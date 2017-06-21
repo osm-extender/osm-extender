@@ -1,4 +1,4 @@
-describe 'rake snmp' do
+describe 'rake monitoring:snmp' do
 
   it 'Preloads the Rails environment' do
     expect(task.prerequisites).to include 'environment'
