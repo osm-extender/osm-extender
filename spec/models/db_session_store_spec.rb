@@ -2,12 +2,23 @@ describe DbSessionStore do
 
   describe '#get_session' do
 
-    it 'Session exists' do
-      session = Session.new(id: 1, session_id: 'session_id', user_id: 3, data: {4 => 'four'})
-      expect(Session).to receive(:find_by_session_id).with('session_id').and_return(session)
-      store = described_class.new(nil)
-      expect(store.get_session(nil, 'session_id')).to eq ['session_id', {4 => 'four', 'user_id' => 3}]
-    end
+    describe 'Session exists' do
+
+      it 'With user' do
+        session = Session.new(id: 1, session_id: 'session_id', user_id: 3, data: {4 => 'four'})
+        expect(Session).to receive(:find_by_session_id).with('session_id').and_return(session)
+        store = described_class.new(nil)
+        expect(store.get_session(nil, 'session_id')).to eq ['session_id', {4 => 'four', 'user_id' => 3}]
+      end
+
+      it 'Without user' do
+        session = Session.new(id: 1, session_id: 'session_id', user_id: nil, data: {4 => 'four'})
+        expect(Session).to receive(:find_by_session_id).with('session_id').and_return(session)
+        store = described_class.new(nil)
+        expect(store.get_session(nil, 'session_id')).to eq ['session_id', {4 => 'four'}]
+      end
+
+    end # # describe session exists
 
     it "Session doesn't exist" do
       expect(Session).to receive(:find_by_session_id).with('session_id').and_return(nil)
@@ -30,21 +41,34 @@ describe DbSessionStore do
 
   describe '#set_session' do
 
-    it 'Session exists' do
-      session = Session.new(id: 1, session_id: 'session_id')
-      expect(Session).to receive(:find_by_session_id).with('session_id').and_return(session)
-      expect(session).to receive(:assign_attributes).with('user_id' => 2)
-      expect(session).to receive('data=').with('array' => [])
-      expect(session).to receive(:save!).and_return(true)
-      store = described_class.new(nil)
-      expect(store.set_session(nil, 'session_id', {'user_id' => 2, 'array' => []}, {})).to eq 'session_id'
-    end
+    describe 'Session exists' do
+
+     before :each do
+        @session = Session.new(id: 1, session_id: 'session_id')
+        expect(Session).to receive(:find_by_session_id).with('session_id').and_return(@session)
+        expect(@session).to receive('data=').with('array' => [])
+        expect(@session).to receive(:save!).and_return(true)
+     end
+
+      it 'With user' do
+        expect(@session).to receive('user_id=').with(2)
+        store = described_class.new(nil)
+        expect(store.set_session(nil, 'session_id', {'user_id' => 2, 'array' => []}, {})).to eq 'session_id'
+      end
+
+      it 'Without user' do
+        expect(@session).to receive('user_id=').with(nil)
+        store = described_class.new(nil)
+        expect(store.set_session(nil, 'session_id', {'array' => []}, {})).to eq 'session_id'
+      end
+
+    end # describe Session exists
 
     it "Session doesn't exist" do
       session = Session.new(id: 1, session_id: 'session_id')
       expect(Session).to receive(:find_by_session_id).with('session_id').and_return(nil)
       expect(Session).to receive(:new).and_return(session)
-      expect(session).to receive(:assign_attributes).with('user_id' => 2)
+      expect(session).to receive('user_id=').with(2)
       expect(session).to receive('data=').with('array' => [])
       expect(session).to receive(:save!).and_return(true)
       store = described_class.new(nil)

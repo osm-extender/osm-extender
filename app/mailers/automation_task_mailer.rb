@@ -35,7 +35,7 @@ class AutomationTaskMailer < ApplicationMailer
     end
 
     mail ({
-      :subject => build_subject('Preparing Email Reminder FAILED'),
+      :subject => build_subject('Performing Automation Tasks FAILED - No current term'),
       :to => task.user.email_address_with_name
     })
   end

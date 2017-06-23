@@ -11,7 +11,7 @@ class DbSessionStore < ActionDispatch::Session::AbstractStore
     session ||= Session.create(session_id: session_id)
     session_data = session.data || {}
     # Copy attributes from session to session_data
-    session_data['user_id'] = session.user_id
+    session_data['user_id'] = session.user_id if session.user_id?
     [session.session_id, session_data]
   end
 

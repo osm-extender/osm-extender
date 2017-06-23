@@ -1,27 +1,20 @@
 describe "Status fetching" do
 
-  it '#all' do
-    status = Status.new
-    expect(status).to receive(:unicorn_workers).and_return('DATA FOR UNICORN WORKERS')
-    expect(status).to receive(:cache).and_return('DATA FOR CACHE')
-    expect(status).to receive(:database_size).and_return('DATA FOR DATABASE SIZE')
-    expect(status).to receive(:users).and_return('DATA FOR USERS')
-    expect(status).to receive(:sessions).and_return('DATA FOR SESSIONS')
-    expect(status.all).to eq ({
-      unicorn_workers: 'DATA FOR UNICORN WORKERS',
-      cache: 'DATA FOR CACHE',
-      database_size: 'DATA FOR DATABASE SIZE',
-      users: 'DATA FOR USERS',
-      sessions: 'DATA FOR SESSIONS',
-    })
-  end
+  describe '#unicorn_workers' do
+    it 'Returns number of workers' do
+      status = Status.new
+      expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
+      expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
+      expect(status.unicorn_workers).to eq 3
+    end
 
-  it "#unicorn_workers" do
-    status = Status.new
-    expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
-    expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
-    expect(status.unicorn_workers).to eq 3
-  end
+    it 'Handles missing PID file' do
+      status = Status.new
+      expect(IO).to receive(:read){ fail Errno::ENOENT, 'No such file or directory' }
+      expect(status).to_not receive('`')
+      expect(status.unicorn_workers).to eq 0
+    end
+  end # describe #unicorn_workers
 
   it '#cache' do
     redis = double
@@ -75,21 +68,61 @@ describe "Status fetching" do
     })
   end
 
-  it '#sessions' do
-    expect(Session).to receive_message_chain(:guests, :count).and_return(5)
-    expect(Session).to receive_message_chain(:users, :count).and_return(10)
-    expect(Session).to receive(:count).and_return(15)
-    expect(Session).to receive(:first).and_return(Session.new(id: 1))
-    expect(Session).to receive(:last).and_return(Session.new(id: 2))
 
-    # Actually get them
-    expect(Status.new.sessions).to eq ({
-      guests: 5,
-      users: 10,
-      total: 15,
-      oldest: Session.new(id: 1),
-      newest: Session.new(id: 2),
-    })
-  end
+  describe '#sessions' do
+    it 'Gets counts & averages' do
+      Timecop.freeze
+      expect(Session).to receive_message_chain(:guests, :count).and_return(1)
+      expect(Session).to receive_message_chain(:users, :count).and_return(2)
+      expect(Session).to receive(:count).and_return(3)
+      expect(Session).to receive(:first).and_return(Session.new(id: 1))
+      expect(Session).to receive(:last).and_return(Session.new(id: 2))
+      expect(Session).to receive(:pluck).with(:user_id, :created_at, :updated_at).and_return([
+        [1, 10.minutes.ago, 8.minutes.ago],
+        [2, 8.minutes.ago, 4.minutes.ago],
+        [nil, 15.minutes.ago, 14.minutes.ago],
+      ])
+
+      # Actually get them
+      expect(Status.new.sessions).to eq ({
+        totals: {
+          all: 3,
+          users: 2,
+          guests: 1,
+        },
+        average_durations: {
+          all: 2.minutes + 20.seconds,
+          users: 3.minutes,
+          guests: 1.minutes,
+        },
+        average_ages: {
+          all: 11.minutes,
+          users: 9.minutes,
+          guests: 15.minutes,
+        },
+        oldest: Session.new(id: 1),
+        newest: Session.new(id: 2),
+      })
+    end
+
+    it 'handles 0 sessions' do
+      expect(Session).to receive_message_chain(:guests, :count).and_return(0)
+      expect(Session).to receive_message_chain(:users, :count).and_return(0)
+      expect(Session).to receive(:count).and_return(0)
+      expect(Session).to receive(:first).and_return(nil)
+      expect(Session).to receive(:last).and_return(nil)
+      expect(Session).to receive(:pluck).with(:user_id, :created_at, :updated_at).and_return([])
+
+      # Actually get them
+      expect(Status.new.sessions).to eq ({
+        totals: {all: 0, users: 0, guests: 0},
+        average_durations: {all: 0, users: 0, guests: 0},
+        average_ages: {all: 0, users: 0, guests: 0},
+        oldest: nil,
+        newest: nil,
+      })
+    end
+
+  end # describe #sessions
 
 end

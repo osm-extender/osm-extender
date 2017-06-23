@@ -35,7 +35,7 @@ gem 'acts_as_list', '~> 0.9.5'        # Makes lists of items orderable
 gem 'paper_trail', '~> 7.0'           # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
-gem 'pry', '~> 0.9', :require=>false  # Nicer console to work in
+gem 'pry', '~> 0.9', require: false  # Nicer console to work in
 gem 'icalendar', '~> 2.2'             # Do stuff with ICS format files
 gem 'mimemagic', '~> 0.3.2'           # Get type of image file returned by OSM
 gem 'figaro', '~> 1.1'                # Use config/application.yml to hold environment variables for easier testing/development
@@ -45,6 +45,9 @@ gem 'delayed_job_active_record', '~> 4.0'
 gem 'daemons', '~> 1.1'
 gem 'daemon-spawn', '~> 0.4'
 
+# Monitoring
+gem 'cachd', '~> 0.0.3'
+gem 'snmp_pass', '~> 0.0.4'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
@@ -87,7 +90,7 @@ group :test do
   gem 'fakeweb', '~> 1.3'
   gem 'timecop', '~> 0.5'
   gem 'simplecov', '~> 0.11'
-  gem 'turn', '~> 0.9', :require => false
+  gem 'turn', '~> 0.9', require: false
   gem 'coveralls', '~> 0.8'
 end
 

@@ -52,7 +52,7 @@ namespace :ci do
       unless return_values.find{ |i| i != 0 }.nil?
         failed_commands = []
         return_values.each_with_index do |value, index|
-          failed_commands.push commands[index] unless value.eql?('0')
+          failed_commands.push commands[index] unless value.eql?(0)
         end
         puts "#{failed_commands.size} #{'command'.pluralize(failed_commands.size)} failed! - #{failed_commands.to_sentence}"
         fail "Something failed"

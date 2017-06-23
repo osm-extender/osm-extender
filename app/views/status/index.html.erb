@@ -2,10 +2,22 @@
 
 <h2>Sessions</h2>
 <%- sessions = @status.sessions %>
-<p>There are a total of <%= number_with_delimiter(sessions[:total]) %> <%= "session".pluralize(sessions[:total]) %>.</p>
+<p>There are a total of <%= number_with_delimiter(sessions[:totals][:all]) %> <%= "session".pluralize(sessions[:totals][:all]) %>.</p>
 <ul>
-  <li><%= pluralize sessions[:users], 'user' %>.</li>
-  <li><%= pluralize sessions[:guests], 'guest' %>.</li>
+  <li><%= pluralize sessions[:totals][:users], 'user' %>.</li>
+  <li><%= pluralize sessions[:totals][:guests], 'guest' %>.</li>
+  <li>
+    The average session duration is <%= time_ago_in_words(sessions[:average_durations][:all].seconds.ago) %>.<ul>
+      <li><%= time_ago_in_words(sessions[:average_durations][:users].seconds.ago) %> for users.</li>
+      <li><%= time_ago_in_words(sessions[:average_durations][:guests].seconds.ago) %> for guests.</li>
+    </ul>
+  </li>
+  <li>
+    The average session age is <%= time_ago_in_words(sessions[:average_ages][:all].seconds.ago) %>.<ul>
+      <li><%= time_ago_in_words(sessions[:average_ages][:users].seconds.ago) %> for users.</li>
+      <li><%= time_ago_in_words(sessions[:average_ages][:guests].seconds.ago) %> for guests.</li>
+    </ul>
+  </li>
   <li>The oldest session is <%= time_ago_in_words(sessions[:oldest].created_at) %> old.</li>
   <li>The newest session is <%= time_ago_in_words(sessions[:newest].created_at) %> old.</li>
 </ul>
@@ -21,7 +33,7 @@
 <p>There are <%= cache[:keys] %> keys in the cache.</p>
 <%- cache_hits = cache[:cache_hits] %>
 <%- cache_misses = cache[:cache_misses] %>
-<%- cache_attempts = cache[:cache_attempts] %>
+<%- cache_attempts = cache[:cache_attempts].to_f %>
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage((cache_hits*100/cache_attempts), precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage((cache_misses*100/cache_attempts), precision: 1) %>) cache misses.</p>
 
 <h2>Database</h2>
