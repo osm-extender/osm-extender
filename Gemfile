@@ -47,7 +47,7 @@ gem 'daemon-spawn', '~> 0.4'
 
 # Monitoring
 gem 'cachd', '~> 0.0.3'
-gem 'snmp_pass', '~> 0.0.4'
+gem 'snmp_pass', '~> 0.0.5'
 
 # Javascript / Assets
 gem 'therubyracer', '~> 0.12'
