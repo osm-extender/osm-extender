@@ -9,7 +9,7 @@ describe 'rake monitoring:snmp' do
     status = double(Status)
     allow(Status).to receive(:new).and_return(status)
     expect(status).to receive(:unicorn_workers).and_return(6)
-    expect(status).to receive(:cache).and_return({ram_max: 2048, ram_used: 1024, keys: 723, cache_hits: 100, cache_hits_percent: 8000, cache_misses: 25, cache_misses_percent: 2000, cache_attempts: 125})
+    expect(status).to receive(:cache).and_return({ram_max: 2048, ram_used: 1024, keys: 723, cache_hits: 100, cache_hits_percent: 80, cache_misses: 25, cache_misses_percent: 20, cache_attempts: 125})
     expect(status).to receive(:users).and_return({unactivated: 1, activated: 2, connected: 3, total: 6})
     expect(status).to receive(:sessions).and_return({
       totals: {all: 3, users: 2, guests: 1},
