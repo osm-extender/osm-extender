@@ -16,21 +16,43 @@ describe "Status fetching" do
     end
   end # describe #unicorn_workers
 
-  it '#cache' do
-    redis = double
-    expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
-    expect(redis).to receive(:config).with(:get, 'maxmemory').and_return('maxmemory'=>'2345')
-    expect(redis).to receive(:info).and_return('used_memory'=>'1234', 'keyspace_hits'=>'4567', 'keyspace_misses'=>'567')
-    expect(redis).to receive(:dbsize).and_return(3456)
-    expect(Status.new.cache).to eq ({
-      ram_max: 2345,
-      ram_used: 1234,
-      keys: 3456,
-      cache_hits: 4567,
-      cache_misses: 567,
-      cache_attempts: 5134,
-    })
-  end
+  describe '#cache' do
+    it 'Creates status' do
+      redis = double
+      expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+      expect(redis).to receive(:config).with(:get, 'maxmemory').and_return('maxmemory'=>'2345')
+      expect(redis).to receive(:info).and_return('used_memory'=>'1234', 'keyspace_hits'=>'4567', 'keyspace_misses'=>'567')
+      expect(redis).to receive(:dbsize).and_return(3456)
+      expect(Status.new.cache).to eq ({
+        ram_max: 2345,
+        ram_used: 1234,
+        keys: 3456,
+        cache_hits: 4567,
+        cache_hits_percent: 88.95597974289053,
+        cache_misses: 567,
+        cache_misses_percent: 11.044020257109466,
+        cache_attempts: 5134,
+      })
+    end
+
+    it 'Handles zeros' do
+      redis = double
+      expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+      expect(redis).to receive(:config).with(:get, 'maxmemory').and_return('maxmemory'=>'0')
+      expect(redis).to receive(:info).and_return('used_memory'=>'0', 'keyspace_hits'=>'0', 'keyspace_misses'=>'0')
+      expect(redis).to receive(:dbsize).and_return(0)
+      expect(Status.new.cache).to eq ({
+        ram_max: 0,
+        ram_used: 0,
+        keys: 0,
+        cache_hits: 0,
+        cache_hits_percent: 0.0,
+        cache_misses: 0,
+        cache_misses_percent: 0.0,
+        cache_attempts: 0,
+      })
+    end
+  end # describe cache
 
   it '#database_size' do
     expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;").and_return([

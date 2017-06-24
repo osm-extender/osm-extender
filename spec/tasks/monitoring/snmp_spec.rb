@@ -9,7 +9,7 @@ describe 'rake monitoring:snmp' do
     status = double(Status)
     allow(Status).to receive(:new).and_return(status)
     expect(status).to receive(:unicorn_workers).and_return(6)
-    expect(status).to receive(:cache).and_return({ram_max: 2048, ram_used: 1024, keys: 723, cache_hits: 100, cache_misses: 25, cache_attempts: 125})
+    expect(status).to receive(:cache).and_return({ram_max: 2048, ram_used: 1024, keys: 723, cache_hits: 100, cache_hits_percent: 8000, cache_misses: 25, cache_misses_percent: 2000, cache_attempts: 125})
     expect(status).to receive(:users).and_return({unactivated: 1, activated: 2, connected: 3, total: 6})
     expect(status).to receive(:sessions).and_return({
       totals: {all: 3, users: 2, guests: 1},
@@ -31,7 +31,11 @@ describe 'rake monitoring:snmp' do
     expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.2 = gauge: 1024')   # Used RAM
     expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.3 = gauge: 723')    # Keys
     expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.4 = gauge: 100')    # Hits
+    expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.4.0 = gauge: 100')  # Hits
+    expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.4.1 = gauge: 8000') # Hits (percent * 100)
     expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.5 = gauge: 25')     # Misses
+    expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.5.0 = gauge: 25')   # Misses
+    expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.5.1 = gauge: 2000') # Misses (percent * 100)
     expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.2.6 = gauge: 125')    # Attempts
     # Users
     expect(STDOUT).to receive(:puts).with('.1.2.3.4.5.6.7.8.9.3.0 = gauge: 6')      # Total users

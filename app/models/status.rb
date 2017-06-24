@@ -16,13 +16,16 @@ class Status
     return @cache unless @cache.nil?
     redis = Rails.cache.data
     info = redis.info
+    cache_attempts = info['keyspace_hits'].to_i + info['keyspace_misses'].to_i
     @cache = {
       ram_max: redis.config(:get, 'maxmemory')['maxmemory'].to_i,
       ram_used: info['used_memory'].to_i,
       keys: redis.dbsize,
       cache_hits: info['keyspace_hits'].to_i,
+      cache_hits_percent: cache_attempts.eql?(0) ? 0 : (100 * info['keyspace_hits'].to_f / cache_attempts),
       cache_misses: info['keyspace_misses'].to_i,
-      cache_attempts: info['keyspace_hits'].to_i + info['keyspace_misses'].to_i
+      cache_misses_percent: cache_attempts.eql?(0) ? 0 : (100 * info['keyspace_misses'].to_f / cache_attempts),
+      cache_attempts: cache_attempts
     }
   end
 
