@@ -141,4 +141,22 @@ module ApplicationHelper
     end
   end
 
+  def seconds_to_time(seconds)
+    fail ArgumentError 'time must be a positive number' if !seconds.is_a?(Numeric) || seconds < 0
+
+    parts = []
+    remaining = seconds
+    {'second' => 60, 'minute' => 60, 'hour' => 24, 'day' => 7, 'week' => nil}.each do |duration, units|
+      if units.nil? # Reached the end of the conversions we can do
+        parts.push "#{remaining} #{duration.pluralize(remaining)}" if remaining > 0
+        break
+      end
+      this_unit = remaining % units
+      remaining = remaining / units
+      parts.push "#{this_unit} #{duration.pluralize(this_unit)}" if this_unit > 0
+      break if remaining <= 0 # No more time left to split
+    end
+    parts.reverse.to_sentence
+  end
+
 end
