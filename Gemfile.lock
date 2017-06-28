@@ -205,7 +205,7 @@ GEM
     paper_trail (7.0.3)
       activerecord (>= 4.0, < 5.2)
       request_store (~> 1.1)
-    pg (0.21.0)
+    pg (0.20.0)
     premailer (1.10.4)
       addressable
       css_parser (>= 1.4.10)
@@ -393,7 +393,7 @@ DEPENDENCIES
   normalize-rails (~> 4.1)
   osm (~> 1.3)
   paper_trail (~> 7.0)
-  pg (~> 0.18)
+  pg (~> 0.18, <= 0.20)
   premailer-rails (~> 1.9)
   pry (~> 0.9)
   rack-mini-profiler (~> 0.9)
