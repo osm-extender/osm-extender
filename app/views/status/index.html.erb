@@ -18,8 +18,9 @@
       <li><%= time_ago_in_words(sessions[:average_ages][:guests].seconds.ago) %> for guests.</li>
     </ul>
   </li>
-  <li>The oldest session is <%= time_ago_in_words(sessions[:oldest].created_at) %> old.</li>
-  <li>The newest session is <%= time_ago_in_words(sessions[:newest].created_at) %> old.</li>
+  <li>The oldest session is <%= time_ago_in_words sessions[:oldest].created_at %> old.</li>
+  <li>The newest session is <%= time_ago_in_words sessions[:newest].created_at %> old.</li>
+  <li>Sessions expire after <%= seconds_to_time Rails.application.config.sorcery.session_timeout %> of inactivity.</li>
 </ul>
 
 <h2>Unicorn</h2>

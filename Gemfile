@@ -19,7 +19,7 @@ gem 'cancan', '~> 1.6'
 
 # Services used
 gem 'redis-rails', '~>4.0'          # Using redis as the cache store
-gem 'pg', '~>0.18'                  # Use a postgresql database
+gem 'pg', '~>0.18', '<= 0.20'       # Use a postgresql database
 gem 'mv-postgresql', '~> 2.2'       # Use migration_validations
 
 # Misc
