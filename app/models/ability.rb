@@ -14,7 +14,7 @@ class Ability
 
     unless user
       # Things only non authenticated users can do
-      can [:new, :create, :activate_account], User unless Rails.env.staging?
+      can [:new, :create, :activate_account], User
 
     else
       # Things only authenticated users can do
