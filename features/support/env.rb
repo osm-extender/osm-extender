@@ -1,6 +1,7 @@
 # Generate test coverage report
 if Gem::Specification::find_all_by_name('simplecov').any?
   require 'simplecov'
+  SimpleCov.coverage_dir(File.join('tmp', 'coverage'))
   SimpleCov.command_name 'cucumber'
   SimpleCov.merge_timeout 1800 # Half an hour
   SimpleCov.start 'rails'
