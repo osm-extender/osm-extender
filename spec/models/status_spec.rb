@@ -55,7 +55,7 @@ describe "Status fetching" do
   end # describe cache
 
   it '#database_size' do
-    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;").and_return([
+    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname = 'test' ORDER BY tablename;").and_return([
       {'tablename' => 'table1s'},
       {'tablename' => 'table2s'}
     ])

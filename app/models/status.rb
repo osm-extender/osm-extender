@@ -32,9 +32,10 @@ class Status
 
   def database_size
     return @database_size unless @database_size.nil?
+    schema = Rails.configuration.database_configuration[Rails.env]['schema_search_path'].split(',').first || 'public'
     sizes = []
     totals = {count: 0, size: 0}
-    tables = ActiveRecord::Base.connection.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;")
+    tables = ActiveRecord::Base.connection.execute("SELECT tablename FROM pg_tables WHERE schemaname = '#{schema}' ORDER BY tablename;")
     tables.map{ |t| t['tablename'] }.each do |table|
       sql = "SELECT pg_total_relation_size('#{table}') AS size, COUNT(#{table}) AS count FROM #{table};"
       res = ActiveRecord::Base.connection.execute(sql).first
