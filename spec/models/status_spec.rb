@@ -54,24 +54,68 @@ describe "Status fetching" do
     end
   end # describe cache
 
-  it '#database_size' do
-    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname = 'test' ORDER BY tablename;").and_return([
-      {'tablename' => 'table1s'},
-      {'tablename' => 'table2s'}
-    ])
-    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table1s') AS size, COUNT(table1s) AS count FROM table1s;").and_return([{'count' => '100', 'size' => '1024'}])
-    expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table2s') AS size, COUNT(table2s) AS count FROM table2s;").and_return([{'count' => '200', 'size' => '2000'}])
-    expect(Status.new.database_size).to eq ({
-      tables: [
-        {model: 'Table1', table: 'table1s', size: 1024, count: 100},
-        {model: 'Table2', table: 'table2s', size: 2000, count: 200}
-      ],
-      totals: {
-        count: 300,
-        size: 3024
-      }
-    })
-  end
+  describe '#database_size' do
+    it "Gets sizes of tables" do
+      expect(Rails).to receive_message_chain(:configuration, :database_configuration).and_return({'test' => {'schema_search_path' => 'SCHEMA-NAME'}})
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname IN ('SCHEMA-NAME') ORDER BY tablename;").and_return([
+        {'tablename' => 'table1s'},
+        {'tablename' => 'table2s'}
+      ])
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table1s') AS size, COUNT(table1s) AS count FROM table1s;").and_return([{'count' => '100', 'size' => '1024'}])
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table2s') AS size, COUNT(table2s) AS count FROM table2s;").and_return([{'count' => '200', 'size' => '2000'}])
+      expect(Status.new.database_size).to eq ({
+        tables: [
+          {model: 'Table1', table: 'table1s', size: 1024, count: 100},
+          {model: 'Table2', table: 'table2s', size: 2000, count: 200}
+        ],
+        totals: {
+          count: 300,
+          size: 3024
+        }
+      })
+    end
+
+    it 'Handles no schema_search_path in config' do
+      expect(Rails).to receive_message_chain(:configuration, :database_configuration).and_return({'test' => {}})
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname IN ('public') ORDER BY tablename;").and_return([
+        {'tablename' => 'table1s'},
+        {'tablename' => 'table2s'}
+      ])
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table1s') AS size, COUNT(table1s) AS count FROM table1s;").and_return([{'count' => '100', 'size' => '1024'}])
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table2s') AS size, COUNT(table2s) AS count FROM table2s;").and_return([{'count' => '200', 'size' => '2000'}])
+      expect(Status.new.database_size).to eq ({
+        tables: [
+          {model: 'Table1', table: 'table1s', size: 1024, count: 100},
+          {model: 'Table2', table: 'table2s', size: 2000, count: 200}
+        ],
+        totals: {
+          count: 300,
+          size: 3024
+        }
+      })
+    end
+
+    it 'Handles multiple schemas in schema_search_path in config' do
+      expect(Rails).to receive_message_chain(:configuration, :database_configuration).and_return({'test' => {'schema_search_path' => 'SCHEMA-NAME-1,SCHEMA-NAME-2, SCHEMA-NAME-3'}})
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT tablename FROM pg_tables WHERE schemaname IN ('SCHEMA-NAME-1','SCHEMA-NAME-2','SCHEMA-NAME-3') ORDER BY tablename;").and_return([
+        {'tablename' => 'table1s'},
+        {'tablename' => 'table2s'}
+      ])
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table1s') AS size, COUNT(table1s) AS count FROM table1s;").and_return([{'count' => '100', 'size' => '1024'}])
+      expect(ActiveRecord::Base.connection).to receive(:execute).with("SELECT pg_total_relation_size('table2s') AS size, COUNT(table2s) AS count FROM table2s;").and_return([{'count' => '200', 'size' => '2000'}])
+      expect(Status.new.database_size).to eq ({
+        tables: [
+          {model: 'Table1', table: 'table1s', size: 1024, count: 100},
+          {model: 'Table2', table: 'table2s', size: 2000, count: 200}
+        ],
+        totals: {
+          count: 300,
+          size: 3024
+        }
+      })
+    end
+
+  end # describe #database_size
 
   it '#users' do
     activated = double(ActiveRecord::Relation)
