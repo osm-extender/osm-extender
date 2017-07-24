@@ -43,23 +43,29 @@ module ApplicationHelper
   # @param format_string the format string to pass to the strftime methods, after replacing %d with the ordinalized day of the month
   # @returns a string representing the date
   def ordinalized_date(date, format_string)
-    return date.strftime(format_string.gsub(/\%d/, date.strftime('%e').to_i.ordinalize.to_s))
+    return date.strftime(format_string.gsub(/(\%d|%e|%\-d)/, '\1'+date.strftime('%d').to_i.ordinal))
   end
 
   # Convert a time to duration to finish a sentance fragment starting "do this by"
   # @param time the time to convert to words 
   # @returns a string
   def do_by_time(time)
+    if time < Time.now
+      return ordinalized_date(time, '%H:%M on %-d %B %Y')
+    end
     if time.today?
       return time.strftime('%H:%M today')
     end
     if time.to_date == Date.tomorrow
       return time.strftime('%H:%M tomorrow')
     end
-    if time.to_date <= (Date.today + 6.days)
+    if time.between?(Date.today,  Date.today+6.days)
       return time.strftime('%H:%M on %A')
     end
-    return ordinalized_date(time, '%H:%M on %A %d %B')
+    if time.year == Date.today.year
+      return ordinalized_date(time, '%H:%M on %A %-d %B')
+    end
+    return ordinalized_date(time, '%H:%M on %-d %B %Y')
   end
 
   # Create a link for sorting a table by a given column from the model
@@ -116,7 +122,7 @@ module ApplicationHelper
         output += "\n"
       end     
     end # each line
-    return output
+    return output.chomp
   end
 
   def stylesheet_link_tag_if_exists(path, opts = {})
