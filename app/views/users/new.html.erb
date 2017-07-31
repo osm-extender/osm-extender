@@ -11,8 +11,15 @@
       </ul>
     </div>
   <% end %>
+
+  <%- if @signup_code %>
+    <div class="field">
+      <%= label_tag :signup_code %><br/>
+      <%= text_field_tag :signup_code %>
+    </div>
+  <% end %>
   <div class="field">
-    <%= f.label :name%><br/>
+    <%= f.label :name %><br/>
     <%= f.text_field :name %>
   </div>
   <div class="field">
@@ -31,4 +38,3 @@
   </div>
   <div class="actions"><%= f.submit 'Sign up' %></div>
 <% end %>
-
