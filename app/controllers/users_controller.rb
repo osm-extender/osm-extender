@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
   forbid_login_for = [:new, :create, :activate_account, :unlock_account]
-  skip_before_action :require_login, :only => forbid_login_for
-  before_action :require_not_login, :only => forbid_login_for
-  load_and_authorize_resource :except=>[:new, :create] + forbid_login_for
-  authorize_resource :only=>[:new, :create]
+  skip_before_action :require_login, only: forbid_login_for
+  before_action :require_not_login, only: forbid_login_for
+  before_action only: [:new, :create] { @signup_code = Figaro.env.signup_code }
+  load_and_authorize_resource except: [:new, :create] + forbid_login_for
+  authorize_resource only: [:new, :create]
   helper_method :sort_column, :sort_direction
 
   def index
@@ -37,6 +38,23 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(params[:user].permit(:name, :email_address, :password, :password_confirmation))
+
+    if @signup_code
+      if params[:signup_code].blank?
+        # Missing signup code
+        flash.now[:error] = 'You must enter the signup code.'
+        render action: :new, status: 422
+        return
+      else
+        unless @signup_code == params[:signup_code]
+          # Incorrect signup code
+          flash.now[:error] = 'Incorrect signup code.'
+          render action: :new, status: 422
+          return
+        end
+      end
+    end
+
     if @user.invalid?
       render action: :new, status: 422
 
@@ -49,7 +67,8 @@ class UsersController < ApplicationController
       end
 
     else
-      render action: :new, status: 500, error: 'Your signup was unsuccessful.'
+      flash.now[:error] = 'Your signup was unsuccessful.'
+      render action: :new, status: 500
     
     end
   end

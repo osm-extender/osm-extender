@@ -20,6 +20,7 @@ osm_api_token:          YOU'LL GET THIS FROM ED AT OSM
 recaptcha_public_key:   PUBLIC KEY FOR RECAPTCHA
 recaptcha_private_key:  PRIVATE KEY FOR RECAPTCHA
 ga_tracking_id:         GOOGLE ANALYTICS TRACKING ID (or ~ if you don't want to use Google Anayltics)
+signup_code:            IF PRESENT THIS CODE MUST BE ENTERED TO CREATE AN ACCOUNT
 
 
 # Values for the test environment - don't change these, remember to also add to .travis.yml
@@ -31,3 +32,4 @@ test:
   recaptcha_public_key:   "11223344556677889900"
   recaptcha_private_key:  "00998877665544332211"
   ga_tracking_id:         ~
+  signup_code:            ~

@@ -15,13 +15,15 @@ Feature: Sign up
     Background:
         Given I have no users
         And no emails have been sent
+		And there is no signup code
 
 
     @send_email
+	@signup_code
     Scenario: Signup
         When I go to the root page
-	When I follow "Sign up" 
-	Then I should not see "Signup code"
+		When I follow "Sign up" 
+		Then I should not see "Signup code"
         When I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "P@55word"
@@ -29,16 +31,54 @@ Feature: Sign up
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Your signup was successful"
-	And I should be on the root page
+		And I should be on the root page
         And "somebody@somewhere.com" should receive an email with subject /Activate Your Account/
-	And there should be 1 email
+		And there should be 1 email
         When I open the email with subject /Activate Your Account/
         And I click the /activate_account/ link in the email
         Then I should see "Your account was successfully activated."
-	And I should be on the signin page
+		And I should be on the signin page
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
-	And there should be 2 emails
+		And there should be 2 emails
 
+	@signup_code
+    Scenario: Signup (with correct signup code)
+		Given the signup code is abcd1234
+        When I go to the signup page
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
+		And I fill in "signup_code" with "abcd1234"
+        And I press "Sign up"
+        Then I should have 1 users
+        And I should see "Your signup was successful"
+
+	@signup_code
+    Scenario: Signup (with incorrect signup code)
+		Given the signup code is abcd1234
+        When I go to the signup page
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
+		And I fill in "signup_code" with "1234abcd"
+        And I press "Sign up"
+        Then I should have 0 users
+        And I should see "Incorrect signup code"
+
+	@signup_code
+    Scenario: Signup (with missing signup code)
+		Given the signup code is abcd1234
+        When I go to the signup page
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
+		And I fill in "signup_code" with ""
+        And I press "Sign up"
+        Then I should have 0 users
+        And I should see "You must enter the signup code"
 
     Scenario: Signup (signed in)
         Given I have the following user records
@@ -48,7 +88,7 @@ Feature: Sign up
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the signup page
         And I should see "You must be signed out to do that."
-	And I should be on the my_page page
+		And I should be on the my_page page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no name)
@@ -60,7 +100,7 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "Name can't be blank"
         And I should not see "Your signup was successful"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no password)
@@ -71,7 +111,7 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "Password can't be blank"
         And I should not see "Your signup was successful"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password too easy)
@@ -84,7 +124,7 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "isn't complex enough"
         And I should not see "Your signup was successful"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (no password confirmation)
@@ -96,7 +136,7 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "Password confirmation doesn't match Password"
         And I should not see "Your signup was successful"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password is email address)
@@ -108,7 +148,7 @@ Feature: Sign up
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Password is not allowed to be your email address"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (password contains part of name)
@@ -119,7 +159,7 @@ Feature: Sign up
         And I fill in "password2" with "Som890%^"
         And I press "Sign up"
         Then I should see "Password is not allowed to contain part of your name"
-	And I should be on the users page
+		And I should be on the users page
         And I should have 0 users
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
@@ -132,7 +172,7 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "Email address can't be blank"
         And I should not see "Your signup was successful"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (invalid email)
@@ -145,7 +185,7 @@ Feature: Sign up
         Then I should have 0 users
         And I should see "Email address does not look like an email address"
         And I should not see "Your signup was successful"
-	And I should be on the users page
+		And I should be on the users page
         And "somebody@somewhere.com" should receive no email with subject /Activate Your Account/
 
     Scenario: Signup (duplicated email)
@@ -178,11 +218,12 @@ Feature: Sign up
         And I should not see "Your signup was successful"
 
 
+
     Scenario: Activate Account (bad token)
         Given I have no users
         When I go to activate_account token="123abc"
         Then I should see "We were unable to activate your account."
-	And I should be on the root page
+		And I should be on the root page
 
     Scenario: Activate Account (signed in)
         Given I have the following user records
@@ -194,5 +235,5 @@ Feature: Sign up
         When I signin as "alice@example.com" with password "P@55word"
         When I go to activate_account token="123abc"
         And I should see "You must be signed out to do that."
-	And I should be on the my_page page
+		And I should be on the my_page page
         And "bob@example.com" should receive no email with subject /Your Account Has Been Activated/
