@@ -280,6 +280,8 @@ GEM
       redis (>= 2.2)
     ref (2.0.0)
     request_store (1.3.2)
+    rollbar (2.15.4)
+      multi_json
     rspec-core (3.6.0)
       rspec-support (~> 3.6.0)
     rspec-expectations (3.6.0)
@@ -410,6 +412,7 @@ DEPENDENCIES
   recaptcha (~> 4.0)
   redcarpet (~> 3.0)
   redis-rails (~> 4.0)
+  rollbar (~> 2.15)
   rspec-rails (~> 3.1)
   sass-rails (~> 5.0)
   simplecov (~> 0.11)
@@ -430,4 +433,4 @@ DEPENDENCIES
   will_paginate (~> 3.0)
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
