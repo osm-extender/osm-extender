@@ -101,6 +101,8 @@ group :development do
   gem 'spring-commands-cucumber', '~> 1.0'
 end
 
+# Error Reporting
+gem 'rollbar', '~> 2.15'
 
 # Deploy with Capistrano
 # gem 'capistrano'
