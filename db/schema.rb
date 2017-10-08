@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170612173332) do
+ActiveRecord::Schema.define(version: 20171008081144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "citext"
 
   create_table "announcements", force: :cascade do |t|
     t.text     "message",                        null: false
@@ -174,16 +175,14 @@ ActiveRecord::Schema.define(version: 20170612173332) do
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.string   "session_id",  null: false
+    t.string   "session_id", null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "sessions_id"
     t.integer  "user_id"
   end
 
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
-  add_index "sessions", ["sessions_id"], name: "index_sessions_on_sessions_id", using: :btree
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
   add_index "sessions", ["user_id"], name: "index_sessions_on_user_id", using: :btree
 
@@ -232,7 +231,7 @@ ActiveRecord::Schema.define(version: 20170612173332) do
   add_index "user_versions", ["item_type", "item_id"], name: "index_user_versions_on_item_type_and_item_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email_address",                                   null: false
+    t.citext   "email_address",                                   null: false
     t.string   "crypted_password"
     t.string   "salt"
     t.datetime "created_at"
@@ -276,9 +275,6 @@ ActiveRecord::Schema.define(version: 20170612173332) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
-  validates("email_lists", "contact_member", inclusion: { in: 0..4 })
-  validates("email_lists", "contact_primary", inclusion: { in: 0..4 })
-  validates("email_lists", "contact_secondary", inclusion: { in: 0..4 })
-  validates("email_lists", "contact_emergency", inclusion: { in: 0..3 })
+  add_foreign_key "automation_tasks", "users"
 
 end
