@@ -66,7 +66,7 @@ class AutomationTaskLeadership < AutomationTask
       core_badges = Hash[ core_badges.select{ |b| BADGE_IDS[section.type].include?(b.id) }.map{ |b| [b.id, b] } ]
     rescue ArgumentError => exception
       intercept_messages = ["That badge does't exist (bad ID).", "That badge does't exist (bad version)."]
-      if intercept_messages.include?(exception.mnessage)
+      if intercept_messages.include?(exception.message)
         return {success: false, errors: ["Could not find the leadership badges under core badges in OSM."]}
       else
         raise exception
