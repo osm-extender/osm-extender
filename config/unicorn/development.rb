@@ -15,5 +15,5 @@ end
 
 after_fork do |server, worker|
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord::Base)
-  Redis.connect if defined?(Redis)
+ #  Redis.connect if defined?(Redis)
 end
