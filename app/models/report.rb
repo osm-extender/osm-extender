@@ -1,7 +1,7 @@
 class Report
 
   def self.badge_completion_matrix(user, section, options)
-    Rails.cache.fetch("user#{user.id}-report-badge_completion_matrix-data-#{options.inspect}", :expires_in => 10.minutes) do
+    Rails.cache.fetch("user#{user.id}-report-badge_completion_matrix-data-#{section.to_i}-#{options.inspect}", :expires_in => 10.minutes) do
       matrix = []
       names = []
       member_ids = []
