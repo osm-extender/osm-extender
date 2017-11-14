@@ -11,7 +11,10 @@ OSMExtender::Application.routes.draw do
 
   get 'contact_us' => 'contact_us#form', :as => 'contact_us'
   post 'contact_us' => 'contact_us#send_form', :as => 'send_contact_us'
-  
+
+  get 'legal/cookie_policy.html', to: 'static#cookie_policy', format: false, as: 'legal_cookie_policy'
+  get 'legal/privacy_policy.html', to: 'static#privacy_policy', format: false, as: 'legal_privacy_policy'
+
   get 'my_account' => 'my_account#show', :as => 'my_account'
   get 'my_account/change_password' => 'my_account#change_password', :as => 'change_my_password'
   put 'my_account/update_password' => 'my_account#update_password', :as => 'update_my_password'

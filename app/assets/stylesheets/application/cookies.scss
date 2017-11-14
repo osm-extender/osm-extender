@@ -1,0 +1,22 @@
+// See https://davidmles.com/usable-cookie-bar-rails/
+
+#cookies-bar {
+  width: 80%;
+  max-width: 950px;
+  margin: 0 auto 2% auto;
+  padding: 5px;
+  border: 2px solid #888888;
+  background-color: #cccccc;
+  overflow: auto;
+  
+  .text {
+    width: 90%;
+    float: left;
+  }
+ 
+  .links {
+    width: 10%;
+    float: right;
+    text-align: right;
+  }
+}

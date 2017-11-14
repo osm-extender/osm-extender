@@ -59,6 +59,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'coffee-rails', '~> 4.0'
 gem 'uglifier', '~> 3.0'
 gem 'normalize-rails', '~> 4.1'
+gem 'js_cookie_rails', '~> 2.1'
 
 group :development do
   gem 'letter_opener', '~> 1.0'       # Don't deliver emails, open them in a new browser window instead
@@ -106,3 +107,5 @@ gem 'rollbar', '~> 2.15'
 
 # Deploy with Capistrano
 # gem 'capistrano'
+
+gem 'haml-rails', '~> 1.0'
