@@ -1,7 +1,5 @@
 worker_processes 1
 
-listen "127.0.0.1:3000"
-
 timeout 30
 
 pid "#{Rails.root}/tmp/pids/unicorn.pid"

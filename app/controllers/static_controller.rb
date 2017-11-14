@@ -1,7 +1,12 @@
 class StaticController < ApplicationController
-  skip_before_action :require_login, :only => [:welcome, :help]
+  skip_before_action :require_login, :only => [:welcome, :help, :privacy_policy, :cookie_policy]
   before_action :require_connected_to_osm, :only => [:check_osm_setup]
 
+  def cookie_policy
+  end
+
+  def privacy_policy
+  end
 
   def welcome
   end
