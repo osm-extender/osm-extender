@@ -26,7 +26,7 @@ describe "First Aid automation task" do
         @ea_badge = Osm::StagedBadge.new(id: 1643)
         @oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
         @oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
-        @user = FactoryGirl.build(:user_connected_to_osm)
+        @user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskFirstAid.new(user: @user, section_id: @section_id)
 
         Osm::Section.stub(:get).with(@user.osm_api, @section_id){ @section }
@@ -139,7 +139,7 @@ describe "First Aid automation task" do
         @ea_badge = Osm::StagedBadge.new(id: 1643)
         @oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
         @oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
-        @user = FactoryGirl.build(:user_connected_to_osm)
+        @user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskFirstAid.new(user: @user, section_id: @section_id)
 
         Osm::Section.stub(:get).with(@user.osm_api, @section_id){ @section }
@@ -197,7 +197,7 @@ describe "First Aid automation task" do
         @ea_badge = Osm::StagedBadge.new(id: 1643)
         @oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
         @oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
-        @user = FactoryGirl.build(:user_connected_to_osm)
+        @user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskFirstAid.new(user: @user, section_id: @section_id)
 
         Osm::Section.stub(:get).with(@user.osm_api, @section_id){ @section }
@@ -259,7 +259,7 @@ describe "First Aid automation task" do
     describe "Errors" do
       it "Getting section" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
 
         Osm::Section.stub(:get){ nil }
@@ -268,7 +268,7 @@ describe "First Aid automation task" do
 
       it "Getting emergency aid badge" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
 
         Osm::Section.stub(:get){ Osm::Section.new(id: section_id) }
@@ -278,7 +278,7 @@ describe "First Aid automation task" do
 
       it "Getting challenge badge" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
 
         Osm::Section.stub(:get){ Osm::Section.new(id: section_id) }
@@ -294,7 +294,7 @@ describe "First Aid automation task" do
           ea_badge = Osm::StagedBadge.new(id: 1643)
           oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
           oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
-          user = FactoryGirl.build(:user_connected_to_osm)
+          user = FactoryBot.build(:user_connected_to_osm)
           task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
   
           Osm::Section.stub(:get).with(user.osm_api, section_id){ section }
@@ -316,7 +316,7 @@ describe "First Aid automation task" do
           ea_badge = Osm::StagedBadge.new(id: 1643)
           oc_badge_beavers = Osm::ChallengeBadge.new(id: 1515)
           oc_badge_cubs = Osm::ChallengeBadge.new(id: 1581)
-          user = FactoryGirl.build(:user_connected_to_osm)
+          user = FactoryBot.build(:user_connected_to_osm)
           task = AutomationTaskFirstAid.new(user: user, section_id: section_id)
   
           Osm::Section.stub(:get).with(user.osm_api, section_id){ section }

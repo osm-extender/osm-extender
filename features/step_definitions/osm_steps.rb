@@ -345,7 +345,7 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
     })
   end
 
-  body = '{"' + section_id + '":['
+  body = '{"' + section_id.to_s + '":['
   terms.each do |term|
     body += "{\"termid\":\"#{term[:id]}\",\"name\":\"#{term[:name]}\",\"sectionid\":\"#{section_id}\",\"startdate\":\"#{term[:start]}\",\"enddate\":\"#{term[:end]}\"},"
   end
@@ -356,7 +356,7 @@ Given /^an OSM request to get terms for section (\d+) will have the terms?$/ do 
 end
 
 Given /^an OSM request to get terms for section (\d+) will have no terms$/ do |section_id|
-  body = '{"' + section_id + '":[]}'
+  body = '{"' + section_id.to_s + '":[]}'
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/api.php?action=getTerms", :body => body, :content_type => 'application/json')
 end
 

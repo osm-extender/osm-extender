@@ -23,7 +23,7 @@ gem 'pg', '~>0.18', '<= 0.20'       # Use a postgresql database
 gem 'mv-postgresql', '~> 2.2'       # Use migration_validations
 
 # Misc
-gem 'osm', '~> 1.3'                   # For using the OSM API
+gem 'osm', '~> 1.3', '>= 1.3.1'       # For using the OSM API
 #gem 'osm', :path => '../../osm/code'
 gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
@@ -83,7 +83,7 @@ end
 
 group :test do
   gem 'rspec-rails', '~> 3.1'
-  gem 'factory_girl', '~> 4.1'
+  gem 'factory_bot', '~> 4.8'
   gem 'cucumber-rails', '~> 1.3', require: false
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 2.0'

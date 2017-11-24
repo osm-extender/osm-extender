@@ -1,6 +1,6 @@
 describe "Automation Task" do
   it "Has a valid factory" do
-    task = FactoryGirl.build(:automation_task, user_id: 321)
+    task = FactoryBot.build(:automation_task, user_id: 321)
     task.class.stub(:human_name){ 'Human name for automation task' }
     task.stub(:only_one_of_each_type){ true }
     task.stub(:set_section_name){ true }
@@ -8,15 +8,15 @@ describe "Automation Task" do
   end
 
   it "Is invalid without user" do
-    task = FactoryGirl.build(:automation_task, user: nil)
+    task = FactoryBot.build(:automation_task, user: nil)
     task.class.stub(:human_name){ 'Human name for automation task' }
     task.stub(:only_one_of_each_type){ true }
     task.should_not be_valid
   end
 
   it "Is invalid without section_id" do
-    user = FactoryGirl.build(:user)
-    task = FactoryGirl.build(:automation_task, user: user, section_id: nil)
+    user = FactoryBot.build(:user)
+    task = FactoryBot.build(:automation_task, user: user, section_id: nil)
     task.class.stub(:human_name){ 'Human name for automation task' }
     task.stub(:only_one_of_each_type){ true }
     task.stub(:set_section_name){ true }
@@ -41,7 +41,7 @@ describe "Automation Task" do
     Module.stub(:constants) { [:AutomationTaskTestItemBeavers, :AutomationTaskTestItemBeaversCubs, :AutomationTaskTestItemCubs] }
     AutomationTask.stub(:where){ [] }
 
-    ret_val = AutomationTask.unused_items(FactoryGirl.build(:user), Osm::Section.new(id: 456, type: :beavers))
+    ret_val = AutomationTask.unused_items(FactoryBot.build(:user), Osm::Section.new(id: 456, type: :beavers))
     ret_val.should == [
       { type: AutomationTaskTestItemBeavers, has_permissions: true },
       { type: AutomationTaskTestItemBeaversCubs, has_permissions: false }
@@ -110,31 +110,31 @@ describe "Automation Task" do
 
   describe "Do Task method" do
     it "User not connected to OSM" do
-      user = FactoryGirl.build(:user)
-      task = FactoryGirl.build(:automation_task, user: user)
+      user = FactoryBot.build(:user)
+      task = FactoryBot.build(:automation_task, user: user)
       task.do_task.should == {success: false, errors: ["#{user.name} hasn't connected their account to OSM yet."]}
     end
 
     it "Doesn't have OSM permissions" do
-      user = FactoryGirl.build(:user_connected_to_osm)
-      task = FactoryGirl.build(:automation_task, user: user)
+      user = FactoryBot.build(:user_connected_to_osm)
+      task = FactoryBot.build(:automation_task, user: user)
       task.class.stub('has_permissions?'){ false }
       task.do_task.should == {success: false, errors: ["#{user.name} doesn't have the correct OSM permissions."]}
     end
 
     it "Calls perform_task method" do
-      user = FactoryGirl.build(:user_connected_to_osm)
-      task = FactoryGirl.build(:automation_task, user: user)
+      user = FactoryBot.build(:user_connected_to_osm)
+      task = FactoryBot.build(:automation_task, user: user)
       task.class.stub('has_permissions?'){ true }
       task.should_receive(:perform_task).with(user).exactly(1).times { {success: true} }
       task.do_task.should == {success: true}
     end
 
     it "With different user" do
-      user = FactoryGirl.build(:user_connected_to_osm)
-      task = FactoryGirl.build(:automation_task, user: user)
+      user = FactoryBot.build(:user_connected_to_osm)
+      task = FactoryBot.build(:automation_task, user: user)
       task.class.stub('has_permissions?'){ true }
-      different_user = FactoryGirl.build(:user_connected_to_osm)
+      different_user = FactoryBot.build(:user_connected_to_osm)
       task.should_receive(:perform_task).with(different_user).exactly(1).times { {success: true} }
       task.do_task(different_user).should == {success: true}
     end

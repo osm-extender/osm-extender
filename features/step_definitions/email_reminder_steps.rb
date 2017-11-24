@@ -9,7 +9,7 @@ Given /^"([^"]*)" has a reminder email for section (\d*) on "([^"]*)"$/ do |emai
     'Saturday' => 6,
   }[day]
   user = User.find_by_email_address(email_address)
-  er = EmailReminder.create :user => user, :send_on => day, :section_id => section_id.to_i
+  EmailReminder.create! :user => user, :send_on => day, :section_id => section_id.to_i
 end
 
 Given /^"([^"]*)" has shared her "([^"]*)" email reminder with "([^"]*)" and it is in the (.*) state$/ do |user, day, sharee, state|

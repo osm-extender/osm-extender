@@ -68,10 +68,12 @@ class EmailReminder < ActiveRecord::Base
   end
 
   def unused_items
-    Rails.application.eager_load! unless Rails.application.config.cache_classes  # cache_clases is off in dev and on in prod
-    items = Module.constants.map{ |i| i=eval(i.to_s) }
-    items.select!{ |i| !i.nil? && i.is_a?(Class) && i.superclass.eql?(EmailReminderItem) }
-    items.select!{ |i| not has_an_item_of_type?(i) }
+    items = [
+      EmailReminderItemAdvisedAbsence, EmailReminderItemBirthday, EmailReminderItemDueBadge,
+      EmailReminderItemEvent, EmailReminderItemNotepad, EmailReminderItemNotSeen,
+      EmailReminderItemProgramme,
+    ]
+    items.reject!{ |i| has_an_item_of_type?(i) }
     items.map!{ |i| {type: i, has_permissions: i.has_permissions?(user, section_id)} }
     items
   end

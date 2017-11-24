@@ -24,7 +24,7 @@ describe "Leadership automation task" do
       before :each do
         @section_id = 300
         @member_id = 400
-        @user = FactoryGirl.build(:user_connected_to_osm)
+        @user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskLeadership.new(user: @user, section_id: @section_id)
 
         Osm::Section.stub(:get){ Osm::Section.new(id: @Section_id, type: :cubs) }
@@ -228,7 +228,7 @@ describe "Leadership automation task" do
       before :each do
         @section_id = 300
         @member_id = 400
-        @user = FactoryGirl.build(:user_connected_to_osm)
+        @user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskLeadership.new(user: @user, section_id: @section_id)
 
         Osm::Section.stub(:get){ Osm::Section.new(id: @Section_id, type: :scouts) }
@@ -435,7 +435,7 @@ describe "Leadership automation task" do
         @member_id = 400
         @member = Osm::Member.new(id: @member_id, grouping_leader: 0, first_name: 'A', last_name: 'Member')
 
-        @user = FactoryGirl.build(:user_connected_to_osm)
+        @user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskLeadership.new(user: @user, section_id: @section_id)
 
         @core_badges = [
