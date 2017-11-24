@@ -83,7 +83,7 @@ end
 
 group :test do
   gem 'rspec-rails', '~> 3.1'
-  gem 'factory_girl', '~> 4.1'
+  gem 'factory_bot', '~> 4.8'
   gem 'cucumber-rails', '~> 1.3', require: false
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 2.0'

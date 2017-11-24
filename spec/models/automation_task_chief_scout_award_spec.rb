@@ -27,7 +27,7 @@ describe "Chief Scout's Award automation task" do
 
       it "{COUNT-OF-BADGES} of {BADGES-NEEDED}" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {achieved_action: 0}
 
@@ -55,7 +55,7 @@ describe "Chief Scout's Award automation task" do
 
       it "{COUNT-OF-BADGES}" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {achieved_action: 1}
 
@@ -83,7 +83,7 @@ describe "Chief Scout's Award automation task" do
 
       it "[YES]" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {achieved_action: 2}
 
@@ -119,7 +119,7 @@ describe "Chief Scout's Award automation task" do
 
       it "x{COUNT-OF-BADGES} of {BADGES-NEEDED}" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 0}
 
@@ -145,7 +145,7 @@ describe "Chief Scout's Award automation task" do
 
       it "x{COUNT-OF-BADGES}" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 1}
 
@@ -171,7 +171,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Progress bar" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 2}
 
@@ -197,7 +197,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Progress bar (zero progress)" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 2}
 
@@ -221,7 +221,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Nothing" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 3}
 
@@ -250,7 +250,7 @@ describe "Chief Scout's Award automation task" do
     describe "Doesn't update OSM when data is the same" do
       it "When achieved" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {achieved_action: 2}
 
@@ -278,7 +278,7 @@ describe "Chief Scout's Award automation task" do
 
       it "When not achieved" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 0}
 
@@ -309,7 +309,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Beavers" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 0}
 
@@ -335,7 +335,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Cubs" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 0}
 
@@ -361,7 +361,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Scouts" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
         task.configuration = {unachieved_action: 0}
 
@@ -390,7 +390,7 @@ describe "Chief Scout's Award automation task" do
     describe "Counts correct badges" do
 
       before :each do
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         @task = AutomationTaskChiefScoutAward.new(user: user, section_id: @section_id)
         @task.configuration = {unachieved_action: 3}
 
@@ -484,7 +484,7 @@ describe "Chief Scout's Award automation task" do
     describe "Errors" do
       it "Getting section" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
 
         Osm::Section.stub(:get){ nil }
@@ -493,7 +493,7 @@ describe "Chief Scout's Award automation task" do
 
       it "Getting badge" do
         section_id = 300
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
 
         Osm::Section.stub(:get){ Osm::Section.new }
@@ -504,7 +504,7 @@ describe "Chief Scout's Award automation task" do
       describe "Updating badge data" do
         it "Returned false" do
           section_id = 300
-          user = FactoryGirl.build(:user_connected_to_osm)
+          user = FactoryBot.build(:user_connected_to_osm)
           task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
           task.configuration = {unachieved_action: 2}
   
@@ -530,7 +530,7 @@ describe "Chief Scout's Award automation task" do
 
         it "Raised an Osm::Error" do
         section_id = 300
-          user = FactoryGirl.build(:user_connected_to_osm)
+          user = FactoryBot.build(:user_connected_to_osm)
           task = AutomationTaskChiefScoutAward.new(user: user, section_id: section_id)
           task.configuration = {unachieved_action: 2}
   

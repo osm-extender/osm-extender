@@ -28,7 +28,7 @@ describe "Birthday Badge automation task" do
     
     it "Works" do
       section_id = 300
-      user = FactoryGirl.build(:user_connected_to_osm)
+      user = FactoryBot.build(:user_connected_to_osm)
       task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
       task.configuration = {badge_6: 6, badge_7: 7, badge_8: 8, badge_9: 9, badge_10: 10}
 
@@ -104,7 +104,7 @@ describe "Birthday Badge automation task" do
 
     it "Handles no badge" do
       section_id = 300
-      user = FactoryGirl.build(:user_connected_to_osm)
+      user = FactoryBot.build(:user_connected_to_osm)
       task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
 
       Osm::Member.stub(:get_for_section).with(user.osm_api, section_id){ [
@@ -127,7 +127,7 @@ describe "Birthday Badge automation task" do
 
     describe "Errors" do
       it "Couldn't get members" do
-        user = FactoryGirl.build(:user_connected_to_osm)
+        user = FactoryBot.build(:user_connected_to_osm)
         task = AutomationTaskBirthdayBadge.new(user: user, section_id: 300)
         Osm::Member.stub(:get_for_section){ [] }
         task.send(:perform_task).should == {
@@ -140,7 +140,7 @@ describe "Birthday Badge automation task" do
       describe "Couldn't mark badge as due" do
         it "Returned false" do
           section_id = 300
-          user = FactoryGirl.build(:user_connected_to_osm)
+          user = FactoryBot.build(:user_connected_to_osm)
           task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
           task.configuration = {badge_6: 6, badge_7: 7, badge_8: 8, badge_9: 9, badge_10: 10}
     
@@ -164,7 +164,7 @@ describe "Birthday Badge automation task" do
 
         it "Raised an Osm::Error" do
           section_id = 300
-          user = FactoryGirl.build(:user_connected_to_osm)
+          user = FactoryBot.build(:user_connected_to_osm)
           task = AutomationTaskBirthdayBadge.new(user: user, section_id: section_id)
           task.configuration = {badge_6: 6, badge_7: 7, badge_8: 8, badge_9: 9, badge_10: 10}
     
