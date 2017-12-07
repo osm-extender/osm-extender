@@ -19,7 +19,7 @@ gem 'cancan', '~> 1.6'
 
 # Services used
 gem 'redis-rails', '~>4.0'          # Using redis as the cache store
-gem 'pg', '~>0.18', '<= 0.20'       # Use a postgresql database
+gem 'pg', '~>0.21'                  # Use a postgresql database
 gem 'mv-postgresql', '~> 2.2'       # Use migration_validations
 
 # Misc
@@ -32,7 +32,7 @@ gem 'premailer-rails', '~> 1.9'       # Easily generate HTML emails (also does p
   gem 'nokogiri', '~> 1.5', '>= 1.8.1' # Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.9.5'        # Makes lists of items orderable
-gem 'paper_trail', '~> 7.0'           # Track changes to (selected) models
+gem 'paper_trail', '~> 8.1'           # Track changes to (selected) models
 gem 'html5_validators', '~> 1.0'      # Client side validation
 gem 'date_time_attribute', '~> 0.1.0' # Allow splitting datetime attributes to a date field and a time field
 gem 'pry', '~> 0.9', require: false  # Nicer console to work in
@@ -57,7 +57,7 @@ gem 'jquery-ui-rails', '~> 5.0', '>= 5.0.5'
 gem 'jquery-tablesorter', '~> 1.23'
 gem 'sass-rails', '~> 5.0'
 gem 'coffee-rails', '~> 4.0'
-gem 'uglifier', '~> 3.0'
+gem 'uglifier', '~> 4.0'
 gem 'normalize-rails', '~> 4.1'
 gem 'js_cookie_rails', '~> 2.1'
 
@@ -90,9 +90,9 @@ group :test do
   gem 'database_cleaner', '~> 1.0'
   gem 'fakeweb', '~> 1.3'
   gem 'timecop', '~> 0.5'
-  gem 'simplecov', '~> 0.11'
   gem 'turn', '~> 0.9', require: false
   gem 'coveralls', '~> 0.8'
+  # gem 'simplecov', '~> 0.15'
 end
 
 group :development do
