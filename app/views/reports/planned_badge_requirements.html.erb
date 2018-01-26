@@ -60,12 +60,13 @@
   <h2>Badges Completed</h2>
   <p>
     The following badges will be completed if everyone turns up all the time.
-    The process of working this out is fairly dumb, it doesn't take account of:<ul>
-      <li>Badges you have to add columns to (e.g. Nights away, Hikes, Time on the water)
-      <li>Badges which require another badge to be completed (it will assume it'll be earnt even if the oter badge hasn't been earnt)
-    </ul>
     <%- unless current_section.subscription_at_least?(:silver) %><b>Activity badges have been excluded as you need at least a Silver subscription in OSM to use them.</b><%- end %>
   </p>
+  <b>The process of working this out is fairly dumb, it doesn't take account of:<ul>
+    <li>Badges you have to add columns to (e.g. Nights away, Hikes, Time on the water)</li>
+    <li>Badges which require another badge to be completed (it will assume it'll be earnt even if the oter badge hasn't been earnt)</li>
+    <li>Badges with multiple identical requirements</li>
+  </ul></b>
 
   <%- unless @earnt_badges.empty? %>
     <ul>
