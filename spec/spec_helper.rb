@@ -1,13 +1,12 @@
 # Generate test coverage report
-if Gem::Specification::find_all_by_name('simplecov').any?
-  require 'simplecov'
-  SimpleCov.coverage_dir(File.join('tmp', 'coverage'))
-  SimpleCov.command_name 'rspec'
-  SimpleCov.merge_timeout 1800 # Half an hour
+require 'coveralls'
+require 'simplecov'
+SimpleCov.command_name 'rspec'
+if ENV['TRAVIS']
+  Coveralls.wear_merged! 'rails'
+else
   SimpleCov.start 'rails'
-  require 'coveralls' and Coveralls.wear_merged!('rails') if ENV['TRAVIS']
 end
-
 
 
 ENV["RAILS_ENV"] ||= 'test'
@@ -19,11 +18,6 @@ require_relative 'support/tasks'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-
-# Cause an error if any spec causes a real web request
-# This should both speed up tests and ensure that our tests cover all remote requests
-FakeWeb.allow_net_connect = false
-FakeWeb.allow_net_connect = %r[^https://coveralls.io] # Allow coveralls to report coverage
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -49,6 +43,13 @@ RSpec.configure do |config|
   config.before(:each) do
     FakeWeb.clean_registry
     Timecop.return
+  end
+
+
+  config.before(:suite) do
+    # Cause an error if any spec causes a real web request
+    # This should both speed up tests and ensure that our tests cover all remote requests
+    FakeWeb.allow_net_connect = false
   end
 
 end

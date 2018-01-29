@@ -3,6 +3,8 @@ namespace :ci do
   desc "Run the Travis CI tests"
   task :travis do
     puts "Setting things up"
+    require 'coveralls'
+    require 'simplecov'
     Rake::Task['ci:travis:setup'].invoke
 
     puts "Checking that assets comiple"
@@ -13,6 +15,8 @@ namespace :ci do
 
     if ENV['TRAVIS']
       puts "Sending results to coveralls"
+      SimpleCov.coverage_dir(File.join('tmp', 'coverage'))
+      FakeWeb.allow_net_connect = true # Allow coveralls to report to coveralls.io
       Coveralls.push!
     end
   end

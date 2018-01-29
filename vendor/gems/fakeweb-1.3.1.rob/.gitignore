@@ -1,0 +1,10 @@
+/doc
+/rdoc
+/html
+/coverage
+/log
+/pkg
+/.bundle
+/.idea
+*.rbc
+Gemfile.lock

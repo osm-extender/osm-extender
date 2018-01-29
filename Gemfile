@@ -88,11 +88,11 @@ group :test do
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 2.0'
   gem 'database_cleaner', '~> 1.0'
-  gem 'fakeweb', '~> 1.3'
+  # gem 'fakeweb', '~> 1.3', '> 1.3.0'
+  gem 'fakeweb', path: File.join(File.dirname(__FILE__), '/vendor/gems/fakeweb-1.3.1.rob')
   gem 'timecop', '~> 0.5'
   gem 'turn', '~> 0.9', require: false
-  gem 'coveralls', '~> 0.8'
-  # gem 'simplecov', '~> 0.15'
+  gem 'coveralls', '~> 0.8', require: false
 end
 
 group :development do
