@@ -29,7 +29,7 @@ gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-lo
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.9'       # Easily generate HTML emails (also does plain text counterpart)
-  gem 'nokogiri', '~> 1.5', '>= 1.8.1' # Adapter for premailer
+  gem 'nokogiri', '~> 1.5', '>= 1.8.2' # Adapter for premailer
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.9.5'        # Makes lists of items orderable
 gem 'paper_trail', '~> 8.1'           # Track changes to (selected) models
@@ -88,11 +88,11 @@ group :test do
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 2.0'
   gem 'database_cleaner', '~> 1.0'
-  gem 'fakeweb', '~> 1.3'
+  # gem 'fakeweb', '~> 1.3', '> 1.3.0'
+  gem 'fakeweb', path: File.join(File.dirname(__FILE__), '/vendor/gems/fakeweb-1.3.1.rob')
   gem 'timecop', '~> 0.5'
   gem 'turn', '~> 0.9', require: false
-  gem 'coveralls', '~> 0.8'
-  # gem 'simplecov', '~> 0.15'
+  gem 'coveralls', '~> 0.8', require: false
 end
 
 group :development do

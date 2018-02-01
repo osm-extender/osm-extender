@@ -49,6 +49,9 @@ OSMExtender::Application.configure do
     :host => 'localhost',
   }
 
+  # Whether to dump (or not) the schema after performing migrations
+  config.active_record.dump_schema_after_migration = false
+
 end
 
 

@@ -62,6 +62,9 @@ OSMExtender::Application.configure do
     :exception__to => 'exceptions@example.com',
   }
 
+  # Whether to dump (or not) the schema after performing migrations
+  config.active_record.dump_schema_after_migration = true
+
 end
 
 ActionController::Parameters.action_on_unpermitted_parameters = :raise
