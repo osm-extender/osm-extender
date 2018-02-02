@@ -6,8 +6,10 @@ OSMExtender::Application.routes.draw do
   get 'help' => 'static#help', :as => 'help'
 
   get 'signin' => 'sessions#new', :as => 'signin'
+  post 'signin' => 'sessions#create'
   get 'signout' => 'sessions#destroy', :as => 'signout'
   get 'signup' => 'users#new', :as => 'signup'
+  get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
 
   get 'contact_us' => 'contact_us#form', :as => 'contact_us'
   post 'contact_us' => 'contact_us#send_form', :as => 'send_contact_us'
@@ -42,9 +44,6 @@ OSMExtender::Application.routes.draw do
   get 'users/:id/resend_activation' => 'users#resend_activation', :as => 'resend_activation_user'
   post 'users/:id/unlock' => 'users#unlock', :as => 'unlock_user'
   post 'users/:id/become' => 'users#become', :as => 'become_user'
-
-  resources :sessions
-  get 'session/change_section' => 'sessions#change_section', :as => 'change_section'
 
   get 'programme_review/balanced' => 'programme_review#balanced', :as => 'programme_review_balanced'
   get 'programme_review/balanced_data' => 'programme_review#balanced_data', :as => 'programme_review_balanced_data'
