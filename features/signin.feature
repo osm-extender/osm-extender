@@ -64,7 +64,7 @@ Feature: Sign in
     Scenario: Signin (bad password)
         When I signin as "alice@example.com" with password "wrong"
         Then I should see "Email address or password was invalid."
-	And I should be on the sessions page
+	And I should be on the signin page
 	And I should have 1 usage log
 	And I should have the following usage log
 	    | user              | controller         | action | result             |
@@ -73,7 +73,7 @@ Feature: Sign in
     Scenario: Signin (bad email address)
         When I signin as "wr@ng.com" with password "P@55word"
         Then I should see "Email address or password was invalid."
-	And I should be on the sessions page
+	And I should be on the signin page
 	And I should have 0 usage log records
 
     Scenario: Signin (not activated)
@@ -83,7 +83,7 @@ Feature: Sign in
 	    | alice@example.com |
         When I signin as "alice@example.com" with password "P@55word"
         Then I should see "You have not yet activated your account."
-	And I should be on the sessions page
+	And I should be on the signin page
 	And I should have 1 usage log
 	And I should have the following usage log
 	    | user              | controller         | action | result        |
