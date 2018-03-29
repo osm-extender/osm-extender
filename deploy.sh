@@ -1,16 +1,19 @@
 #!/bin/bash
 
 # Do rails stuff
+echo -e "\n*\n* Rails Stuff\n*\n"
 bundle install
 rake db:migrate
 rake assets:precompile
 
 # Reload unicorn
+echo -e "\n*\n* Reload Unicorn\n*\n"
 if [ -e tmp/pids/unicorn.pid ]; then
 	kill -s USR2 `cat tmp/pids/unicorn.pid`
 fi
 
 # Notify rollbar
+echo -e "\n*\n* Notify Rollbar\n*\n"
 curl https://api.rollbar.com/api/1/deploy/ \
   -F access_token=$ROLLBAR_TOKEN_POST_SERVER_ITEM \
   -F environment=$RAILS_ENV \
