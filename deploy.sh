@@ -9,7 +9,7 @@ rake assets:precompile
 # Reload unicorn
 echo -e "\n*\n* Reload Unicorn\n*\n"
 if [ -e tmp/pids/unicorn.pid ]; then
-	kill -s USR2 `cat tmp/pids/unicorn.pid`
+	kill -s HUP `cat tmp/pids/unicorn.pid`
 fi
 
 # Notify rollbar
