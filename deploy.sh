@@ -2,8 +2,11 @@
 
 # Do rails stuff
 echo -e "\n*\n* Rails Stuff\n*\n"
+echo -e "\n** bundle install **"
 bundle install
+echo -e "\n** db:migrate **"
 rake db:migrate
+echo -e "\n** assets:precompile **"
 rake assets:precompile
 
 # Reload unicorn
@@ -20,3 +23,5 @@ curl https://api.rollbar.com/api/1/deploy/ \
   -F revision=`git rev-parse --verify HEAD` \
   -F local_username=`whoami` \
   -F rollbar_username=$ROLLBAR_USERNAME
+
+echo
