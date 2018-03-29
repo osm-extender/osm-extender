@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    @user.assign_attributes(params[:user].permit(:name, :email_address, :can_administer_users, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
+    @user.assign_attributes(params[:user].permit(:name, :email_address, :can_administer_users, :can_view_statistics, :can_view_status, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
 
     if @user.invalid?
       render action: :edit, status: 422
