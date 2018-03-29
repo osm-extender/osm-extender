@@ -4,7 +4,7 @@
 echo -e "\n*\n* Rails Stuff\n*\n"
 echo -e "\n** bundle install **"
 bundle install
-echo -e "\n** db:migrate **""
+echo -e "\n** db:migrate **"
 rake db:migrate
 echo -e "\n** assets:precompile **"
 rake assets:precompile
