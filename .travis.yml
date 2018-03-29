@@ -1,6 +1,7 @@
 language: ruby
 rvm:
-- 2.4.3
+  - 2.4.4
+  - 2.5.1
 branches:
   only:
   - master
@@ -9,17 +10,19 @@ branches:
 script: bundle exec rake ci:travis
 env:
   global:
-  - secret_key_base="abcd1234"
-  - osm_api_name="Test API"
-  - osm_api_id="12"
-  - osm_api_token="1234567890"
-  - recaptcha_public_key="11223344556677889900"
-  - recaptcha_private_key="00998877665544332211"
+    - secret_key_base="abcd1234"
+    - osm_api_name="Test API"
+    - osm_api_id="12"
+    - osm_api_token="1234567890"
+    - recaptcha_public_key="11223344556677889900"
+    - recaptcha_private_key="00998877665544332211"
 services:
-- postgresql
+  - postgresql
+before_install:
+  - gem install bundler
 before_script:
-- psql -c 'create database travis_ci_test;' -U postgres
-- cp config/database.yml.travis config/database.yml
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - cp config/database.yml.travis config/database.yml
 notifications:
   slack:
     secure: miFXHnyhvU8v2LVJqpYf2O5Ruh7YlCwlpGn6ZJoOpNA+/ALVMD6RzeoqClFzhZ456rBPpu9x8Px0m40mym8kIhBYeDI4ltKMxwtjElKZoc1Sk6JMH5Q2MA7jB3gjN9F9u28zYwEWxG5VUEWScXNCobZqNjjRPBfL6fH3yZi6u+E=

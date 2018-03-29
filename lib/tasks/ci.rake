@@ -24,11 +24,6 @@ namespace :ci do
   namespace :travis do
     task :setup do
       # Setup environment
-      puts "Copy database.yml.example to database.yml"
-      database_yml = File.join(Rails.root, 'config', 'database.yml')
-      database_yml_example = File.join(Rails.root, 'config', 'database.yml.example')
-      FileUtils.copy(database_yml_example, database_yml) unless File.exists?(database_yml)
-
       puts "Setting up database"
       ['db:setup', 'db:migrate', 'db:seed', 'db:fixtures:load'].each do |task|
         Rake::Task[task].reenable

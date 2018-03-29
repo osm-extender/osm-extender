@@ -1,5 +1,8 @@
 <%= page_title 'Status' %>
 
+<h2>OSMX Version</h2>
+<p>Running commit <%= @status.commit %></p>
+
 <h2>Sessions</h2>
 <%- sessions = @status.sessions %>
 <p>There are a total of <%= number_with_delimiter(sessions[:totals][:all]) %> <%= "session".pluralize(sessions[:totals][:all]) %>.</p>

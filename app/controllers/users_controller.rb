@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   forbid_login_for = [:new, :create, :activate_account, :unlock_account]
   skip_before_action :require_login, only: forbid_login_for
   before_action :require_not_login, only: forbid_login_for
-  before_action only: [:new, :create] { @signup_code = Figaro.env.signup_code }
+  before_action(only: [:new, :create]) { @signup_code = Figaro.env.signup_code }
   load_and_authorize_resource except: [:new, :create] + forbid_login_for
   authorize_resource only: [:new, :create]
   helper_method :sort_column, :sort_direction
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    @user.assign_attributes(params[:user].permit(:name, :email_address, :can_administer_users, :can_view_statistics, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
+    @user.assign_attributes(params[:user].permit(:name, :email_address, :can_administer_users, :can_view_statistics, :can_view_status, :can_administer_announcements, :can_administer_delayed_job, :can_become_other_user))
 
     if @user.invalid?
       render action: :edit, status: 422

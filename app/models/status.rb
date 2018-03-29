@@ -29,6 +29,13 @@ class Status
     }
   end
 
+  def commit
+    begin
+      `git --no-pager show --no-patch --format='%H - %s'`.chomp
+    rescue
+      "UNKNOWN"
+    end
+  end
 
   def database_size
     return @database_size unless @database_size.nil?
