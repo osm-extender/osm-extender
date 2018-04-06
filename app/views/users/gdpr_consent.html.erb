@@ -1,0 +1,18 @@
+<%= page_title 'GDPR Consent' %>
+
+<p>
+  Hi <%= current_user.name %>, as part of complying with the GDPR I'm getting the
+  informed and positive consent of all OSM Extender users. Please read the
+  <%= link_to 'Privacy Policy', legal_privacy_policy_path %>, check the box
+  and click the button to continue. You'll only need to do this once.
+</p>
+
+<%= form_tag do %>
+
+  <div class="field">
+    <%= check_box_tag :gdpr_consent %>
+    <%= label_tag :gdpr_consent, "I consent to my information being processed inline with the #{link_to 'Privacy Policy', legal_privacy_policy_path, target: '_blank'}.".html_safe %>
+  </div>
+            
+  <div class="actions"><%= submit_tag 'Give consent' %></div>
+<% end %>

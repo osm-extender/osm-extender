@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   forbid_login_for = [:new, :create, :activate_account, :unlock_account]
   skip_before_action :require_login, only: forbid_login_for
+  skip_before_action :require_gdpr_consent, only: [:gdpr_consent, :gdpr_consent_given] + forbid_login_for
   before_action :require_not_login, only: forbid_login_for
   before_action(only: [:new, :create]) { @signup_code = Figaro.env.signup_code }
   load_and_authorize_resource except: [:new, :create] + forbid_login_for
@@ -37,7 +38,8 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new(params[:user].permit(:name, :email_address, :password, :password_confirmation))
+    @user = User.new(params[:user].permit(:name, :email_address, :password, :password_confirmation, :gdpr_consent))
+    @user.gdpr_consent ||= false
 
     if @signup_code
       if params[:signup_code].blank?
@@ -161,6 +163,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def gdpr_consent_given
+    if params[:gdpr_consent].eql?('1')
+      if current_user.update gdpr_consent_at: Time.now.utc
+        redirect_to session[:return_to].nil? ? my_page_path : session.delete(:return_to), :notice => 'Thank you, your consent has been recorded.'
+      else
+        redirect_to gdpr_consent_path, error: 'Sorry something went wrong, please retry.'
+      end
+    else
+      flash[:error] = 'You must check the box to give consent.'
+      render action: :gdpr_consent, status: 422
+    end
+  end
 
   private  
   def sort_column

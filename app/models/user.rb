@@ -31,6 +31,9 @@ class User < ActiveRecord::Base
   validates_numericality_of :custom_row_height, :only_integer=>true, :greater_than_or_equal_to=>0
   validates_numericality_of :custom_text_size, :only_integer=>true, :greater_than_or_equal_to=>0
 
+  validates_acceptance_of :gdpr_consent, on: :create
+
+  before_save :set_gdpr_consent_timestamp, if: Proc.new { |r| r.gdpr_consent.eql?('1') }
 
   def change_password!(new_password, new_password_confirmation=new_password)
     self.password = new_password
@@ -207,6 +210,11 @@ class User < ActiveRecord::Base
       end
     end
     return true
+  end
+
+  def set_gdpr_consent_timestamp
+    return unless gdpr_consent.eql?('1')
+    write_attribute :gdpr_consent_at, Time.now.utc
   end
 
   public

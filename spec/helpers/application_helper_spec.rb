@@ -219,20 +219,28 @@ describe ApplicationHelper do
   describe '#pos_neg' do
     context 'where true is good' do
       it 'and value is true' do
-        expect(helper.pos_neg(true, true, 'text')).to eq '<span style="color: green;">text</span>'
+        expect(helper.pos_neg(true, 'text', true)).to eq '<span style="color: green;">text</span>'
       end
       it 'and value is false' do
-        expect(helper.pos_neg(false, true, 'text')).to eq '<span style="color: red;">text</span>'
+        expect(helper.pos_neg(false, 'text', true)).to eq '<span style="color: red;">text</span>'
       end
     end # context where true is good
     context 'where false is good' do
       it 'and value is true' do
-        expect(helper.pos_neg(true, false, 'text')).to eq '<span style="color: red;">text</span>'
+        expect(helper.pos_neg(true, 'text', false)).to eq '<span style="color: red;">text</span>'
       end
       it 'and value is false' do
-        expect(helper.pos_neg(false, false, 'text')).to eq '<span style="color: green;">text</span>'
+        expect(helper.pos_neg(false, 'text', false)).to eq '<span style="color: green;">text</span>'
       end
     end # context where false is good
+    context 'with a different bad text' do
+      it 'value is good' do
+        expect(helper.pos_neg(true, 'good', true, 'bad')).to eq '<span style="color: green;">good</span>'
+      end
+      it 'value is bad' do
+        expect(helper.pos_neg(false, 'good', true, 'bad')).to eq '<span style="color: red;">bad</span>'
+      end
+    end # context with a different bad text
   end # describe #pos_neg
 
 

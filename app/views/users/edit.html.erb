@@ -67,6 +67,20 @@
     <%= f.check_box :can_become_other_user %>
     <%= f.label :can_become_other_user %>
   </div>
+
+  <h2>Timestamps</h2>
+  <div class="field">
+    Created at:<br/>
+    <%= @user.created_at %>
+  </div>
+   <div class="field">
+     Updated at:<br/>
+     <%= @user.updated_at %>
+  </div>
+  <div class="field">
+    GDPR Consent at:<br/>
+    <%= pos_neg @user.gdpr_consent_at?, @user.gdpr_consent_at, true, 'No!' %>
+  </div> 
   
   <div class="actions"><%= f.submit 'Update' %></div>
 <% end %>

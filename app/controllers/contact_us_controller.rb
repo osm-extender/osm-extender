@@ -1,5 +1,6 @@
 class ContactUsController < ApplicationController
   skip_before_action :require_login
+  skip_before_action :require_gdpr_consent
 
   def form
     @contact = ContactUs.new
