@@ -1,7 +1,7 @@
 <%= page_title 'Status' %>
 
 <h2>OSMX Version</h2>
-<p>Running commit <%= @status.commit %></p>
+<p>Running commit <%= link_to @status.commit[:id], "https://github.com/robertgauld/OSMExtender/commit/#{@status.commit[:id]}" %> - <%= @status.commit[:title] %></p>
 
 <h2>Sessions</h2>
 <%- sessions = @status.sessions %>
