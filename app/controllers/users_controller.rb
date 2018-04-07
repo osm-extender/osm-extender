@@ -13,7 +13,8 @@ class UsersController < ApplicationController
               search(:name, params[:search_name]).
               search(:email_address, params[:search_email]).
               order(sort_column + " " + sort_direction).
-              paginate(:per_page => 10, :page => params[:page])
+              paginate(:per_page => 10, :page => params[:page]).
+              includes(:automation_tasks, :email_reminders, :email_lists)
   end
 
   def edit
