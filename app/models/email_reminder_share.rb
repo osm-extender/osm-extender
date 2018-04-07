@@ -1,5 +1,5 @@
 class EmailReminderShare < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :on => [:create, :update]
 
   belongs_to :reminder, :class_name => 'EmailReminder'
 
@@ -19,6 +19,7 @@ class EmailReminderShare < ActiveRecord::Base
   after_initialize :provide_defaults
   before_save :set_was_new
   after_save :email_sharee
+  before_destroy { versions.destroy_all }
 
 
   def subscribed?

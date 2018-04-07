@@ -13,7 +13,7 @@
 %p Your data is being processed under the lawful basis of consent, this means that you have the right to:
 %ul
   %li Informed - You are currently reading the privacy policy which addresses this.
-  %li Erasure - If you would like your data erased request this by signing in then using the #{link_to 'contact form', contact_us_path}.
+  %li Erasure - If you would like your data erased then sign in, go to "#{ link_to "My account", my_account_path}" then click "#{link_to "Delete account", confirm_delete_my_account_path}" and follow the instructions. Please note that this deletes your data from the database and after a few months from all backups, if you require a more immediate/thorough erasure then please signin and use the #{link_to 'contact form', contact_us_path}.
   %li Access and Data Portability - If you would like a copy of your data signin and use the #{link_to 'contact form', contact_us_path}.
   %li Rectification - If you would like your data corrected then please signin in and goto your page, if you can't find where to correct the wrong information then use the #{link_to 'contact form', contact_us_path}.
   %li Lodge a complaint with the Information Commissioner's Office - #{link_to 'https://ico.org.uk', 'https://ico.org.uk'}.
@@ -61,7 +61,8 @@
 
 %h2 Data Retention
 %ul
-  %li Your user data is retained in a database for upto 3 months after removing your account, this allows me to retore it should you require.
+  %li Upon deleting your account all your data is deleted from the database.
+  %li Upon deleting any of your data (e.g. an email reminder) it is purged from the database after 3 months, this allows for recovery in the event of accidental deletion.
   %li Your data from OSM is retained in a cache on the server for upto 10 minutes.
   %li Web server logs are retained on the server for upto 1 month.
   %li Backups of the servers (which include the database and logs) are retained for upto six months.

@@ -11,7 +11,7 @@
 #   * human_configuration - to return a string containing a user friendly version of the configuration (e.g. "From 1 week ago to 3 weeks time")
 
 class EmailReminderItem < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :on => [:create, :update]
 
   belongs_to :email_reminder
 
@@ -23,6 +23,8 @@ class EmailReminderItem < ActiveRecord::Base
   validates_numericality_of :position, :only_integer=>true, :greater_than_or_equal_to=>0
 
   validate :only_one_of_each_type
+
+  before_destroy { versions.destroy_all }
 
   acts_as_list
 
