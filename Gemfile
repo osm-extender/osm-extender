@@ -109,3 +109,5 @@ gem 'rollbar', '~> 2.15'
 # gem 'capistrano'
 
 gem 'haml-rails', '~> 1.0'
+
+gem 'tty-prompt', '~> 0.16.0', require: false
