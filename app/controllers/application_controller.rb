@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery :with => :exception
   before_action :require_login
+  before_action :require_gdpr_consent
   before_action :set_paper_trail_whodunnit
   add_flash_types :information, :error, :warning, :notice, :instruction
   helper_method :current_section, :current_announcements, :has_osm_permission?, :user_has_osm_permission?,
@@ -84,6 +85,17 @@ class ApplicationController < ActionController::Base
     unless current_user.connected_to_osm?
       flash[:instruction] = 'You must connect to your OSM account first.'
       redirect_to(current_user ? connect_to_osm_path : signin_path)
+      return false
+    end
+    return true
+  end
+
+
+  # Filter to require the user has given GDPR consent
+  def require_gdpr_consent
+    unless current_user.gdpr_consent_at?
+      session[:return_to] = request.env['PATH_INFO']
+      redirect_to gdpr_consent_path
       return false
     end
     return true

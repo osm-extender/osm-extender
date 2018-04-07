@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_action :require_login, :only => [:new, :create, :destroy]
+  skip_before_action :require_gdpr_consent, :only => [:new, :create, :destroy]
 
   def new
   end

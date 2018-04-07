@@ -18,6 +18,7 @@ class Ability
 
     else
       # Things only authenticated users can do
+      can [:gdpr_consent, :gdpr_consent_given], User
       can [:administer, :preview, :sample, :send_email, :re_order], EmailReminder do |reminder|
         reminder.user == user
       end

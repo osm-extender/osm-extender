@@ -1,67 +1,76 @@
 = page_title 'Privacy Policy'
 
-
 %h2 Key details
-%p This website privacy policy describes how [company name] protects and makes use of the information you give the company when you use this website.
+%p This website privacy policy describes how Robert Gauld protects and makes use of the information you give when you use this website.
 %p If you are asked to provide information when using this website, it will only be used in the ways described in this privacy policy.
-%p This policy is updated from time to time. The latest version is published on this page.
-%p This website privacy policy was updated on: [date]
-%p If you have any questions about this policy, please email [email address] or write to: [postal address].
-
-
-%h2 Introduction
-%p We gather and use certain information about individuals in order to provide products and services and to enable certain functions on this website. We also collect information to better understand how visitors use this website and to present timely, relevant information to them.
+%p
+  This policy is updated from time to time. The latest version is published on this page.
+  This website privacy policy was updated on 7th April 2018.
+%p If you have any questions about this policy, please use the #{link_to('contact form', contact_us_path).html_safe}.
+%p I gather and use certain information about individuals in order to provide products and services and to enable certain functions on this website. I also collect information to better understand how visitors use this website and to present timely, relevant information to them.
+%p I also process information about other individuals on your behalf and at your request, you remain controller of this information.
+%p I do not use automated decision making or profiling.
+%p Your data is being processed under the lawful basis of consent, this means that you have the right to:
+%ul
+  %li Informed - You are currently reading the privacy policy which addresses this.
+  %li Erasure - If you would like your data erased then sign in, go to "#{ link_to "My account", my_account_path}" then click "#{link_to "Delete account", confirm_delete_my_account_path}" and follow the instructions. Please note that this deletes your data from the database and after a few months from all backups, if you require a more immediate/thorough erasure then please signin and use the #{link_to 'contact form', contact_us_path}.
+  %li Access and Data Portability - If you would like a copy of your data signin and use the #{link_to 'contact form', contact_us_path}.
+  %li Rectification - If you would like your data corrected then please signin in and goto your page, if you can't find where to correct the wrong information then use the #{link_to 'contact form', contact_us_path}.
+  %li Lodge a complaint with the Information Commissioner's Office - #{link_to 'https://ico.org.uk', 'https://ico.org.uk'}.
 
 
 %h2 What data is gathered
-%p We may collect the following information:
+%p I may collect the following information:
 %ul
-  %li Name and job title
-  %li Contact information including email address
-  %li Demographic information, such as postcode, preferences and interests
+  %li Name and Contact information including email address
   %li Website usage data
   %li Other information relevant to client enquiries
   %li Other information pertaining to special offers and surveys
-
+%p I also collect the following information as a result of how technology works:
+%ul
+  %li Your IP address - this is sent by your computer to ours so that it can respond with the requested information. This is stored in log files to enable the diagnosis and fixing of issues.
+  %li Details of your web browser - this is disgarded by the web server after servicing your request.
+  %li
+    The previous page you were on if you followed a link - this is only used to:
+    %ul
+      %li Send you back to the page you were on after signing in or performing any other action which interupts your normal use of the website..
+      %li Track which sites refer people to this one.
 
 %h2 How the data is used
-%p Collecting this data helps us understand what you are looking from the company, enabling us to deliver improved products and services. Specifically, we may use data:
+%p Collecting this data helps me understand what you are looking from the company, enabling me to deliver improved products and services. Specifically, I may use data:
 %ul
   %li For our own internal records.
-  %li To improve the products and services we provide.
-  %li To contact you in response to a specific enquiry.
+  %li To improve the products and services I provide.
+  %li To contact you in response to a specific enquiry or issue.
   %li To customise the website for you.
-  %li To send you promotional emails about products, services, offers and other things we think might be relevant to you.
-  %li To send you promotional mailings or to call you about products, services, offers and other things we think might be relevant to you.
-  %li To contact you via email, telephone or mail for market research reasons. 
 
 
 %h2 Cookies
-%p See our seperate #{link_to 'Cookie Policy', legal_cookie_policy_path }.
+%p See the seperate #{link_to 'Cookie Policy', legal_cookie_policy_path }.
 
 
 %h2 Controlling information about you
-%p When you fill in a form or provide your details on our website, you will see one or more tick boxes allowing you to:
-%ul
-  %li Opt-in to receive marketing communications from us by email, telephone, text message or post.
-  %li Opt-in to receive marketing communications from our third-party partners by email, telephone, text message or post.
-%p If you have agreed that we can use your information for marketing purposes, you can change your mind easily, via one of these methods:
-%ul
-  %li Sign in to our website and change your opt-in settings.
-  %li Send an email to [email address].
-  %li Write to us at: [postal address].
-%p We will never lease, distribute or sell your personal information to third parties unless we have your permission or the law requires us to.
-%p Any personal information we hold about you is stored and processed under our data protection policy, in line with the Data Protection Act 1998.
+%p I will never lease, distribute or sell your personal information to third parties unless I have your permission or the law requires me to.
+%p Any personal information I hold about you is stored and processed under our data protection policy, in line with the Data Protection Act and General Data Protection Regulations.
 
 
 %h2 Security
-%p We will always hold your information securely.
-%p To prevent unauthorised disclosure or access to your information, we have implemented strong physical and electronic security safeguards.
-%p We also follow stringent procedures to ensure we work with all personal data in line with the Data Protection Act 1998.
+%p I will always hold your information securely.
+%p To prevent unauthorised disclosure or access to your information, I have implemented strong physical and electronic security safeguards.
+%p I also follow stringent procedures to ensure I work with all personal data in line with the Data Protection Act 1998.
+
+%h2 Data Retention
+%ul
+  %li Upon deleting your account all your data is deleted from the database.
+  %li Upon deleting any of your data (e.g. an email reminder) it is purged from the database after 3 months, this allows for recovery in the event of accidental deletion.
+  %li Your data from OSM is retained in a cache on the server for upto 10 minutes.
+  %li Web server logs are retained on the server for upto 1 month.
+  %li Backups of the servers (which include the database and logs) are retained for upto six months.
+  %li Statistics that you contribute to (such as total user accounts on a date or total number of website visitors during a given hour) are retained indefinatly.
 
 
 %h2 Links from the site
-%p The website may contain links to other websites. Please note that we have no control of websites outside the [domain name] domain. If you provide information to a website to which we link, we are not responsible for its protection and privacy. Always be wary when submitting data to websites. Read the site’s data protection and privacy policies fully.
+%p The website may contain links to other websites. Please note that I have no control of websites outside the [domain name] domain. If you provide information to a website to which I link, I am not responsible for its protection and privacy. Always be wary when submitting data to websites. Read the site’s data protection and privacy policies fully.
 
 
 %h2 Third parties
@@ -73,7 +82,7 @@
   The information generated by the cookie about your use of the website will be transmitted to and stored by Google on servers in the United States.
   Google will use this information for the purpose of evaluating your use of the website, compiling reports on website activity for website operators and providing other services relating to website activity and internet usage.
   You may refuse the use of cookies by selecting the appropriate settings on your browser, however please note that if you do this you may not be able to use the full functionality of this website. By using this website, you consent to the processing of data about you by Google in the manner and for the purposes set out above.
-  You can also prevent Google from collecting information (including your IP address) via cookies and processing this information by downloading this browser plugin and installing it:
+  You can also prevent Google from collecting information (including your IP address) via cookies and processing this information by downloading this browser plugin and installing it
   = link_to 'https://tools.google.com/dlpage/gaoptout', 'https://tools.google.com/dlpage/gaoptout'
 
 %h3 Google recaptcha
@@ -82,6 +91,12 @@
   This plugin checks if you are a person in order to prevent certain website functions from being (ab)used by spam bots (particularly comments).
   This plugin query includes the sending of the IP address and possibly other data required by Google for the Google reCAPTCHA service.
   On behalf of the operator of this website, Google will use this information to evaluate your use of this service.
-  For more information about Google's privacy policy, please visit:
-  = link_to 'https://www.google.com/intl/de/policies/privacy/', 'https://www.google.com/intl/de/policies/privacy/'
+  For more information about Google's privacy policy, please visit
+  = link_to 'https://www.google.com/intl/de/policies/privacy', 'https://www.google.com/intl/de/policies/privacy'
   By using the reCAPTCHA service, you consent to the processing of data about you by Google in the manner and for the purposes set out above.
+
+%h3 Rollbar
+%p
+  Rollbar is a service which allows me to track the errors which occur on the website to make debugging and fixing issues easier. Whenever you see a "We're sorry, but something went wrong" page the web server sends information about what went wrong to rollbar for me. Any sensitive information such as passwords is redacted. The information sent to rollbar is your name (if you are signed in), which browser you used, which operating system you used and the IP address you came from.
+  For more information on Rollbar's privacy policy please visit
+  = link_to 'https://rollbar.com/privacy', 'https://rollbar.com/privacy'

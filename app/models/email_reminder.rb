@@ -1,5 +1,5 @@
 class EmailReminder < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :on => [:create, :update]
 
   belongs_to :user
   has_many :items, -> { order :position }, class_name: EmailReminderItem, dependent: :destroy, inverse_of: :email_reminder
@@ -14,7 +14,9 @@ class EmailReminder < ActiveRecord::Base
   validates_inclusion_of :send_on, :in => 0..6
 
   validates_presence_of :section_name
+
   before_validation :set_section_name
+  before_destroy { versions.destroy_all }
 
 
   def send_email(options={})

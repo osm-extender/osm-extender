@@ -108,3 +108,8 @@ Then /^"([^"]*)" should have a new activation deadline$/ do |email|
   should_expire_at = Time.now.utc + User.sorcery_config.activation_token_expiration_period
   expires_at.to_i.should == should_expire_at.to_i
 end
+
+Then /^"([^"]*)" should( not)? have granted GDPR consent$/ do |email, negate|
+    user = User.find_by_email_address(email)
+    user.gdpr_consent_at.nil?.should == (negate ? true : false)
+end

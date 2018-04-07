@@ -1,5 +1,5 @@
 class EmailList < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :on => [:create, :update]
 
   belongs_to :user
 
@@ -22,6 +22,7 @@ class EmailList < ActiveRecord::Base
   validate :at_least_one_contact
 
   before_save :set_hash_of_addresses
+  before_destroy { versions.destroy_all }
 
 
   def get_list

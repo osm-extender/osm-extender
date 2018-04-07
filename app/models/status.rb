@@ -1,4 +1,5 @@
 class Status
+  @@commit ||= `git --no-pager show --no-patch --format='%H - %s'`.chomp
 
   def unicorn_workers
     return @unicorn_workers unless @unicorn_workers.nil?
@@ -30,11 +31,11 @@ class Status
   end
 
   def commit
-    begin
-      `git --no-pager show --no-patch --format='%H - %s'`.chomp
-    rescue
-      "UNKNOWN"
-    end
+    details = @@commit.split(' - ', 2)
+    {
+      id: details[0],
+      title: details[1]
+    }
   end
 
   def database_size

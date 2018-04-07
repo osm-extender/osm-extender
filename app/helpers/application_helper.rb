@@ -30,11 +30,11 @@ module ApplicationHelper
   # @param positive_value (optional, default true) the value to be considered positive (and displayed in green)
   # @param text the text to display
   # @returns an HTML safe string
-  def pos_neg(value, positive_value=true, text)
+  def pos_neg(value, text, positive_value=true, alt_neg_text=nil)
     if positive_value == value
       return "<span style=\"color: green;\">#{text}</span>".html_safe
     else
-      return "<span style=\"color: red;\">#{text}</span>".html_safe
+      return "<span style=\"color: red;\">#{alt_neg_text || text}</span>".html_safe
     end
   end
 

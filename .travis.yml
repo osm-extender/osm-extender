@@ -7,7 +7,8 @@ branches:
   - master
   - staging
   - "/gh(?:\\d)+(?:-.+)?/"
-script: bundle exec rake ci:travis
+services:
+  - postgresql
 env:
   global:
     - secret_key_base="abcd1234"
@@ -16,13 +17,21 @@ env:
     - osm_api_token="1234567890"
     - recaptcha_public_key="11223344556677889900"
     - recaptcha_private_key="00998877665544332211"
-services:
-  - postgresql
 before_install:
   - gem install bundler
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.yml.travis config/database.yml
+  - bundle exec rake db:create
+  - bundle exec rake db:migrate
+  - bundle exec rake db:seed
+  - bundle exec rake db:fixtures:load
+script:
+  - bundle exec rake assets:precompile
+  - bundle exec rspec
+  - bundle exec cucumber
+after_script:
+  - bundle exec rails runner 'require "coveralls"; FakeWeb.allow_net_connect = true; Coveralls.push!'
 notifications:
   slack:
     secure: miFXHnyhvU8v2LVJqpYf2O5Ruh7YlCwlpGn6ZJoOpNA+/ALVMD6RzeoqClFzhZ456rBPpu9x8Px0m40mym8kIhBYeDI4ltKMxwtjElKZoc1Sk6JMH5Q2MA7jB3gjN9F9u28zYwEWxG5VUEWScXNCobZqNjjRPBfL6fH3yZi6u+E=

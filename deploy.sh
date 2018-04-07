@@ -2,18 +2,23 @@
 
 # Do rails stuff
 echo -e "\n*\n* Rails Stuff\n*\n"
+
 echo -e "\n** bundle install **"
 bundle install
-echo -e "\n** db:migrate **"
-rake db:migrate
+
 echo -e "\n** assets:precompile **"
 rake assets:precompile
+
+echo -e "\n** db:migrate **"
+rake db:migrate
+
 
 # Reload unicorn
 echo -e "\n*\n* Reload Unicorn\n*\n"
 if [ -e tmp/pids/unicorn.pid ]; then
 	kill -s HUP `cat tmp/pids/unicorn.pid`
 fi
+
 
 # Notify rollbar
 echo -e "\n*\n* Notify Rollbar\n*\n"

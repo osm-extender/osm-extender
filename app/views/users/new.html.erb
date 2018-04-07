@@ -36,5 +36,9 @@
     <%= f.label :password_confirmation %><br/>
     <%= f.password_field :password_confirmation, {:id => :password2} %>
   </div>
+  <div class="field">
+    <%= f.check_box :gdpr_consent %>
+    <%= f.label :gdpr_consent, "I consent to my information being processed inline with the #{link_to 'Privacy Policy', legal_privacy_policy_path, target: '_blank'}.".html_safe %>
+  </div>
   <div class="actions"><%= f.submit 'Sign up' %></div>
 <% end %>

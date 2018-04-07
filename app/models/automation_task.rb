@@ -12,7 +12,7 @@
 # * ALLOWED_SECTIONS - an array of symbols representing the allowed section types for this task
 
 class AutomationTask < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :on => [:create, :update]
 
   belongs_to :user
 
@@ -26,6 +26,8 @@ class AutomationTask < ActiveRecord::Base
   validates_presence_of :section_name
 
   validate :only_one_of_each_type
+
+  before_destroy { versions.destroy_all }
 
 
   def do_task(user=self.user)

@@ -55,10 +55,13 @@ module OSMExtender
       # Put OSM gem into debug mode
       Osm::Api.debug = true
       # Set user for paper trails audits
-      who_am_i = `whoami`.strip
-      puts "Who should paper trail's versions credit changes to? (#{who_am_i})"
-      who = gets.strip
-      who = who.blank? ? who_am_i : who
+      require 'tty-prompt'
+      prompt = TTY::Prompt.new
+      who = prompt.ask("Who should paper trail's versions credit changes to?") { |p|
+        p.required true
+        p.default `whoami`.chomp
+        p.modify :trim
+      }
       PaperTrail.whodunnit = "console: #{who}"
     end
 

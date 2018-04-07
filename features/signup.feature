@@ -20,6 +20,7 @@ Feature: Sign up
 
     @send_email
 	@signup_code
+	@gdpr_consent
     Scenario: Signup
         When I go to the root page
 		When I follow "Sign up" 
@@ -28,6 +29,7 @@ Feature: Sign up
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "P@55word"
         And I fill in "password2" with "P@55word"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Your signup was successful"
@@ -41,6 +43,17 @@ Feature: Sign up
         And "somebody@somewhere.com" should receive an email with subject /Your Account Has Been Activated/
 		And there should be 2 emails
 
+	@gdpr_consent
+    Scenario: GDPR Consent not given
+        When I go to the signup page
+        When I fill in "Name" with "Somebody"
+        And I fill in "Email address" with "somebody@somewhere.com"
+        And I fill in "password1" with "P@55word"
+        And I fill in "password2" with "P@55word"
+        And I press "Sign up"
+        Then I should have 0 users
+        And I should see "Gdpr consent must be accepted"
+
 	@signup_code
     Scenario: Signup (with correct signup code)
 		Given the signup code is abcd1234
@@ -50,6 +63,7 @@ Feature: Sign up
         And I fill in "password1" with "P@55word"
         And I fill in "password2" with "P@55word"
 		And I fill in "signup_code" with "abcd1234"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Your signup was successful"
@@ -63,6 +77,7 @@ Feature: Sign up
         And I fill in "password1" with "P@55word"
         And I fill in "password2" with "P@55word"
 		And I fill in "signup_code" with "1234abcd"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Incorrect signup code"
@@ -76,6 +91,7 @@ Feature: Sign up
         And I fill in "password1" with "P@55word"
         And I fill in "password2" with "P@55word"
 		And I fill in "signup_code" with ""
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "You must enter the signup code"
@@ -96,6 +112,7 @@ Feature: Sign up
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "P@55word"
         And I fill in "password2" with "P@55word"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Name can't be blank"
@@ -107,6 +124,7 @@ Feature: Sign up
         When I go to the signup page
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Password can't be blank"
@@ -120,6 +138,7 @@ Feature: Sign up
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "a"
         And I fill in "password2" with "a"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "isn't complex enough"
@@ -132,6 +151,7 @@ Feature: Sign up
         And I fill in "Name" with "Somebody"
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "aB3$hj37"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Password confirmation doesn't match Password"
@@ -145,6 +165,7 @@ Feature: Sign up
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "somebody@somewhere.com"
         And I fill in "password2" with "somebody@somewhere.comm"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Password is not allowed to be your email address"
@@ -157,6 +178,7 @@ Feature: Sign up
         And I fill in "Email address" with "somebody@somewhere.com"
         And I fill in "password1" with "Som890%^"
         And I fill in "password2" with "Som890%^"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should see "Password is not allowed to contain part of your name"
 		And I should be on the users page
@@ -168,6 +190,7 @@ Feature: Sign up
         And I fill in "Name" with "Somebody"
         And I fill in "password1" with "aB3$hj37"
         And I fill in "password2" with "aB3$hj37"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Email address can't be blank"
@@ -181,6 +204,7 @@ Feature: Sign up
         And I fill in "Email address" with "a"
         And I fill in "password1" with "aB3$hj37"
         And I fill in "password2" with "aB3$hj37"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 0 users
         And I should see "Email address does not look like an email address"
@@ -197,6 +221,7 @@ Feature: Sign up
         And I fill in "Email address" with "alice@example.com"
         And I fill in "password1" with "aB3$hj37"
         And I fill in "password2" with "aB3$hj37"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Email address has already been taken"
@@ -212,6 +237,7 @@ Feature: Sign up
         And I fill in "Email address" with "ALICE@example.com"
         And I fill in "password1" with "aB3$hj37"
         And I fill in "password2" with "aB3$hj37"
+		And I check "user_gdpr_consent"
         And I press "Sign up"
         Then I should have 1 users
         And I should see "Email address has already been taken"

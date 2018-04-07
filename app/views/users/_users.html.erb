@@ -7,6 +7,7 @@
     <th>Actions</th>
     <th>Login<br/>Locked?</th> 
     <th>Connected<br/>to OSM?</th>
+    <th>Automation<br/>Tasks</TH>
     <th>Email<br/>reminders</th>
     <th>Email<br/>lists</th>
   </tr>
@@ -44,6 +45,7 @@
         <%- end %>
       </td>
       <td><%= yes_no user.connected_to_osm? %></td>
+      <td><%= user.automation_tasks.count %></td>
       <td><%= user.email_reminders.count %></td>
       <td><%= user.email_lists.count %></td>
     </tr>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171008081144) do
+ActiveRecord::Schema.define(version: 20180407150723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,17 +219,6 @@ ActiveRecord::Schema.define(version: 20171008081144) do
   add_index "usage_logs", ["section_id"], name: "index_usage_logs_on_section_id", using: :btree
   add_index "usage_logs", ["user_id"], name: "index_usage_logs_on_user_id", using: :btree
 
-  create_table "user_versions", force: :cascade do |t|
-    t.string   "item_type",  null: false
-    t.integer  "item_id",    null: false
-    t.string   "event",      null: false
-    t.string   "whodunnit"
-    t.text     "object"
-    t.datetime "created_at"
-  end
-
-  add_index "user_versions", ["item_type", "item_id"], name: "index_user_versions_on_item_type_and_item_id", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.citext   "email_address",                                   null: false
     t.string   "crypted_password"
@@ -257,6 +246,7 @@ ActiveRecord::Schema.define(version: 20171008081144) do
     t.integer  "custom_text_size",                default: 0
     t.string   "unlock_token"
     t.boolean  "can_view_status",                 default: false
+    t.datetime "gdpr_consent_at"
   end
 
   add_index "users", ["activation_token"], name: "index_users_on_activation_token", using: :btree

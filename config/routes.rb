@@ -45,6 +45,9 @@ OSMExtender::Application.routes.draw do
   post 'users/:id/unlock' => 'users#unlock', :as => 'unlock_user'
   post 'users/:id/become' => 'users#become', :as => 'become_user'
 
+  get 'gdpr_consent' => 'users#gdpr_consent', :as => 'gdpr_consent'
+  post 'gdpr_consent' => 'users#gdpr_consent_given', :as => 'gdpr_consent_given'
+
   get 'programme_review/balanced' => 'programme_review#balanced', :as => 'programme_review_balanced'
   get 'programme_review/balanced_data' => 'programme_review#balanced_data', :as => 'programme_review_balanced_data'
 

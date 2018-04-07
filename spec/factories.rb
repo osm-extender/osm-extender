@@ -4,6 +4,7 @@ FactoryBot.define do
     password 'P@55word'
     password_confirmation { |u| u.password }
     name { |u| u.email_address.match(/[^@]*/)[0].capitalize } # Take before the @
+    gdpr_consent_at { Time.now.utc }
 
     factory :user_connected_to_osm do
       osm_userid 100

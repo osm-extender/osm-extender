@@ -175,6 +175,7 @@ Feature: My Account
 	And an OSM request to get_api_access for section "1" will have the permissions
 	    | permission | granted |
 	    | member     | none    |
+	And I have no PaperTrail::Versions
         When I signin as "alice@example.com" with password "P@55word"
         And I go to the delete my account page
 	Then I should be on the confirm delete my account page
@@ -187,6 +188,7 @@ Feature: My Account
 	And I should have 0 email reminders
 	And I should have 0 email reminder items
 	And I should have 0 email lists
+	And I should have 0 PaperTrail::Versions
 
     Scenario: Delete (wrong password)
         When I signin as "alice@example.com" with password "P@55word"
