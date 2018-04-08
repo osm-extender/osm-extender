@@ -1,0 +1,106 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "42b66cf765a98009f4785fc959316a7e298633b1122b5a37506114a21c9ed546",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/users_controller.rb",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "User.search(:name, params[:search_name]).search(:email_address, params[:search_email]).order(((sort_column + \" \") + sort_direction))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "UsersController",
+        "method": "index"
+      },
+      "user_input": "sort_column",
+      "confidence": "Medium",
+      "note": "sort_column and sort_direction methods achieve sanitisation."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "5400df1c50ddc83c5f11fce1d83b6d6b9da46c840efdad2dacbb2b461e452bbc",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/user.rb",
+      "line": 122,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where([\"#{column.to_s} LIKE ?\", \"%#{text}%\"])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "User",
+        "method": "User.search"
+      },
+      "user_input": "column",
+      "confidence": "Medium",
+      "note": "Lines 118 and 120 provide sanitisation."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "794be28c4e068b43d0fb28d07e345c0699b78f1fef7138f3454bb78c926cc55c",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/status.rb",
+      "line": 49,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"SELECT pg_total_relation_size('#{table}') AS size, COUNT(#{table}) AS count FROM #{table};\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Status",
+        "method": "database_size"
+      },
+      "user_input": "table",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "84715b939cd08db023fcc80827ddc5a303999d2f89e6c58540b29d8313001015",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/status.rb",
+      "line": 46,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ActiveRecord::Base.connection.execute(\"SELECT tablename FROM pg_tables WHERE schemaname IN (#{(Rails.configuration.database_configuration[Rails.env][\"schema_search_path\"] or \"public\").split(\",\").map do\n \"'#{s.strip}'\"\n end.join(\",\")}) ORDER BY tablename;\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Status",
+        "method": "database_size"
+      },
+      "user_input": "(Rails.configuration.database_configuration[Rails.env][\"schema_search_path\"] or \"public\").split(\",\").map do\n \"'#{s.strip}'\"\n end.join(\",\")",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "b0200a3a032b14180383cbfa3fa830845a3bb446a41aa06652e9ea5f1c0ff6db",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/map_members_controller.rb",
+      "line": 69,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "member.send((params[:address] or \"contact\"))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MapMembersController",
+        "method": "get_address_data_for_section"
+      },
+      "user_input": "params[:address]",
+      "confidence": "High",
+      "note": "Line 64 provides sanitisation of the value."
+    }
+  ],
+  "updated": "2018-04-08 08:48:47 +0100",
+  "brakeman_version": "4.2.1"
+}

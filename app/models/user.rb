@@ -14,9 +14,9 @@ class User < ActiveRecord::Base
   has_many :usage_log, inverse_of: :user
   has_many :sessions, inverse_of: :user
 
-  scope :activated, -> { where(sorcery_config.activation_state_attribute_name => 'active') }
-  scope :unactivated, -> { where(sorcery_config.activation_state_attribute_name => 'pending') }
-  scope :activation_expired, -> { unactivated.where("\"#{sorcery_config.activation_token_expires_at_attribute_name}\" < ?", Time.now) }
+  scope :activated, -> { where(activation_state: 'active') }
+  scope :unactivated, -> { where(activation_state: 'pending') }
+  scope :activation_expired, -> { unactivated.where("activation_token_expires_at < ?", Time.now) }
   scope :connected_to_osm, -> { where.not(osm_userid: nil, osm_secret: nil) }
   scope :not_connected_to_osm, -> { where(osm_userid: nil, osm_secret: nil) }
 
