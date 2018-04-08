@@ -19,6 +19,7 @@ env:
     - recaptcha_private_key="00998877665544332211"
 before_install:
   - gem install bundler
+  - gem install bundle-audit
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.yml.travis config/database.yml
@@ -30,6 +31,7 @@ script:
   - bundle exec rake assets:precompile
   - bundle exec rspec
   - bundle exec cucumber
+  - bundle audit
 after_script:
   - bundle exec rails runner 'require "coveralls"; FakeWeb.allow_net_connect = true; Coveralls.push!'
 notifications:

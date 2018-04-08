@@ -5,8 +5,7 @@
 # spring (1.7.2)            --->   2.0.0   requires rails 5
 
 
-source 'http://rubygems.org'
-#source 'http://production.cf.rubygems.org'  # Workaround for rubygems being down
+source 'https://rubygems.org'
 
 # Rails
 gem 'rails', '~> 4.1', '>= 4.2.7.1'
@@ -69,6 +68,7 @@ group :development do
   gem 'meta_request', '~> 0.4.0'      # Allow use of the rails panel Chrome extension (https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 #  gem 'pry-debugger', '~> 0.2', :require=>false  # Add debugging extras to pry
 #  gem 'debugger', '~> 1.6', :require=>false
+  gem 'bundle-audit', '~> 0.1.0'      # Scan bundle for insecure gems
 end
 
 # Uniocorn webserver
