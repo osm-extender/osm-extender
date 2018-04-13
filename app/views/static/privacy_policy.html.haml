@@ -1,11 +1,30 @@
 = page_title 'Privacy Policy'
 
+%h2 Contents
+%ul
+  %li= link_to 'Key details', '#key_details'
+  %li= link_to 'What data is gathered', '#what_data_is_gathered'
+  %li= link_to 'How the data is used', '#how_the_data_is_used'
+  %li= link_to 'Cookies', '#cookies'
+  %li= link_to 'Security', '#security'
+  %li= link_to 'Data retention', '#data_retention'
+  %li= link_to 'Links from the site', '#links_from_the_site'
+  %li
+    = link_to 'Third parties', '#third_parties'
+    %ul
+      %li= link_to 'Google analytics', '#third_parties-google_analytics'
+      %li= link_to 'Google recaptcha', '#third_parties-google_recaptcha'
+      %li= link_to 'Rollbar', '#third_parties-rollbar'
+  %li= link_to 'Changes', '#changes'
+
+
+%a{ name: 'key_details'}
 %h2 Key details
 %p This website privacy policy describes how Robert Gauld protects and makes use of the information you give when you use this website.
 %p If you are asked to provide information when using this website, it will only be used in the ways described in this privacy policy.
 %p
   This policy is updated from time to time. The latest version is published on this page.
-  This website privacy policy was updated on 7th April 2018.
+  This website privacy policy was updated on <b>13th April 2018</b>.
 %p If you have any questions about this policy, please use the #{link_to('contact form', contact_us_path).html_safe}.
 %p I gather and use certain information about individuals in order to provide products and services and to enable certain functions on this website. I also collect information to better understand how visitors use this website and to present timely, relevant information to them.
 %p I also process information about other individuals on your behalf and at your request, you remain controller of this information.
@@ -19,6 +38,7 @@
   %li Lodge a complaint with the Information Commissioner's Office - #{link_to 'https://ico.org.uk', 'https://ico.org.uk'}.
 
 
+%a{ name: 'what_data_is_gathered'}
 %h2 What data is gathered
 %p I may collect the following information:
 %ul
@@ -36,6 +56,8 @@
       %li Send you back to the page you were on after signing in or performing any other action which interupts your normal use of the website..
       %li Track which sites refer people to this one.
 
+
+%a{ name: 'how_the_data_is_used'}
 %h2 How the data is used
 %p Collecting this data helps me understand what you are looking from the company, enabling me to deliver improved products and services. Specifically, I may use data:
 %ul
@@ -43,23 +65,52 @@
   %li To improve the products and services I provide.
   %li To contact you in response to a specific enquiry or issue.
   %li To customise the website for you.
-
-
-%h2 Cookies
-%p See the seperate #{link_to 'Cookie Policy', legal_cookie_policy_path }.
-
-
-%h2 Controlling information about you
 %p I will never lease, distribute or sell your personal information to third parties unless I have your permission or the law requires me to.
 %p Any personal information I hold about you is stored and processed under our data protection policy, in line with the Data Protection Act and General Data Protection Regulations.
 
 
+%a{ name: 'cookies'}
+%h2 Cookies
+%h3 What are cookies?
+%p
+  Cookies are small text files located in the browser directory of your computer or mobile device. When you visit a website, it can send information back to the browser which then creates the cookie. Every time you revisit the same website it can access the information stored in the cookie. Cookies are not just created by the website you visit, but may also be created by other websites that run adverts, video or other content you view.
+%br
+  The website
+  = link_to 'allaboutcookies.org', 'https://www.allaboutcookies.org/', target: '_blank'
+  has a  more detaild description of cookies.
+
+
+%h3 Types of cookies and their use on this site
+%ul
+  %li
+    Essential cookies - Some cookies are essential to allow this website to work.
+    %ul
+      %li session - this cookie keeps track of who you have signed in as
+
+  %li
+    Functional cookies - Allow a website to provide additional services by remembering your preferences and settings.
+    %ul
+      %li allow_cookies - this is set when you choose to hide the cookie notice so you don't keep seeing it
+
+  %li
+    Performance cookies - Allow us to keep track of our website analytics. It is highly beneficial for us to know how many visitors I get, where they are visiting from, what the most popular pages are, which blog posts get the most views and what time of day has the least number of visitors (so I know the best time to do maintenance).
+    %ul
+      %li Google analytics is used by this site, it sets cookies called __utma, __utmb, __utmc, __utmt, __utmv, __utmz, __utmx and __utmxx. Google analytics code is only run (and therefore the cookies are only set) if you have accepted the use of cookies.
+
+  %li
+    Advertising cookies - Third party advertisers will often place cookies to help make advertisements and offers more interesting to you.
+    %ul
+      %li I have no direct third party advertising on its website.
+
+
+%a{ name: 'security'}
 %h2 Security
 %p I will always hold your information securely.
 %p To prevent unauthorised disclosure or access to your information, I have implemented strong physical and electronic security safeguards.
 %p I also follow stringent procedures to ensure I work with all personal data in line with the Data Protection Act 1998.
 
-%h2 Data Retention
+%a{ name: 'data_retention'}
+%h2 Data retention
 %ul
   %li Upon deleting your account all your data is deleted from the database.
   %li Upon deleting any of your data (e.g. an email reminder) it is purged from the database after 3 months, this allows for recovery in the event of accidental deletion.
@@ -69,13 +120,16 @@
   %li Statistics that you contribute to (such as total user accounts on a date or total number of website visitors during a given hour) are retained indefinatly.
 
 
+%a{ name: 'links_from_the_site'}
 %h2 Links from the site
 %p The website may contain links to other websites. Please note that I have no control of websites outside the [domain name] domain. If you provide information to a website to which I link, I am not responsible for its protection and privacy. Always be wary when submitting data to websites. Read the site’s data protection and privacy policies fully.
 
 
+%a{ name: 'third_parties'}
 %h2 Third parties
 %p The website uses a number of services from third parties, these are described below.
 
+%a{ name: 'third_parties-google_analytics'}
 %h3 Google analytics
 %p
   This website uses Google Analytics, a web analytics service provided by Google, Inc. (“Google”). Google Analytics uses “cookies”, which are text files saved on your computer, to help the website analyze how you use the site.
@@ -84,7 +138,9 @@
   You may refuse the use of cookies by selecting the appropriate settings on your browser, however please note that if you do this you may not be able to use the full functionality of this website. By using this website, you consent to the processing of data about you by Google in the manner and for the purposes set out above.
   You can also prevent Google from collecting information (including your IP address) via cookies and processing this information by downloading this browser plugin and installing it
   = link_to 'https://tools.google.com/dlpage/gaoptout', 'https://tools.google.com/dlpage/gaoptout'
+  Data about your visits to this site are retained for a period of 38 months and statistics that you contribute to (such as total visits per hour) are retained indefinatly.
 
+%a{ name: 'third_parties-google_recaptcha'}
 %h3 Google recaptcha
 %p
   The reCAPTCHA service provided by Google Inc. (Google) to protect your submissions via internet submission forms on this site.
@@ -95,8 +151,22 @@
   = link_to 'https://www.google.com/intl/de/policies/privacy', 'https://www.google.com/intl/de/policies/privacy'
   By using the reCAPTCHA service, you consent to the processing of data about you by Google in the manner and for the purposes set out above.
 
+%a{ name: 'third_parties-rollbar'}
 %h3 Rollbar
 %p
   Rollbar is a service which allows me to track the errors which occur on the website to make debugging and fixing issues easier. Whenever you see a "We're sorry, but something went wrong" page the web server sends information about what went wrong to rollbar for me. Any sensitive information such as passwords is redacted. The information sent to rollbar is your name (if you are signed in), which browser you used, which operating system you used and the IP address you came from.
   For more information on Rollbar's privacy policy please visit
   = link_to 'https://rollbar.com/privacy', 'https://rollbar.com/privacy'
+
+
+%a{name: 'changes'}
+%h2 Changes
+
+%h3 7th April 2018
+%p Extra details relating to GDPR added.
+
+%h3 13th April 2018
+%ul 
+  %li Add more details about Google Analytics retention times
+  %li Move cookie policy into this document
+  %li Add linking around the document

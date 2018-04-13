@@ -40,7 +40,7 @@
             We are using cookies to give you the best experience on our site. By continuing to use this site, you are agreeing to the use of cookies.
           </div>
           <div class="links">
-            <%= link_to '[details]', legal_cookie_policy_path, id: 'cookies-details' %>
+            <%= link_to '[details]', privacy_policy_path(anchor: 'cookies'), id: 'cookies-details' %>
             <%= link_to '[accept]', '#', id: 'cookies-accept' %>
           </div>
         </div><!-- cookies-bar -->
@@ -160,8 +160,7 @@
     </div><!-- content -->
 
     <div id="footer">
-      <%= link_to 'Cookie Policy', legal_cookie_policy_path %><br>
-      <%= link_to 'Privacy Policy', legal_privacy_policy_path %>
+      <%= link_to 'Privacy Policy', privacy_policy_path %>
     </div><!-- footer -->
 
 

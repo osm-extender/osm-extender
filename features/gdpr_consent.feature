@@ -77,11 +77,8 @@ Feature: GDPR Consent
         When I go to the contact_us page
       	Then I should be on the contact_us page
 
-        When I go to the legal_cookie_policy page
-      	Then I should be on the legal_cookie_policy page
-
-        When I go to the legal_privacy_policy page
-      	Then I should be on the legal_privacy_policy page
+        When I go to the privacy_policy page
+      	Then I should be on the privacy_policy page
 
 
 
