@@ -16,7 +16,15 @@ rake db:migrate
 # Reload unicorn
 echo -e "\n*\n* Reload Unicorn\n*\n"
 if [ -e tmp/pids/unicorn.pid ]; then
-	kill -s HUP `cat tmp/pids/unicorn.pid`
+	# Spawn new master
+	kill -s USR2 `cat tmp/pids/unicorn.pid`
+	# Close old master
+	while ! [ -f tmp/pids/unicorn.pid.oldbin ];
+	do
+		echo "Waiting for new master to become available"
+		sleep 0.25
+	done
+	kill -s QUIT `cat tmp/pids/unicorn.pid.oldbin`
 fi
 
 
