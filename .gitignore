@@ -2,6 +2,7 @@
 todo.txt
 db/*.sqlite3
 db/*.sqlite3-journal
+doc/app
 log/*
 tmp/
 .sass-cache/
