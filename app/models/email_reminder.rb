@@ -56,9 +56,10 @@ class EmailReminder < ActiveRecord::Base
               EmailReminderMailer.reminder_email(self, data, person).deliver_now
             end
           end
-        rescue Exception => exception
+        rescue => exception
           EmailReminderMailer.failed(self).deliver_now
           NotifierMailer.reminder_failed(self, exception).deliver_now
+          Rollbar.error(exception)
         end
       end
     end
