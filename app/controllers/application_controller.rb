@@ -143,8 +143,8 @@ class ApplicationController < ActionController::Base
   # @param permission_to the action which is being checked (:read or :write)
   # @param permission_on the object type which is being checked (:member, :register ...), this can be an array in which case the user must be able to perform the action to all objects
   # @return [Boolean] Whether the user has been given the permission
-  def require_osm_permission(permission_to, permission_on, user=current_user, section=current_section)
-    unless has_osm_permission?(permission_to, permission_on, user, section)
+  def require_osm_permission(permission_to, permission_on, user: current_user, section: current_section)
+    unless has_osm_permission?(permission_to, permission_on, user: user, section: section)
       flash[:error] = 'You do not have the correct OSM permissions to do that.'
       redirect_back_or_to(current_user ? check_osm_setup_path : signin_path)
       return false
@@ -153,17 +153,17 @@ class ApplicationController < ActionController::Base
   end
 
   # Check if the user and API have a given OSM permission
-  def has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
+  def has_osm_permission?(permission_to, permission_on, user: current_user, section: current_section)
     user.has_osm_permission?(section, permission_to, permission_on)
   end
 
   # Check if the user has a given OSM permission
-  def user_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
+  def user_has_osm_permission?(permission_to, permission_on, user: current_user, section: current_section)
     user.user_has_osm_permission?(section, permission_to, permission_on)
   end
 
   # Check if the API has a given OSM permission
-  def api_has_osm_permission?(permission_to, permission_on, user=current_user, section=current_section)
+  def api_has_osm_permission?(permission_to, permission_on, user: current_user, section: current_section)
     user.api_has_osm_permission?(section, permission_to, permission_on)
   end
 
@@ -323,7 +323,7 @@ class ApplicationController < ActionController::Base
     @groupings = {}
     Osm::Section.get_all(osm_api).each do |section|
       @groupings[section.id] = {}
-      if has_osm_permission?(:read, :member, current_user, section)
+      if has_osm_permission?(:read, :member, section: section)
         Osm::Grouping.get_for_section(osm_api, section).each do |grouping|
           @groupings[section.id][grouping.name] = grouping.id
         end

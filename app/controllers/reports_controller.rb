@@ -128,12 +128,12 @@ class ReportsController < ApplicationController
 
     @my_params[:programme].each do |section, selected|
       if selected.eql?('1')
-        require_osm_permission(:read, :programme, current_user, section.to_i) or return
+        require_osm_permission(:read, :programme, section: section.to_i) or return
       end
     end
     @my_params[:events].each do |section, selected|
       if selected.eql?('1')
-        require_osm_permission(:read, :events, current_user, section.to_i) or return
+        require_osm_permission(:read, :events, section: section.to_i) or return
       end
     end
 

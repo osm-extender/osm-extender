@@ -49,6 +49,7 @@ Feature: Reminder Email
 	    | programme  | read    |
 	    | register   | read    |
 	    | badge      | read    |
+		| events     | read    |
         When I signin as "alice@example.com" with password "P@55word"
         And I follow "Email reminders"
         And I follow "create one"
@@ -61,6 +62,27 @@ Feature: Reminder Email
         And I should see "Tuesday"
 	And I should see "This email reminder has no items yet"
         And "alice@example.com" should have 1 email reminder
+        When I follow "Birthdays"
+        And I press "Create birthdays item"
+        Then I should see "Item was successfully added"
+        When I follow "Events"
+        And I press "Create events item"
+        Then I should see "Item was successfully added"
+        When I follow "add_email_reminder_item_programme"
+        And I press "Create programme item"
+        Then I should see "Item was successfully added"
+        When I follow "Members not seen"
+        And I press "Create members not seen item"
+        Then I should see "Item was successfully added"
+        When I follow "Advised absences"
+        And I press "Create advised absences item"
+        Then I should see "Item was successfully added"
+        When I follow "Due badges"
+        And I press "Create due badges item"
+        Then I should see "Item was successfully added"
+        When I follow "Section Notepad"
+        And I press "Create section notepad item"
+        Then I should see "Item was successfully added"
 
     Scenario: Should see only own reminders
         Given I have the following user records
