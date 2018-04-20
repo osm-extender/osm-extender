@@ -5,7 +5,7 @@ class OsmFlexiRecordsController < ApplicationController
     forbid_section_type :waiting, @section
   end
   before_action :except=>:index do
-    require_osm_permission :read, :flexi, current_user, @section
+    require_osm_permission :read, :flexi, section: @section
   end
 
   def index

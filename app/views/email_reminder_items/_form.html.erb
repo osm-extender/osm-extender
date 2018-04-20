@@ -1,31 +1,31 @@
-<% if @email_reminder_item.errors.any? %>
+<% if email_reminder_item.errors.any? %>
   <div id="error_explanation">
-    <h2><%= pluralize(@email_reminder_item.errors.count, "error") %> prohibited this item from being saved:</h2>
+    <h2><%= pluralize(email_reminder_item.errors.count, "error") %> prohibited this item from being saved:</h2>
     <ul>
-    <% @email_reminder_item.errors.full_messages.each do |msg| %>
+    <% email_reminder_item.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
     <% end %>
     </ul>
   </div>
 <% end %>
 
-<%- @email_reminder_item.class.configuration_labels.keys.sort.each do |key| %>
+<%- email_reminder_item.class.configuration_labels.keys.sort.each do |key| %>
 <div class="field">
-  <%- case @email_reminder_item.class.configuration_types[key] %>
+  <%- case email_reminder_item.class.configuration_types[key] %>
     <%- when :integer, :positive_integer %>
-      <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label><br/>
-      <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
+      <label for="<%= key %>"><%= email_reminder_item.class.configuration_labels[key] %></label><br/>
+      <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= email_reminder_item.configuration[key] %>"/>
     <%- when :boolean %>
       <input type="hidden" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="0"/>
-      <input type="checkbox" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="1" <%- if @email_reminder_item.configuration[key] %>checked="checked"<%- end %>/>
-      <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label>
+      <input type="checkbox" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="1" <%- if email_reminder_item.configuration[key] %>checked="checked"<%- end %>/>
+      <label for="<%= key %>"><%= email_reminder_item.class.configuration_labels[key] %></label>
     <%- else %>
-      <label for="<%= key %>"><%= @email_reminder_item.class.configuration_labels[key] %></label><br/>
-      <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= @email_reminder_item.configuration[key] %>"/>
+      <label for="<%= key %>"><%= email_reminder_item.class.configuration_labels[key] %></label><br/>
+      <input type="text" name="email_reminder_item[<%= key %>]" id="<%= key %>" value="<%= email_reminder_item.configuration[key] %>"/>
   <%- end %>
 </div>
 <%- end %>
 
 <div class="actions">
-  <%= f.submit "#{@email_reminder_item.persisted? ? 'Update' : 'Create'} #{@email_reminder_item.human_name.downcase} item" %>
+  <%= f.submit "#{email_reminder_item.persisted? ? 'Update' : 'Create'} #{email_reminder_item.human_name.downcase} item" %>
 </div>

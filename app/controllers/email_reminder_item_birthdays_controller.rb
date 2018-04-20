@@ -1,5 +1,5 @@
 class EmailReminderItemBirthdaysController < EmailReminderItemsController
-  before_action { require_osm_permission :read, :member }
+  before_action { require_osm_permission :read, :member, section: email_reminder.section_id }
 
 
   private

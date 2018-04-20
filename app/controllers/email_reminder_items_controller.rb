@@ -3,6 +3,7 @@ class EmailReminderItemsController < ApplicationController
   before_action { forbid_section_type :waiting }
   load_and_authorize_resource :except=>[:new, :create]
   authorize_resource :only=>[:new, :create]
+  helper_method :email_reminder, :email_reminder_item
 
 
   def index
@@ -10,7 +11,6 @@ class EmailReminderItemsController < ApplicationController
   end
 
   def show
-    @email_reminder_item = model.find(params[:id])
   end
 
   def new
@@ -18,7 +18,6 @@ class EmailReminderItemsController < ApplicationController
   end
 
   def edit
-    @email_reminder_item = EmailReminderItem.find(params[:id])
   end
 
   def create
@@ -31,7 +30,7 @@ class EmailReminderItemsController < ApplicationController
     if @email_reminder_item.invalid?
       render action: :new, status: 422
     elsif @email_reminder_item.save
-      redirect_to edit_email_reminder_path(@email_reminder_item.email_reminder), notice: 'Item was successfully added.'
+      redirect_to edit_email_reminder_path(email_reminder), notice: 'Item was successfully added.'
     else
       render action: :new, status: 500, error: 'Item could not be added.'
     end
@@ -39,22 +38,20 @@ class EmailReminderItemsController < ApplicationController
 
   def update
     params[:email_reminder_item] ||= {}
-    @email_reminder_item = EmailReminderItem.find(params[:id])
-    @email_reminder_item.assign_attributes(:configuration=>configuration_params.symbolize_keys)
+    email_reminder_item.assign_attributes(:configuration=>configuration_params.symbolize_keys)
 
-    if @email_reminder_item.invalid?
+    if email_reminder_item.invalid?
       render action: :edit, status: 422
-    elsif @email_reminder_item.save
-      redirect_to edit_email_reminder_path(@email_reminder_item.email_reminder), notice: 'Item was successfully updated.'
+    elsif email_reminder_item.save
+      redirect_to edit_email_reminder_path(email_reminder), notice: 'Item was successfully updated.'
     else
       render action: :edit, status: 500, error: 'Item could not be updated.'
     end
   end
 
   def destroy
-    @email_reminder_item = EmailReminderItem.find(params[:id])
-    return_to = edit_email_reminder_path(@email_reminder_item.email_reminder)
-    @email_reminder_item.destroy
+    return_to = edit_email_reminder_path(email_reminder)
+    email_reminder_item.destroy
 
     redirect_to return_to
   end
@@ -63,6 +60,14 @@ class EmailReminderItemsController < ApplicationController
   private
   def configuration_params
     params[:email_reminder_item].permit(model.default_configuration.keys)
+  end
+
+  def email_reminder_item
+    @email_reminder_item ||= model.find(params[:id])
+  end
+
+  def email_reminder
+    @email_reminder ||= EmailReminder.find(params[:email_reminder_id])
   end
 
 end

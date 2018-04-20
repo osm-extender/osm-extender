@@ -1,5 +1,5 @@
-<%= page_title "Edit #{@email_reminder_item.human_name.downcase} item" %>
+<%= page_title "Edit #{email_reminder_item.human_name.downcase} item" %>
 
-<%= form_for @email_reminder_item, {:url=>self.send("#{@email_reminder_item.class.to_s.gsub!(/(.)([A-Z])/,'\1_\2').downcase!}_path", @email_reminder_item.email_reminder, @email_reminder_item), :method=>:patch} do |f| %>
+<%= form_for email_reminder_item, {:url=>self.send("#{email_reminder_item.class.to_s.gsub!(/(.)([A-Z])/,'\1_\2').downcase!}_path", email_reminder_item.email_reminder, email_reminder_item), :method=>:patch} do |f| %>
   <%= render 'form', :f=>f %>
 <% end %>

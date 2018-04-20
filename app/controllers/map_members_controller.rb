@@ -5,7 +5,7 @@ class MapMembersController < ApplicationController
     forbid_section_type :waiting, @section
   end
   before_action :except=>[:index, :multiple_page, :multiple_data] do
-    require_osm_permission :read, :member, current_user, @section
+    require_osm_permission :read, :member, section: @section
   end
   before_action do
     @addresses = {'Member' => 'contact', 'Primary contact 1' => 'primary_contact', 'Primary contact 2' => 'secondary_contact', 'Emergency contact' => 'emergency_contact', 'Doctor' => 'doctor'}
