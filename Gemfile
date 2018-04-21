@@ -22,8 +22,8 @@ gem 'pg', '~>0.21'                  # Use a postgresql database
 gem 'mv-postgresql', '~> 2.2'       # Use migration_validations
 
 # Misc
-gem 'osm', '~> 1.3', '>= 1.3.2'       # For using the OSM API
-#gem 'osm', :path => '../../osm/code'
+gem 'osm', '~> 1.3', '>= 1.3.3'       # For using the OSM API
+#gem 'osm', :path => '../../osm/osm-code'
 gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
