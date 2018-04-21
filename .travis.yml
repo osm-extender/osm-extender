@@ -38,4 +38,5 @@ after_script:
   - bundle exec rails runner 'require "coveralls"; FakeWeb.allow_net_connect = true; Coveralls.push!'
 notifications:
   slack:
-    secure: miFXHnyhvU8v2LVJqpYf2O5Ruh7YlCwlpGn6ZJoOpNA+/ALVMD6RzeoqClFzhZ456rBPpu9x8Px0m40mym8kIhBYeDI4ltKMxwtjElKZoc1Sk6JMH5Q2MA7jB3gjN9F9u28zYwEWxG5VUEWScXNCobZqNjjRPBfL6fH3yZi6u+E=
+    on_success: always
+    secure: "dv+/jJemDGkupHWWDJqgZ5Gqgg+IuCmf5qv1iiH4iJ/c7aOIVo5QDxnPZ7rqrtw9ueOcxcbVtAGtBr1zn8UWp9fd+mL6sMpqgOK2Br0VKXBUgRv6cSaCD32g/bg9tqXN5bUx1nZiM9Qi6Vf2JLn35eu7b9tskwS8eTDoxqUCHqc="
