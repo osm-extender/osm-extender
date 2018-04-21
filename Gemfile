@@ -29,6 +29,7 @@ gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.9'       # Easily generate HTML emails (also does plain text counterpart)
   gem 'nokogiri', '~> 1.5', '>= 1.8.2' # Adapter for premailer
+gem 'mailgun-ruby', '~>1.1.6'         # Send emails through mailgun
 gem 'faker', '~> 1.1'                 # Generate fake data for sample emails
 gem 'acts_as_list', '~> 0.9.5'        # Makes lists of items orderable
 gem 'paper_trail', '~> 8.1'           # Track changes to (selected) models

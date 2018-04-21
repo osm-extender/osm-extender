@@ -8,7 +8,7 @@ Rollbar.configure do |config|
   end
 
   # Here we'll disable in 'test':
-  if Rails.env.test?
+  if Rails.env.test? || Rails.env.cucumber?
     config.enabled = false
   end
 

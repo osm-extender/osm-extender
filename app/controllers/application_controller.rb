@@ -259,7 +259,7 @@ class ApplicationController < ActionController::Base
   end
 
   def email_error(exception)
-    NotifierMailer.exception(exception, env, session).deliver_now
+    NotifierMailer.exception(exception, env, session).deliver_later
   end
 
   def clean_backtrace(exception)

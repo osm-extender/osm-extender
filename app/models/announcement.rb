@@ -49,7 +49,7 @@ class Announcement < ActiveRecord::Base
   end
 
   def email_announcement_to(user)
-    UserMailer.announcement(user, self).deliver_now
+    UserMailer.announcement(user, self).deliver_later
   end
 
 

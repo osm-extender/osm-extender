@@ -14,6 +14,7 @@
     %ul
       %li= link_to 'Google analytics', '#third_parties-google_analytics'
       %li= link_to 'Google recaptcha', '#third_parties-google_recaptcha'
+      %li= link_to 'Mailgun', '#third_parties-mailgun'
       %li= link_to 'Rollbar', '#third_parties-rollbar'
   %li= link_to 'Changes', '#changes'
 
@@ -24,7 +25,7 @@
 %p If you are asked to provide information when using this website, it will only be used in the ways described in this privacy policy.
 %p
   This policy is updated from time to time. The latest version is published on this page.
-  This website privacy policy was updated on <b>13th April 2018</b>.
+  This website privacy policy was updated on <b>21st April 2018</b>.
 %p If you have any questions about this policy, please use the #{link_to('contact form', contact_us_path).html_safe}.
 %p I gather and use certain information about individuals in order to provide products and services and to enable certain functions on this website. I also collect information to better understand how visitors use this website and to present timely, relevant information to them.
 %p I also process information about other individuals on your behalf and at your request, you remain controller of this information.
@@ -151,6 +152,14 @@
   = link_to 'https://www.google.com/intl/de/policies/privacy', 'https://www.google.com/intl/de/policies/privacy'
   By using the reCAPTCHA service, you consent to the processing of data about you by Google in the manner and for the purposes set out above.
 
+%a{ name: 'third_parties-mailgun'}
+%h3 Mailgun
+%p
+  Mailgun is a service which allows for the sending of emails, it's what I use to send all emails from the site.
+  Whilst Mailgun provides the abillity to track the opening of email this is not done on this site.
+  For more information on Mailgun's privacy policy please visit
+  = link_to 'https://www.mailgun.com/privacy-policy', 'https://www.mailgun.com/privacy-policy'
+
 %a{ name: 'third_parties-rollbar'}
 %h3 Rollbar
 %p
@@ -170,3 +179,6 @@
   %li Add more details about Google Analytics retention times
   %li Move cookie policy into this document
   %li Add linking around the document
+
+%h3 21st April 2018
+%p Add third party service #{link_to 'Mailgun', '#third_parties-mailgun'}

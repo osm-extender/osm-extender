@@ -22,6 +22,8 @@ recaptcha_private_key:  PRIVATE KEY FOR RECAPTCHA
 ga_tracking_id:         GOOGLE ANALYTICS TRACKING ID (or ~ if you don't want to use Google Anayltics)
 signup_code:            IF PRESENT THIS CODE MUST BE ENTERED TO CREATE AN ACCOUNT
 rollbar_access_token:   USED FOR REPORTING ERRORS TO ROLLBAR
+mailgun_domain:         DOMAIN USED BY MAILGUN FOR SENDING EMAIL
+mailgun_api_key:        USED FOR SENDING EMAIL THROUGH MAILGUN
 
 
 # Values for the test environment - don't change these, remember to also add to .travis.yml

@@ -53,22 +53,4 @@ ActionDispatch::Callbacks.to_prepare do
     :exception__to => ,       # Can be in the format - "Name" <email_address>
   }
 
-  # Mail sending options (uncomment the one which is relevant to your setup)
-  # Sendmail
-#  ActionMailer::Base.delivery_method = :sendmail
-#  ActionMailer::Base.sendmail_settings = {
-#    :location => '',
-#  }
-  # SMTP
-#  ActionMailer::Base.delivery_method = :smtp
-#  ActionMailer::Base.smtp_settings = {
-#    :address              => '',
-#    :port                 => '',
-#    :domain               => '',
-#    :user_name            => '',
-#    :password             => '',
-#    :authentication       => 'plain',
-#    :enable_starttls_auto => true
-#  }
-
 end
