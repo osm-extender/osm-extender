@@ -3,29 +3,6 @@
 <h2>OSMX Version</h2>
 <p>Running commit <%= link_to @status.commit[:id], "https://github.com/robertgauld/OSMExtender/commit/#{@status.commit[:id]}" %> - <%= @status.commit[:title] %></p>
 
-<h2>Sessions</h2>
-<%- sessions = @status.sessions %>
-<p>There are a total of <%= number_with_delimiter(sessions[:totals][:all]) %> <%= "session".pluralize(sessions[:totals][:all]) %>.</p>
-<ul>
-  <li><%= pluralize sessions[:totals][:users], 'user' %>.</li>
-  <li><%= pluralize sessions[:totals][:guests], 'guest' %>.</li>
-  <li>
-    The average session duration is <%= time_ago_in_words(sessions[:average_durations][:all].seconds.ago) %>.<ul>
-      <li><%= time_ago_in_words(sessions[:average_durations][:users].seconds.ago) %> for users.</li>
-      <li><%= time_ago_in_words(sessions[:average_durations][:guests].seconds.ago) %> for guests.</li>
-    </ul>
-  </li>
-  <li>
-    The average session age is <%= time_ago_in_words(sessions[:average_ages][:all].seconds.ago) %>.<ul>
-      <li><%= time_ago_in_words(sessions[:average_ages][:users].seconds.ago) %> for users.</li>
-      <li><%= time_ago_in_words(sessions[:average_ages][:guests].seconds.ago) %> for guests.</li>
-    </ul>
-  </li>
-  <li>The oldest session is <%= time_ago_in_words sessions[:oldest].created_at %> old.</li>
-  <li>The newest session is <%= time_ago_in_words sessions[:newest].created_at %> old.</li>
-  <li>Sessions expire after <%= seconds_to_time Rails.application.config.sorcery.session_timeout %> of inactivity.</li>
-</ul>
-
 <h2>Unicorn</h2>
 <p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>
 

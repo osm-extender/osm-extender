@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180407150723) do
+ActiveRecord::Schema.define(version: 20180422171834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,18 +174,6 @@ ActiveRecord::Schema.define(version: 20180407150723) do
     t.date     "term_finish",  null: false
   end
 
-  create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
-  end
-
-  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
-  add_index "sessions", ["user_id"], name: "index_sessions_on_user_id", using: :btree
-
   create_table "statistics", force: :cascade do |t|
     t.date     "date",                         null: false
     t.integer  "users"
@@ -266,5 +254,3 @@ ActiveRecord::Schema.define(version: 20180407150723) do
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
   add_foreign_key "automation_tasks", "users"
-
-end
