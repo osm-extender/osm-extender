@@ -58,8 +58,6 @@ OSMExtender::Application.configure do
   }
   NotifierMailer.options = {
     :contact_form__to => 'contactus@example.com',
-    :reminder_failed__to => 'reminder-mailer-failed@example.com',
-    :exception__to => 'exceptions@example.com',
   }
 
   # Whether to dump (or not) the schema after performing migrations

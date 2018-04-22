@@ -61,8 +61,6 @@ OSMExtender::Application.configure do
   }
   NotifierMailer.options = {
     :contact_form__to => 'contactus@example.com',
-    :reminder_failed__to => 'reminder-mailer-failed@example.com',
-    :exception__to => 'exceptions@example.com',
   }
   EmailReminderMailer.send :default, {
     :from => 'reminder-mailer@example.com',         # Can be in the format - "Name" <email_address>

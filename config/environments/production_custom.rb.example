@@ -48,8 +48,6 @@ ActionDispatch::Callbacks.to_prepare do
   }
   NotifierMailer.options = {
     :contact_form__to => ,    # Can be in the format - "Name" <email_address>
-    :reminder_failed__to => , # Can be in the format - "Name" <email_address>
-    :exception__to => ,       # Can be in the format - "Name" <email_address>
   }
 
 end

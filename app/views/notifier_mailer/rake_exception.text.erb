@@ -1,5 +1,0 @@
-The message was: <%= @exception.message %>
-The task was:    <%= @task.to_s %>
-
-The backtrace was:
-<%= raw Rails.backtrace_cleaner.send(:filter, @exception.backtrace).join("\n    ") %>

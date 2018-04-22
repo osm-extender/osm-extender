@@ -444,21 +444,6 @@ Feature: Reminder Email
         And I should see "Programme" in the email body
         And I should see "Members Not Seen" in the email body
 
-
-    @send_email
-    Scenario: Sending the email fails
-	Given "alice@example.com" has a reminder email for section 1 on "Tuesday" with all items
-        When "alice@example.com"'s reminder email for section 1 on "Tuesday" is sent
-        Then "alice@example.com" should receive 1 email with subject "Reminder Email for Section 1 (1st Somewhere) Failed"
-        And "reminder-mailer-failed@example.com" should receive 1 email with subject "Reminder Email Failed"
-
-        When "alice@example.com" opens the email with subject "Reminder Email for Section 1 (1st Somewhere) Failed"
-        Then I should see "your reminder email for Section 1 (1st Somewhere) has failed" in the email body
-
-        When "reminder-mailer-failed@example.com" opens the email with subject "Reminder Email Failed"
-        Then I should see "A reminder email failed" in the email body
-
-
     @send_email
     Scenario: An item has an error
 	Given "alice@example.com" has a reminder email for section 1 on "Tuesday"

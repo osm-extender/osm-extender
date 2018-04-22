@@ -8,11 +8,12 @@ describe 'rake scheduled:reminder_emails' do
 
     before :each do
       Timecop.freeze(DateTime.new(2017, 6, 11, 2, 0, 0)) # 2 AM on SUnday 11th June 2017
+      @user = User.new(id: 2, name: 'user_name', email_address: 'name@example.com')
       @reminder = EmailReminder.new(
         id: 12,
         section_id: 3,
         section_name: 'section_name',
-        user: User.new(id: 2, name: 'user_name', email_address: 'name@example.com')
+        user: @user
       )
     end
 
@@ -55,7 +56,7 @@ describe 'rake scheduled:reminder_emails' do
         mail = ActionMailer::Base.deliveries.last
         expect(mail.to).to eq ['name@example.com']
         expect(mail.from).to eq ['reminder-mailer@example.com']
-        expect(mail.subject).to eq 'OSMExtender (TEST) - Preparing Email Reminder FAILED'
+        expect(mail.subject).to eq 'OSMExtender (TEST) - Reminder Email for section_name FAILED'
         expect(mail.text_part.body.decoded).to include "Whilst trying to prepare your email reminder for section_name an\nerror occured - you can't access data in the section."
       end
 
@@ -66,23 +67,38 @@ describe 'rake scheduled:reminder_emails' do
         mail = ActionMailer::Base.deliveries.last
         expect(mail.to).to eq ['name@example.com']
         expect(mail.from).to eq ['reminder-mailer@example.com']
-        expect(mail.subject).to eq 'OSMExtender (TEST) - Preparing Email Reminder FAILED'
+        expect(mail.subject).to eq 'OSMExtender (TEST) - Reminder Email for section_name FAILED'
         expect(mail.text_part.body.decoded).to include "Whilst trying to prepare your email reminder for section_name an\nerror occured - there is no current term."
       end
 
-      it 'Exception' do
-        expect(@reminder).to receive(:send_email) { raise ArgumentError, 'Just a test' }
+      it 'Exception from reminder.send_email' do
+        exception = ArgumentError.new 'Just a test'
+        expect(@reminder).to receive(:send_email) { raise exception }
         expect(STDOUT).to receive(:puts).with("\t\tAn Exception was raised (Just a test)")
+        expect(Rollbar).to receive(:error).with(exception)
         expect{ task.execute }.to change { ActionMailer::Base.deliveries.size }.by(1)
         mail = ActionMailer::Base.deliveries.last
-        expect(mail.to).to eq ['exceptions@example.com']
-        expect(mail.from).to eq ['notifier-mailer@example.com']
-        expect(mail.subject).to eq 'OSMExtender (TEST) - An Exception Occured in a Rake Task'
-        expect(mail.body.decoded).to include 'The message was: Just a test'
-        expect(mail.body.decoded).to include 'The task was:    Reminder Email (id: 12, user: 2, section: 3)'
-        expect(mail.body.decoded).to include 'The backtrace was:'
+        expect(mail.to).to eq ['name@example.com']
+        expect(mail.from).to eq ['reminder-mailer@example.com']
+        expect(mail.subject).to eq 'OSMExtender (TEST) - Reminder Email for section_name FAILED'
+        expect(mail.text_part.body.decoded).to include "Unfortunately your reminder email for section_name has failed"
       end
 
+      it 'Exception from reminder.get_data' do
+        exception = ArgumentError.new 'Just a test'
+        expect(@reminder).to receive(:get_data) { raise exception }
+        allow(@user).to receive(:connected_to_osm?).and_return(true)
+        allow(@user).to receive(:osm_api).and_return(true)
+        expect(Osm::Section).to receive(:get).and_return(true)
+        expect(STDOUT).to receive(:puts).with("\t\tAn Exception was raised (Just a test)")
+        expect(Rollbar).to receive(:error).with(exception)
+        expect{ task.execute }.to change { ActionMailer::Base.deliveries.size }.by(1)
+        mail = ActionMailer::Base.deliveries.last
+        expect(mail.to).to eq ['name@example.com']
+        expect(mail.from).to eq ['reminder-mailer@example.com']
+        expect(mail.subject).to eq 'OSMExtender (TEST) - Reminder Email for section_name FAILED'
+        expect(mail.text_part.body.decoded).to include "Unfortunately your reminder email for section_name has failed"
+      end
     end # describe Handles exceptions
 
   end # describe Executes

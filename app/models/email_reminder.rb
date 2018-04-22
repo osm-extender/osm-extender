@@ -49,17 +49,11 @@ class EmailReminder < ActiveRecord::Base
       section = Osm::Section.get(user.osm_api, section_id)
       unless section.nil?
         # We now know that the user can access this section
-        begin
-          data = get_data
-          send_to.each do |person|
-            if person[:share].nil? || (person[:share].subscribed? || options[:skip_subscribed_check])
-              EmailReminderMailer.reminder_email(self, data, person).deliver_now
-            end
+        data = get_data
+        send_to.each do |person|
+          if person[:share].nil? || (person[:share].subscribed? || options[:skip_subscribed_check])
+            EmailReminderMailer.reminder_email(self, data, person).deliver_now
           end
-        rescue => exception
-          EmailReminderMailer.failed(self).deliver_now
-          NotifierMailer.reminder_failed(self, exception).deliver_now
-          Rollbar.error(exception)
         end
       end
     end
