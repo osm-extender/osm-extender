@@ -39,7 +39,7 @@ class EmailReminderSharesController < ApplicationController
   def resend_shared_with_you
     email_reminder_share = current_user.email_reminder_shares.find(params[:id])
     unless email_reminder_share.nil?
-      EmailReminderMailer.shared_with_you(email_reminder_share).deliver_now
+      EmailReminderMailer.shared_with_you(email_reminder_share).deliver_later
       redirect_to email_reminder_shares_path(email_reminder_share.reminder), notice: 'Invitation was successfully resent.'
     else
       redirect_to email_reminder_shares_path(email_reminder_share.reminder), error: 'Invitation could not be resent.'

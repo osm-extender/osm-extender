@@ -27,7 +27,8 @@ namespace :scheduled  do
           EmailReminderMailer.no_current_term(reminder, exception).deliver_now
           noterm_emails_sent[reminder.user_id].push reminder.section_id
         end
-      rescue Exception => exception
+      rescue => exception
+        EmailReminderMailer.failed(reminder).deliver_now
         exception_raised("Reminder Email (id: #{reminder.id}, user: #{reminder.user_id}, section: #{reminder.section_id})", exception)
       end
     end

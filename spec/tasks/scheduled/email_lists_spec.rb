@@ -89,16 +89,11 @@ describe 'rake scheduled:email_lists' do
       end
 
       it 'Exception' do
-        expect(@list).to receive(:get_hash_of_addresses) { raise ArgumentError, 'Just a test' }
+        exception = ArgumentError.new 'Just a test'
+        expect(@list).to receive(:get_hash_of_addresses) { raise exception }
         expect(STDOUT).to receive(:puts).with("\t\tAn Exception was raised (Just a test)")
-        expect{ task.execute }.to change { ActionMailer::Base.deliveries.size }.by(1)
-        mail = ActionMailer::Base.deliveries.last
-        expect(mail.to).to eq ['exceptions@example.com']
-        expect(mail.from).to eq ['notifier-mailer@example.com']
-        expect(mail.subject).to eq 'OSMExtender (TEST) - An Exception Occured in a Rake Task'
-        expect(mail.body.decoded).to include 'The message was: Just a test'
-        expect(mail.body.decoded).to include 'The task was:    Checking list for changed address (id: 123, user: 2, section: 3)'
-        expect(mail.body.decoded).to include 'The backtrace was:'
+        expect(Rollbar).to receive(:error).with(exception)
+        expect { task.execute }.not_to raise_error
       end
 
     end # describe Handles exceptions

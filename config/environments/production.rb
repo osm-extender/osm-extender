@@ -69,6 +69,13 @@ OSMExtender::Application.configure do
     :race_condition_ttl => 2.minutes
   }
 
+  # How to send email
+  config.action_mailer.delivery_method = :mailgun 
+  config.action_mailer.mailgun_settings = { 
+    api_key: Figaro.env.mailgun_api_key!, 
+    domain: Figaro.env.mailgun_domain!
+  }
+
   # URL Options (copy/complete into production_custom.rb)
   Rails.application.routes.default_url_options = {
     :protocol => 'https',
@@ -87,4 +94,3 @@ ActiveSupport::Deprecation.silenced = true
 
 # Load custom configuration
 require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
-

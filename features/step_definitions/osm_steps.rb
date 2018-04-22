@@ -458,7 +458,7 @@ Given /^an OSM request to get activity (\d+) will have tags "(.+)"$/ do |activit
 end
 
 Given /^an OSM request to get the notepad for section (\d+) will give "(.+)"$/ do |section_id, notepad|
-  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => notepad}.to_json, :content_type => 'application/json')
+  FakeWeb.register_uri(:post, 'https://www.onlinescoutmanager.co.uk/api.php?action=getNotepads', :body => {section_id => {'raw' => notepad, 'html' => "<p>#{notepad}</p>"}}.to_json, :content_type => 'application/json')
 end
 
 Given /^an OSM request to add activity to programme will work$/ do

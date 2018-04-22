@@ -246,7 +246,6 @@ class ApplicationController < ActionController::Base
   def render_error(exception)
     log_error(exception)
     Rollbar.error(exception)
-    email_error(exception)
     render :template => "error/500", :status => 500
   end
 
@@ -256,10 +255,6 @@ class ApplicationController < ActionController::Base
       Rails.backtrace_cleaner.send(:filter, exception.backtrace).join("\n    ") +
       "\n\n"
     )
-  end
-
-  def email_error(exception)
-    NotifierMailer.exception(exception, env, session).deliver_now
   end
 
   def clean_backtrace(exception)

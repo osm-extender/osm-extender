@@ -15,7 +15,7 @@ class EmailReminderMailer < ApplicationMailer
     @reminder = reminder
 
     mail ({
-      :subject => build_subject("Reminder Email for #{@reminder.section_name} Failed"),
+      :subject => build_subject("Reminder Email for #{@reminder.section_name} FAILED"),
       :to => @reminder.user.email_address_with_name
     })
   end
@@ -61,7 +61,7 @@ class EmailReminderMailer < ApplicationMailer
     end
 
     mail ({
-      :subject => build_subject('Preparing Email Reminder FAILED'),
+      :subject => build_subject("Reminder Email for #{@reminder.section_name} FAILED"),
       :to => @reminder.user.email_address_with_name
     })
   end
@@ -70,7 +70,7 @@ class EmailReminderMailer < ApplicationMailer
     @reminder = reminder
 
     mail ({
-      :subject => build_subject('Preparing Email Reminder FAILED'),
+      :subject => build_subject("Reminder Email for #{@reminder.section_name} FAILED"),
       :to => @reminder.user.email_address_with_name
     })
   end

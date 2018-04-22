@@ -68,12 +68,12 @@ class EmailReminderShare < ActiveRecord::Base
 
   def email_sharee
     if @was_new
-      EmailReminderMailer.shared_with_you(self).deliver_now
+      EmailReminderMailer.shared_with_you(self).deliver_later
     end
 
     if self.state_changed?
       new_state = state_change.last.to_sym
-      EmailReminderMailer.send(state, self).deliver_now unless state == :pending
+      EmailReminderMailer.send(state, self).deliver_later unless state == :pending
     end
 
     return true

@@ -3,7 +3,6 @@ namespace :scheduled  do
   def exception_raised(task, exception)
     puts "\t\tAn Exception was raised (#{exception.message})"
     Rollbar.error(exception)
-    NotifierMailer.rake_exception(task, exception).deliver_now
   end
 
   task :monthly => ['clean:all']

@@ -98,16 +98,11 @@ describe 'rake scheduled:automation_tasks' do
       end
 
       it 'Exception' do
-        expect(@task).to receive(:do_task) { raise ArgumentError, 'Just a test' }
+        exception = ArgumentError.new 'Just a test'
+        expect(@task).to receive(:do_task) { raise exception }
         expect(STDOUT).to receive(:puts).with("\t\tAn Exception was raised (Just a test)")
-        expect{ task.execute }.to change { ActionMailer::Base.deliveries.size }.by(1)
-        mail = ActionMailer::Base.deliveries.last
-        expect(mail.to).to eq ['exceptions@example.com']
-        expect(mail.from).to eq ['notifier-mailer@example.com']
-        expect(mail.subject).to eq 'OSMExtender (TEST) - An Exception Occured in a Rake Task'
-        expect(mail.body.decoded).to include 'The message was: Just a test'
-        expect(mail.body.decoded).to include 'The task was:    Automation Task (id: 1234, user: 2, section: 3)'
-        expect(mail.body.decoded).to include 'The backtrace was:'
+        expect(Rollbar).to receive(:error).with(exception)
+        expect { task.execute }.not_to raise_error
       end
 
     end # describe Handles exceptions
