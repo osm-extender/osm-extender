@@ -55,12 +55,10 @@ OSMExtender::Application.configure do
     :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
     'return-path' => 'osmx@localhost',  # Should be the email address portion of from
   }
-  NotifierMailer.send :default, {
-    :from => 'notifier-mailer@example.com',         # Can be in the format - "Name" <email_address>
-    'return-path' => 'notifier-mailer@example.com', # Should be the email address portion of from
-  }
-  NotifierMailer.options = {
-    :contact_form__to => 'contactus@example.com',
+  ContactUsMailer.send :default, {
+    :to => 'contactus@example.com',                 # Can be in the format - "Name" <email_address>
+    :from => 'contact-us-mailer@example.com',       # Can be in the format - "Name" <email_address>
+    'return-path' => 'contact-us-mailer@example.com', # Should be the email address portion of from
   }
   EmailReminderMailer.send :default, {
     :from => 'reminder-mailer@example.com',         # Can be in the format - "Name" <email_address>

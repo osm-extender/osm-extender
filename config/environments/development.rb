@@ -56,8 +56,8 @@ OSMExtender::Application.configure do
     :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
     'return-path' => 'osmx@localhost',  # Should be the email address portion of from
   }
-  NotifierMailer.options = {
-    :contact_form__to => 'contactus@example.com',
+  ContactUsMailer.send :default, {
+    :to => 'contactus@example.com',     # Can be in the format - "Name" <email_address>
   }
 
   # Whether to dump (or not) the schema after performing migrations
