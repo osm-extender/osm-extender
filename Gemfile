@@ -11,6 +11,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 4.1', '>= 4.2.7.1'
 gem 'activerecord-session_store', '~> 1.0'
 gem 'rb-readline'
+gem 'responders', '~> 2.0'
 
 # Authentication / Authorisation
 gem 'sorcery', '~> 0.11'
@@ -39,6 +40,7 @@ gem 'pry', '~> 0.9', require: false  # Nicer console to work in
 gem 'icalendar', '~> 2.2'             # Do stuff with ICS format files
 gem 'mimemagic', '~> 0.3.2'           # Get type of image file returned by OSM
 gem 'figaro', '~> 1.1'                # Use config/application.yml to hold environment variables for easier testing/development
+gem 'terminal-table', '~> 1.8'        # Display data in an ASCII table
 
 # Jobs in background
 gem 'delayed_job_active_record', '~> 4.0'

@@ -117,6 +117,31 @@ describe "Status fetching" do
 
   end # describe #database_size
 
+
+  it '#delayed_job' do
+    Delayed::Job.create handler: 'puts'
+    Delayed::Job.create handler: 'puts', locked_at: Time.now
+    Delayed::Job.create handler: 'puts', failed_at: Time.now
+    Delayed::Job.create handler: 'puts', failed_at: Time.now
+
+    expect(Status.new.delayed_job).to eq({
+      settings: {
+        default_priority: 5,
+        max_attempts: 5,
+        max_run_time: 14400,
+        sleep_delay: 15,
+        destroy_failed_jobs: false,
+        delay_jobs: false
+      },
+      jobs: {
+        total: 4,
+        locked: 1,
+        failed: 2,
+      }
+    })
+  end # it #delayed_job
+
+
   it '#users' do
     activated = double(ActiveRecord::Relation)
     expect(User).to receive_message_chain(:unactivated, :count).and_return(1)

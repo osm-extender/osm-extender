@@ -58,6 +58,21 @@ class Status
     }
   end
 
+  def delayed_job
+    return @delayed_job unless @delayed_job.nil?
+
+    wanted_settings = [:default_priority, :max_attempts, :max_run_time, :sleep_delay, :destroy_failed_jobs, :delay_jobs]
+    settings = Hash[ wanted_settings.map{ |i| [i, Delayed::Worker.send(i)] } ]
+
+    @delayed_job = {
+      settings: settings,
+      jobs: {
+        total: Delayed::Job.count,
+        locked: Delayed::Job.where.not(locked_at: nil).count,
+        failed: Delayed::Job.where.not(failed_at: nil).count,
+      }
+    }
+  end
 
   def users
     @users ||= {

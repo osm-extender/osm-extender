@@ -40,6 +40,11 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 
+  config.filter_rails_from_backtrace!
+
+  config.include ControlerSpecHelper, type: :controller
+  config.render_views
+
   config.before(:each) do
     FakeWeb.clean_registry
     Timecop.return
