@@ -39,4 +39,5 @@ after_script:
 notifications:
   slack:
     on_success: always
+    on_failure: always
     secure: "dv+/jJemDGkupHWWDJqgZ5Gqgg+IuCmf5qv1iiH4iJ/c7aOIVo5QDxnPZ7rqrtw9ueOcxcbVtAGtBr1zn8UWp9fd+mL6sMpqgOK2Br0VKXBUgRv6cSaCD32g/bg9tqXN5bUx1nZiM9Qi6Vf2JLn35eu7b9tskwS8eTDoxqUCHqc="
