@@ -57,8 +57,9 @@ class StatusController < ApplicationController
   private
 
   def require_authorized
-    keys = Figaro.env.status_keys.split(':')
-    return true if keys.include? params[:key]
+    if Figaro.env.status_keys?
+      return true if Figaro.env.status_keys.split(':').include? params[:key]
+    end
     require_osmx_permission :view_status
   end
 
