@@ -9,6 +9,5 @@ tmp/
 .sass-cache/
 config/application.yml
 config/environments/*_custom.rb
-config/database.yml
 config/unicorn.conf
 public/assets

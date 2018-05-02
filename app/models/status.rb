@@ -58,6 +58,21 @@ class Status
     }
   end
 
+  def delayed_job
+    return @delayed_job unless @delayed_job.nil?
+
+    wanted_settings = [:default_priority, :max_attempts, :max_run_time, :sleep_delay, :destroy_failed_jobs, :delay_jobs]
+    settings = Hash[ wanted_settings.map{ |i| [i, Delayed::Worker.send(i)] } ]
+
+    @delayed_job = {
+      settings: settings,
+      jobs: {
+        total: Delayed::Job.count,
+        locked: Delayed::Job.where.not(locked_at: nil).count,
+        failed: Delayed::Job.where.not(failed_at: nil).count,
+      }
+    }
+  end
 
   def users
     @users ||= {
@@ -65,40 +80,6 @@ class Status
       activated: User.activated.not_connected_to_osm.count,
       connected: User.activated.connected_to_osm.count,
       total: User.count
-    }
-  end
-
-
-  def sessions
-    return @sessions unless @session.nil?
-
-    totals = {
-      all: Session.count,
-      users: Session.users.count,
-      guests: Session.guests.count,
-    }
-
-    average_ages = {all: 0, users: 0, guests: 0}
-    average_durations = {all: 0, users: 0, guests: 0}
-    # Populate average hashes with totals - we'll divide them later
-    Session.pluck(:user_id, :created_at, :updated_at).each_with_object(Hash.new(0)) do |(user_id, created_at, updated_at), hash|
-      user_type = user_id ? :users : :guests
-      age = Time.now.to_i - created_at.to_i
-      duration = updated_at.to_i - created_at.to_i
-      average_ages[:all] += age
-      average_ages[user_type] += age
-      average_durations[:all] += duration
-      average_durations[user_type] += duration
-    end
-    average_ages.each_key { |key| average_ages[key] /= totals[key] unless totals[key].eql?(0) } # turn the gathered sums into an average
-    average_durations.each_key { |key| average_durations[key] /= totals[key] unless totals[key].eql?(0) } # turn the gathered sums into an average
-
-    @sessions = {
-      totals: totals,
-      average_ages: average_ages,
-      average_durations: average_durations,
-      oldest: Session.first,
-      newest: Session.last
     }
   end
 

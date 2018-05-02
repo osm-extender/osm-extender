@@ -1,6 +1,6 @@
 class DeleteAllSessions < ActiveRecord::Migration
   def up
     # Old sessions are incompatible (current_section is stored as an ID now)
-    Session.delete_all
+    Session.delete_all if defined?(Session)
   end
 end

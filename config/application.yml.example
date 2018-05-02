@@ -24,10 +24,26 @@ signup_code:            IF PRESENT THIS CODE MUST BE ENTERED TO CREATE AN ACCOUN
 rollbar_access_token:   USED FOR REPORTING ERRORS TO ROLLBAR
 mailgun_domain:         DOMAIN USED BY MAILGUN FOR SENDING EMAIL
 mailgun_api_key:        USED FOR SENDING EMAIL THROUGH MAILGUN
+status_keys:            USED FOR ACCESSING THE STATUS PAGES WITHOUT SIGINING IN - SEPERATE WITH :
+database_host:          THE HOST TO CONNECT TO THE DATABASE ON (default 'localhost')
+database_name:          THE DATABASE NAME TO CONNECT TO
+database_username:      THE USERNAME TO AUTHENTICATE TO THE DATABASE WITH
+database_password:      THE PASSWORD TO AUTHENTICATE TO THE DATABASE WITH
+database_pool:          THE SIZE OF THE DATABASE CONNECTION POOL (default 5)
+database_timeout:       THE TIMEOUT FOR CONNECTING TO THE DATABASE IN ILLISECONDS (default 5000)
 
-
-# Values for the test environment - don't change these, remember to also add to .travis.yml
+# Values for the test environment - remember to keep .travis.yml in sync
 test:
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+  database_host:          THE HOST TO CONNECT TO THE DATABASE ON (default 'localhost')
+  database_name:          THE DATABASE NAME TO CONNECT TO
+  database_username:      THE USERNAME TO AUTHENTICATE TO THE DATABASE WITH
+  database_password:      THE PASSWORD TO AUTHENTICATE TO THE DATABASE WITH
+  database_pool:          THE SIZE OF THE DATABASE CONNECTION POOL (default 5)
+  database_timeout:       THE TIMEOUT FOR CONNECTING TO THE DATABASE IN ILLISECONDS (default 5000)
+# DO NOT CHANGE ANY OF THESE
   secret_key_base:        USE 'bundle exec rake secret' TO GENERATE THIS
   osm_api_name:           Test API
   osm_api_id:             "12"
@@ -36,3 +52,4 @@ test:
   recaptcha_private_key:  "00998877665544332211"
   ga_tracking_id:         ~
   signup_code:            ~
+  status_keys:            test-a:test-b

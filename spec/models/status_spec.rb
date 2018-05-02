@@ -117,6 +117,31 @@ describe "Status fetching" do
 
   end # describe #database_size
 
+
+  it '#delayed_job' do
+    Delayed::Job.create handler: 'puts'
+    Delayed::Job.create handler: 'puts', locked_at: Time.now
+    Delayed::Job.create handler: 'puts', failed_at: Time.now
+    Delayed::Job.create handler: 'puts', failed_at: Time.now
+
+    expect(Status.new.delayed_job).to eq({
+      settings: {
+        default_priority: 5,
+        max_attempts: 5,
+        max_run_time: 14400,
+        sleep_delay: 15,
+        destroy_failed_jobs: false,
+        delay_jobs: false
+      },
+      jobs: {
+        total: 4,
+        locked: 1,
+        failed: 2,
+      }
+    })
+  end # it #delayed_job
+
+
   it '#users' do
     activated = double(ActiveRecord::Relation)
     expect(User).to receive_message_chain(:unactivated, :count).and_return(1)
@@ -133,62 +158,5 @@ describe "Status fetching" do
       total: 6
     })
   end
-
-
-  describe '#sessions' do
-    it 'Gets counts & averages' do
-      Timecop.freeze
-      expect(Session).to receive_message_chain(:guests, :count).and_return(1)
-      expect(Session).to receive_message_chain(:users, :count).and_return(2)
-      expect(Session).to receive(:count).and_return(3)
-      expect(Session).to receive(:first).and_return(Session.new(id: 1))
-      expect(Session).to receive(:last).and_return(Session.new(id: 2))
-      expect(Session).to receive(:pluck).with(:user_id, :created_at, :updated_at).and_return([
-        [1, 10.minutes.ago, 8.minutes.ago],
-        [2, 8.minutes.ago, 4.minutes.ago],
-        [nil, 15.minutes.ago, 14.minutes.ago],
-      ])
-
-      # Actually get them
-      expect(Status.new.sessions).to eq ({
-        totals: {
-          all: 3,
-          users: 2,
-          guests: 1,
-        },
-        average_durations: {
-          all: 2.minutes + 20.seconds,
-          users: 3.minutes,
-          guests: 1.minutes,
-        },
-        average_ages: {
-          all: 11.minutes,
-          users: 9.minutes,
-          guests: 15.minutes,
-        },
-        oldest: Session.new(id: 1),
-        newest: Session.new(id: 2),
-      })
-    end
-
-    it 'handles 0 sessions' do
-      expect(Session).to receive_message_chain(:guests, :count).and_return(0)
-      expect(Session).to receive_message_chain(:users, :count).and_return(0)
-      expect(Session).to receive(:count).and_return(0)
-      expect(Session).to receive(:first).and_return(nil)
-      expect(Session).to receive(:last).and_return(nil)
-      expect(Session).to receive(:pluck).with(:user_id, :created_at, :updated_at).and_return([])
-
-      # Actually get them
-      expect(Status.new.sessions).to eq ({
-        totals: {all: 0, users: 0, guests: 0},
-        average_durations: {all: 0, users: 0, guests: 0},
-        average_ages: {all: 0, users: 0, guests: 0},
-        oldest: nil,
-        newest: nil,
-      })
-    end
-
-  end # describe #sessions
 
 end

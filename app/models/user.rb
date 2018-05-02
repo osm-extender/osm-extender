@@ -12,7 +12,6 @@ class User < ActiveRecord::Base
   has_many :hidden_announcements, dependent: :destroy, inverse_of: :user
   has_many :emailed_announcements, dependent: :destroy, inverse_of: :user
   has_many :usage_log, inverse_of: :user
-  has_many :sessions, inverse_of: :user
 
   scope :activated, -> { where(activation_state: 'active') }
   scope :unactivated, -> { where(activation_state: 'pending') }

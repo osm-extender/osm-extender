@@ -6,7 +6,6 @@ namespace :scheduled  do
   end
 
   task :monthly => ['clean:all']
-  task :daily => [:automation_tasks, :reminder_emails, :email_lists, :statistics]
-  task :hourly => [:delete_old_sessions, :delete_nonactivated_users]
+  task :daily => [:automation_tasks, :reminder_emails, :email_lists, :statistics, :delete_nonactivated_users]
 
 end

@@ -1,34 +1,26 @@
 <%= page_title 'Status' %>
 
+<ul>
+  <li><%= link_to 'OSMX Version', '#version' %></li>
+  <%- %w{unicorn_workers cache delayed_job database_size users}.each do |type| %>
+    <li>
+      <%= link_to type.titleize, "##{type}"%>
+      <%- [:cacti, :json, :csv, :text_table].each do |format| %>
+        <%= link_to "[#{format}]", send("status_#{type}_path", format: format) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<a name="version"/>
 <h2>OSMX Version</h2>
 <p>Running commit <%= link_to @status.commit[:id], "https://github.com/robertgauld/OSMExtender/commit/#{@status.commit[:id]}" %> - <%= @status.commit[:title] %></p>
 
-<h2>Sessions</h2>
-<%- sessions = @status.sessions %>
-<p>There are a total of <%= number_with_delimiter(sessions[:totals][:all]) %> <%= "session".pluralize(sessions[:totals][:all]) %>.</p>
-<ul>
-  <li><%= pluralize sessions[:totals][:users], 'user' %>.</li>
-  <li><%= pluralize sessions[:totals][:guests], 'guest' %>.</li>
-  <li>
-    The average session duration is <%= time_ago_in_words(sessions[:average_durations][:all].seconds.ago) %>.<ul>
-      <li><%= time_ago_in_words(sessions[:average_durations][:users].seconds.ago) %> for users.</li>
-      <li><%= time_ago_in_words(sessions[:average_durations][:guests].seconds.ago) %> for guests.</li>
-    </ul>
-  </li>
-  <li>
-    The average session age is <%= time_ago_in_words(sessions[:average_ages][:all].seconds.ago) %>.<ul>
-      <li><%= time_ago_in_words(sessions[:average_ages][:users].seconds.ago) %> for users.</li>
-      <li><%= time_ago_in_words(sessions[:average_ages][:guests].seconds.ago) %> for guests.</li>
-    </ul>
-  </li>
-  <li>The oldest session is <%= time_ago_in_words sessions[:oldest].created_at %> old.</li>
-  <li>The newest session is <%= time_ago_in_words sessions[:newest].created_at %> old.</li>
-  <li>Sessions expire after <%= seconds_to_time Rails.application.config.sorcery.session_timeout %> of inactivity.</li>
-</ul>
-
-<h2>Unicorn</h2>
+<a name="unicorn_workers"/>
+<h2>Unicorn Workers</h2>
 <p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>
 
+<a name="cache"/>
 <h2>Cache</h2>
 <%- cache = @status.cache %>
 <%- used = cache[:ram_used] %>
@@ -40,7 +32,44 @@
 <%- cache_attempts = cache[:cache_attempts].to_f %>
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage(cache[:cache_hits_percent], precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage(cache[:cache_misses_percent], precision: 1) %>) cache misses.</p>
 
-<h2>Database</h2>
+<a name="delayed_job"/>
+<h2>Delayed Job</h2>
+<%- delayed_job = @status.delayed_job %>
+<%- jobs = delayed_job[:jobs] %>
+<table>
+  <tr>
+    <th>State</th>
+    <th>Count</th>
+  </tr>
+  <%- [:locked, :failed, :total].each do |state| %>
+    <tr>
+      <td><%= state.to_s.titleize %></td>
+      <td><%= jobs[state].inspect %></td>
+    </tr>
+  <%- end %>
+</table>
+<h3>Settings</h3>
+<%- settings = delayed_job[:settings] %>
+<table>
+  <%- settings.each do |key, value| %>
+    <tr>
+      <td><%= key %></td>
+      <td>
+        <%- if value.is_a?(ActiveSupport::Duration) # It's a time %>
+          <%- if value >= 3600 %><%= (value / 3600) %> hours<%- end %>
+          <%- if value >= 60 %><%= ((value / 60) % 60 ) %> minutes<%- end %>
+          <%= (value % 60) %> seconds
+        <%- else %>
+          <%= value.inspect %>
+        <%- end %>
+      </td>
+    </tr>
+  <%- end %>
+</table>
+
+
+<a name="database_size"/>
+<h2>Database Size</h2>
 <%- database_size = @status.database_size %>
 <%- totals = database_size[:totals] %>
 <table id="database-sizes">
@@ -73,6 +102,7 @@
   </tfoot>
 </table>
 
+<a name="users"/>
 <h2>Users</h2>
 <%- users = @status.users %>
 <p>There are a total of <%= users[:total] %> users.</p>
