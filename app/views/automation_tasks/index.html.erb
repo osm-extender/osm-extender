@@ -17,7 +17,7 @@
         <td><%= yes_no task.active? %></td>
         <td><%= task.human_configuration %></td>
         <td>
-          <%= link_to '[Run now]', self.send("#{task.class.name.singularize.underscore}_perform_path"), method: :post %>
+          <%= link_to '[Run now]', self.send("#{task.class.name.singularize.underscore}_perform_path"), method: :post, target: '_blank' %>
           <%= link_to '[Edit]', self.send("edit_#{task.class.name.singularize.underscore}_path", task) %>
           <%= link_to '[Unconfigure]', self.send("#{task.class.name.singularize.underscore}_path", task), data: {:confirm => 'Are you sure?'}, method: :delete %>
         </td>

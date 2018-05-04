@@ -62,19 +62,12 @@ class AutomationTasksController < ApplicationController
   def perform_task
 #TODO - check for nil @task
     @task = model.where(['section_id = ? AND type = ?', current_section.to_i, model.to_s]).first
-    @task = @task.do_task(current_user)
-    if @task[:log_lines].is_a?(Array) && !@task[:log_lines].empty?
-      flash[:information] = view_context.html_from_log_lines(@task[:log_lines])
-    end
+    @result = @task.do_task(current_user)
 
-    if @task[:success]
-      redirect_to automation_tasks_path, notice: 'Task was successfully performed.'
+    if @result[:success]
+      flash[:notice] = 'Task was successfully performed.'
     else
-      error_message = 'Task was unsuccessfully performed.'.html_safe
-      if @task[:errors].is_a?(Array) && !@task[:errors].empty?
-        error_message << view_context.html_from_log_lines(@task[:errors])
-      end
-      redirect_to automation_tasks_path, error: error_message
+      flash[:error] = 'Task was unsuccessfully performed.'
     end
   end
 
