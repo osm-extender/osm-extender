@@ -16,7 +16,6 @@ module OSMExtender
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths << "#{config.root}/lib"
-    config.autoload_paths << "#{config.root}/app/renderers"
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -66,6 +65,8 @@ module OSMExtender
       PaperTrail.whodunnit = "console: #{who}"
     end
 
+    # Redirect www.... host to ...
+    config.middleware.insert_before 0, 'RedirectWwwMiddleware'
 
     config.active_record.raise_in_transactional_callbacks = true
 
