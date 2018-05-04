@@ -12,4 +12,3 @@ Some rake tasks have been provided to make the administration and management of 
     - scheduled:automation\_tasks - this will run the automation tasks
     - scheduled:statistics - this will gather site statistics for the days they have not been done for. This will speed up the viewing of statistics graphs as well as making the data marginally more accurate.
     - scheduled:delete\_nonactivated\_users - this will delete nonactivated users whose token has expired
-* monitoring:snmp[base\_oid] - this will run a script which snmpd's pass_persist can use to get status information about the system. Replace base\_oid with the base OID you'd like the information available from. See [SNMP OIDs](/robertgauld/OSMExtender/wiki/SNMP-OIDs).
