@@ -1,0 +1,11 @@
+<%= page_title "Performed #{@task.human_name} Task for #{current_section.name} (#{current_section.group_name})" %>
+
+<%- if @result[:errors].is_a?(Array) and @result[:errors].any? %>
+<h2>Errors</h2>
+<%= html_from_log_lines(@result[:errors]) %>
+<% end %>
+
+<%- if @result[:log_lines].is_a?(Array) and @result[:log_lines].any? %>
+<h2>Log</h2>
+<%= html_from_log_lines @result[:log_lines] %>
+<% end %>
