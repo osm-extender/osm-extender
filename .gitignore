@@ -1,3 +1,4 @@
+docker.envfile
 .bundle
 .envrc
 todo.txt
@@ -8,6 +9,4 @@ log/*
 tmp/
 .sass-cache/
 config/application.yml
-config/environments/*_custom.rb
-config/unicorn.conf
 public/assets

@@ -4,9 +4,10 @@ describe 'rake scheduled:clean:announcements' do
     expect(task.prerequisites).to include 'environment'
   end
 
-  it 'Executes' do
-    expect(Announcement).to receive(:delete_old).and_return([:a])
-    expect(STDOUT).to receive(:puts).with('1 announcements deleted.')
+  it 'Delegates to PruneAnnouncementsJob' do
+    job = double(PruneAnnouncementsJob)
+    expect(PruneAnnouncementsJob).to receive(:new).and_return(job)
+    expect(job).to receive(:perform_now).and_return(nil)
     expect { task.execute }.not_to raise_error
   end
 

@@ -50,27 +50,4 @@ OSMExtender::Application.configure do
     :host => 'test',
   }
 
-  # Mailer options
-  ActionMailer::Base.send :default, {
-    :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
-    'return-path' => 'osmx@localhost',  # Should be the email address portion of from
-  }
-  ContactUsMailer.send :default, {
-    :to => 'contactus@example.com',                 # Can be in the format - "Name" <email_address>
-    :from => 'contact-us-mailer@example.com',       # Can be in the format - "Name" <email_address>
-    'return-path' => 'contact-us-mailer@example.com', # Should be the email address portion of from
-  }
-  EmailReminderMailer.send :default, {
-    :from => 'reminder-mailer@example.com',         # Can be in the format - "Name" <email_address>
-    'return-path' => 'reminder-mailer@example.com', # Should be the email address portion of from
-  }
-  AutomationTaskMailer.send :default, {
-    :from => 'automation-task-mailer@example.com',  # Can be in the format - "Name" <email_address>
-    'return-path' => 'automation-task-mailer@example.com', # Should be the email address portion of from
-  }
-  UserMailer.send :default, {
-    :from => 'user-mailer@example.com',             # Can be in the format - "Name" <email_address>
-    'return-path' => 'user-mailer@example.com',     # Should be the email address portion of from
-  }
-
 end

@@ -1,6 +1,5 @@
 language: ruby
 rvm:
-  - 2.4.4
   - 2.5.1
 branches:
   only:
@@ -18,6 +17,8 @@ env:
     - recaptcha_public_key="11223344556677889900"
     - recaptcha_private_key="00998877665544332211"
     - status_keys="test-a:test-b"
+    - mailgun_domain="osmx.example.com"
+    - contact_us_to_address="contactus@example.com"
 before_install:
   - gem install bundler
   - gem install bundle-audit

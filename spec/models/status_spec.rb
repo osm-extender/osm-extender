@@ -4,7 +4,7 @@ describe "Status fetching" do
     it 'Returns number of workers' do
       status = Status.new
       expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
-      expect(status).to receive('`').with('pgrep -cP 1234').and_return('3')
+      expect(status).to receive('`').with('pgrep -P 1234').and_return("1\n2\n3\n")
       expect(status.unicorn_workers).to eq 3
     end
 
@@ -120,9 +120,9 @@ describe "Status fetching" do
 
   it '#delayed_job' do
     Delayed::Job.create handler: 'puts'
-    Delayed::Job.create handler: 'puts', locked_at: Time.now
-    Delayed::Job.create handler: 'puts', failed_at: Time.now
-    Delayed::Job.create handler: 'puts', failed_at: Time.now
+    Delayed::Job.create handler: 'puts', locked_at: Time.now, cron: '* * * * *'
+    Delayed::Job.create handler: 'puts', failed_at: Time.now, cron: '* * * * *'
+    Delayed::Job.create handler: 'puts', failed_at: Time.now, cron: '* * * * *'
 
     expect(Status.new.delayed_job).to eq({
       settings: {
@@ -137,6 +137,7 @@ describe "Status fetching" do
         total: 4,
         locked: 1,
         failed: 2,
+        cron: 3
       }
     })
   end # it #delayed_job
@@ -151,12 +152,22 @@ describe "Status fetching" do
     expect(User).to receive(:count).and_return(6)
 
     # Actually get them
-    expect(Status.new.users).to eq ({
+    expect(Status.new.users).to eq({
       unactivated: 1,
       activated: 2,
       connected: 3,
       total: 6
     })
+  end
+
+  describe '#health' do
+    it 'is healthy' do
+      expect(Status.new.health).to eq({
+        healthy: true,
+        ok: [],
+        not_ok: []
+      })
+    end
   end
 
 end

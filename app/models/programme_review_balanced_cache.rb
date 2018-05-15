@@ -12,11 +12,4 @@ class ProgrammeReviewBalancedCache < ActiveRecord::Base
 
   scope :for_section, ->(section) { where section_id: section.to_i }
 
-  def self.delete_old(older_than=1.year.ago)
-    if older_than.is_a?(String)
-      older_than = older_than.split.inject { |count, unit| count.to_i.send(unit) }
-    end
-    destroy_all ['last_used_at <= ?', older_than]
-  end
-
 end

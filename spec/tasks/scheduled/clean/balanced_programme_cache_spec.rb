@@ -4,9 +4,10 @@ describe 'rake scheduled:clean:balanced_programme_cache' do
     expect(task.prerequisites).to include 'environment'
   end
 
-  it 'Executes' do
-    expect(ProgrammeReviewBalancedCache).to receive(:delete_old).and_return([:a, :b, :c, :d])
-    expect(STDOUT).to receive(:puts).with('4 programme review caches deleted.')
+  it 'Delegates to PruneBalancedProgrammeCacheJob' do
+    job = double(PruneBalancedProgrammeCacheJob)
+    expect(PruneBalancedProgrammeCacheJob).to receive(:new).and_return(job)
+    expect(job).to receive(:perform_now).and_return(nil)
     expect { task.execute }.not_to raise_error
   end
 

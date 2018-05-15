@@ -11,7 +11,7 @@ OSMExtender::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_files = false
+  config.serve_static_files = true
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
@@ -28,19 +28,32 @@ OSMExtender::Application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-  # Set log level
-  config.log_level = :debug
+  # Log to STDOUT
+  logger = Logger.new(STDOUT)
+  logger.formatter = Logger::Formatter.new
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+  STDOUT.sync = true
+
+  # Set log level - :debug, :info, :warn, :error, :fatal, or :unknown
+  config.log_level = :info
+
+  # Turn of colour in rails log
+  config.colorize_logging = false
+
+  # Automatically tag log messages
+  config.log_tags = [ :uuid ]
 
   # Print deprecation notices to the Rails logger
-  config.active_support.deprecation = :log
+  config.active_support.deprecation = :notify
 
   # Which sort of cache to use
-  config.cache_store = :memory_store, {
-    :size => 32 * (1024 * 1024), #MiB
-    :compress => true,
-    :compress_threshold => 1 * (1024 * 1024), #MiB
-    :expires_in => 30.minutes,
-    :race_condition_ttl => 2.minutes
+  config.cache_store = :redis_store, {
+    host: Figaro.env.redis_host || 'localhost',
+    port: Figaro.env.redis_port? ? Figaro.env.redis_port.split(':').last.to_i : 6379,  # Sometimes it appears as tcp://<IP-ADDRESS>:6379
+    db: Figaro.env.redis_db? ? Figaro.env.redis_db.to_i : 0,
+    password: Figaro.env.redis_password || nil,
+    expires_in: Figaro.env.redis_expires_in? ? Figaro.env.redis_expires_in.to_i : 10.minutes,
+    namespace: Figaro.env.redis_namespace || "osmx.#{Rails.env}"
   }
 
   # How to send email
@@ -50,21 +63,18 @@ OSMExtender::Application.configure do
     domain: Figaro.env.mailgun_domain!
   }
 
-  # URL Options (copy/complete into staging_custom.rb)
+  # URL Options
   Rails.application.routes.default_url_options = {
     :protocol => 'https',
-    :host => 'localhost',
+    :host => Figaro.env.routes_host!,
   }
 
   # Whether to dump (or not) the schema after performing migrations
   config.active_record.dump_schema_after_migration = false
 
+  # Enable threaded mode
+  # config.threadsafe!
 end
 
-
 ActiveSupport::Deprecation.silenced = true
-ActionController::Parameters.action_on_unpermitted_parameters ||= :raise
-
-
-# Load custom configuration
-require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+ActionController::Parameters.action_on_unpermitted_parameters = :raise

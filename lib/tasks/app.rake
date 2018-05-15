@@ -1,3 +1,3 @@
-namespace :app  do
+namespace :app do
 
 end

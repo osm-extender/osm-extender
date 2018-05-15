@@ -24,7 +24,7 @@ class RedirectWwwMiddleware
   private
 
   def redirect?(request)
-    request.host.downcase[0..3].eql?('www.')
+    request.host[0..3].downcase.eql?('www.')
   end
 
   def redirect_to(request)

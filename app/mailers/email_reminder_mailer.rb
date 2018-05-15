@@ -1,5 +1,10 @@
 class EmailReminderMailer < ApplicationMailer
 
+  default **get_defaults(
+    name: Figaro.env.automation_task_from_name? ? Figaro.env.automation_task_from_name : 'OSMX Reminders',
+    mailname: Figaro.env.automation_task_from_mailname? ? Figaro.env.automation_task_from_mailname : 'reminders',
+  )
+
   def reminder_email(reminder, data, send_to)
     @reminder = reminder
     @data = data

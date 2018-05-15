@@ -14,4 +14,12 @@ class ApplicationMailer < ActionMailer::Base
     return "#{start} - #{subject}"
   end
 
+  def self.get_defaults(name:, mailname:, domain: Figaro.env.mailgun_domain!)
+    mail_address = "#{mailname}@#{domain}"
+    {
+      from: "\"#{name}\" <#{mail_address}>",
+      address: mail_address
+    }
+  end
+
 end

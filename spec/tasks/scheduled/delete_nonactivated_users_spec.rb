@@ -4,9 +4,10 @@ describe 'rake scheduled:delete_nonactivated_users' do
     expect(task.prerequisites).to include 'environment'
   end
 
-  it 'Executes' do
-    expect(User).to receive_message_chain(:activation_expired, :destroy_all).and_return([User.new(id: 1), User.new(id: 5)])
-    expect(STDOUT).to receive(:puts).with('2 users deleted')
+  it 'Delegates to PruneUnactivatedUsersJob' do
+    job = double(PruneUnactivatedUsersJob)
+    expect(PruneUnactivatedUsersJob).to receive(:new).and_return(job)
+    expect(job).to receive(:perform_now).and_return(nil)
     expect { task.execute }.not_to raise_error
   end
 

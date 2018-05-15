@@ -1,0 +1,51 @@
+<%= page_title "Delayed Job - #{@job.id}" %>
+
+<p>
+  <b>Status:</b>
+  <%- if @job.run_at? %>Waiting <%= @job.run_at.past? ? 'since' : 'for' %> <%= @job.run_at %> (<%= distance_of_time_in_words_to_now @job.run_at %> <%=@job.run_at.past? ? 'ago' : 'from now' %>)<br/><%- end %>
+  <%- if @job.locked_at %>Running since <%= @job.locked_at %> (<%= distance_of_time_in_words_to_now @job.locked_at %> ago)<br/><%- end %>
+  <%- if @job.failed_at? %>Failed since <%= @job.failed_at %> (<%= distance_of_time_in_words_to_now @job.failed_at %> ago)<br/><%- end %>
+</p>
+
+<p>
+  <b>Class:</b>
+  <%= @handler.class %>
+</p>
+
+<p>
+  <b>Arguments:</b>
+  <%= @handler.arguments.inspect %>
+</p>
+
+<p>
+  <b>Queue:</b>
+  <%= @job.queue.inspect %>
+  -
+  <%= @handler.queue_name %>
+</p>
+
+<p>
+  <b>Cron:</b>
+  <%= @job.cron %>
+</p>
+
+<p>
+  <b>Priority:</b>
+  <%= @job.priority %>
+  -
+  <%- if @job.priority = @default_priority %>
+    Default
+  <%- else %>
+    <%= (@job.priority < @default_priority) ? "More important by #{@default_priority - @job.priority}" : "Less important by #{@job.priority - @default_priority}" %>
+  <%- end %>
+</p>
+
+<p>
+  <b>Attempts:</b>
+  <%= @job.attempts %>
+</p>
+
+<p>
+  <b>Last Error:</b>
+  <pre><%= @job.last_error %></pre>
+</p>

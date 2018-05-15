@@ -7,6 +7,8 @@ class SessionsController < ApplicationController
 
   def create
     user = login(params[:email_address].downcase, params[:password])
+    Rails.logger.debug "SessionsController#create: user is #{user.inspect}"
+
     if user
       # since user has remembered their password remove any reset tokens
       user.clear_reset_password_token
@@ -14,7 +16,9 @@ class SessionsController < ApplicationController
 
       # Set current section
       if current_user.connected_to_osm?
+        Rails.logger.debug "SessionsController#create: user is connected to OSM."
         sections = Osm::Section.get_all(osm_api)
+        Rails.logger.debug "SessionsController#create: user has access to #{sections.count} sections."
         set_current_section sections.first
         if current_user.startup_section?
           sections.each do |section|
@@ -26,9 +30,11 @@ class SessionsController < ApplicationController
         end
       end
 
+      Rails.logger.debug "SessionsController#create: logging, flashing and redirecting."
       log_usage(:result => 'success', :section_id => nil)
       flash[:notice] = 'Successfully signed in.'
       redirect_to (session[:return_to_url].nil? ? my_page_path : session.delete(:return_to_url) )
+      Rails.logger.debug "SessionsController#create: done!"
     else
       user = User.find_by(email_address: params[:email_address].downcase)
       if user && user.activation_state.eql?('pending')

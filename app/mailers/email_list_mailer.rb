@@ -1,5 +1,10 @@
 class EmailListMailer < ApplicationMailer
 
+  default **get_defaults(
+    name: Figaro.env.automation_task_from_name? ? Figaro.env.automation_task_from_name : 'OSMX Notifications',
+    mailname: Figaro.env.automation_task_from_mailname? ? Figaro.env.automation_task_from_mailname : 'notifications',
+  )
+
   def changed(email_list)
     @email_list = email_list
     mail ({

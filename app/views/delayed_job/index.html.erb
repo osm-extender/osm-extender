@@ -5,52 +5,42 @@
 <table>
   <tr>
     <th>id</th>
+    <th>Handler Class</th></th>
     <th>Queue</th>
     <th>Status</th>
     <th>Priority</th>
     <th>Attempts</th>
     <th>Last error</th>
-    <th>Run at</tH>
-    <th>Locked at</tH>
-    <th>Failed at</tH>
-    <th>Created at</th>
+    <th>Run at</th>
+    <th>Cron?</th>
   </tr>
   <%- @jobs.each do |job| %>
-  <%- handler = YAML::load(Delayed::Job.first.handler) %>
-  <%- job_text = "#{handler.object.name}#{(handler.object.methods.include?(:new) ? ' self.' : '.') + handler.method_name.to_s}(#{handler.args.map{|i| i.inspect}.join(', ')})" %>
+    <%- handler = YAML::load(job.handler) %>
     <tr>
-      <td title="<%= job_text %>"><%= job.id %></td>
+      <td><%= link_to job.id, delayed_job_path(job) %></td>
+      <td><%= handler.class %></td>
       <td><%= job.queue %></td>
       <td>
-        <%- if job.run_at? %>Waiting<%-end %>
+        <%- if job.run_at? %>Waiting<%- end %>
         <%- if job.locked_at %>Running<%- end %>
         <%- if job.failed_at? %>Failed<%- end %>
       </td>
       <td>
         <%= job.priority %><br/>
         <%- if job.priority = @settings[:default_priority] %>
-          Default
+          (Default)
         <%- else %>
-          <%= (job.priority < @settings[:default_priority]) ? 'Higher' : 'Lower' %>
+          (<%= (job.priority < @settings[:default_priority]) ? 'Higher' : 'Lower' %>)
         <%- end %>
       </td>
       <td><%= job.attempts %></td>
-      <td><%= job.last_error %></td>
+      <td><%= job.last_error&.lines&.first %></td>
       <td>
         <%= job.run_at %>
-        <%- if job.run_at? %><br/><%= distance_of_time_in_words_to_now(job.run_at) %> ago<%- end %>
+        <%- if job.run_at? %><br/><%= distance_of_time_in_words_to_now(job.run_at) %> <%= job.run_at.past? ? 'ago' : 'from now' %><%- end %>
       </td>
       <td>
-        <%= job.locked_at %>
-        <%- if job.locked_at? %><br/><%= distance_of_time_in_words_to_now(job.locked_at) %> ago<%- end %>
-      </td>
-      <td>
-        <%= job.failed_at %>
-        <%- if job.failed_at? %><br/><%= distance_of_time_in_words_to_now(job.failed_at) %> ago<%- end %>
-      </td>
-      <td>
-        <%= job.created_at %>
-        <br/><%= distance_of_time_in_words_to_now(job.created_at) %> ago
+        <%= job.cron.present? ? 'Yes' : '' %>
       </td>
     </tr>
   <%- end %>

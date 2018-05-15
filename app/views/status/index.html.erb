@@ -2,6 +2,13 @@
 
 <ul>
   <li><%= link_to 'OSMX Version', '#version' %></li>
+  <li>
+    Health
+    <%- [:cacti, :json, :csv, :text_table].each do |format| %>
+      <%= link_to "[#{format}]", status_health_path(format: format) %>
+    <% end %>
+    <%= link_to '[txt]', status_health_path(format: :txt) %>
+  </li>
   <%- %w{unicorn_workers cache delayed_job database_size users}.each do |type| %>
     <li>
       <%= link_to type.titleize, "##{type}"%>
@@ -41,7 +48,7 @@
     <th>State</th>
     <th>Count</th>
   </tr>
-  <%- [:locked, :failed, :total].each do |state| %>
+  <%- [:locked, :failed, :total, :cron].each do |state| %>
     <tr>
       <td><%= state.to_s.titleize %></td>
       <td><%= jobs[state].inspect %></td>

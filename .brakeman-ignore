@@ -27,7 +27,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/user.rb",
-      "line": 122,
+      "line": 121,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where([\"#{column.to_s} LIKE ?\", \"%#{text}%\"])",
       "render_path": null,
@@ -47,7 +47,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/status.rb",
-      "line": 49,
+      "line": 67,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.execute(\"SELECT pg_total_relation_size('#{table}') AS size, COUNT(#{table}) AS count FROM #{table};\")",
       "render_path": null,
@@ -67,7 +67,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/status.rb",
-      "line": 46,
+      "line": 64,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.execute(\"SELECT tablename FROM pg_tables WHERE schemaname IN (#{(Rails.configuration.database_configuration[Rails.env][\"schema_search_path\"] or \"public\").split(\",\").map do\n \"'#{s.strip}'\"\n end.join(\",\")}) ORDER BY tablename;\")",
       "render_path": null,
@@ -77,6 +77,26 @@
         "method": "database_size"
       },
       "user_input": "(Rails.configuration.database_configuration[Rails.env][\"schema_search_path\"] or \"public\").split(\",\").map do\n \"'#{s.strip}'\"\n end.join(\",\")",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "8d3b43569e7d48a826530e241f35cd352eecb5f85f0188b9f7eaf33dfaac7df0",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/models/status.rb",
+      "line": 27,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "`pgrep -P #{IO.read(File.join(Rails.root, \"tmp\", \"pids\", \"unicorn.pid\"))}`",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Status",
+        "method": "unicorn_workers"
+      },
+      "user_input": "IO.read(File.join(Rails.root, \"tmp\", \"pids\", \"unicorn.pid\"))",
       "confidence": "Medium",
       "note": ""
     },
@@ -99,8 +119,28 @@
       "user_input": "params[:address]",
       "confidence": "High",
       "note": "Line 64 provides sanitisation of the value."
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 25,
+      "fingerprint": "ce3963f8f52ed4c5bd7ce96f88e40a7a3210c003c6d94df22404996113049575",
+      "check_name": "Deserialize",
+      "message": "YAML.load called with parameter value",
+      "file": "app/controllers/delayed_job_controller.rb",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
+      "code": "YAML.load(Delayed::Job.find(params[:id]).handler)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DelayedJobController",
+        "method": "show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Medium",
+      "note": ""
     }
   ],
-  "updated": "2018-04-08 08:48:47 +0100",
-  "brakeman_version": "4.2.1"
+  "updated": "2018-05-23 18:23:35 +0100",
+  "brakeman_version": "4.3.0"
 }

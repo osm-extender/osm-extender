@@ -7,4 +7,10 @@ class DelayedJobController < ApplicationController
     @jobs = Delayed::Job.all
   end
 
+  def show
+    @job = Delayed::Job.find(params[:id])
+    @handler = YAML::load @job.handler
+    @default_priority = Delayed::Worker.default_priority
+  end
+
 end

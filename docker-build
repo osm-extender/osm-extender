@@ -1,0 +1,28 @@
+#!/bin/bash
+
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+PREVIOUS_IMAGE=$(docker image inspect --format='{{.Id}}' "robertgauld/osmx:$GIT_BRANCH" 2>/dev/null)
+TAG="robertgauld/osmx"
+
+# Fail and exit immediately if any command doesn't succeed (e)
+# or if any unbound variables lurk within (u)
+set -eu
+
+# Build the new image
+docker build \
+  --force-rm \
+  --build-arg git_commit="$(git --no-pager show --no-patch --format='%H%n%s')" \
+  --tag "$TAG:$GIT_BRANCH" \
+  --file Dockerfile \
+  ./
+  $@
+
+# Remove the old version from local machine
+if [ "$PREVIOUS_IMAGE" != "" ]; then
+  docker rmi $PREVIOUS_IMAGE
+fi
+
+# Tag with commit id if staging/master
+if [ "$GIT_BRANCH" == "staging" -o "$GIT_BRANCH" == "master" ]; then
+  docker tag "$TAG:$GIT_BRANCH" "$TAG:$(git --no-pager show --no-patch --format='%H')"
+fi

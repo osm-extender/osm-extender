@@ -45,6 +45,18 @@ class StatusController < ApplicationController
     end
   end
 
+  def health
+    data = Status.new.health
+    status = data[:healthy] ? :ok : :service_unavailable
+    respond_with(data) do |format|
+      format.cacti { render cacti: {healthy: data[:healthy] ? 1 : 0}, status: status }
+      format.csv { render csv: [], headings: [], status: status }
+      format.json { render json: data, status: status }
+      format.text_table { render text_table: [], headings: [], status: status }
+      format.text { render plain: data[:healthy] ? "HEALTHY\n" : "UNHEALTHY\n", status: status }
+    end
+  end
+
   def unicorn_workers
     respond_with Status.new.unicorn_workers
   end

@@ -1,5 +1,10 @@
 class AutomationTaskMailer < ApplicationMailer
 
+  default **get_defaults(
+    name: Figaro.env.automation_task_from_name? ? Figaro.env.automation_task_from_name : 'OSMX Automation Tasks',
+    mailname: Figaro.env.automation_task_from_mailname? ? Figaro.env.automation_task_from_mailname : 'automation-tasks',
+  )
+
   def errors(task, errors)
     @task = task
     @errors = errors

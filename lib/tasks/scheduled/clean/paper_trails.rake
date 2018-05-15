@@ -3,8 +3,8 @@ namespace :scheduled  do
     desc "Stop the versions tables getting too big"
     task :paper_trails => :environment do
       $PROGRAM_NAME = "OSMX #{Rails.env} - Clean Paper Trails"
-      deleted = PaperTrail::Version.destroy_all(["created_at < ?", 3.months.ago]).size
-      puts "#{deleted} old versions deleted."
+      PrunePaperTrailsJob.new.perform_now
+      Rails.logger.warn '[DEPRECATION] This rake task has been deprecated in favor of PrunePaperTrailsJob.'
     end
   end
 end

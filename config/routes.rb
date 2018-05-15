@@ -129,11 +129,12 @@ OSMExtender::Application.routes.draw do
   get 'statistics/automation_tasks' => 'statistics#automation_tasks', :as => 'automation_tasks_statistics'
 
   get 'status' => 'status#index', :as => 'status'
-  %w{ cache database_size delayed_job unicorn_workers users }.each do |type|
+  %w{ cache database_size delayed_job unicorn_workers users health }.each do |type|
     get "status/#{type}(.:format)" => 'status#'+type, :as => "status_#{type}"
   end
 
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
+  get 'delayed_job/:id' => 'delayed_job#show#', :as => 'delayed_job'
 
   root :to => 'static#welcome'
 end

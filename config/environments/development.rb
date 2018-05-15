@@ -18,6 +18,21 @@ OSMExtender::Application.configure do
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false
 
+  # Log to STDOUT
+  logger = Logger.new(STDOUT)
+  logger.formatter = Logger::Formatter.new
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+  STDOUT.sync = true
+
+  # Set log level - :debug, :info, :warn, :error, :fatal, or :unknown
+  config.log_level = :debug
+
+  # Turn of colour in rails log
+  config.colorize_logging = true
+
+  # Automatically tag log messages
+  config.log_tags = [ :uuid ]
+
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -32,12 +47,12 @@ OSMExtender::Application.configure do
 
   # Setup cache
   config.cache_store = :redis_store, {
-    host: '127.0.0.1',
-    port: 6379,
-    db: 0,
-    password: nil,
-    expires_in: 10.minutes,
-    namespace: 'osmx.production'
+    host: Figaro.env.redis_host || 'localhost',
+    port: Figaro.env.redis_port? ? Figaro.env.redis_port.split(':').last.to_i : 6379,  # Sometimes it appears as tcp://<IP-ADDRESS>:6379
+    db: Figaro.env.redis_db? ? Figaro.env.redis_db.to_i : 0,
+    password: Figaro.env.redis_password || nil,
+    expires_in: Figaro.env.redis_expires_in? ? Figaro.env.redis_expires_in.to_i : 2.minutes,
+    namespace: Figaro.env.redis_namespace || "osmx.#{Rails.env}"
   }
 
   # Don't deliver emails, open them in a new window instead
@@ -52,10 +67,6 @@ OSMExtender::Application.configure do
   config.action_mailer.asset_host = "#{"#{Rails.application.routes.default_url_options[:protocol]}://" if Rails.application.routes.default_url_options[:protocol]}#{Rails.application.routes.default_url_options[:host]}#{":#{Rails.application.routes.default_url_options[:port]}" if Rails.application.routes.default_url_options[:port]}"
 
   # Mailer email address options (you may override this in development_custom.rb)
-  ActionMailer::Base.send :default, {
-    :from => '"OSMX" <osmx@localhost>', # Can be in the format - "Name" <email_address>
-    'return-path' => 'osmx@localhost',  # Should be the email address portion of from
-  }
   ContactUsMailer.send :default, {
     :to => 'contactus@example.com',     # Can be in the format - "Name" <email_address>
   }
@@ -66,8 +77,3 @@ OSMExtender::Application.configure do
 end
 
 ActionController::Parameters.action_on_unpermitted_parameters = :raise
-
-
-# Load custom configuration
-require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
-

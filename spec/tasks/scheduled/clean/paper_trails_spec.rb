@@ -4,10 +4,10 @@ describe 'rake scheduled:clean:paper_trails' do
     expect(task.prerequisites).to include 'environment'
   end
 
-  it 'Executes' do
-    Timecop.freeze
-    expect(PaperTrail::Version).to receive(:destroy_all).with(["created_at < ?", 3.months.ago]).and_return([:a, :b, :c])
-    expect(STDOUT).to receive(:puts).with('3 old versions deleted.')
+  it 'Delegates to PrunePaperTrailsJob' do
+    job = double(PrunePaperTrailsJob)
+    expect(PrunePaperTrailsJob).to receive(:new).and_return(job)
+    expect(job).to receive(:perform_now).and_return(nil)
     expect { task.execute }.not_to raise_error
   end
 

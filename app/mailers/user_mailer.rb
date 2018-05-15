@@ -1,6 +1,11 @@
 class UserMailer < ApplicationMailer
   helper ApplicationHelper
 
+  default **get_defaults(
+    name: Figaro.env.automation_task_from_name? ? Figaro.env.automation_task_from_name : 'OSM Extender',
+    mailname: Figaro.env.automation_task_from_mailname? ? Figaro.env.automation_task_from_mailname : 'system',
+  )
+
   def activation_needed(user)
     @user = user
     mail ({

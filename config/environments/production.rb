@@ -6,12 +6,15 @@ OSMExtender::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
-  # Full error reports are disabled and caching is turned on
+  # Full error reports are enabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_files = false
+  config.serve_static_files = true
+
+  # Only use best-standards-support built into browsers
+  config.action_dispatch.best_standards_support = :builtin
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
@@ -22,51 +25,35 @@ OSMExtender::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  # Defaults to Rails.root.join("public/assets")
-  # config.assets.manifest = YOUR_PATH
-
-  # Specifies the header that your server uses for sending files
-  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
-
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-  # See everything in the log (default is :info)
-  # config.log_level = :debug
+  # Log to STDOUT
+  logger = Logger.new(STDOUT)
+  logger.formatter = Logger::Formatter.new
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+  STDOUT.sync = true
 
-  # Use a different logger for distributed setups
-  # config.logger = SyslogLogger.new
+  # Set log level - :debug, :info, :warn, :error, :fatal, or :unknown
+  config.log_level = :info
 
-  # Use a different cache store in production
-  # config.cache_store = :mem_cache_store
+  # Turn of colour in rails log
+  config.colorize_logging = false
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server
-  # config.action_controller.asset_host = "http://assets.example.com"
+  # Automatically tag log messages
+  config.log_tags = [ :uuid ]
 
-  # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  # config.assets.precompile += %w( search.js )
-
-  # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
-
-  # Enable threaded mode
-  # config.threadsafe!
-
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation can not be found)
-  config.i18n.fallbacks = true
-
-  # Send deprecation notices to registered listeners
+  # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :notify
 
   # Which sort of cache to use
-  config.cache_store = :memory_store, {
-    :size => 32 * (1024 * 1024), #MiB
-    :compress => true,
-    :compress_threshold => 1 * (1024 * 1024), #MiB
-    :expires_in => 30.minutes,
-    :race_condition_ttl => 2.minutes
+  config.cache_store = :redis_store, {
+    host: Figaro.env.redis_host || 'localhost',
+    port: Figaro.env.redis_port? ? Figaro.env.redis_port.split(':').last.to_i : 6379,  # Sometimes it appears as tcp://<IP-ADDRESS>:6379
+    db: Figaro.env.redis_db? ? Figaro.env.redis_db.to_i : 0,
+    password: Figaro.env.redis_password || nil,
+    expires_in: Figaro.env.redis_expires_in? ? Figaro.env.redis_expires_in.to_i : 10.minutes,
+    namespace: Figaro.env.redis_namespace || "osmx.#{Rails.env}"
   }
 
   # How to send email
@@ -76,21 +63,22 @@ OSMExtender::Application.configure do
     domain: Figaro.env.mailgun_domain!
   }
 
-  # URL Options (copy/complete into production_custom.rb)
+  # URL Options
   Rails.application.routes.default_url_options = {
     :protocol => 'https',
-    :host => 'localhost',
+    :host => Figaro.env.routes_host!,
   }
 
   # Whether to dump (or not) the schema after performing migrations
   config.active_record.dump_schema_after_migration = false
 
+  # Enable threaded mode
+  # config.threadsafe!
+
+  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
+  # the I18n.default_locale when a translation can not be found)
+  config.i18n.fallbacks = true
 end
 
-
-ActionController::Parameters.action_on_unpermitted_parameters ||= :raise
 ActiveSupport::Deprecation.silenced = true
-
-
-# Load custom configuration
-require File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb") if File.exists?(File.join(Rails.root, 'config', 'environments', "#{Rails.env}_custom.rb"))
+ActionController::Parameters.action_on_unpermitted_parameters = :raise

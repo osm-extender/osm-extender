@@ -52,12 +52,4 @@ class Announcement < ActiveRecord::Base
     UserMailer.announcement(user, self).deliver_later
   end
 
-
-  def self.delete_old(older_than=6.months.ago)
-    if older_than.is_a?(String)
-      older_than = older_than.split.inject { |count, unit| count.to_i.send(unit) }
-    end
-    destroy_all ['updated_at <= :when AND finish <= :when', when: older_than.to_date]
-  end
-
 end

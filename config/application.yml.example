@@ -31,6 +31,7 @@ database_username:      THE USERNAME TO AUTHENTICATE TO THE DATABASE WITH
 database_password:      THE PASSWORD TO AUTHENTICATE TO THE DATABASE WITH
 database_pool:          THE SIZE OF THE DATABASE CONNECTION POOL (default 5)
 database_timeout:       THE TIMEOUT FOR CONNECTING TO THE DATABASE IN ILLISECONDS (default 5000)
+contact_us_to_address:  EMAIL ADDRESS TO SEND CONTACT US FORM SUBMISSIONS TO
 
 # Values for the test environment - remember to keep .travis.yml in sync
 test:
@@ -53,3 +54,5 @@ test:
   ga_tracking_id:         ~
   signup_code:            ~
   status_keys:            test-a:test-b
+  mailgun_domain:         osmx.example.com
+  contact_us_to_address:  contactus@example.com

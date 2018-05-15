@@ -1,12 +1,30 @@
 class Status
-  @@commit ||= `git --no-pager show --no-patch --format='%H - %s'`.chomp
+  @@commit = File.join(Rails.root, 'config', 'git_commit.txt')
+  @@commit = File.exists?(@@commit) ? File.read(@@commit) : `git --no-pager show --no-patch --format='%H%n%s'`
+
+  def health
+#    checks = []
+#    health = {
+#      ok: [],
+#      not_ok: []
+#    }
+#
+#    checks.each do |check|
+#      key = check.ok? ? :ok : :not_ok
+#      health[key].push check
+#    end
+#
+#    health[:healthy] = health[:not_ok].none?
+#    health
+    {healthy: true, ok: [], not_ok: []}
+  end
 
   def unicorn_workers
     return @unicorn_workers unless @unicorn_workers.nil?
     begin
       pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
       pid = IO.read(pid_file)
-      @unicorn_workers = `pgrep -cP #{pid}`.to_i
+      @unicorn_workers = `pgrep -P #{pid}`.lines.count
     rescue Errno::ENOENT
       return 0
     end
@@ -31,7 +49,7 @@ class Status
   end
 
   def commit
-    details = @@commit.split(' - ', 2)
+    details = @@commit.lines.map(&:chomp)
     {
       id: details[0],
       title: details[1]
@@ -70,6 +88,7 @@ class Status
         total: Delayed::Job.count,
         locked: Delayed::Job.where.not(locked_at: nil).count,
         failed: Delayed::Job.where.not(failed_at: nil).count,
+        cron: Delayed::Job.where.not(cron: nil).count,
       }
     }
   end

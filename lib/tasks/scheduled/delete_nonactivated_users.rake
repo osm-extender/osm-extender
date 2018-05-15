@@ -2,7 +2,7 @@ namespace :scheduled  do
   desc "Remove nonactivated users whose activation tokens have expired"
   task :delete_nonactivated_users => :environment do
     $PROGRAM_NAME = "OSMX #{Rails.env} - Removing nonactivated users"
-    deleted = User.activation_expired.destroy_all.size
-    puts "#{ActionController::Base.helpers.pluralize(deleted, 'user')} deleted"
+    PruneUnactivatedUsersJob.new.perform_now
+    Rails.logger.warn '[DEPRECATION] This rake task has been deprecated in favor of PruneUnactivatedUsersJob.'
   end
 end
