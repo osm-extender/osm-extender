@@ -27,7 +27,7 @@ describe 'rake app:deploy:rollbar' do
         expect(http).to receive(:use_ssl=).with(true)
         expect(http).to receive(:request).with(request).and_return(response)
         expect(response).to receive(:is_a?).with(Net::HTTPOK).and_return(true)
-        expect(response).to receive(:body).and_return('{"data": {}}')
+        expect(response).to receive(:body).and_return("{\n  \"data\": {}\n}")
 
         expect { task.execute }.not_to raise_error
       end
@@ -77,22 +77,3 @@ describe 'rake app:deploy:rollbar' do
 
   end # describe Post to tollbar
 end
-
-
-
-
-        #
-        #uri = URI.parse 'https://api.rollbar.com/api/1/deploy/'
-        #request = Net::HTTP::Post.new(uri.request_uri)
-        #request.set_form_data({
-        #  access_token: Figaro.env.rollbar_access_token!,
-        #  environment: Rails.env,
-        #  revision: commit[:id],
-        #  comment: commit[:title],
-        #})
-        #http = Net::HTTP.new(uri.hostname, uri.port)
-        #http.use_ssl = true
-        #response = http.request(request)
-        #Rails.logger.debug "Rollbar said: #{response.body.inspect}"
-        #
-        #if response.body.eql?('{"data": {}}')

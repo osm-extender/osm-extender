@@ -64,10 +64,12 @@ OSMExtender::Application.configure do
   }
 
   # URL Options
-  Rails.application.routes.default_url_options = {
+  options = {
     :protocol => 'https',
     :host => Figaro.env.routes_host!,
   }
+  Rails.application.routes.default_url_options = options
+  config.action_mailer.asset_host = "#{"#{options[:protocol]}://" if options.has_key?(:protocol)}#{options[:host]}#{":#{options[:port]}" if options.has_key?(:port)}"
 
   # Whether to dump (or not) the schema after performing migrations
   config.active_record.dump_schema_after_migration = false

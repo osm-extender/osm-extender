@@ -22,16 +22,11 @@ namespace :app do
       http.use_ssl = true
       response = http.request(request)
 
-puts 'got response'
-puts response.class#is_a?(Net::HTTPOK)
-      if response.is_a?(Net::HTTPOK) and response.body.eql?('{"data": {}}')
-puts 's'
+      if response.is_a?(Net::HTTPOK) and response.body.eql?("{\n  \"data\": {}\n}")
         Rails.logger.info 'Success'
       elsif response.is_a?(Net::HTTPOK)
-puts 'une'
         Rails.logger.error "Rollbar returned an unexpected body - #{response.body.inspect}"
       else
-puts '?'
         Rails.logger.error "Rollbar returned a #{response}."
       end
     end # task rollbar

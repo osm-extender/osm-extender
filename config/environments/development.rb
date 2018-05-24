@@ -64,7 +64,7 @@ OSMExtender::Application.configure do
     :host => 'localhost',
     :port => 3000,
   }
-  config.action_mailer.asset_host = "#{"#{Rails.application.routes.default_url_options[:protocol]}://" if Rails.application.routes.default_url_options[:protocol]}#{Rails.application.routes.default_url_options[:host]}#{":#{Rails.application.routes.default_url_options[:port]}" if Rails.application.routes.default_url_options[:port]}"
+  config.action_mailer.asset_host = 'http://localhost:3000'
 
   # Mailer email address options (you may override this in development_custom.rb)
   ContactUsMailer.send :default, {
