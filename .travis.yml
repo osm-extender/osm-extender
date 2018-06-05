@@ -42,4 +42,5 @@ notifications:
   slack:
     on_success: always
     on_failure: always
-    secure: "dv+/jJemDGkupHWWDJqgZ5Gqgg+IuCmf5qv1iiH4iJ/c7aOIVo5QDxnPZ7rqrtw9ueOcxcbVtAGtBr1zn8UWp9fd+mL6sMpqgOK2Br0VKXBUgRv6cSaCD32g/bg9tqXN5bUx1nZiM9Qi6Vf2JLn35eu7b9tskwS8eTDoxqUCHqc="
+    rooms:
+    - secure: 1lx1VAIZrVtE1HhjJYm8wtYR2jWYzJDYR2SeAGqP7qlBVIO14PX8sEMPGCezonxyPnUhBwQHZ1xphAJvnGuJtfSvPDHb9HxjGwa4m9RMkhwHsat7Pxlm2qmQnf/dRVVMb6/3dLlDy5Ey09LsUxNEL7+lVjPTEHMjalcGA157phw=
