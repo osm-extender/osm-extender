@@ -1,5 +1,3 @@
-{<img src="https://gemnasium.com/robertgauld/OSMExtender.png" alt="Dependency Status" />}[https://gemnasium.com/robertgauld/OSMExtender]
-
 Master branch:
 {<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=master"/>}[http://travis-ci.org/robertgauld/OSMExtender]
 {<img src="https://coveralls.io/repos/robertgauld/OSMExtender/badge.png?branch=master" />}[https://coveralls.io/r/robertgauld/OSMExtender]
