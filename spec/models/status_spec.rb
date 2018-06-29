@@ -1,21 +1,5 @@
 describe "Status fetching" do
 
-  describe '#unicorn_workers' do
-    it 'Returns number of workers' do
-      status = Status.new
-      expect(IO).to receive(:read).with(File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')).and_return('1234')
-      expect(status).to receive('`').with('pgrep -P 1234').and_return("1\n2\n3\n")
-      expect(status.unicorn_workers).to eq 3
-    end
-
-    it 'Handles missing PID file' do
-      status = Status.new
-      expect(IO).to receive(:read){ fail Errno::ENOENT, 'No such file or directory' }
-      expect(status).to_not receive('`')
-      expect(status.unicorn_workers).to eq 0
-    end
-  end # describe #unicorn_workers
-
   describe '#cache' do
     it 'Creates status' do
       redis = double

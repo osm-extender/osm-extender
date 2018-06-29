@@ -68,15 +68,9 @@ group :development do
   gem 'bundle-audit', '~> 0.1.0'      # Scan bundle for insecure gems
 end
 
-# Uniocorn webserver
-gem 'unicorn', '~> 5.0'               # Use unicorn as the web server
-gem 'unicorn-rails', '~> 2.2.0'     # rails server command will use unicorn by default
-
-group :staging, :production do
-  gem 'unicorn-worker-killer', '~> 0.4'                 # Worker self killing based on
-                                                        # requests served or memory usage
-  gem 'unicorn-autoscaling', '~> 0.0', require: false   # Auto scale the number of unicorn workers
-end
+# Puma webserver
+gem 'puma', '~> 3.11'         # Use puma as the web server
+gem 'puma-rails', '~> 0.0.2'  # rails server command will use puma by default
 
 group :test do
   gem 'rspec-rails', '~> 3.1'

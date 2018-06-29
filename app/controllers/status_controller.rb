@@ -57,10 +57,6 @@ class StatusController < ApplicationController
     end
   end
 
-  def unicorn_workers
-    respond_with Status.new.unicorn_workers
-  end
-
   def users
     respond_with Status.new.users
   end

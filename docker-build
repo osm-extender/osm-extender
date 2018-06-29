@@ -14,8 +14,7 @@ docker build \
   --build-arg git_commit="$(git --no-pager show --no-patch --format='%H%n%s')" \
   --tag "$TAG:$GIT_BRANCH" \
   --file Dockerfile \
-  ./
-  $@
+  $@ ./
 
 # Remove the old version from local machine
 if [ "$PREVIOUS_IMAGE" != "" ]; then

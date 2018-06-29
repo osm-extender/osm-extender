@@ -34,12 +34,6 @@ describe StatusController do
       'text_table' => "++\n++",
       'text' => "HEALTHY\n",
      },
-     unicorn_workers: {
-       'cacti' => "6\n",
-       'json' => '6',
-       'csv' => "6\n",
-       'text_table' => "+---+\n| 6 |\n+---+",
-    },
      users: {
        'cacti' => 'unactivated:1 activated:2 connected:3 total:6' + "\n",
        'json' => '{"unactivated":1,"activated":2,"connected":3,"total":6}',
@@ -59,7 +53,6 @@ describe StatusController do
     before(:each) do
       expect(Status).to receive(:new).and_return(status)
       allow(status).to receive(:health).and_return({healthy: true, ok: [], not_ok: []})
-      allow(status).to receive(:unicorn_workers).and_return(6)
       allow(status).to receive(:cache).and_return({ram_max: 2048, ram_used: 1024, keys: 723, cache_hits: 100, cache_hits_percent: 80, cache_misses: 25, cache_misses_percent: 20, cache_attempts: 125})
       allow(status).to receive(:users).and_return({unactivated: 1, activated: 2, connected: 3, total: 6})
       allow(status).to receive(:database_size).and_return({
@@ -131,7 +124,6 @@ describe StatusController do
     context 'Valid' do
       before(:each) do
         expect(Status).to receive(:new).and_return(status)
-        allow(status).to receive(:unicorn_workers).and_return(6)
         allow(status).to receive(:cache).and_return({ram_max: 2048, ram_used: 1024, keys: 723, cache_hits: 100, cache_hits_percent: 80, cache_misses: 25, cache_misses_percent: 20, cache_attempts: 125})
         allow(status).to receive(:users).and_return({unactivated: 1, activated: 2, connected: 3, total: 6})
         allow(status).to receive(:database_size).and_return({

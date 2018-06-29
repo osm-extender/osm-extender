@@ -35,5 +35,5 @@ CMD ["bundle", "exec", "rails", "console"]
 
 #EXPOSE 3000/tcp
 #CMD ["bundle", "exec", "rake", "app:deploy"]  # migrate db, compile assets and post to rollbar
-#CMD ["bundle", "exec", "rails", "server", "unicorn"]
+#CMD ["bundle", "exec", "rails", "server"]
 #CMD ["bundle", "exec", "rake", "jobs:work"]

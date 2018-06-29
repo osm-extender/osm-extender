@@ -35,7 +35,7 @@ OSMExtender::Application.configure do
   STDOUT.sync = true
 
   # Set log level - :debug, :info, :warn, :error, :fatal, or :unknown
-  config.log_level = :warn
+  config.log_level = :debug
 
   # Turn of colour in rails log
   config.colorize_logging = false

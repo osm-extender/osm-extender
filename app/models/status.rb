@@ -19,17 +19,6 @@ class Status
     {healthy: true, ok: [], not_ok: []}
   end
 
-  def unicorn_workers
-    return @unicorn_workers unless @unicorn_workers.nil?
-    begin
-      pid_file = File.join(Rails.root, 'tmp', 'pids', 'unicorn.pid')
-      pid = IO.read(pid_file)
-      @unicorn_workers = `pgrep -P #{pid}`.lines.count
-    rescue Errno::ENOENT
-      return 0
-    end
-  end
-
 
   def cache
     return @cache unless @cache.nil?

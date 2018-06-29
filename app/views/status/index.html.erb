@@ -9,7 +9,7 @@
     <% end %>
     <%= link_to '[txt]', status_health_path(format: :txt) %>
   </li>
-  <%- %w{unicorn_workers cache delayed_job database_size users}.each do |type| %>
+  <%- %w{cache delayed_job database_size users}.each do |type| %>
     <li>
       <%= link_to type.titleize, "##{type}"%>
       <%- [:cacti, :json, :csv, :text_table].each do |format| %>
@@ -22,10 +22,6 @@
 <a name="version"/>
 <h2>OSMX Version</h2>
 <p>Running commit <%= link_to @status.commit[:id], "https://github.com/robertgauld/OSMExtender/commit/#{@status.commit[:id]}" %> - <%= @status.commit[:title] %></p>
-
-<a name="unicorn_workers"/>
-<h2>Unicorn Workers</h2>
-<p>Unicorn currently has <%= pluralize(@status.unicorn_workers, 'worker') %>.</p>
 
 <a name="cache"/>
 <h2>Cache</h2>
