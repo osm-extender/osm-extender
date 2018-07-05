@@ -15,7 +15,22 @@ threads 4, 16
 workers 4
 
 # Specifies the `environment` that Puma will run in.
-#environment ENV.fetch('RAILS_ENV', 'development')
+# environment ENV.fetch('RAILS_ENV', 'development')
+
+# Configure the automatic killing of Puma workers.
+PumaWorkerKiller.config do |config|
+  # How much RAM must everything fit in (set this to the upper limit of the container).
+  config.ram = 1024 # MiB
+  # At what percentage of RAM usage should somehting be done.
+  config.percent_usage = 0.9
+  # How often should it be checked.
+  config.frequency = 10 # seconds
+  # How often (if at all) should rolling restarts be performed.
+  config.enable_rolling_restart = true
+  config.rolling_restart_frequency = 4 * 3600 # 4 hours in seconds
+  # Don't "polute" logs with the memory used every n seconds.
+  config.reaper_status_logs = false
+end
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
@@ -51,6 +66,10 @@ end
 on_worker_fork do
   ActiveRecord::Base.connection.disconnect! if defined?(ActiveRecord::Base)
   Redis.current.disconnect! if defined?(Redis)
+end
+
+before_fork do
+  PumaWorkerKiller.start
 end
 
 # Allow puma to be restarted by `rails restart` command.
