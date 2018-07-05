@@ -2,7 +2,7 @@
 
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 PREVIOUS_IMAGE=$(docker image inspect --format='{{.Id}}' "robertgauld/osmx:$GIT_BRANCH" 2>/dev/null)
-TAG="robertgauld/osmx"
+TAG="eu.gcr.io/tangy-orange/osmx"
 
 # Fail and exit immediately if any command doesn't succeed (e)
 # or if any unbound variables lurk within (u)
