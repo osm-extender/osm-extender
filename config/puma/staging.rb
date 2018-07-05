@@ -25,9 +25,9 @@ PumaWorkerKiller.config do |config|
   config.percent_usage = 0.9
   # How often should it be checked.
   config.frequency = 10 # seconds
-  # How often (if at all) should rolling restarts be performed.
-  config.enable_rolling_restart = true
+  # How often should rolling restarts be performed.
   config.rolling_restart_frequency = 4 * 3600 # 4 hours in seconds
+  config.enable_rolling_restart
   # Don't "polute" logs with the memory used every n seconds.
   config.reaper_status_logs = false
 end
