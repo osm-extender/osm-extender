@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180520163122) do
+ActiveRecord::Schema.define(version: 20180715151516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,29 +184,10 @@ ActiveRecord::Schema.define(version: 20180520163122) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "email_reminder_shares_by_day"
-    t.text     "usage"
     t.text     "automation_tasks"
   end
 
   add_index "statistics", ["date"], name: "index_statistics_on_date", unique: true, using: :btree
-
-  create_table "usage_logs", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "controller",     null: false
-    t.string   "action",         null: false
-    t.string   "sub_action"
-    t.string   "result"
-    t.text     "extra_details"
-    t.datetime "at",             null: false
-    t.integer  "at_day_of_week", null: false
-    t.integer  "at_hour",        null: false
-  end
-
-  add_index "usage_logs", ["action"], name: "index_usage_logs_on_action", using: :btree
-  add_index "usage_logs", ["at"], name: "index_usage_logs_on_at", using: :btree
-  add_index "usage_logs", ["section_id"], name: "index_usage_logs_on_section_id", using: :btree
-  add_index "usage_logs", ["user_id"], name: "index_usage_logs_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.citext   "email_address",                                   null: false

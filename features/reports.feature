@@ -8,7 +8,6 @@ Feature: Report OSM data
 
     Background:
     	Given I have no users
-	And I have no usage log records
         And I have the following user records
 	    | email_address     |
 	    | alice@example.com |
@@ -29,7 +28,6 @@ Feature: Report OSM data
         And I follow "Reports"
         Then I should be on the reports page
         And I should see "Due Badges"
-	And I should have 1 usage log record
 
     Scenario: Due Badges
 	Given an OSM request to get due badges for section 1 and term 1 will result in the following being due their "Test" badge
@@ -41,7 +39,3 @@ Feature: Report OSM data
 	And I uncheck "Check badge stock?"
 	And I press "Show due badges"
 	Then I should be on the due_badges_report page
-        And I should have 2 usage log records
-        And I should have the following usage log
-            | user              | controller        | action     |
-            | alice@example.com | ReportsController | due_badges |

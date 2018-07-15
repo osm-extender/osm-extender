@@ -40,7 +40,6 @@ class ReportsController < ApplicationController
         @by_badge[badge].push member_id
       end
     end
-    log_usage
   end
 
 
@@ -98,14 +97,6 @@ class ReportsController < ApplicationController
         end
       end # tsv
     end
-
-    log_usage(
-      :sub_action => request.format.to_s,
-      :extra_details => {
-        :groupings => selected_groupings,
-        :events => @my_params['events'].select{ |k,v| v.eql?('1') }.map{ |k,v| k.to_i},
-      }
-    )
   end
 
 
@@ -159,8 +150,6 @@ class ReportsController < ApplicationController
       end # tsv
       format.ics # ICS
     end
-
-    log_usage(:sub_action => request.format.to_s, :extra_details => @options, :section_id => nil)
   end
 
 
@@ -283,7 +272,6 @@ class ReportsController < ApplicationController
     #    end # badge in badges
     #  end # each badge_type
     #end # term in terms
-    log_usage(:extra_details => {:start => @start, :finish => @finish})
   end
 
 
@@ -318,8 +306,6 @@ class ReportsController < ApplicationController
         end
       end # tsv
     end
-
-    log_usage(:sub_action => request.format.to_s, :extra_details => @options)
   end
 
 
@@ -354,8 +340,6 @@ class ReportsController < ApplicationController
         end
       end # tsv
     end
-
-    log_usage(:sub_action => request.format.to_s, :extra_details => @options)
   end
 
 
@@ -426,8 +410,6 @@ class ReportsController < ApplicationController
       end
     end
     @badge_names[:staged].merge!(new_badge_names)
-
-    log_usage
   end
 
 
@@ -613,8 +595,6 @@ class ReportsController < ApplicationController
       end # check_birthday
 
     end # if @check_earnt
-
-    log_usage
   end
 
   def leader_access_audit
@@ -660,8 +640,6 @@ class ReportsController < ApplicationController
         @by_leader[leader_id][section.id] = permissions
       end
     end
-
-    log_usage
   end
 
 

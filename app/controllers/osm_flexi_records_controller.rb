@@ -66,8 +66,6 @@ class OsmFlexiRecordsController < ApplicationController
         @counts[field] += 1 unless (record.fields[field].blank? || record.fields[field][0].eql?('x'))
       end
     end
-
-    log_usage(:extra_details => {record_id: params[:record_id], section_id: params[:section_id]})
   end
 
 end

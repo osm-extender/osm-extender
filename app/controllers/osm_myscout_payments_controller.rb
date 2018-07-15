@@ -3,7 +3,6 @@ class OsmMyscoutPaymentsController < ApplicationController
   before_action { require_section_type Constants::YOUTH_SECTIONS }
 
   def calculator
-    log_usage(:section_id => nil)
   end
 
 end

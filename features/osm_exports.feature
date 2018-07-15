@@ -8,7 +8,6 @@ Feature: Export OSM data
 
     Background:
 	Given I have no users
-        And I have no usage log records
         And I have the following user records
 	    | email_address     |
 	    | alice@example.com |
@@ -41,10 +40,6 @@ Feature: Export OSM data
         Then I should get a download with filename "1stSomewhere_Section1_Members.csv" and MIME type "text/csv"
         And the body should contain ",,1,,A,Member,,,,2000-01-01"
         And the body should not contain "First Name"
-        And I should have 2 usage log records
-        And I should have the following usage log
-            | user              | controller           | action  |
-            | alice@example.com | OsmExportsController | members |
 
     Scenario: Export Members TSV with headers
 	Given an OSM request to get groupings for section 1 will have the groupings
@@ -61,10 +56,6 @@ Feature: Export OSM data
         Then I should get a download with filename "1stSomewhere_Section1_Members.tsv" and MIME type "text/tsv"
         And the body should contain "First Name	Last Name"
         And the body should contain "A	Member"
-        And I should have 2 usage log records
-        And I should have the following usage log
-            | user              | controller           | action  |
-            | alice@example.com | OsmExportsController | members |
 
 
     Scenario: Export Programme Meetings
@@ -75,10 +66,6 @@ Feature: Export OSM data
         Then I should get a download with filename "1stSomewhere_Section1_ProgrammeMeetings.csv" and MIME type "text/csv"
         And the body should contain "19:15,20:30,Weekly Meeting 1,"","","","","""
 	And the body should contain "19:15,20:30,Weekly Meeting 2,"","","","","""
-        And I should have 2 usage log records
-        And I should have the following usage log
-            | user              | controller           | action             |
-            | alice@example.com | OsmExportsController | programme_meetings |
 
 
     Scenario: Export Programme Activities
@@ -95,10 +82,6 @@ Feature: Export OSM data
         And the body should contain "1,12,Activity 12,"""
         And the body should contain "2,21,Activity 21,"""
         And the body should contain "2,22,Activity 22,"""
-        And I should have 2 usage log records
-        And I should have the following usage log
-            | user              | controller           | action               |
-            | alice@example.com | OsmExportsController | programme_activities |
 
 
     Scenario: Export Flexi Record
@@ -115,7 +98,3 @@ Feature: Export OSM data
         Then I should get a download with filename "1stSomewhere_Section1_Flexi1.csv" and MIME type "text/csv"
         And the body should contain "Member ID,First name,Last name,Custom"
         And the body should contain "0,John,Smith,A"
-        And I should have 2 usage log records
-        And I should have the following usage log
-            | user              | controller           | action       |
-            | alice@example.com | OsmExportsController | flexi_record |

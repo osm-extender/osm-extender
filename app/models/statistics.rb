@@ -30,10 +30,7 @@ class Statistics < ActiveRecord::Base
     # Email Reminders
     get_email_reminders_data(date, data)
 
-    # Usage
-    data[:usage] = get_usage_data(date)
-
-    # Automation Tasks
+# Automation Tasks
     data[:automation_tasks] = get_automation_tasks_data(date)
 
     record = (date < Date.today) ? create(data) : new(data) # Create (and save) only if date is in the past
@@ -105,36 +102,6 @@ class Statistics < ActiveRecord::Base
     data[:email_reminder_shares_by_day] = shared_by_day
 
     data[:email_reminders_by_type] = EmailReminderItem.where(['created_at < ?', date + 1]).group(:type).count
-  end
-
-  def self.get_usage_data(date)
-    nonunique = {}
-    unique_usersection = {}
-    unique_all = {}
-    UsageLog.where(['DATE(at) = ?', date]).
-    group(:controller, :action).count.each do |(controller, action), count|
-      key = "#{controller}|#{action}"
-      nonunique[key] ||= 0
-      nonunique[key] += count
-    end
-    UsageLog.where(['DATE(at) = ?', date]).
-    group(:controller, :action, :user_id, :section_id).count.each do |(controller, action), count|
-      key = "#{controller}|#{action}"
-      unique_usersection[key] ||= 0
-      unique_usersection[key] += 1
-    end
-    UsageLog.where(['DATE(at) = ?', date]).
-    group(:controller, :action, :user_id, :section_id, :extra_details).count.each do |(controller, action), count|
-      key = "#{controller}|#{action}"
-      unique_all[key] ||= 0
-      unique_all[key] += 1
-    end
-
-    return {
-      'unique_all' => unique_all,
-      'unique_usersection' => unique_usersection,
-      'nonunique' => nonunique,
-    }
   end
 
   def self.get_automation_tasks_data(date)

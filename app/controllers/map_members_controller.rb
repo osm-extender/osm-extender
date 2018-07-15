@@ -27,7 +27,6 @@ class MapMembersController < ApplicationController
     render :json => {
       members: members,
     }
-    log_usage
   end
 
 
@@ -55,7 +54,6 @@ class MapMembersController < ApplicationController
       members: members,
       errors: errors,
     }
-    log_usage
   end
 
 

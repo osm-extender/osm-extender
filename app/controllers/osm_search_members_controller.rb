@@ -53,7 +53,6 @@ class OsmSearchMembersController < ApplicationController
         end # each contact for member
       end # each member
     end # each section
-    log_usage
   end
 
 end

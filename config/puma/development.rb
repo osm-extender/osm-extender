@@ -4,7 +4,7 @@ workers 2
 preload_app!
 GC.copy_on_write_friendly = true if GC.respond_to?('copy_on_write_friendly=')
 PumaWorkerKiller.config do |config|
-  config.ram = 341 # MiB
+  config.ram = 409 # MiB
   config.percent_usage = 1
   config.frequency = 5 # seconds
   config.reaper_status_logs = false

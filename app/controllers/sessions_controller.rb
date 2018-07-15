@@ -31,21 +31,20 @@ class SessionsController < ApplicationController
       end
 
       Rails.logger.debug "SessionsController#create: logging, flashing and redirecting."
-      log_usage(:result => 'success', :section_id => nil)
       flash[:notice] = 'Successfully signed in.'
       redirect_to (session[:return_to_url].nil? ? my_page_path : session.delete(:return_to_url) )
       Rails.logger.debug "SessionsController#create: done!"
     else
       user = User.find_by(email_address: params[:email_address].downcase)
       if user && user.activation_state.eql?('pending')
-        log_usage(:result => 'not activated', :user => user, :section_id => nil)
         flash[:error] = 'You have not yet activated your account.'
+        Rails.logger.error 'Non activated account attempted signin.'
       elsif user && !user.lock_expires_at.nil?
-        log_usage(:result => 'locked', :user => user, :section_id => nil)
         flash[:error] = 'The account was locked.'
+        Rails.logger.error 'Locked account attempted signin.'
       else
-        log_usage(:result => 'incorrect password', :user => user, :section_id => nil) if user
         flash[:error] = 'Email address or password was invalid.'
+        Rails.logger.error 'Email address or password was invalid.'
       end
       render :new
     end
