@@ -1,6 +1,6 @@
 class EmailReminderSubscriptionsController < ApplicationController
   skip_before_action :require_login, :only => [:edit, :change]
-  skip_before_action :require_gdpr_consent, :only => [:edit, :create]
+  skip_before_action :require_gdpr_consent
 
 
   def edit
