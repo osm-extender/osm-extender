@@ -27,15 +27,14 @@
       <p>First consider suggesting the feature in the Online Scout Manager forum. If It&#39;s not taken or you feel it doesn&#39;t belong in OSM then use the Contact option to get in touch.</p>
     </div>
 
-    <h3 class="ui-accordion-header"><a href="#">Does Online Scout Manager Extender use cookies (and what are they anyway)?</a></h3>
+    <h3 class="ui-accordion-header"><a href="#">Can I use Online Scout Manager Extender with Scouts New Zealand, Irish Girl Guides etc?</a></h3>
     <div class="ui-accordion-content">
-      <p>Cookies are small text files stored on you computer, they are small parcels of data which a web server gives to a web browser, the browser then sends them back to the server which each request. Since the browser makes a new connection to the server each time you load a page cookies allow the server to keep track of who is viewing a page.</p>
-      <p>This is how OSMX uses cookies - when you signin a random number is generated and sent to your browser as a cookie as well as being stored on the server, this number allows the server to check sho you are currently signed in as. These cookies are set to expire (i.e. be deleted) when your browser is closed.</p>
-      <p>OSMX also uses services from other providers which set cookies, these are:</p>
-      <ul>
-        <li><a href="http://www.google.com/recaptcha/policy">Google ReCAPTCHA</a></li>
-      </ul>
-      <p>You can find out more about cookies by visiting <a href="http://www.allaboutcookies.org/">www.allaboutcookies.org</a>.</p>
+      <p>No, there's too much chance that as Online Scout Manager has subtle differences between these versions that the API used by OSM Extender will have subtle differences too.</p>
+      <p>
+        However if you know someone familiar with Ruby on Rails then get them to:
+        fork and adjust the <a href="https://github.com/robertgauld/osm/" target="_blank">OSM gem</a> I created to work with your flavour of OSM,
+        fork and adjust <a href="https://github.com/robertgauld/OSMExtender" target="_blank">OSM Extender</a> to use the gem they forked and reflect any differences in your flavour of OSM.
+      </p>
     </div>
 
     <h3 class="ui-accordion-header"><a href="#">How does Online Scout Manager Extender store passwords?</a></h3>
