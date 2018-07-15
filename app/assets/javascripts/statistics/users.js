@@ -6,7 +6,7 @@ google.setOnLoadCallback(function () {
 
 function drawCharts() {
   $.ajax({
-    url: '<%= OSMExtender::Application.routes.url_helpers.user_statistics_path(format: :json) %>',
+    url: 'users.json',
     dataType:"json",
     async: false,
     success: function(data, status, jqXHR) {

@@ -14,7 +14,7 @@ function setRowHeight(to) {
 
 function saveCustomSizes(csrfToken) {
   $.ajax({
-    url: '<%= OSMExtender::Application.routes.url_helpers.save_custom_sizes_path %>',
+    url: '/my_preferences/save_custom_sizes',
     type: 'post',
     dataType: 'json',
     headers: {'X-CSRF-Token': csrfToken},

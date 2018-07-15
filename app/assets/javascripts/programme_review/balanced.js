@@ -13,7 +13,7 @@ function drawCharts() {
   updateStatus('Retreiving data.');
 
   $.ajax({
-    url: '<%= OSMExtender::Application.routes.url_helpers.programme_review_balanced_data_path %>',
+    url: 'balanced_data',
     dataType:"json",
     async: false,
     success: function(data, status, jqXHR) {
