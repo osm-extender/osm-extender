@@ -104,9 +104,8 @@ class ApplicationController < ActionController::Base
 
   # Get a human friendly description of how a permission is set for a user in OSM
   def osm_user_permission_human_friendly(permission_on, user=current_user, section=current_section)
-    permissions = user.osm_api.get_user_permissions
-    permissions = permissions[section.to_i] || {}
-    permissions = (permissions[permission_on] || [])
+    permissions = user.osm_api.get_user_permissions || {}
+    permissions = permissions.dig(section.to_i, permission_on) || []
     return 'Administer' if permissions.include?(:administer)
     return 'Read and Write' if permissions.include?(:write)
     return 'Read' if permissions.include?(:read)
