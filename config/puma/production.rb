@@ -5,14 +5,14 @@ bind ENV.fetch('BIND', "tcp://#{ENV.fetch('HOST', '0.0.0.0')}:#{ENV.fetch('PORT'
 # Any libraries that use thread pools should be configured to match
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum, this matches the default thread size of Active Record.
-threads 4, 16
+threads 4, 8
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked webserver processes. If using threads and workers together
 # the concurrency of the application would be max `threads` * `workers`.
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
-workers 4
+workers 2
 
 # Specifies the `environment` that Puma will run in.
 # environment ENV.fetch('RAILS_ENV', 'development')
@@ -20,14 +20,13 @@ workers 4
 # Configure the automatic killing of Puma workers.
 PumaWorkerKiller.config do |config|
   # How much RAM must everything fit in (set this to the upper limit of the container).
-  config.ram = 1024 # MiB
+  config.ram = 512 # MiB
   # At what percentage of RAM usage should somehting be done.
   config.percent_usage = 0.9
   # How often should it be checked.
   config.frequency = 10 # seconds
   # How often should rolling restarts be performed.
   config.rolling_restart_frequency = 4 * 3600 # 4 hours in seconds
-  config.enable_rolling_restart
   # Don't "polute" logs with the memory used every n seconds.
   config.reaper_status_logs = false
 end
