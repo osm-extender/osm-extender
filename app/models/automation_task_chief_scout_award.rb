@@ -85,9 +85,19 @@ class AutomationTaskChiefScoutAward < AutomationTask
     end
     member_badge_data = Hash[badge.get_data_for_section(user.osm_api, section).map{ |d| [d.member_id, d] } ]
 
-    member_start_dates = Hash[ Osm::Member.get_for_section(user.osm_api, section).map{ |m| [m.id, m.started_section] } ]
-    activity_badges = Hash[ Osm::ActivityBadge.get_badges_for_section(user.osm_api, section).map{ |b| [b.identifier, b] } ]
-    staged_badges = Hash[ Osm::StagedBadge.get_badges_for_section(user.osm_api, section).map{ |b| [b.identifier, b] } ]
+    member_start_dates = Osm::Member.get_for_section(user.osm_api, section)&.map{ |m| [m.id, m.started_section] }&.to_h
+    if member_start_dates.nil?
+      return {success: false, errors: ['Could not retrieve Start dates from OSM.']}
+    end
+
+    activity_badges = Osm::ActivityBadge.get_badges_for_section(user.osm_api, section)&.map{ |b| [b.identifier, b] }&.to_h
+    if activity_badges.nil?
+      return {success: false, errors: ['Could not retrieve Activity badges from OSM.']}
+    end
+    staged_badges = Osm::StagedBadge.get_badges_for_section(user.osm_api, section)&.map{ |b| [b.identifier, b] }&.to_h
+    if staged_badges.nil?
+      return {success: false, errors: ['Could not retrieve Staged badges from OSM.']}
+    end
 
     badge_summaries = Osm::Badge.get_summary_for_section(user.osm_api, section)
     badge_summaries.each do |badge_summary|
