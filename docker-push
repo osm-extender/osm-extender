@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Fail and exit immediately if any command doesn't succeed (e)
+# or if any unbound variables lurk within (u)
+set -eu
+
+tag="eu.gcr.io/tangy-orange/osmx"
+git_branch=$(git rev-parse --abbrev-ref HEAD)
+
+docker push "$tag:$(git --no-pager show --no-patch --format='%H')"
+docker push "$tag:$git_branch"

@@ -21,7 +21,11 @@ RUN bundle install --without development test ;\
 # Copy app and make usable
 COPY --chown=app:app . /home/app
 RUN su app -c "mkdir -p /home/app/tmp/pids"
-#RUN bundle exec rake assets:precompile ## REQUIRES ENVIRONMENT
+RUN mailgun_domain='a' contact_us_to_address='a' secret_key_base='a' \
+    osm_api_name='a' osm_api_id='a' osm_api_token='a' \
+    recaptcha_public_key='a' recaptcha_private_key='a' mailgun_api_key='a' \
+    database_name='a' database_username='a' database_password='a' \
+    bundle exec rake assets:precompile
 
 
 # Save commit information to image for status page to use
@@ -31,9 +35,9 @@ RUN if [ -z "$git_commit" ]; then exit 1; else : ; fi ;\
 
 
 USER app
-CMD ["bundle", "exec", "rails", "console"]
+CMD bin/console
 
 #EXPOSE 3000/tcp
-#CMD ["bundle", "exec", "rake", "app:deploy"]  # migrate db, compile assets and post to rollbar
-#CMD ["bundle", "exec", "rails", "server"]
-#CMD ["bundle", "exec", "rake", "jobs:work"]
+#CMD bin/console
+#CMD bin/server
+#CMD bin/worker

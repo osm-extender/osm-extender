@@ -1,5 +1,5 @@
 namespace :app do
 
-  task :deploy => ['db:migrate', 'assets:precompile', 'deploy:rollbar']
+  task :deploy => ['db:migrate', 'deploy:rollbar']
 
 end

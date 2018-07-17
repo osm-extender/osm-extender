@@ -2,7 +2,6 @@ Some rake tasks have been provided to make the administration and management of 
 
 * app:deploy - this will run the following tasks:
   - db:migrate
-  - assets:precompile
   - app:deploy:rollbar - post a deployment to rollbar
 * app:setup - this will setup the application for first use, running all of the following tasks:
   - app:setup:first_user - Create the first user for the system
@@ -17,6 +16,7 @@ Some rake tasks have been provided to make the administration and management of 
       - PruneAnnouncementsJob
       - PruneBalancedProgrammeCacheJob
       - PrunrPaperTrailsJob
+* app:wait_for_migrations - wait for any pending migrations to be applied
 
 
 Some rake tasks have been deprecated in favour of using the corresponding jobs instead:

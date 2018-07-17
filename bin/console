@@ -1,0 +1,4 @@
+#!/bin/sh
+
+bundle exec rake app:deploy:wait_for_migrations
+bundle exec rails console
