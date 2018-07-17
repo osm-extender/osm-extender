@@ -136,7 +136,7 @@ function plot() {
       }
   }).get().join("&");
   $.ajax({
-    url: '<%= CGI.unescape OSMExtender::Application.routes.url_helpers.map_members_multiple_data_path  %>' + '?address=' + document.getElementById('address').value + "&" + checked_sections,
+    url: 'multiple/data?address=' + document.getElementById('address').value + "&" + checked_sections,
     dataType:'json',
     async: false,
     success: function(data, status, jqXHR) {

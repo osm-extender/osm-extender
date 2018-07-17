@@ -127,7 +127,7 @@ function plot(section_id) {
     });
   }
   $.ajax({
-    url: '<%= CGI.unescape OSMExtender::Application.routes.url_helpers.map_members_data_path(section_id: '[[section_id]]')  %>'.replace('[[section_id]]', section_id) + '?address=' + document.getElementById('address').value,
+    url: section_id + '/data?address=' + document.getElementById('address').value,
     dataType:'json',
     async: false,
     success: function(data, status, jqXHR) {
