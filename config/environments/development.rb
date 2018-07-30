@@ -56,7 +56,17 @@ OSMExtender::Application.configure do
   }
 
   # Don't deliver emails, open them in a new window instead
-  config.action_mailer.delivery_method = :letter_opener
+  # Unless mailgun_api_key env var is present
+  if Figaro.env.mailgun_api_key?
+    config.action_mailer.delivery_method = :mailgun 
+    config.action_mailer.mailgun_settings = {
+      api_host: Figaro.env.mailgun_api_host || 'api.eu.mailgun.net',
+      api_key: Figaro.env.mailgun_api_key!,
+      domain: Figaro.env.mailgun_domain!
+    }
+  else
+    config.action_mailer.delivery_method = :letter_opener
+  end
 
   # URL Options
   Rails.application.routes.default_url_options = {

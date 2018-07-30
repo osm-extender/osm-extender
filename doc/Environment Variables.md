@@ -12,6 +12,7 @@
 | rollbar_access_token            | yes       |                       | Used for reporting errors to rollbar              |                                                             |
 | mailgun_domain                  | yes       |                       | The domain OSMX will be sending email from        |                                                             |
 | mailgun_api_key                 | yes       |                       | Used to authenticate OSMX to mailgun              |                                                             |
+| mailgun_api_host                |           | api.eu.mailgun.net    |                                                   |                                                             |
 | status_keys                     |           |                       | Used to provide signinless status fetching        | Seperate multiple keys with a :                             |
 | routes_host                     | yes       |                       | The hostname to use when generating routes        |                                                             |
 | database_host                   |           | localhost             | Database host name                                |                                                             |

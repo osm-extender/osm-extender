@@ -58,7 +58,8 @@ OSMExtender::Application.configure do
 
   # How to send email
   config.action_mailer.delivery_method = :mailgun 
-  config.action_mailer.mailgun_settings = { 
+  config.action_mailer.mailgun_settings = {
+    api_host: Figaro.env.mailgun_api_host || 'api.eu.mailgun.net',
     api_key: Figaro.env.mailgun_api_key!, 
     domain: Figaro.env.mailgun_domain!
   }

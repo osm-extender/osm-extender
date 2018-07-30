@@ -24,6 +24,7 @@ signup_code:            IF PRESENT THIS CODE MUST BE ENTERED TO CREATE AN ACCOUN
 rollbar_access_token:   USED FOR REPORTING ERRORS TO ROLLBAR
 mailgun_domain:         DOMAIN USED BY MAILGUN FOR SENDING EMAIL
 mailgun_api_key:        USED FOR SENDING EMAIL THROUGH MAILGUN
+mailgun_api_host:       DEFAULT: api.eu.mailgun.net
 status_keys:            USED FOR ACCESSING THE STATUS PAGES WITHOUT SIGINING IN - SEPERATE WITH :
 database_host:          THE HOST TO CONNECT TO THE DATABASE ON (default 'localhost')
 database_name:          THE DATABASE NAME TO CONNECT TO
