@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git_branch=$(git rev-parse --abbrev-ref HEAD)
-tag="eu.gcr.io/tangy-orange/osmx"
+tag_base="eu.gcr.io/tangy-orange/osmx"
 previous_image=$(docker image inspect --format='{{.Id}}' "$tag:$git_branch" 2>/dev/null)
 
 # Fail and exit immediately if any command doesn't succeed (e)
@@ -12,7 +12,7 @@ set -eu
 docker build \
   --force-rm \
   --build-arg git_commit="$(git --no-pager show --no-patch --format='%H%n%s')" \
-  --tag "$tag:$git_branch" \
+  --tag "$tag_base:$git_branch" \
   --file Dockerfile \
   $@ ./
 
@@ -23,5 +23,7 @@ fi
 
 # Tag with commit id if staging/master
 if [ "$git_branch" == "staging" -o "$git_branch" == "master" ]; then
-  docker tag "$tag:$git_branch" "$tag:$(git --no-pager show --no-patch --format='%H')"
+  git_commit=$(git --no-pager show --no-patch --format='%H')
+  docker tag "$tag_base:$git_branch" "$tag_base:$git_commit"
+  echo "Tagged $tag_base:$git_commit"
 fi
