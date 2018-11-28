@@ -8,7 +8,7 @@
 source 'https://rubygems.org'
 
 # Rails
-gem 'rails', '~> 4.1', '>= 4.2.7.1'
+gem 'rails', '~> 4.1', '>= 4.2.11'
 gem 'activerecord-session_store', '~> 1.0'
 #gem 'rb-readline'
 gem 'responders', '~> 2.0'
@@ -76,7 +76,7 @@ gem 'puma_worker_killer', '~> 0.1.0' # Manage RAM growth by performing rolling r
 group :test do
   gem 'rspec-rails', '~> 3.1'
   gem 'factory_bot', '~> 4.8'
-  gem 'cucumber-rails', '~> 1.3', require: false
+  gem 'cucumber-rails', '~> 1.3', '< 1.6', require: false
   gem 'webrat', '~> 0.7'
   gem 'email_spec', '~> 2.0'
   gem 'database_cleaner', '~> 1.0'
