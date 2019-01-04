@@ -105,3 +105,8 @@ gem 'haml-rails', '~> 1.0'
 
 gem 'tty-prompt', '~> 0.16.0', require: false
 gem 'tzinfo-data', '~> 1.2018'
+
+# Performance reporting
+group :production do
+  gem 'scout_apm', '~> 2.4'
+end
