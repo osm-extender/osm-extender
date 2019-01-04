@@ -29,7 +29,7 @@
 <%- cache = @status.cache %>
 <%- used = cache[:ram_used] %>
 <%- maximum = cache[:ram_max] %>
-<%- if maximum.zero? %>
+<%- if maximum.nil? || maximum.zero? %>
   <p>Using <%= number_to_human_size(used) %>.</p>
 <% else %>
   <p>Using <%= number_to_human_size(used) %> of <%= number_to_human_size(maximum) %> (<%= number_to_percentage((used*100/maximum), precision: 1) %>).</p>

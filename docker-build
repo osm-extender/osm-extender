@@ -11,7 +11,8 @@ set -eu
 # Build the new image
 docker build \
   --force-rm \
-  --build-arg git_commit="$(git --no-pager show --no-patch --format='%H%n%s')" \
+  --build-arg HEROKU_SLUG_COMMIT="$(git --no-pager show --no-patch --format='%H')" \
+  --build-arg HEROKU_SLUG_DESCRIPTION="$(git --no-pager show --no-patch --format='%s')" \
   --tag "$tag_base:$git_branch" \
   --file Dockerfile \
   $@ ./

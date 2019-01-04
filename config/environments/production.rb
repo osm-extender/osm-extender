@@ -47,14 +47,7 @@ OSMExtender::Application.configure do
   config.active_support.deprecation = :notify
 
   # Which sort of cache to use
-  config.cache_store = :redis_store, {
-    host: Figaro.env.redis_host || 'localhost',
-    port: Figaro.env.redis_port? ? Figaro.env.redis_port.split(':').last.to_i : 6379,  # Sometimes it appears as tcp://<IP-ADDRESS>:6379
-    db: Figaro.env.redis_db? ? Figaro.env.redis_db.to_i : 0,
-    password: Figaro.env.redis_password || nil,
-    expires_in: Figaro.env.redis_expires_in? ? Figaro.env.redis_expires_in.to_i : 10.minutes,
-    namespace: Figaro.env.redis_namespace || "osmx.#{Rails.env}"
-  }
+  config.cache_store = :redis_store, Rails.application.config_for(:redis)
 
   # How to send email
   config.action_mailer.delivery_method = :mailgun 

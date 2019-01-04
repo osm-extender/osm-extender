@@ -12,7 +12,10 @@
 #
 # Setting a value of ~ will remove the setting
 
-
+DATABASE_URL:           THE DATABASE TO CONNECT TO, LOOKS LIKE - postgres://USER-NAME:PASSWORD@HOST:PORT/DATABASE-NAME
+REDIS_URL:              THE CACHE TO CONNECT TO, LOOKS LIKE - redis://USER:PASSWORD@HOST:PORT[/DATABASE]
+WEB_CONCURRENCY:        NUMBER OF OS PROCESSES TO START (default 2)
+RAILS_MAX_THREADS:	NUMBER OF THREADS PER WORKER (default 5)
 secret_key_base:        USE 'bundle exec rake secret' TO GENERATE THIS
 osm_api_name:           YOU'LL HAVE GIVEN THIS TO ED AT OSM
 osm_api_id:             YOU'LL GET THIS FROM ED AT OSM
@@ -26,12 +29,8 @@ mailgun_domain:         DOMAIN USED BY MAILGUN FOR SENDING EMAIL
 mailgun_api_key:        USED FOR SENDING EMAIL THROUGH MAILGUN
 mailgun_api_host:       DEFAULT: api.eu.mailgun.net
 status_keys:            USED FOR ACCESSING THE STATUS PAGES WITHOUT SIGINING IN - SEPERATE WITH :
-database_host:          THE HOST TO CONNECT TO THE DATABASE ON (default 'localhost')
-database_name:          THE DATABASE NAME TO CONNECT TO
-database_username:      THE USERNAME TO AUTHENTICATE TO THE DATABASE WITH
-database_password:      THE PASSWORD TO AUTHENTICATE TO THE DATABASE WITH
-database_pool:          THE SIZE OF THE DATABASE CONNECTION POOL (default 5)
-database_timeout:       THE TIMEOUT FOR CONNECTING TO THE DATABASE IN ILLISECONDS (default 5000)
+database_pool:          THE SIZE OF THE DATABASE CONNECTION POOL (default workers * threads)
+database_timeout:       THE TIMEOUT FOR CONNECTING TO THE DATABASE IN MILLISECONDS (default 5000)
 contact_us_to_address:  EMAIL ADDRESS TO SEND CONTACT US FORM SUBMISSIONS TO
 
 # Values for the test environment - remember to keep .travis.yml in sync
@@ -39,10 +38,7 @@ test:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-  database_host:          THE HOST TO CONNECT TO THE DATABASE ON (default 'localhost')
-  database_name:          THE DATABASE NAME TO CONNECT TO
-  database_username:      THE USERNAME TO AUTHENTICATE TO THE DATABASE WITH
-  database_password:      THE PASSWORD TO AUTHENTICATE TO THE DATABASE WITH
+  DATABASE_URL:           THE DATABASE TO CONNECT TO, LOOKS LIKE - postgres://USER-NAME:PASSWORD@HOST:PORT/DATABASE-NAME
   database_pool:          THE SIZE OF THE DATABASE CONNECTION POOL (default 5)
   database_timeout:       THE TIMEOUT FOR CONNECTING TO THE DATABASE IN ILLISECONDS (default 5000)
 # DO NOT CHANGE ANY OF THESE

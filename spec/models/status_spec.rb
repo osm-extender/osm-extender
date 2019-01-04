@@ -19,6 +19,15 @@ describe "Status fetching" do
       })
     end
 
+    it 'Handles being denied getting the config' do
+      redis = double
+      expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+      expect(redis).to receive(:config).and_raise(Redis::CommandError, 'ERR unknown command \'config\'')
+      allow(redis).to receive(:info).and_return('used_memory'=>'0', 'keyspace_hits'=>'0', 'keyspace_misses'=>'0')
+      allow(redis).to receive(:dbsize).and_return(0)
+      expect(Status.new.cache[:ram_max]).to be_nil
+    end
+
     it 'Handles zeros' do
       redis = double
       expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)

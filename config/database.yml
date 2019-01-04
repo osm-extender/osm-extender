@@ -1,11 +1,7 @@
 from_environment: &from_environment
   adapter:  postgresql
-  host:     <%= Figaro.env.database_host || 'localhost' %>
-  database: <%= Figaro.env.database_name! %>
-  username: <%= Figaro.env.database_username! %>
-  password: <%= Figaro.env.database_password! %>
-  pool:     <%= Figaro.env.database_pool || 5 %>
-  timeout:  <%= Figaro.env.database_timeout || 5000 %>
+  pool:     <%= ENV.fetch('database_pool', Integer(ENV.fetch('RAILS_MAX_THREADS', 5)) * Integer(ENV.fetch('WEB_CONCURRENCY', 2))) %>
+  timeout:  <%= ENV.fetch('database_timeout', 5000) %>
 
 development:
   <<: *from_environment
@@ -25,7 +21,6 @@ production:
 ##  database: db/test.sqlite3
 ##  pool: 5
 ##  timeout: 5000
-
 
 test: &test
   <<: *from_environment

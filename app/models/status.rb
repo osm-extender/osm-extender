@@ -1,6 +1,4 @@
 class Status
-  @@commit = File.join(Rails.root, 'config', 'git_commit.txt')
-  @@commit = File.exists?(@@commit) ? File.read(@@commit) : `git --no-pager show --no-patch --format='%H%n%s'`
 
   def health
 #    checks = []
@@ -25,8 +23,13 @@ class Status
     redis = Rails.cache.data
     info = redis.info
     cache_attempts = info['keyspace_hits'].to_i + info['keyspace_misses'].to_i
+    ram_max = begin
+      redis.config(:get, 'maxmemory')['maxmemory'].to_i
+    rescue Redis::CommandError
+      nil
+    end
     @cache = {
-      ram_max: redis.config(:get, 'maxmemory')['maxmemory'].to_i,
+      ram_max: ram_max,
       ram_used: info['used_memory'].to_i,
       keys: redis.dbsize,
       cache_hits: info['keyspace_hits'].to_i,
@@ -38,10 +41,9 @@ class Status
   end
 
   def commit
-    details = @@commit.lines.map(&:chomp)
     {
-      id: details[0],
-      title: details[1]
+      id: ENV['HEROKU_SLUG_COMMIT'] || `git --no-pager show --no-patch --format='%H'`.chomp,
+      title: ENV['HEROKU_SLUG_DESCRIPTION'] || `git --no-pager show --no-patch --format='%s'`.chomp
     }
   end
 

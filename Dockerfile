@@ -24,14 +24,18 @@ RUN su app -c "mkdir -p /home/app/tmp/pids"
 RUN mailgun_domain='a' contact_us_to_address='a' secret_key_base='a' \
     osm_api_name='a' osm_api_id='a' osm_api_token='a' \
     recaptcha_public_key='a' recaptcha_private_key='a' mailgun_api_key='a' \
-    database_name='a' database_username='a' database_password='a' \
+    DATABASE_URL='postgres://a:a@a/a' REDIS_URL='redis://:a@a' \
     bundle exec rake assets:precompile
 
 
 # Save commit information to image for status page to use
-ARG git_commit
-RUN if [ -z "$git_commit" ]; then exit 1; else : ; fi ;\
-    echo -e "$git_commit" > /home/app/config/git_commit.txt
+ARG HEROKU_SLUG_COMMIT
+ARG HEROKU_SLUG_DESCRIPTION
+ENV HEROKU_SLUG_COMMIT=${HEROKU_SLUG_COMMIT}
+ENV HEROKU_SLUG_DESCRIPTION=${HEROKU_SLUG_DESCRIPTION}
+#ARG git_commit
+#RUN if [ -z "$git_commit" ]; then exit 1; else : ; fi ;\
+#    echo -e "$git_commit" > /home/app/config/git_commit.txt
 
 
 USER app
