@@ -2,6 +2,8 @@ from_environment: &from_environment
   adapter:  postgresql
   pool:     <%= ENV.fetch('database_pool', Integer(ENV.fetch('RAILS_MAX_THREADS', 5)) * Integer(ENV.fetch('WEB_CONCURRENCY', 2))) %>
   timeout:  <%= ENV.fetch('database_timeout', 5000) %>
+  variables:
+    statement_timeout: <%= ENV.fetch('database_statement_timeout', 30_000) %>
 
 development:
   <<: *from_environment

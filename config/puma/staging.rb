@@ -47,7 +47,7 @@ GC.copy_on_write_friendly = true if GC.respond_to?('copy_on_write_friendly=')
 # not a request timeout, it is to protect against a hung or dead process.
 # Setting this value will not protect against slow requests.
 # Default value is 60 seconds.
-worker_timeout 60
+worker_timeout 30
 
 # The code in the `on_worker_boot` will be called if you are using
 # clustered mode by specifying a number of `workers`. After each worker
