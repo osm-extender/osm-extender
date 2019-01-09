@@ -11,7 +11,6 @@
   <%= stylesheet_link_tag_if_exists "#{params[:controller]}__print", :media=>:print %>
 
   <%= javascript_include_tag 'https://www.google.com/jsapi' if content_for?(:use_charts) %>
-  <%= javascript_include_tag 'https://maps.googleapis.com/maps/api/js?sensor=false' if content_for?(:use_maps) %>
   <%= javascript_include_tag 'application' %>
   <%= javascript_include_tag_if_exists "#{params[:controller]}" %>
   <%= javascript_include_tag_if_exists "#{params[:controller]}/#{params[:action]}" %>
@@ -71,7 +70,6 @@
             <div class="menu_item"><%= link_to 'Email reminders', email_reminders_path %></div>
             <%- if current_user.connected_to_osm? && current_section %>
               <div class="menu_item"><%= link_to 'Email lists', email_lists_path %></div>
-              <div class="menu_item"><%= link_to 'Map members', map_members_multiple_path %></div>
               <div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_path %></div>
               <div class="menu_item"><%= link_to 'Search members', osm_search_members_form_path %></div>
               <div class="menu_item"><%= link_to 'Payments calculator', osm_myscout_payments_calculator_path %></div>
@@ -82,7 +80,6 @@
               <%= link_to '[change]', my_page_path %>
             </div>
             <div id="secondary_menu_current">
-              <%- if !current_section.waiting? && has_osm_permission?(:read, :member) %><div class="menu_item"><%= link_to 'Map members', map_members_path(current_section.id) %></div><%- end %>
               <%- if !current_section.waiting? && has_osm_permission?(:read, :flexi) %><div class="menu_item"><%= link_to 'Flexi records', osm_flexi_records_for_section_path(current_section.id) %></div><%- end %>
               <%- if current_section.youth_section? && has_osm_permission?(:read, :programme) %><div class="menu_item"><%= link_to 'Programme review', programme_review_balanced_path %></div><%- end %>
               <div class="menu_item"><%= link_to 'OSM exports', osm_exports_path %></div>

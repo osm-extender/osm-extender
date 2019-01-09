@@ -99,14 +99,12 @@ Feature: OSM
 	And I should not see "Programme review"
 	And I should not see "Email lists"
 	And I should not see "Check OSM setup"
-	And I should not see "Map members"
 
     Scenario: Message but no links for non connected user
         When I signin as "alice@example.com" with password "P@55word"
 	Then I should see "Email reminders"
 	And I should not see "Email lists"
 	And I should see "links to more things you can do will appear here"
-	And I should not see "Map members"
 	And I should not see "Programme review"
 	And I should not see "Check OSM setup"
 
@@ -123,7 +121,6 @@ Feature: OSM
 	And I should see "Programme review"
 	And I should see "Email lists"
 	And I should see "Check OSM setup"
-	And I should see "Map members"
 
     Scenario: Message and selected links for connected user without permissions
 	Given "alice@example.com" is connected to OSM

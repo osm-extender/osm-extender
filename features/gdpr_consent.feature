@@ -42,9 +42,6 @@ Feature: GDPR Consent
         When I go to the email_lists page
       	Then I should be on the gdpr_consent page
 
-        When I go to the map_members_multiple page
-      	Then I should be on the gdpr_consent page
-
         When I go to the osm_flexi_records page
       	Then I should be on the gdpr_consent page
 
