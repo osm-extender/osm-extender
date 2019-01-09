@@ -5,7 +5,6 @@ namespace :scheduled  do
     Rollbar.error(exception)
   end
 
-  task :monthly => ['clean:all']
   task :daily => [:automation_tasks, :reminder_emails, :email_lists, :statistics, :delete_nonactivated_users]
 
 end
