@@ -7,7 +7,7 @@
  *= require_self
 */
 
-#header {
+#header, #footer, #debuginfo {
     display:            none;
 }
 
