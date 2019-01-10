@@ -279,32 +279,61 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
     require_osm_permission(:read, :badge) or return
 
-    options = {
-      :include_core => @my_params[:include_core].eql?('1'),
-      :include_challenge => @my_params[:include_challenge].eql?('1'),
-      :include_staged => @my_params[:include_staged].eql?('1'),
-      :include_activity => @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
-      :exclude_not_started => @my_params[:hide_not_started].eql?('1'),
-      :exclude_all_finished => @my_params[:hide_all_finished].eql?('1'),
-    }
-    @names, @matrix = Report.badge_completion_matrix(current_user, current_section, options).values_at(:names, :matrix)
+    if params[:waiting]
+      if BadgeCompletionMatrixReport.data_for?(
+        current_user.id,
+        current_section.id,
+        include_core: @my_params[:include_core].eql?('1'),
+        include_challenge: @my_params[:include_challenge].eql?('1'),
+        include_staged: @my_params[:include_staged].eql?('1'),
+        include_activity: @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
+        exclude_not_started: @my_params[:hide_not_started].eql?('1'),
+        exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
+      )
+        @data = BadgeCompletionMatrixReport.data_for(
+          current_user.id,
+          current_section.id,
+          include_core: @my_params[:include_core].eql?('1'),
+          include_challenge: @my_params[:include_challenge].eql?('1'),
+          include_staged: @my_params[:include_staged].eql?('1'),
+          include_activity: @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
+          exclude_not_started: @my_params[:hide_not_started].eql?('1'),
+          exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
+        )
 
-    respond_to do |format|
-      format.html # html
-      format.csv do
-        send_sv_file({:col_sep => ',', :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@names]}, 'BadgeCompletionMatrix.csv', 'text/csv') do |csv|
-          @matrix.each do |item|
-            csv << item
-          end
-        end
-      end # csv
-      format.tsv do
-        send_sv_file({:col_sep => "\t", :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@names]}, 'BadgeCompletionMatrix.tsv', 'text/tsv') do |csv|
-          @matrix.each do |item|
-            csv << item
-          end
-        end
-      end # tsv
+        respond_to do |format|
+          format.html # html
+          format.csv do
+            send_sv_file({:col_sep => ',', :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@data[:names]]}, 'BadgeCompletionMatrix.csv', 'text/csv') do |csv|
+              @data[:matrix].each do |item|
+                csv << item
+              end
+            end
+          end # csv
+          format.tsv do
+            send_sv_file({:col_sep => "\t", :headers => ['Badge Type', 'Badge', 'Requirement Group', 'Requirement', *@data[:names]]}, 'BadgeCompletionMatrix.tsv', 'text/tsv') do |csv|
+              @data[:matrix].each do |item|
+                csv << item
+              end
+            end
+          end # tsv
+        end # respond_to    
+      else
+        render :waiting
+      end
+    else
+      # Add job
+      MissingBadgeRequirementsReport.delay.data_for(
+        current_user.id,
+        current_section.id,
+        include_core: @my_params[:include_core].eql?('1'),
+        include_challenge: @my_params[:include_challenge].eql?('1'),
+        include_staged: @my_params[:include_staged].eql?('1'),
+        include_activity: @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
+        exclude_not_started: @my_params[:hide_not_started].eql?('1'),
+        exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
+      )
+      redirect_to action: :badge_completion_matrix, waiting: '1', missing_badge_requirements: @my_params.symbolize_keys
     end
   end
 
@@ -347,69 +376,38 @@ class ReportsController < ApplicationController
     require_section_type Constants::YOUTH_SECTIONS or return
     require_osm_permission(:read, :badge) or return
 
-    @badge_data_by_member = {}
-    @badge_data_by_badge = {}
-    @member_names = {}
-    @badge_names = {:core => {}, :staged => {}, :activity => {}, :challenge => {}} #TODO flatten
-    @badge_requirement_labels = {}
-
-    @badge_types = {}
-    @badge_types[:core] = 'Core' if @my_params[:include_core].eql?('1')
-    @badge_types[:challenge] = 'Challenge' if @my_params[:include_challenge].eql?('1')
-    @badge_types[:staged] = 'Staged Activity and Partnership' if @my_params[:include_staged].eql?('1')
-    if @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver) # Bronze does not include activity badges
-      @badge_types[:activity] = 'Activity'
-    end
-
-    badges = {}
-    badges[:core] = Osm::CoreBadge.get_badges_for_section(osm_api, current_section) if @badge_types.has_key?(:core)
-    badges[:staged] = Osm::StagedBadge.get_badges_for_section(osm_api, current_section) if @badge_types.has_key?(:staged)
-    badges[:challenge] = Osm::ChallengeBadge.get_badges_for_section(osm_api, current_section) if @badge_types.has_key?(:challenge)
-    badges[:activity] = Osm::ActivityBadge.get_badges_for_section(osm_api, current_section) if @badge_types.has_key?(:activity)
-
-    badge_data = {}
-    badges.each do |type, bs|
-      badge_data[type] = []
-      @badge_data_by_badge[type] = {}
-      @badge_requirement_labels[type] ||= {}
-      bs.each do |badge|
-        @badge_names[type][badge.identifier] = badge.name
-        badge.get_data_for_section(osm_api, current_section).each do |data|
-          next if badge.add_columns?
-          if data.started?
-            @member_names[data.member_id] = "#{data[:first_name]} #{data[:last_name]}"
-            @badge_data_by_member[data.member_id] ||= {}
-            @badge_data_by_member[data.member_id][type] ||= []
-            badge_key = badge.type.eql?(:staged) ? "#{badge.identifier}_#{data.started}" : badge.identifier
-            @badge_requirement_labels[type][badge_key] ||= {}
-            @badge_data_by_badge[type][badge_key] ||= {}
-            @badge_data_by_member[data.member_id][type].push data
-            if badge.has_levels?
-              # Get requirements for only the started level
-              requirements = badge.requirements.select{ |r| r.mod.letter.eql?(('a'..'z').to_a[data.started-1])}
-            else
-              requirements = badge.requirements
-            end
-            requirements.each do |requirement|
-              unless data.requirement_met?(requirement.id)
-                @badge_data_by_badge[type][badge_key][requirement.id] ||= []
-                @badge_data_by_badge[type][badge_key][requirement.id].push data.member_id
-                @badge_requirement_labels[type][badge_key][requirement.id] = requirement.name
-              end
-            end
-          end
-        end
+    if params[:waiting]
+      if MissingBadgeRequirementsReport.data_for?(
+        current_user.id,
+        current_section.id,
+        include_core: @my_params[:include_core].eql?('1'),
+        include_challenge: @my_params[:include_challenge].eql?('1'),
+        include_activity: @my_params[:include_activity].eql?('1'),
+        include_staged: @my_params[:include_staged].eql?('1'),
+      )
+        @data = MissingBadgeRequirementsReport.data_for(
+          current_user.id,
+          current_section.id,
+          include_core: @my_params[:include_core].eql?('1'),
+          include_challenge: @my_params[:include_challenge].eql?('1'),
+          include_activity: @my_params[:include_activity].eql?('1'),
+          include_staged: @my_params[:include_staged].eql?('1'),
+        )
+      else
+        render :waiting
       end
+    else
+      # Add job
+      MissingBadgeRequirementsReport.delay.data_for(
+        current_user.id,
+        current_section.id,
+        include_core: @my_params[:include_core].eql?('1'),
+        include_challenge: @my_params[:include_challenge].eql?('1'),
+        include_activity: @my_params[:include_activity].eql?('1'),
+        include_staged: @my_params[:include_staged].eql?('1'),
+      )
+      redirect_to action: :missing_badge_requirements, waiting: '1', missing_badge_requirements: @my_params.symbolize_keys
     end
-
-    # Suffix levels to names for staged badges
-    new_badge_names = {}
-    @badge_names[:staged].each do |key, label|
-      (1..5).each do |level|
-        new_badge_names["#{key}_#{level}"] = "#{label} (Level #{level})"
-      end
-    end
-    @badge_names[:staged].merge!(new_badge_names)
   end
 
 
@@ -418,183 +416,71 @@ class ReportsController < ApplicationController
     require_osm_permission(:read, :programme) or return
     require_osm_permission(:read, :events) or return if current_section.subscription_at_least?(:silver)
 
-    dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
+    # Check OSM access for optional stuff
+    if @my_params[:check_earnt]
+      require_osm_permission(:read, :badge) or return
+    end
+    if @my_params[:check_event_attendance]
+      require_section_subscription(:silver) or return
+    end
+    if @my_params[:check_meeting_attendance]
+      require_osm_permission(:read, :register) or return
+    end
+    if @my_params[:check_participation] || @my_params[:check_birthday]
+      require_osm_permission(:read, :member) or return
+    end
+
+    dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])].sort
     if dates.include?(nil)
       flash[:errror] = 'You failed to provide at least one of the dates.'
       redirect_back_or_to reports_path
       return
     end
-    @start, @finish = dates.sort
-    @check_earnt = @my_params[:check_earnt].eql?('1')
-    @check_stock = @my_params[:check_stock].eql?('1') && @check_earnt
-    check_participation = @my_params[:check_participation].eql?('1') && @check_earnt
-    check_birthday = @my_params[:check_birthday].eql?('1') && @check_earnt
-    check_event_attendance = @my_params[:check_event_attendance].eql?('1') && @check_earnt
-    check_meeting_attendance = @my_params[:check_meeting_attendance].eql?('1') && @check_earnt
-    @badge_stock = @check_stock ? Osm::Badges.get_stock(osm_api, current_section) : {}
-    @badge_stock.default = 0
 
-    # Check OSM access for optional stuff
-    if @check_earnt
-      require_osm_permission(:read, :badge) or return
-    end
-    if check_event_attendance
-      require_section_subscription(:silver) or return
-    end
-    if check_meeting_attendance
-      require_osm_permission(:read, :register) or return
-    end
-    if check_participation || check_birthday
-      require_osm_permission(:read, :member) or return
-    end
-
-    badge_by_type = {
-      'activity' => Osm::ActivityBadge,
-      'staged' => Osm::StagedBadge,
-      'challenge' => Osm::ChallengeBadge,
-      'core' => Osm::CoreBadge,
-    }
-
-    @by_badge = {}
-    @by_meeting = {}
-    @by_event = {}
-    all_requirements = {} # key is an Osm::Meeting or Osm::Event, value is array f hashes of the information
-    meeting_attendance = {} # Key is member ID, value is the combined Hash of attendance dates
-    event_attendance = {} # Key is member ID, value is a Hash of event ID to attending symbol
-    @earnt_badges = {}
-
-    terms = Osm::Term.get_for_section(osm_api, current_section).select{ |term| !(term.finish < @start) && !(term.start > @finish) }
-    events, meetings = Report.get_calendar_items_for_section(osm_api, current_section, start: @start, finish: @finish, include_events: current_section.subscription_at_least?(:silver), include_meetings: true).values_at(:events, :meetings)
-
-
-    # For events
-    events.each do |event|
-      # Get badge requirements
-      @by_event[event] ||= {} unless event.badges.empty?
-      all_requirements[event] ||= []
-      event.badges.each do |bl|
-        next unless bl.badge_section.eql?(current_section.type)
-        badge_name = "#{bl.badge_name.downcase.capitalize} #{bl.badge_type.to_s.titleize} badge"
-        requirement_name = bl.requirement_label
-        @by_badge[badge_name] ||= []
-        @by_badge[badge_name].push requirement_name unless @by_badge[badge_name].include?(requirement_name)
-        @by_event[event][badge_name] ||= []
-        @by_event[event][badge_name].push requirement_name unless @by_event[event][badge_name].include?(requirement_name)
-        all_requirements[event].push({column: bl.requirement_id, data: (bl.data.blank? ? 'YES' : bl.data)})
-      end # each bl
-      # Get attendance
-      if check_event_attendance && @check_earnt
-        terms.each do |term| # Make sure we get people who have left but are still attending
-          event.get_attendance(osm_api, term).each do |attendance|
-            event_attendance[attendance.member_id] ||= {}
-            event_attendance[attendance.member_id][event.id] = attendance.attending
-          end # each attendance
-        end # each term
+    if params[:waiting]
+      if PlannedBadgeRequirementsReport.data_for?(
+        current_user.id,
+        current_section.id,
+        start: dates.first,
+        finish: dates.last,
+        check_earnt: @my_params[:check_earnt].eql?('1'),
+        check_stock: @my_params[:check_stock].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_participation: @my_params[:check_participation].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_birthday: @my_params[:check_birthday].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
+      )
+        @data = PlannedBadgeRequirementsReport.data_for(
+          current_user.id,
+          current_section.id,
+          start: dates.first,
+          finish: dates.last,
+          check_earnt: @my_params[:check_earnt].eql?('1'),
+          check_stock: @my_params[:check_stock].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_participation: @my_params[:check_participation].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_birthday: @my_params[:check_birthday].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
+        )
+      else
+        render :waiting
       end
-    end # each event
-
-    # For meetings
-    meetings.each do |meeting|
-      badge_links = meeting.get_badge_requirements(osm_api)
-      all_requirements[meeting] ||= [] unless badge_links.empty?
-      badge_links.each do |bl|
-        badge_name = "#{bl['badgeName'].downcase.capitalize} #{bl['badgetype'].to_s.titleize} badge"
-        requirement_name = "#{bl['columngroup']}: #{bl['name']}"
-        @by_meeting[meeting] ||= {}
-        @by_meeting[meeting][badge_name] ||= []
-        @by_meeting[meeting][badge_name].push requirement_name unless @by_meeting[meeting][badge_name].include?(requirement_name)
-        @by_badge[badge_name] ||= []
-        @by_badge[badge_name].push requirement_name unless @by_badge[badge_name].include?(requirement_name)
-        all_requirements[meeting].push({column: bl['column_id'].to_i, data: (bl['data'].blank? ? 'YES' : bl['data'])})
-      end
-    end # meetings for section
-    # Get attendance
-    if check_meeting_attendance && @check_earnt
-      terms.each do |term|
-        Osm::Register.get_attendance(osm_api, current_section, term).each do |attendance_data|
-          meeting_attendance[attendance_data.member_id] ||= {}
-          meeting_attendance[attendance_data.member_id].merge!(attendance_data.attendance)
-        end # each attendance_data
-      end # each term
+    else
+      # Add job
+      PlannedBadgeRequirementsReport.delay.data_for(
+        current_user.id,
+        current_section.id,
+        start: dates.first,
+        finish: dates.last,
+        check_earnt: @my_params[:check_earnt].eql?('1'),
+        check_stock: @my_params[:check_stock].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_participation: @my_params[:check_participation].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_birthday: @my_params[:check_birthday].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
+        check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
+      )
+      redirect_to action: :planned_badge_requirements, waiting: '1', planned_badge_requirements: @my_params.symbolize_keys
     end
-
-
-    if @check_earnt
-      # Get badges and datas
-      badges = [Osm::CoreBadge, Osm::ActivityBadge, Osm::StagedBadge, Osm::ChallengeBadge].map{ |klass| klass.get_badges_for_section(osm_api, current_section) }.flatten
-      badges.select!{ |b| !b.add_columns? }
-      datas = {} # key = "#{badge_id}_#{badge_version}" value = Array of datas
-      requirements = {} # key = member_id value = shared requirements Hash
-      badges.select{ |b| b.requirements.size > 0 }.each do |badge| # Each badge with requirements
-        badge.get_data_for_section(osm_api, current_section).each do |data|
-          # All datas for a member share a requirements hash 
-          requirements[data.member_id] ||= DirtyHashy.new
-          requirements[data.member_id].merge!(data.requirements)
-          data.requirements = requirements[data.member_id]
-          # Add the data to the collection
-          datas[badge.identifier] ||= []
-          datas[badge.identifier].push data
-        end
-      end
-
-      # Fast forward badge requirements
-      all_requirements.each do |thing, list|
-        list.each do |requirement| # {column: ###, data: 'YES'}
-          requirements.each do |member_id, data|
-            if thing.is_a?(Osm::Meeting) && check_meeting_attendance
-              next unless [nil, :yes].include?(meeting_attendance[member_id][thing.date]) # They were present or attendance was not taken (yet)
-            elsif thing.is_a?(Osm::Event) && check_event_attendance
-              next unless [:yes, :invited, :shown, :reserved].include?(event_attendance[member_id][thing.id]) # They may be present
-            end
-            data[requirement[:column]] = requirement[:data]
-          end # each entry in requirements by member
-        end # list of requirements
-      end # all_requirements.each
-
-      # Get list of finished badges
-      datas.each do |badge_identifier, list|
-        list.each do |data|
-          next if data.awarded? || data.due?
-          if data.earnt?
-            member_name = "#{data.first_name} #{data.last_name}"
-            key = [data.badge, data.earnt]
-            @earnt_badges[key] ||= []
-            @earnt_badges[key].push member_name
-          end
-        end
-      end
-
-      if check_participation
-        badge = badges.select{ |b| b.name == 'Joining In' }.first
-        unless badge.nil?
-          (members ||= Osm::Member.get_for_section(osm_api, current_section)).each do |member|
-            next if member.grouping_id == -2  # Leaders don't get these participation badges
-            next_level_due = ((@start.to_time - member.joined_movement.to_time) / 1.year).ceil
-            if (@start..@finish).include?(member.joined_movement + next_level_due.years)
-              key = [badge, next_level_due]
-              @earnt_badges[key] ||= []
-              @earnt_badges[key].push member.name
-            end
-          end
-        end
-      end # if check_participation
-
-      if check_birthday
-        birthday_badges = Hash[badges.select{ |b| !!b.name.match(/birthday/i) }.map{ |b| [b.name.match(/(\d+)(?:st|nd|th)/)[1].to_i, b] }]
-        (members ||= Osm::Member.get_for_section(osm_api, current_section)).each do |member|
-          next_birthday = ((@start.to_time - member.date_of_birth.to_time) / 1.year).ceil
-          if (@start..@finish).include?(member.date_of_birth + next_birthday.years)
-            badge = birthday_badges[next_birthday]
-            unless badge.nil?
-              key = [badge, 1]
-              @earnt_badges[key] ||= []
-              @earnt_badges[key].push member.name
-            end
-          end
-        end
-      end # check_birthday
-
-    end # if @check_earnt
   end
 
   def leader_access_audit
@@ -655,7 +541,6 @@ class ReportsController < ApplicationController
       @members_by_grouping[grouping_names[grouping_id]] = members[grouping_id]
     end
   end
-
 
   private
   def send_sv_file(options={}, file_name, mime_type, &generate_data)

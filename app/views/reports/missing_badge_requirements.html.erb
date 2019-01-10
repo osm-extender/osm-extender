@@ -2,7 +2,7 @@
 
 <p>
   The following badge types are included in this report:<ul>
-    <%- @badge_types.values.each do |label| %>
+    <%- @data.dig(:badge_types).values.each do |label| %>
       <li><%= label %></li>
     <%- end %>
   </ul>
@@ -11,14 +11,14 @@
 
 <h2>Grouped by Member</h2>
 <ul>
-  <%- @badge_data_by_member.each do |member_id, badges| %>
+  <%- @data.dig(:badge_data_by_member).each do |member_id, badges| %>
     <li>
-      <%= @member_names[member_id] %>:
+      <%= @data.dig(:member_names, member_id) %>:
       <ul>
       <%- [:core, :activity, :challenge].each do |type| %>
         <%- unless badges[type].nil? %>
           <li>
-            <%= @badge_types[type] %>:
+            <%= @data.dig(:badge_types, type) %>:
             <ul>
             <%- badges[type].each do |data| %>
               <%- if data.is_a?(String) %>
@@ -95,19 +95,19 @@
 
 <h2 class="page-break-before">Grouped by Badge</h2>
 <ul>
-  <%- @badge_types.each do |type, label| %>
-    <%- if @badge_data_by_badge[type].size > 0 %>
+  <%- @data.dig(:badge_types).each do |type, label| %>
+    <%- if @data.dig(:badge_data_by_badge, type).size > 0 %>
       <li><%= label %>:
         <ul>
-          <%- @badge_data_by_badge[type].each do |badge_key, requirements| %>
+          <%- @data.dig(:badge_data_by_badge, type).each do |badge_key, requirements| %>
             <%- if requirements.size > 0 %>
-              <li><%= @badge_names[type][badge_key] %>:
+              <li><%= @data.dig(:badge_names, type, badge_key) %>:
                 <ul>
                   <%- requirements.each do |r_key, members| %>
-                    <li><%= @badge_requirement_labels[type][badge_key][r_key] %>:
+                    <li><%= @data.dig(:badge_requirement_labels, type, badge_key, r_key) %>:
                       <ul>
                         <%- members.each do |member_id| %>
-                          <li><%= @member_names[member_id] %></li>
+                          <li><%= @data.dig(:member_names, member_id) %></li>
                         <%- end %>
                       </ul>
                     </li>

@@ -23,13 +23,13 @@
         <th style="vertical-align: bottom;">Badge type</th>
         <th style="vertical-align: bottom;">Badge name</th>
         <th style="vertical-align: bottom;" colspan="2">Requirement</th>
-        <%- @names.each do |name| %>
+        <%- @data[:names].each do |name| %>
           <th style="vertical-align: bottom; font-size: 80%;"><%- name.split(' ').first.split('').each do |c| %><%= c %><br/><%- end %></th>
         <%- end %>
       </tr>
     </thead>
     <tbody>
-      <%- @matrix.each do |row| %>
+      <%- @data[:matrix].each do |row| %>
         <tr>
           <%- row[0..3].each do |cell| %>
             <td><%= cell %></td>

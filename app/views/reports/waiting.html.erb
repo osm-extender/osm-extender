@@ -1,0 +1,10 @@
+<%= page_title 'Please Wait' %>
+
+<p>
+  Data for your report is being gathered.
+  This page will automatically keep checking if the data is available and then display it.
+</p>
+
+<script>
+  window.setTimeout(function(){ document.location.reload(true); }, 15000);
+</script>

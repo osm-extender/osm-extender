@@ -1,11 +1,11 @@
 <%= page_title 'Planned Badges Report' %>
 
 <h2>Badge Requirements Planned</h2>
-<p>You are planning to meet the following badge requirements between <%= ordinalized_date(@start, "%a %d of %b %Y") %> and <%= ordinalized_date(@finish, "%a %d of %b %Y") %>.</p>
+<p>You are planning to meet the following badge requirements between <%= ordinalized_date(@data[:start], "%a %d of %b %Y") %> and <%= ordinalized_date(@data[:finish], "%a %d of %b %Y") %>.</p>
 
 <h3>By Badge</h3>
 <ul>
-  <%- @by_badge.each do |badge, requirements| %>
+  <%- @data[:by_badge].each do |badge, requirements| %>
     <li>
       <%= badge %>:<ul>
         <%- requirements.each do |requirement| %>
@@ -19,7 +19,7 @@
 
 <h3>By Meeting</h3>
 <ul>
-  <%- @by_meeting.each do |meeting, links| %>
+  <%- @data[:by_meeting].each do |meeting, links| %>
     <li><%= meeting.title %> on <%= ordinalized_date(meeting.date, "%a %d of %b %Y") %>
       <ul>
         <%- links.each do |badge, requirements| %>
@@ -39,7 +39,7 @@
 
 <h3>By Event</h3>
 <ul>
-  <%- @by_event.each do |event, links| %>
+  <%- @data[:by_event].each do |event, links| %>
     <li>
       <%= event.name %><% unless event.start.nil? %> on <%= ordinalized_date(event.start, "%a %d of %b %Y") %><% end %>:
       <ul>
@@ -56,7 +56,7 @@
 </ul>
 
 
-<%- if @check_earnt %>
+<%- if @data[:check_earnt] %>
   <h2>Badges Completed</h2>
   <p>
     The following badges will be completed if everyone turns up all the time.
@@ -68,15 +68,15 @@
     <li>Badges with multiple identical requirements</li>
   </ul></b>
 
-  <%- unless @earnt_badges.empty? %>
+  <%- unless @data[:earnt_badges].empty? %>
     <ul>
-      <%- @earnt_badges.sort.each do |(badge, level), member_names| %>
+      <%- @data[:earnt_badges].sort.each do |(badge, level), member_names| %>
         <%- badge_name = "#{badge.type.to_s.titleize} - #{badge.name}" %>
         <%- badge_name = badge.has_levels? ? "#{badge_name} #{level}" : badge_name %>
-        <%- badge_stock = @badge_stock["#{badge.id}_#{level}"] %>
+        <%- badge_stock = @data.dig(:badge_stock, "#{badge.id}_#{level}") %>
         <li>
           <%= badge_name %> (x <%= member_names.count %>)
-          <%- if @check_stock %><%= pos_neg((badge_stock >= member_names.count), "(you have #{badge_stock})") %><%- end %>
+          <%- if @data[:check_stock] %><%= pos_neg((badge_stock >= member_names.count), "(you have #{badge_stock})") %><%- end %>
           :
           <ul>
             <%- member_names.each do |member_name| %>
