@@ -218,6 +218,11 @@ class ApplicationController < ActionController::Base
       log_error(exception)
       render :template => "error/osm", :status => 503, :locals => {:exception => exception}
     end
+
+    rescue_from Errno::ENETUNREACH do |exception|
+      log_error(exception)
+      render :template => "error/osm", :status => 503, :locals => {:exception => Osm::ConnectionError.new(exception.message)}
+    end
   end
 
   rescue_from Osm::Error::NoCurrentTerm do |exception|
