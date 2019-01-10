@@ -128,7 +128,8 @@ OSMExtender::Application.routes.draw do
   end
 
   get 'delayed_jobs' => 'delayed_job#index', :as => 'delayed_jobs'
-  get 'delayed_job/:id' => 'delayed_job#show#', :as => 'delayed_job'
+  get 'delayed_job/:id' => 'delayed_job#show', :as => 'delayed_job'
+  post 'delayed_job/:id/delete' => 'delayed_job#delete', as: 'delete_delayed_job'
 
   root :to => 'static#welcome'
 end

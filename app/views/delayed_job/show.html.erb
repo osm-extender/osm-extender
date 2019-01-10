@@ -14,7 +14,7 @@
 
 <p>
   <b>Arguments:</b>
-  <%= @handler.arguments.inspect %>
+  <%= @handler.args.inspect %>
 </p>
 
 <p>
@@ -49,3 +49,5 @@
   <b>Last Error:</b>
   <pre><%= @job.last_error %></pre>
 </p>
+
+<%= link_to '[Delete]', delete_delayed_job_path(job) %>
