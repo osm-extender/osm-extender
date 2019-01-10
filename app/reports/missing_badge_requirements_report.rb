@@ -24,9 +24,9 @@ class MissingBadgeRequirementsReport < LongRunningReport
       badge_requirement_labels = {}
 
       badge_types = {}
-      badge_types[:core] = 'Core' if @include_core
-      badge_types[:challenge] = 'Challenge' if @include_challenge
-      badge_types[:staged] = 'Staged Activity and Partnership' if @include_staged
+      badge_types[:core] = 'Core' if include_core
+      badge_types[:challenge] = 'Challenge' if include_challenge
+      badge_types[:staged] = 'Staged Activity and Partnership' if include_staged
       if include_activity && section.subscription_at_least?(:silver) # Bronze does not include activity badges
         badge_types[:activity] = 'Activity'
       end
