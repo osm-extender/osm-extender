@@ -9,7 +9,7 @@
     <% end %>
     <%= link_to '[txt]', status_health_path(format: :txt) %>
   </li>
-  <%- %w{cache delayed_job database_size users}.each do |type| %>
+  <%- %w{cache scheduled_jobs delayed_job database_size users}.each do |type| %>
     <li>
       <%= link_to type.titleize, "##{type}"%>
       <%- [:cacti, :json, :csv, :text_table].each do |format| %>
@@ -39,6 +39,27 @@
 <%- cache_misses = cache[:cache_misses] %>
 <%- cache_attempts = cache[:cache_attempts].to_f %>
 <p>There have been <%= number_with_delimiter(cache_hits) %> (<%= number_to_percentage(cache[:cache_hits_percent], precision: 1) %>) cache hits and <%= number_with_delimiter(cache_misses) %> (<%= number_to_percentage(cache[:cache_misses_percent], precision: 1) %>) cache misses.</p>
+
+<a name="scheduled_jobs"/>
+<h2>Scheduled Jobs</h2>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Type</th>
+    <th>Status</th>
+    <th>Next Run</th>
+    <th>Cron</th>
+  </tr>
+  <%- @status.scheduled_jobs.each do |job| %>
+    <tr>
+      <td><%= job[:id] %></td>
+      <td><%= job[:type] %></td>
+      <td><%= pos_neg !job[:status].eql?(:failed), job[:status] %></td>
+      <td><%= pos_neg job[:run_at] >= Time.now, job[:run_at] %></td>
+      <td><%= job[:cron] %></td>
+    </tr>
+  <%- end %>
+</table>
 
 <a name="delayed_job"/>
 <h2>Delayed Job</h2>

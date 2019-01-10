@@ -84,6 +84,30 @@ class Status
     }
   end
 
+  def scheduled_jobs
+    return @scheduled_jobs unless @scheduled_jobs.nil?
+
+    job_status = lambda do |job|
+      return :running if job.locked_at
+      return :failed if job.failed_at
+      :success
+    end
+
+    @scheduled_jobs = Delayed::Job.where.not(cron: nil)
+                                  .map do |job|
+                                    {
+                                      id: job.id,
+                                      type: YAML.parse(job.handler)
+                                                .map(&:tag)
+                                                .select { |n| n&.start_with?('!ruby/object:') }
+                                                .first.split(':', 2).last,
+                                      status: job_status.call(job),
+                                      cron: job.cron,
+                                      run_at: job.run_at,
+                                    }
+                                  end
+  end
+
   def users
     @users ||= {
       unactivated: User.unactivated.count,

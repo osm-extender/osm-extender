@@ -45,6 +45,15 @@ class StatusController < ApplicationController
     end
   end
 
+  def scheduled_jobs
+    data = Status.new.scheduled_jobs
+    respond_with data do |format|
+      format.cacti { render cacti: flatten_hash(data.inject({}) { |out, inp| out[inp[:id].to_s] = inp.except(:id); out }) }
+      format.csv { render csv: data.map { |j| j.values_at(:id, :type, :status, :run_at, :cron) }, headings: ['Id', 'Type', 'Status', 'Next run', 'Cron'] }
+      format.text_table { render text_table: data.map { |j| j.values_at(:id, :type, :status, :run_at, :cron) }, headings: ['Id', 'Type', 'Status', 'Next run', 'Cron'] }
+    end
+  end
+
   def health
     data = Status.new.health
     status = data[:healthy] ? :ok : :service_unavailable
