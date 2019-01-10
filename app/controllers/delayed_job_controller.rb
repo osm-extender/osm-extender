@@ -13,4 +13,8 @@ class DelayedJobController < ApplicationController
     @default_priority = Delayed::Worker.default_priority
   end
 
+  def destroy
+    Delayed::Job.destroy(params[:id])
+    redirect_to delayed_jobs_path
+  end
 end

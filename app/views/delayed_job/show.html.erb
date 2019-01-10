@@ -20,8 +20,6 @@
 <p>
   <b>Queue:</b>
   <%= @job.queue.inspect %>
-  -
-  <%= @handler.queue_name %>
 </p>
 
 <p>
@@ -50,4 +48,4 @@
   <pre><%= @job.last_error %></pre>
 </p>
 
-<%= link_to '[Delete]', delete_delayed_job_path(job) %>
+<%= link_to '[Delete]', delayed_job_path(@job), data: {confirm: 'Are you sure?'} ,method: :delete %>
