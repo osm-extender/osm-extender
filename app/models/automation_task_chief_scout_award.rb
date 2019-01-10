@@ -77,15 +77,20 @@ class AutomationTaskChiefScoutAward < AutomationTask
     if section.nil?
       return {success: false, errors: ['Could not retrieve section from OSM.']}
     end
-    
+
     badge = Osm::ChallengeBadge.get_badges_for_section(user.osm_api, section) || []
     badge = badge.select{ |b| b.id.eql?(BADGE_IDS[section.type]) }.first
     if badge.nil?
       return {success: false, errors: ["Could not retrieve Chief Scout's Award badge from OSM."]}
     end
-    member_badge_data = Hash[badge.get_data_for_section(user.osm_api, section).map{ |d| [d.member_id, d] } ]
+    member_badge_data = badge.get_data_for_section(user.osm_api, section)
+                             .map{ |d| [d.member_id, d] }
+                             .to_h
 
-    member_start_dates = Osm::Member.get_for_section(user.osm_api, section)&.map{ |m| [m.id, m.started_section] }&.to_h
+    member_start_dates = Osm::Member.get_for_section(user.osm_api, section)
+                                    &.map{ |m| [m.id, m.started_section] }
+                                    &.select { |(_id, started_section)| !!started_section }
+                                    &.to_h
     if member_start_dates.nil?
       return {success: false, errors: ['Could not retrieve Start dates from OSM.']}
     end
@@ -105,7 +110,7 @@ class AutomationTaskChiefScoutAward < AutomationTask
 
       start_date = member_start_dates[badge_summary[:member_id]]
       unless start_date.is_a?(Date) # Can't do the comparrison
-        errors.push "Couldn't get started section date for #{badge_summary[:name]}."
+        # errors.push "Couldn't get started section date for #{badge_summary[:name]}."
         next badge_summary
       end
 

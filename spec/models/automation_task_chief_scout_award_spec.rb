@@ -477,7 +477,7 @@ describe "Chief Scout's Award automation task" do
         Osm::StagedBadge.stub(:get_badges_for_section){ [Osm::StagedBadge.new(identifier: '501_0')] }
 
         ret_val = @task.send(:perform_task)
-        ret_val.should == {:success=>false, :log_lines=>[], :errors=>["Couldn't get started section date for M."]}
+        ret_val.should == {:success=>true, :log_lines=>[], :errors=>[]}
       end
     end
 
