@@ -323,7 +323,7 @@ class ReportsController < ApplicationController
       end
     else
       # Add job
-a=      MissingBadgeRequirementsReport.delay.data_for(
+      BadgeCompletionMatrixReport.delay.data_for(
         current_user.id,
         current_section.id,
         include_core: @my_params[:include_core].eql?('1'),
@@ -333,7 +333,6 @@ a=      MissingBadgeRequirementsReport.delay.data_for(
         exclude_not_started: @my_params[:hide_not_started].eql?('1'),
         exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
       )
-fail a.inspect
       redirect_to action: :badge_completion_matrix, waiting: '1', missing_badge_requirements: @my_params.symbolize_keys
     end
   end
