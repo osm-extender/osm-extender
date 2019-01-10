@@ -44,7 +44,7 @@ gem 'terminal-table', '~> 1.8'        # Display data in an ASCII table
 # Jobs in background
 gem 'delayed_job_active_record', '~> 4.0'
 gem 'delayed_cron_job', '~> 0.7'
-#gem 'daemons', '~> 1.1'
+gem 'daemons', '~> 1.3'
 #gem 'daemon-spawn', '~> 0.4'
 
 # Javascript / Assets
