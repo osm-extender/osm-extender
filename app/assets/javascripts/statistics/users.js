@@ -21,7 +21,7 @@ function drawCharts() {
         width: 1000, height: 350
       };
 
-      drawUsersChart(data['users'], users_options, users_chart);
+      drawUsersChart(data, users_options, users_chart);
     }
   })
 }
@@ -47,9 +47,8 @@ function drawUsersChart(data, options, chart) {
 
   var users_data = data['data'];
   for(data_row in users_data) {
-    row = new Array();
-    row[0] = new Date(users_data[data_row]['date']);
-    row[1] = users_data[data_row]['total'];
+    row = users_data[data_row];
+    row[0] = new Date(row[0]);
     data_table.addRow(row);
   }
 

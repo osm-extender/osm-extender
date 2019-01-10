@@ -82,9 +82,8 @@ function drawNumberChart(data, options, chart) {
   });
 
   for(data_row in data) {
-    row = new Array();
-    row[0] = new Date(data[data_row]['date']);
-    row[1] = data[data_row]['total'];
+    row = data[data_row];
+    row[0] = new Date(row[0]);
     data_table.addRow(row);
   }
 

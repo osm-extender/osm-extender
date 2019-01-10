@@ -35,40 +35,13 @@ class StatisticsController < ApplicationController
 
   private
   def users_data
-    earliest = User.minimum(:created_at).to_date
-    users_max = 0
-    users = [{:date => (earliest - 1), :total => 0}]
-    (earliest..Date.today).each do |date|
-      cache = Statistics.create_or_retrieve_for_date(date)
-      users.push ({
-        :date => date,
-        :total => cache['users']
-      })
-      users_max = cache['users'] if cache['users'] > users_max
-    end
-
-    return {
-      'users' => {
-        'data' => users,
-        'max_value' => users_max
-      },
+    {
+      'data' => Statistics.order(date: :asc).pluck(:date, :users),
+      'max_value' => Statistics.maximum(:users)
     }
   end
 
   def email_reminders_data
-    earliest = User.minimum(:created_at).to_date
-
-    number_max = 0
-    number = [{:date => (earliest - 1), :total => 0}]
-    (earliest..Date.today).each do |date|
-      cache = Statistics.create_or_retrieve_for_date(date)
-      number.push ({
-        :date => date,
-        :total => cache['email_reminders']
-      })
-      number_max = cache['email_reminders'] if cache['email_reminders'] > number_max
-    end
-
     todays_data = Statistics.create_or_retrieve_for_date(Date.today)
 
     by_day = [todays_data['email_reminders_by_day'], todays_data['email_reminder_shares_by_day']]
@@ -87,8 +60,8 @@ class StatisticsController < ApplicationController
 
     return {
       :number => {
-        :data => number,
-        :max_value => number_max
+        :data => Statistics.order(date: :asc).pluck(:date, :email_reminders),
+        :max_value => Statistics.maximum(:email_reminders)
       },
       :day => {
         :data => by_day,
