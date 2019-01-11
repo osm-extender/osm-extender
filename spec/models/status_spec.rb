@@ -121,7 +121,7 @@ describe "Status fetching" do
       settings: {
         default_priority: 5,
         max_attempts: 5,
-        max_run_time: 14400,
+        max_run_time: 3600,
         sleep_delay: 15,
         destroy_failed_jobs: false,
         delay_jobs: false
