@@ -24,7 +24,7 @@ class AutomationTasksController < ApplicationController
       user: current_user,
       section_id: current_section.id,
       active: (params[:automation_task] || {})[:active].eql?('1'),
-      configuration: configuration_params.symbolize_keys,
+      configuration: configuration_params.to_h.symbolize_keys,
     })
 
     if @task.invalid?
@@ -41,7 +41,7 @@ class AutomationTasksController < ApplicationController
     @task.assign_attributes({
       user: current_user,
       active: (params[:automation_task] || {})[:active].eql?('1'),
-      configuration: configuration_params.symbolize_keys,
+      configuration: configuration_params.to_h.symbolize_keys,
     })
 
     if @task.invalid?

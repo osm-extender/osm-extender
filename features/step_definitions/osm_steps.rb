@@ -52,21 +52,22 @@ end
 
 
 Given /^an OSM request to get_api_access for section "([^"]*)" will have the permissions$/ do |section, table|
+  values = {
+    'none' => '0',
+    'read' => '10',
+    'write' => '20',
+    'administer' => '100',
+  }
 
-  permissions = Array.new
-  table.hashes.each do |hash|
-     permissions.push [hash['permission'], hash['granted']]
-  end
-
-  body = '{"apis":[{"apiid":"12","name":"Test API","permissions":{'
-  permissions.each do |permission|
-    permission[1] = 0 if permission[1].eql?('none')
-    permission[1] = 10 if permission[1].eql?('read')
-    permission[1] = 20 if permission[1].eql?('write') || permission[1].eql?('read/write')
-    body += "\"#{permission[0]}\":\"#{permission[1]}\","
-  end
-  body[-1] = '}'
-  body += '}]}'
+  body = {
+    'apis' => [{
+      'apiid' => '12',
+      'name' => 'Test API',
+      'permissions' => Hash[table.hashes.map { |hash|
+        [hash['permission'], values.fetch(hash['granted'])]
+      }]
+    }]
+  }.to_json
 
   FakeWeb.register_uri(:post, "https://www.onlinescoutmanager.co.uk/ext/settings/access/?action=getAPIAccess&sectionid=#{section}", :body => body, :content_type => 'application/json')
 end

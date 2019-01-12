@@ -81,8 +81,8 @@ describe StatusController do
     end
 
     describe '#index' do
-      before(:each) { get :index, key: 'a' }
-      it { expect(response).to be_success }
+      before(:each) { get :index, params: {key: 'a'} }
+      it { expect(response).to be_successful }
       it { expect(response.headers["Content-Type"]).to eq "text/html; charset=utf-8" }
       it { expect(response).to render_template :index }    
     end
@@ -90,8 +90,8 @@ describe StatusController do
     response_bodies.each do |method, bodies|
       bodies.each do |format, body|
         describe "#{method.to_s.titleize} as #{format}" do
-          before(:each) { get method, format: format, key: 'a' }
-          it { expect(response).to be_success }
+          before(:each) { get method, params: {format: format, key: 'a'} }
+          it { expect(response).to be_successful }
           it { expect(response.headers["Content-Type"]).to eq mime_types[format] }
           it { expect(response.body).to eq body }    
         end # describe
@@ -109,7 +109,7 @@ describe StatusController do
       before(:each) { allow(status).to receive(:health).and_return({healthy: false, ok: [], not_ok: []}) }
       unhealthy_bodies.each do |format, body|
         describe "as #{format}" do
-          before(:each) { get :health, format: format, key: 'a' }
+          before(:each) { get :health, params: {format: format, key: 'a'} }
           it { expect(response.status).to eq 503 }
           it { expect(response.headers["Content-Type"]).to eq mime_types[format] }
           it { expect(response.body).to eq body }
@@ -152,8 +152,8 @@ describe StatusController do
       end
 
       describe '#index' do
-        before(:each) { get :index, key: 'test-a' }
-        it { expect(response).to be_success }
+        before(:each) { get :index, params: {key: 'test-a'} }
+        it { expect(response).to be_successful }
         it { expect(response.headers["Content-Type"]).to eq "text/html; charset=utf-8" }
         it { expect(response).to render_template :index }    
       end
@@ -161,8 +161,8 @@ describe StatusController do
       response_bodies.each do |method, bodies|
         bodies.each do |format, body|
           describe "#{method.to_s.titleize} as #{format}" do
-            before(:each) { get method, format: format, key: 'test-a' }
-            it { expect(response).to be_success }
+            before(:each) { get method, params: {format: format, key: 'test-a'} }
+            it { expect(response).to be_successful }
             it { expect(response.headers["Content-Type"]).to eq mime_types[format] }
             it { expect(response.body).to eq body }    
           end # describe
@@ -183,7 +183,7 @@ describe StatusController do
       response_bodies.each do |method, bodies|
         bodies.each do |format, body|
           describe "#{method.to_s.titleize} as #{format}" do
-            before(:each) { get method, format: format, key: 'key-invalid' }
+            before(:each) { get method, params: {format: format, key: 'key-invalid'} }
             it { expect(response).to redirect_to signin_path }
             it { expect(flash[:error]).to eq 'You are not allowed to do that.' }
           end # describe
@@ -208,7 +208,7 @@ describe StatusController do
     response_bodies.each do |method, bodies|
       bodies.each do |format, body|
         describe "#{method.to_s.titleize} as #{format}" do
-          before(:each) { get method, format: format }
+          before(:each) { get method, params: {format: format} }
           it { expect(response).to redirect_to my_page_path }
           it { expect(flash[:error]).to eq 'You are not allowed to do that.' }
         end # describe
@@ -230,7 +230,7 @@ describe StatusController do
     response_bodies.each do |method, bodies|
       bodies.each do |format, body|
         describe "##{method.to_s.titleize} as #{format}" do
-          before(:each) { get method, {format: format} }
+          before(:each) { get method, params: {format: format} }
           it { expect(response).to redirect_to signin_path }
           it { expect(flash[:error]).to eq 'You are not allowed to do that.' }
         end # describe

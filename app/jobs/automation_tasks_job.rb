@@ -1,4 +1,4 @@
-class AutomationTasksJob < ActiveJob::Base
+class AutomationTasksJob < ApplicationJob
   queue_as :default
 
   def perform

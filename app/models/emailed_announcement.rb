@@ -1,4 +1,4 @@
-class EmailedAnnouncement < ActiveRecord::Base
+class EmailedAnnouncement < ApplicationRecord
 
   belongs_to :announcement
   belongs_to :user

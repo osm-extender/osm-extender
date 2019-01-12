@@ -11,7 +11,7 @@
 # The inheriting class MUST provide the following constants:
 # * ALLOWED_SECTIONS - an array of symbols representing the allowed section types for this task
 
-class AutomationTask < ActiveRecord::Base
+class AutomationTask < ApplicationRecord
   has_paper_trail :on => [:create, :update]
 
   belongs_to :user

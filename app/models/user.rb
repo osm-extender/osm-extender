@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   authenticates_with_sorcery!
   has_paper_trail(
     :skip => [:crypted_password, :salt, :activation_token, :reset_password_token],
@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   def has_osm_permission?(section, permission_to, permission_on)
     user_can = user_has_osm_permission?(section, permission_to, permission_on)
     api_can = api_has_osm_permission?(section, permission_to, permission_on)
-    return user_can && api_can
+    user_can && api_can
   end
 
   # Check if the user has a given OSM permission
@@ -145,7 +145,7 @@ class User < ActiveRecord::Base
         end
       end
     end
-    return true
+    true
   end
 
   # Check if the API has a given OSM permission
@@ -158,7 +158,7 @@ class User < ActiveRecord::Base
         end
       end
     end
-    return true
+    true
   end
 
 

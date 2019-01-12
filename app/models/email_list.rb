@@ -1,4 +1,4 @@
-class EmailList < ActiveRecord::Base
+class EmailList < ApplicationRecord
   has_paper_trail :on => [:create, :update]
 
   belongs_to :user

@@ -10,7 +10,7 @@
 #   * self.configuration_types - to return a hash (keys are the keys used in the above hash, value is the Class that the value should be converted to)
 #   * human_configuration - to return a string containing a user friendly version of the configuration (e.g. "From 1 week ago to 3 weeks time")
 
-class EmailReminderItem < ActiveRecord::Base
+class EmailReminderItem < ApplicationRecord
   has_paper_trail :on => [:create, :update]
 
   belongs_to :email_reminder

@@ -1,4 +1,4 @@
-class ReminderEmailsJob < ActiveJob::Base
+class ReminderEmailsJob < ApplicationJob
   queue_as :default
 
   def perform

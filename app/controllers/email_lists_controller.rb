@@ -73,7 +73,8 @@ class EmailListsController < ApplicationController
 
   def preview
     my_params = sanatised_params.email_list
-    if my_params.values_at(:contact_member, :contact_primary, :contact_secondary, :contact_emergency).uniq.eql?([0])
+
+    if my_params.values_at(:contact_member, :contact_primary, :contact_secondary, :contact_emergency).uniq.eql?(['0'])
       flash[:error] = 'You must select at least one contact to get some addresses for.'
       redirect_to email_lists_path(email_list: my_params) and return
     end
@@ -91,7 +92,9 @@ class EmailListsController < ApplicationController
   def multiple
     case params[:commit]
       when 'Get addresses'
-        multiple_get_addresses(params[:email_list])
+        multiple_get_addresses params.require(:email_list)
+                                     .permit(current_user.email_lists.map { |l| l.id.to_s })
+                                     .to_h
       else
         flash[:error] = 'That was an invalid action.'
         redirect_to email_lists_path
@@ -114,7 +117,7 @@ class EmailListsController < ApplicationController
   end
 
   def clean_lists(lists)
-    (lists || {}).select{ |k,v| v['selected'].eql?('1') }.map{ |k,v| k.to_i}
+    (lists || {}).select{ |_k, v| v.eql?('1') }.map{ |k, _v| k.to_i}
   end
 
   def get_sections_data

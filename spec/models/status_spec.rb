@@ -3,7 +3,7 @@ describe "Status fetching" do
   describe '#cache' do
     it 'Creates status' do
       redis = double
-      expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+      expect(Rails).to receive_message_chain(:cache, :redis).and_return(redis)
       expect(redis).to receive(:config).with(:get, 'maxmemory').and_return('maxmemory'=>'2345')
       expect(redis).to receive(:info).and_return('used_memory'=>'1234', 'keyspace_hits'=>'4567', 'keyspace_misses'=>'567')
       expect(redis).to receive(:dbsize).and_return(3456)
@@ -21,7 +21,7 @@ describe "Status fetching" do
 
     it 'Handles being denied getting the config' do
       redis = double
-      expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+      expect(Rails).to receive_message_chain(:cache, :redis).and_return(redis)
       expect(redis).to receive(:config).and_raise(Redis::CommandError, 'ERR unknown command \'config\'')
       allow(redis).to receive(:info).and_return('used_memory'=>'0', 'keyspace_hits'=>'0', 'keyspace_misses'=>'0')
       allow(redis).to receive(:dbsize).and_return(0)
@@ -30,7 +30,7 @@ describe "Status fetching" do
 
     it 'Handles zeros' do
       redis = double
-      expect(Rails).to receive_message_chain(:cache, :data).and_return(redis)
+      expect(Rails).to receive_message_chain(:cache, :redis).and_return(redis)
       expect(redis).to receive(:config).with(:get, 'maxmemory').and_return('maxmemory'=>'0')
       expect(redis).to receive(:info).and_return('used_memory'=>'0', 'keyspace_hits'=>'0', 'keyspace_misses'=>'0')
       expect(redis).to receive(:dbsize).and_return(0)

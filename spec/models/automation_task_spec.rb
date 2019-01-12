@@ -1,6 +1,6 @@
 describe "Automation Task" do
   it "Has a valid factory" do
-    task = FactoryBot.build(:automation_task, user_id: 321)
+    task = FactoryBot.build(:automation_task)
     task.class.stub(:human_name){ 'Human name for automation task' }
     task.stub(:only_one_of_each_type){ true }
     task.stub(:set_section_name){ true }

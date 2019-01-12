@@ -1,4 +1,4 @@
-class Statistics < ActiveRecord::Base
+class Statistics < ApplicationRecord
 
   serialize :email_reminders_by_day, Array
   serialize :email_reminder_shares_by_day, Array

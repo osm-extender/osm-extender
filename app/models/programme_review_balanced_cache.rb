@@ -1,4 +1,4 @@
-class ProgrammeReviewBalancedCache < ActiveRecord::Base
+class ProgrammeReviewBalancedCache < ApplicationRecord
 
   serialize :data, Hash
 

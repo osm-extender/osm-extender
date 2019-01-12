@@ -1,7 +1,7 @@
 default: &default
-  url:        <%= Figaro.env.REDIS_URL!  %>
-  expires_in: <%= ENV.fetch('redis_expires_in', 10.minutes) %>
-  namespace:  <%= ENV.fetch('redis_namepsace', "osmx.#{Rails.env}") %>
+  :url:        <%= Figaro.env.REDIS_URL!  %>
+  :expires_in: <%= ENV.fetch('redis_expires_in', 10.minutes) %>
+  :namespace:  <%= ENV.fetch('redis_namepsace', "osmx.#{Rails.env}") %>
 
 development:
   <<: *default

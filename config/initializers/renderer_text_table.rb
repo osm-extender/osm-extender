@@ -28,5 +28,5 @@ ActionController::Renderers.add :text_table do |data, options|
       t.add_separator if row.eql?(:separator)
     end
   end
-  send_data table.to_s, disposition: :inline, type: Mime::TEXT_TABLE
+  send_data table.to_s, disposition: :inline, type: Mime[:text_table]
 end

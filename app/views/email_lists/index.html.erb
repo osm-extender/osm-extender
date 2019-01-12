@@ -13,7 +13,7 @@
     
       <% @email_lists.each do |email_list| %>
         <tr>
-          <td><%= check_box_tag "email_list[#{email_list.id}][selected]", 1, false, :class => 'select_email_list' %></td>
+          <td><%= check_box_tag "email_list[#{email_list.id}]", 1, false, :class => 'select_email_list' %></td>
           <td><%= @section_names[email_list.section_id] %></td>
           <td><%= email_list.name %></td>
           <td>

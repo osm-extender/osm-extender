@@ -2,7 +2,7 @@ class AnnouncementsController < ApplicationController
   load_and_authorize_resource :except=>[:new, :create]
   authorize_resource :only=>[:new, :create]
 
-  before_action :only=>[:index, :new] do
+  before_action only: [:index, :new] do
     now = Time.zone.now
     now_hr = now.strftime('%H')
     now_min = now.strftime('%M').to_i
@@ -78,5 +78,4 @@ class AnnouncementsController < ApplicationController
     Announcement.delay.email_announcement(@announcement.id)   # Setup job to resend it
     flash[:information] = 'Emailing the announcement has been added to the job queue.'
   end
-
 end

@@ -57,7 +57,7 @@ Feature: Reminder Email
         And I select "Tuesday" from "Send on"
         And I press "Create Email reminder"
         Then I should see "successfully created"
-	And "1st Somewhere : Section 2" should be selected for "Section"
+	And I should see "1st Somewhere : Section 2"
 	And I should see "now add some items to your reminder"
         And I should see "Tuesday"
 	And I should see "This email reminder has no items yet"

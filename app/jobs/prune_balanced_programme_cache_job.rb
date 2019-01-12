@@ -1,4 +1,4 @@
-class PruneBalancedProgrammeCacheJob < ActiveJob::Base
+class PruneBalancedProgrammeCacheJob < ApplicationJob
   queue_as :default
 
   def perform

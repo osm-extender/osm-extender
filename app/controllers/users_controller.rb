@@ -9,6 +9,7 @@ class UsersController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   def index
+    params.permit(:sort_column, :sort_direction, :page)
     @users = User.
               search(:name, params[:search_name]).
               search(:email_address, params[:search_email]).

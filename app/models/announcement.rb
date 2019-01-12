@@ -1,4 +1,4 @@
-class Announcement < ActiveRecord::Base
+class Announcement < ApplicationRecord
   has_paper_trail
 
   has_many :hidden_announcements, dependent: :destroy, inverse_of: :announcement

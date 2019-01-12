@@ -6,5 +6,5 @@
 
 Mime::Type.register "text/csv", :csv
 Mime::Type.register 'text/tsv', :tsv
-Mime::Type.register Mime::TEXT, :cacti
-Mime::Type.register Mime::TEXT, :text_table
+Mime::Type.register 'text/plain', :cacti
+Mime::Type.register 'text/plain', :text_table

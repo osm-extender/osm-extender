@@ -24,8 +24,8 @@ class ReportsController < ApplicationController
 
 
   def due_badges
-    require_section_type Constants::YOUTH_SECTIONS or return
-    require_osm_permission(:read, :badge) or return
+    require_section_type Constants::YOUTH_SECTIONS
+    require_osm_permission(:read, :badge)
     due_badges = Osm::Badges.get_due_badges(osm_api, current_section)
     @check_stock = @my_params[:check_stock].eql?('1')
     @by_member = due_badges.by_member
@@ -44,8 +44,8 @@ class ReportsController < ApplicationController
 
 
   def event_attendance
-    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
-    require_osm_permission(:read, :events) or return
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    require_osm_permission(:read, :events)
 
     unless @my_params['events'].is_a?(Hash)
       flash[:error] = 'You must select at least one event to get the attendance for.'
@@ -119,12 +119,12 @@ class ReportsController < ApplicationController
 
     @my_params[:programme].each do |section, selected|
       if selected.eql?('1')
-        require_osm_permission(:read, :programme, section: section.to_i) or return
+        require_osm_permission(:read, :programme, section: section.to_i)
       end
     end
     @my_params[:events].each do |section, selected|
       if selected.eql?('1')
-        require_osm_permission(:read, :events, section: section.to_i) or return
+        require_osm_permission(:read, :events, section: section.to_i)
       end
     end
 
@@ -154,8 +154,8 @@ class ReportsController < ApplicationController
 
 
   def awarded_badges
-    require_section_type Constants::YOUTH_SECTIONS or return
-    require_osm_permission(:read, :badge) or return
+    require_section_type Constants::YOUTH_SECTIONS
+    require_osm_permission(:read, :badge)
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])]
     if dates.include?(nil)
@@ -276,8 +276,11 @@ class ReportsController < ApplicationController
 
 
   def badge_completion_matrix
-    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
-    require_osm_permission(:read, :badge) or return
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    require_osm_permission(:read, :badge)
+
+    @report_params = params.require(:badge_completion_matrix)
+                           .permit(:include_core, :include_activity, :include_challenge, :include_staged, :hide_not_started, :hide_all_finished)
 
     if params[:waiting]
       if BadgeCompletionMatrixReport.data_for?(
@@ -333,14 +336,18 @@ class ReportsController < ApplicationController
         exclude_not_started: @my_params[:hide_not_started].eql?('1'),
         exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
       )
-      redirect_to action: :badge_completion_matrix, waiting: '1', missing_badge_requirements: @my_params.symbolize_keys
+      redirect_to(
+        action: :badge_completion_matrix,
+        waiting: '1',
+        badge_completion_matrix: @report_params
+      )
     end
   end
 
 
   def badge_stock_check
-    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS or return
-    require_osm_permission(:read, :events) or return
+    require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
+    require_osm_permission(:read, :events)
 
     options = {
       :include_core => @my_params[:include_core].eql?('1'),
@@ -373,8 +380,11 @@ class ReportsController < ApplicationController
 
 
   def missing_badge_requirements
-    require_section_type Constants::YOUTH_SECTIONS or return
-    require_osm_permission(:read, :badge) or return
+    require_section_type Constants::YOUTH_SECTIONS
+    require_osm_permission(:read, :badge)
+
+    @report_params = params.require(:missing_badge_requirements)
+                           .permit(:include_core, :include_activity, :include_challenge, :include_staged)
 
     if params[:waiting]
       if MissingBadgeRequirementsReport.data_for?(
@@ -406,28 +416,32 @@ class ReportsController < ApplicationController
         include_activity: @my_params[:include_activity].eql?('1'),
         include_staged: @my_params[:include_staged].eql?('1'),
       )
-      redirect_to action: :missing_badge_requirements, waiting: '1', missing_badge_requirements: @my_params.symbolize_keys
+      redirect_to(
+        action: :missing_badge_requirements,
+        waiting: '1',
+        missing_badge_requirements: @report_params
+      )
     end
   end
 
 
   def planned_badge_requirements
-    require_section_type Constants::YOUTH_SECTIONS or return
-    require_osm_permission(:read, :programme) or return
-    require_osm_permission(:read, :events) or return if current_section.subscription_at_least?(:silver)
+    require_section_type Constants::YOUTH_SECTIONS
+    require_osm_permission(:read, :programme)
+    require_osm_permission(:read, :events) if current_section.subscription_at_least?(:silver)
 
     # Check OSM access for optional stuff
     if @my_params[:check_earnt]
-      require_osm_permission(:read, :badge) or return
+      require_osm_permission(:read, :badge)
     end
     if @my_params[:check_event_attendance]
-      require_section_subscription(:silver) or return
+      require_section_subscription(:silver)
     end
     if @my_params[:check_meeting_attendance]
-      require_osm_permission(:read, :register) or return
+      require_osm_permission(:read, :register)
     end
     if @my_params[:check_participation] || @my_params[:check_birthday]
-      require_osm_permission(:read, :member) or return
+      require_osm_permission(:read, :member)
     end
 
     dates = [Osm.parse_date(@my_params[:start]), Osm.parse_date(@my_params[:finish])].sort
@@ -436,6 +450,9 @@ class ReportsController < ApplicationController
       redirect_back_or_to reports_path
       return
     end
+
+    @report_params = params.require(:planned_badge_requirements)
+                           .permit(:start, :finish, :check_earnt, :check_stock, :check_event_attendance, :check_meeting_attendance, :check_participation, :check_birthday)
 
     if params[:waiting]
       if PlannedBadgeRequirementsReport.data_for?(
@@ -479,7 +496,11 @@ class ReportsController < ApplicationController
         check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
         check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
       )
-      redirect_to action: :planned_badge_requirements, waiting: '1', planned_badge_requirements: @my_params.symbolize_keys
+      redirect_to(
+        action: :planned_badge_requirements,
+        waiting: '1',
+        planned_badge_requirements: @report_params
+      )
     end
   end
 
@@ -530,7 +551,7 @@ class ReportsController < ApplicationController
 
 
   def members_photos
-    require_osm_permission(:read, :member) or return
+    require_osm_permission(:read, :member)
     members = Osm::Member.get_for_section(current_user.osm_api, current_section).group_by{ |i| i.grouping_id }
     grouping_names = Osm::Grouping.get_for_section(current_user.osm_api, current_section).map{ |i| [i.id, i.name] }.to_h
     grouping_names.default = 'Members not in a grouping'

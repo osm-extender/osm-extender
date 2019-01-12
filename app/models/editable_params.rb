@@ -31,12 +31,17 @@ class EditableParams < Struct.new(:for_user)
     [:email_address, :name]
   end
 
-end
+  def user
+    if for_user && for_user.can_administer_users?
+      [
+        :name, :email_address,
+        :can_administer_users, :can_view_statistics, :can_view_status,
+        :can_administer_announcements, :can_administer_delayed_job,
+        :can_become_other_user
+      ]
+    else
+      []
+    end
+  end
 
-#  def topic
-#    if for_user && for_user.admin?
-#      [:name]
-#    else
-#      [:name, :option]
-#    end
-#  end
+end

@@ -24,7 +24,7 @@ class EmailReminderItemsController < ApplicationController
     params[:email_reminder_item] ||= {}
     @email_reminder_item = model.new({
       :email_reminder => EmailReminder.find(params[:email_reminder_id]),
-      :configuration => configuration_params.symbolize_keys,
+      :configuration => configuration_params.to_h.symbolize_keys,
     })
 
     if @email_reminder_item.invalid?
@@ -38,7 +38,7 @@ class EmailReminderItemsController < ApplicationController
 
   def update
     params[:email_reminder_item] ||= {}
-    email_reminder_item.assign_attributes(:configuration=>configuration_params.symbolize_keys)
+    email_reminder_item.assign_attributes(:configuration=>configuration_params.to_h.symbolize_keys)
 
     if email_reminder_item.invalid?
       render action: :edit, status: 422

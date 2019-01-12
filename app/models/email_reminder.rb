@@ -1,9 +1,9 @@
-class EmailReminder < ActiveRecord::Base
+class EmailReminder < ApplicationRecord
   has_paper_trail :on => [:create, :update]
 
   belongs_to :user
-  has_many :items, -> { order :position }, class_name: EmailReminderItem, dependent: :destroy, inverse_of: :email_reminder
-  has_many :shares, class_name: EmailReminderShare, dependent: :destroy, foreign_key: :reminder_id, inverse_of: :reminder
+  has_many :items, -> { order :position }, class_name: 'EmailReminderItem', dependent: :destroy, inverse_of: :email_reminder
+  has_many :shares, class_name: 'EmailReminderShare', dependent: :destroy, foreign_key: :reminder_id, inverse_of: :reminder
 
   validates_presence_of :user
   

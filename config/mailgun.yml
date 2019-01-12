@@ -1,0 +1,13 @@
+default: &default
+  api_host:   <%= Figaro.env.mailgun_api_host || 'api.eu.mailgun.net' %>
+  api_key:    <%= Figaro.env.mailgun_api_key! %>
+  domain:     <%= Figaro.env.mailgun_domain! %>
+
+development:
+  <<: *default
+
+staging:
+  <<: *default
+
+production:
+  <<: *default

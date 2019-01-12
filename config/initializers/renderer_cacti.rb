@@ -9,5 +9,5 @@ ActionController.add_renderer :cacti do |data, options|
           .join(' ')
   end
 
-  send_data (data.to_s + "\n"), disposition: :inline, type: Mime::CACTI
+  send_data (data.to_s + "\n"), disposition: :inline, type: Mime[:cacti]
 end

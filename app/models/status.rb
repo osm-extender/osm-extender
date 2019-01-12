@@ -20,7 +20,7 @@ class Status
 
   def cache
     return @cache unless @cache.nil?
-    redis = Rails.cache.data
+    redis = Rails.cache.redis
     info = redis.info
     cache_attempts = info['keyspace_hits'].to_i + info['keyspace_misses'].to_i
     ram_max = begin

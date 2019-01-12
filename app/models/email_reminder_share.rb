@@ -1,4 +1,4 @@
-class EmailReminderShare < ActiveRecord::Base
+class EmailReminderShare < ApplicationRecord
   has_paper_trail :on => [:create, :update]
 
   belongs_to :reminder, :class_name => 'EmailReminder'
@@ -18,7 +18,8 @@ class EmailReminderShare < ActiveRecord::Base
 
   after_initialize :provide_defaults
   before_save :set_was_new
-  after_save :email_sharee
+  before_save :set_was_state
+  after_commit :email_sharee
   before_destroy { versions.destroy_all }
 
 
@@ -63,7 +64,10 @@ class EmailReminderShare < ActiveRecord::Base
 
   def set_was_new
     @was_new = new_record?
-    return true
+  end
+
+  def set_was_state
+    @was_state = state_was
   end
 
   def email_sharee
@@ -71,12 +75,10 @@ class EmailReminderShare < ActiveRecord::Base
       EmailReminderMailer.shared_with_you(self).deliver_later
     end
 
-    if self.state_changed?
-      new_state = state_change.last.to_sym
-      EmailReminderMailer.send(state, self).deliver_later unless state == :pending
+    if @was_state != state
+      unless state == 'pending'
+        EmailReminderMailer.send(state, self).deliver_later
+      end
     end
-
-    return true
   end
-
 end

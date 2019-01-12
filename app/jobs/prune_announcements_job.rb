@@ -1,4 +1,4 @@
-class PruneAnnouncementsJob < ActiveJob::Base
+class PruneAnnouncementsJob < ApplicationJob
   queue_as :default
 
   def perform

@@ -1,7 +1,7 @@
 class OsmExportsController < ApplicationController
   before_action :require_connected_to_osm
 
-  before_filter {
+  before_action {
     params[:file_options] ||= {}
     # Set defaults
     params[:file_options][:include_header] ||= '1'

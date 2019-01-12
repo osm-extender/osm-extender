@@ -82,21 +82,13 @@ end
 Then /^"([^"]*)" should contain "([^"]*)"$/ do |field, value|
   field = find_field(field)
   field_value = (field.tag_name == 'textarea') ? field.text : field.value
-  if field_value.respond_to? :should
-    field_value.should =~ /#{value}/
-  else
-    assert_match(/#{value}/, field_value)
-  end
+  expect(field_value).to match /#{value}/
 end
 
 Then /^"([^"]*)" should not contain "([^"]*)"$/ do |field, value|
   field = find_field(field)
   field_value = (field.tag_name == 'textarea') ? field.text : field.value
-  if field_value.respond_to? :should_not
-    field_value.should_not =~ /#{value}/
-  else
-    assert_no_match(/#{value}/, field_value)
-  end
+  expect(field_value).to_not match /#{value}/
 end
 
 Then /^"([^"]*)" should be selected for "([^"]*)"(?: within "([^\"]*)")?$/ do |value, field, selector|

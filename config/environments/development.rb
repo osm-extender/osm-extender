@@ -1,82 +1,111 @@
-OSMExtender::Application.configure do
-  # Settings specified here will take precedence over those in config/application.rb
-
-  config.eager_load = false
+Rails.application.configure do
+  # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
-  # every request.  This slows down response time but is perfect for development
+  # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  # Configure static asset server for tests with Cache-Control for performance
+  # Do not eager load code on boot.
+  config.eager_load = false
+
+  # Configure static asset server for development with Cache-Control for performance.
   config.serve_static_files = true
 
-  # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  # Show full error reports.
+  config.consider_all_requests_local = true
 
-  # Don't care if the mailer can't send
+  # Setup cache
+  config.action_controller.perform_caching = true
+  config.cache_store = :redis_cache_store, Rails.application.config_for(:redis)
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{2.days.to_i}"
+  }
+
+  # Enable/disable caching. By default caching is disabled.
+  # Run rails dev:cache to toggle caching.
+  # if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  #   config.action_controller.perform_caching = true
+  #   config.cache_store = :memory_store
+  #   config.public_file_server.headers = {
+  #     'Cache-Control' => "public, max-age=#{2.days.to_i}"
+  #   }
+  # else
+  #   config.action_controller.perform_caching = false
+  #   config.cache_store = :null_store
+  # end
+
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = :local
+
+  # What will manage the jobs on the queue for active_job
+  config.active_job.queue_adapter = :delayed_job
+
+  # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  config.action_mailer.perform_caching = false
+
   # Log to STDOUT
-  logger = Logger.new(STDOUT)
+  logger = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = Logger::Formatter.new
   config.logger = ActiveSupport::TaggedLogging.new(logger)
+  config.colorize_logging = true
+  config.log_level = :debug
   STDOUT.sync = true
 
-  # Set log level - :debug, :info, :warn, :error, :fatal, or :unknown
-  config.log_level = :debug
-
-  # Turn of colour in rails log
-  config.colorize_logging = true
-
-  # Automatically tag log messages
-  config.log_tags = [ :uuid ]
-
-  # Print deprecation notices to the Rails logger
+  # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
 
-  # Do not compress assets
+  # Raise an error on page load if there are pending migrations.
+  config.active_record.migration_error = :page_load
+
+  # Don't compress assets
   config.assets.compress = false
 
-  # Expands the lines which load the assets
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
+
+  # Debug mode disables concatenation and preprocessing of assets.
+  # This option may cause significant delays in view rendering with a large
+  # number of complex assets.
   config.assets.debug = true
 
-  # Setup cache
-  config.cache_store = :redis_store, Rails.application.config_for(:redis)
-
-  # Don't deliver emails, open them in a new window instead
-  # Unless mailgun_api_key env var is present
+  # Don't deliver emails, open them in a new browser window instead
+  # unless mailgun_api_key env var is present
   if Figaro.env.mailgun_api_key?
-    config.action_mailer.delivery_method = :mailgun 
-    config.action_mailer.mailgun_settings = {
-      api_host: Figaro.env.mailgun_api_host || 'api.eu.mailgun.net',
-      api_key: Figaro.env.mailgun_api_key!,
-      domain: Figaro.env.mailgun_domain!
-    }
+    config.action_mailer.delivery_method = :mailgun
+    config.action_mailer.mailgun_settings = Rails.application.config_for(:mailgun)
   else
     config.action_mailer.delivery_method = :letter_opener
   end
 
-  # URL Options
+  # URL options
   Rails.application.routes.default_url_options = {
     :protocol => 'http',
     :host => 'localhost',
     :port => 3000,
   }
   config.action_mailer.asset_host = 'http://localhost:3000'
-
-  # Mailer email address options (you may override this in development_custom.rb)
+  
+  # Mailer email address options
   ContactUsMailer.send :default, {
-    :to => 'contactus@example.com',     # Can be in the format - "Name" <email_address>
+    :to => 'contactus@example.com',     # Can be in the format - "Name" <email@domain.com>
   }
+
+  # Suppress logger output for asset requests.
+  config.assets.quiet = true
 
   # Whether to dump (or not) the schema after performing migrations
   config.active_record.dump_schema_after_migration = true
 
-end
+  # Raises error for missing translations
+  config.action_view.raise_on_missing_translations = true
 
-ActionController::Parameters.action_on_unpermitted_parameters = :raise
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+end

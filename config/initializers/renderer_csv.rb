@@ -14,7 +14,7 @@ ActionController::Renderers.add :csv do |data, options|
     # Nothing special to do
 
   elsif data.respond_to?(:to_csv)
-    send_data data.to_csv(options), disposition: :inline, type: Mime::CSV and return
+    send_data data.to_csv(options), disposition: :inline, type: Mime[:csv] and return
   else
     data = [[data.to_s]]
   end
@@ -32,6 +32,6 @@ ActionController::Renderers.add :csv do |data, options|
       }
     },
     disposition: :inline,
-    type: Rails.env.development? ? Mime::TEXT : Mime::CSV
+    type: Rails.env.development? ? Mime[:text] : Mime[:csv]
   )
 end

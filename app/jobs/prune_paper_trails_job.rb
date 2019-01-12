@@ -1,4 +1,4 @@
-class PrunePaperTrailsJob < ActiveJob::Base
+class PrunePaperTrailsJob < ApplicationJob
   queue_as :default
 
   def perform

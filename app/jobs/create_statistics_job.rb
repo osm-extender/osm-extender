@@ -1,4 +1,4 @@
-class CreateStatisticsJob < ActiveJob::Base
+class CreateStatisticsJob < ApplicationJob
   queue_as :default
 
   def perform

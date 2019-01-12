@@ -1,4 +1,4 @@
-class PruneUnactivatedUsersJob < ActiveJob::Base
+class PruneUnactivatedUsersJob < ApplicationJob
   queue_as :default
 
   def perform

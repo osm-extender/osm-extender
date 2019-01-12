@@ -1,4 +1,4 @@
-class EmailListsJob < ActiveJob::Base
+class EmailListsJob < ApplicationJob
   queue_as :default
 
   def perform

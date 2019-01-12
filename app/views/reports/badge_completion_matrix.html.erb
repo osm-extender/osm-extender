@@ -44,8 +44,8 @@
 </div>
 
 
-<%= link_to '[Export as CSV]', badge_completion_matrix_report_path(params.merge(:format => :csv)) %><br/>
-<%= link_to '[Export as TSV]', badge_completion_matrix_report_path(params.merge(:format => :tsv)) %><br/>
+<%= link_to '[Export as CSV]', badge_completion_matrix_report_path(@report_params.merge(:format => :csv)) %><br/>
+<%= link_to '[Export as TSV]', badge_completion_matrix_report_path(@report_params.merge(:format => :tsv)) %><br/>
 
 
 <script type="text/javascript">
