@@ -1,0 +1,39 @@
+<table>
+  <tr>
+    <th>id</th>
+    <th>Handler Class</th></th>
+    <th>Queue</th>
+    <th>Status</th>
+    <th>Priority</th>
+    <th>Attempts</th>
+    <th>Last error</th>
+    <th>Run at</th>
+  </tr>
+  <%- jobs.each do |job| %>
+    <%- handler = YAML::load(job.handler) %>
+    <tr>
+      <td><%= link_to job.id, delayed_job_path(job) %></td>
+      <td><%= handler.class %></td>
+      <td><%= job.queue %></td>
+      <td>
+        <%- if job.run_at? %>Waiting<%- end %>
+        <%- if job.locked_at %>Running<%- end %>
+        <%- if job.failed_at? %>Failed<%- end %>
+      </td>
+      <td>
+        <%= job.priority %><br/>
+        <%- if job.priority = @settings[:default_priority] %>
+          (Default)
+        <%- else %>
+          (<%= (job.priority < @settings[:default_priority]) ? 'Higher' : 'Lower' %>)
+        <%- end %>
+      </td>
+      <td><%= job.attempts %></td>
+      <td><%= job.last_error&.lines&.first %></td>
+      <td>
+        <%= job.run_at %>
+        <%- if job.run_at? %><br/><%= distance_of_time_in_words_to_now(job.run_at) %> <%= job.run_at.past? ? 'ago' : 'from now' %><%- end %>
+      </td>
+    </tr>
+  <%- end %>
+</table>
