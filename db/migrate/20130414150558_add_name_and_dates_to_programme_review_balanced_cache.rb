@@ -1,4 +1,4 @@
-class AddNameAndDatesToProgrammeReviewBalancedCache < ActiveRecord::Migration
+class AddNameAndDatesToProgrammeReviewBalancedCache < ActiveRecord::Migration[4.2]
 
   def up
     # Add columns

@@ -1,4 +1,4 @@
-class RemoveAudits < ActiveRecord::Migration
+class RemoveAudits < ActiveRecord::Migration[4.2]
   def up
     drop_table :audits
   end

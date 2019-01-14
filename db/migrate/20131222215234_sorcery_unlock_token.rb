@@ -1,4 +1,4 @@
-class SorceryUnlockToken < ActiveRecord::Migration
+class SorceryUnlockToken < ActiveRecord::Migration[4.2]
   def self.up
     add_column :users, :unlock_token, :string, :default => nil
     add_index :users, :unlock_token

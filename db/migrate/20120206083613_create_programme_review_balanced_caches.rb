@@ -1,4 +1,4 @@
-class CreateProgrammeReviewBalancedCaches < ActiveRecord::Migration
+class CreateProgrammeReviewBalancedCaches < ActiveRecord::Migration[4.2]
   def change
     create_table :programme_review_balanced_caches do |t|
       t.integer :term_id, :null => false

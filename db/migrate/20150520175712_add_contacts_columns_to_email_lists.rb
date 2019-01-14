@@ -1,4 +1,4 @@
-class AddContactsColumnsToEmailLists < ActiveRecord::Migration
+class AddContactsColumnsToEmailLists < ActiveRecord::Migration[4.2]
   def change
     # Values:
     #   0 - None

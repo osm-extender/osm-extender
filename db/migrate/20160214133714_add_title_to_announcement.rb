@@ -1,4 +1,4 @@
-class AddTitleToAnnouncement < ActiveRecord::Migration
+class AddTitleToAnnouncement < ActiveRecord::Migration[4.2]
   def change
     add_column :announcements, :title, :string
   end

@@ -1,4 +1,4 @@
-class CreateSharedEventAttendances < ActiveRecord::Migration
+class CreateSharedEventAttendances < ActiveRecord::Migration[4.2]
 
   def change
     create_table :shared_event_attendances do |t|

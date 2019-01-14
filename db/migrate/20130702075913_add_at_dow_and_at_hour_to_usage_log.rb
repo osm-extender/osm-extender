@@ -1,4 +1,4 @@
-class AddAtDowAndAtHourToUsageLog < ActiveRecord::Migration
+class AddAtDowAndAtHourToUsageLog < ActiveRecord::Migration[4.2]
 
   class UsageLog < ActiveRecord::Base
     belongs_to :user

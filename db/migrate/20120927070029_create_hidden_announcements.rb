@@ -1,4 +1,4 @@
-class CreateHiddenAnnouncements < ActiveRecord::Migration
+class CreateHiddenAnnouncements < ActiveRecord::Migration[4.2]
   def change
     create_table :hidden_announcements do |t|
       t.references :user, :null => false

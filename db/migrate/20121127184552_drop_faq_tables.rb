@@ -1,4 +1,4 @@
-class DropFaqTables < ActiveRecord::Migration
+class DropFaqTables < ActiveRecord::Migration[4.2]
   def up
     drop_table :faqs
     drop_table :faq_tags

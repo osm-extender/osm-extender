@@ -1,4 +1,4 @@
-class SorceryBruteForceProtection < ActiveRecord::Migration
+class SorceryBruteForceProtection < ActiveRecord::Migration[4.2]
   def self.up
     add_column :users, :failed_logins_count, :integer, :default => 0
     add_column :users, :lock_expires_at, :datetime, :default => nil

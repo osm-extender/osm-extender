@@ -1,4 +1,4 @@
-class AddDescriptionToSettingValue < ActiveRecord::Migration
+class AddDescriptionToSettingValue < ActiveRecord::Migration[4.2]
 
   def self.up
     add_column :setting_values, :description, :text, :null=>false, :default=>'Ooops, a description of this setting should appear here'

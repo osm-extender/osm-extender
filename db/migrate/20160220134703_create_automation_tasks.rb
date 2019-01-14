@@ -1,4 +1,4 @@
-class CreateAutomationTasks < ActiveRecord::Migration
+class CreateAutomationTasks < ActiveRecord::Migration[4.2]
   def change
     create_table :automation_tasks do |t|
       t.references :user, index: true, foreign_key: true

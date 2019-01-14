@@ -1,4 +1,4 @@
-class CreateSharedEventFieldData < ActiveRecord::Migration
+class CreateSharedEventFieldData < ActiveRecord::Migration[4.2]
 
   def change
     create_table :shared_event_field_data do |t|

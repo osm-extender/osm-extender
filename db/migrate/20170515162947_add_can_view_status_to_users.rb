@@ -1,4 +1,4 @@
-class AddCanViewStatusToUsers < ActiveRecord::Migration
+class AddCanViewStatusToUsers < ActiveRecord::Migration[4.2]
 
   def up
     add_column :users, :can_view_status, :boolean, :default => false

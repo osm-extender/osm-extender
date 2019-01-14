@@ -1,4 +1,4 @@
-class CreateEmailedAnnouncements < ActiveRecord::Migration
+class CreateEmailedAnnouncements < ActiveRecord::Migration[4.2]
   def change
     create_table :emailed_announcements do |t|
       t.references :announcement

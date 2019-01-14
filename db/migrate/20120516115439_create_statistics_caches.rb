@@ -1,4 +1,4 @@
-class CreateStatisticsCaches < ActiveRecord::Migration
+class CreateStatisticsCaches < ActiveRecord::Migration[4.2]
   def change
     create_table :statistics_caches do |t|
       t.date :date, :null => false

@@ -1,4 +1,4 @@
-class RenameFaqTagIdToTagIdInFaqTagings < ActiveRecord::Migration
+class RenameFaqTagIdToTagIdInFaqTagings < ActiveRecord::Migration[4.2]
   def self.up
     remove_index :faq_tagings, :faq_tag_id
     remove_index :faq_tagings, [:faq_id, :faq_tag_id]

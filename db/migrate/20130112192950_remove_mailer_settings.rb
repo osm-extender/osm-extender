@@ -1,4 +1,4 @@
-class RemoveMailerSettings < ActiveRecord::Migration
+class RemoveMailerSettings < ActiveRecord::Migration[4.2]
   def prompt(question, test_answer)
     return test_answer if Rails.env.test?
     STDOUT.puts question

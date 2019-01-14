@@ -1,4 +1,4 @@
-class UpdateStorageOfBalancedProgrammeCache < ActiveRecord::Migration
+class UpdateStorageOfBalancedProgrammeCache < ActiveRecord::Migration[4.2]
 
   def self.up
     ProgrammeReviewBalancedCache.destroy_all

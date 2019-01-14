@@ -2,7 +2,7 @@ class UserVersion < ActiveRecord::Base
 end
 
 
-class DropUserVersions < ActiveRecord::Migration
+class DropUserVersions < ActiveRecord::Migration[4.2]
   def up
     UserVersion.transaction do
       UserVersion.find_in_batches do |records|

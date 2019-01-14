@@ -1,4 +1,4 @@
-class CreateEmailReminders < ActiveRecord::Migration
+class CreateEmailReminders < ActiveRecord::Migration[4.2]
   def change
     create_table :email_reminders do |t|
       t.references :user

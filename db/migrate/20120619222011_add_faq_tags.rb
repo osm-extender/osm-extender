@@ -1,4 +1,4 @@
-class AddFaqTags < ActiveRecord::Migration
+class AddFaqTags < ActiveRecord::Migration[4.2]
 
   def up
     create_table :faq_tags do |t|

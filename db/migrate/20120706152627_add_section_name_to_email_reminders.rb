@@ -1,4 +1,4 @@
-class AddSectionNameToEmailReminders < ActiveRecord::Migration
+class AddSectionNameToEmailReminders < ActiveRecord::Migration[4.2]
 
   def up
     add_column :email_reminders, :section_name, :string

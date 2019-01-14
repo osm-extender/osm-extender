@@ -1,4 +1,4 @@
-class RemoveDevelopmentMailInterceptor < ActiveRecord::Migration
+class RemoveDevelopmentMailInterceptor < ActiveRecord::Migration[4.2]
   class SettingValue < ActiveRecord::Base
     has_paper_trail
     validates_presence_of :key

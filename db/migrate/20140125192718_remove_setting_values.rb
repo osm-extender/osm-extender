@@ -1,4 +1,4 @@
-class RemoveSettingValues < ActiveRecord::Migration
+class RemoveSettingValues < ActiveRecord::Migration[4.2]
 
   def self.up
     drop_table :setting_values

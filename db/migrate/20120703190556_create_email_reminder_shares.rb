@@ -1,4 +1,4 @@
-class CreateEmailReminderShares < ActiveRecord::Migration
+class CreateEmailReminderShares < ActiveRecord::Migration[4.2]
   def change
     create_table :email_reminder_shares do |t|
       t.references :reminder, :null => false

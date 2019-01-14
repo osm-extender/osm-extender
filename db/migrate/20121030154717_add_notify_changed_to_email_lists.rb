@@ -1,4 +1,4 @@
-class AddNotifyChangedToEmailLists < ActiveRecord::Migration
+class AddNotifyChangedToEmailLists < ActiveRecord::Migration[4.2]
   def change
     add_column :email_lists, :notify_changed, :boolean, :default => false, :null => false
     add_column :email_lists, :last_hash_of_addresses, :string, :limit => 64, :default => '', :null => false
