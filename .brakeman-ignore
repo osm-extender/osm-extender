@@ -7,7 +7,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/users_controller.rb",
-      "line": 15,
+      "line": 16,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "User.search(:name, params[:search_name]).search(:email_address, params[:search_email]).order(((sort_column + \" \") + sort_direction))",
       "render_path": null,
@@ -47,7 +47,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/status.rb",
-      "line": 67,
+      "line": 58,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.execute(\"SELECT pg_total_relation_size('#{table}') AS size, COUNT(#{table}) AS count FROM #{table};\")",
       "render_path": null,
@@ -67,7 +67,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/status.rb",
-      "line": 64,
+      "line": 55,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "ActiveRecord::Base.connection.execute(\"SELECT tablename FROM pg_tables WHERE schemaname IN (#{(Rails.configuration.database_configuration[Rails.env][\"schema_search_path\"] or \"public\").split(\",\").map do\n \"'#{s.strip}'\"\n end.join(\",\")}) ORDER BY tablename;\")",
       "render_path": null,
@@ -81,53 +81,13 @@
       "note": ""
     },
     {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
-      "fingerprint": "8d3b43569e7d48a826530e241f35cd352eecb5f85f0188b9f7eaf33dfaac7df0",
-      "check_name": "Execute",
-      "message": "Possible command injection",
-      "file": "app/models/status.rb",
-      "line": 27,
-      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "`pgrep -P #{IO.read(File.join(Rails.root, \"tmp\", \"pids\", \"unicorn.pid\"))}`",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Status",
-        "method": "unicorn_workers"
-      },
-      "user_input": "IO.read(File.join(Rails.root, \"tmp\", \"pids\", \"unicorn.pid\"))",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "b0200a3a032b14180383cbfa3fa830845a3bb446a41aa06652e9ea5f1c0ff6db",
-      "check_name": "Send",
-      "message": "User controlled method execution",
-      "file": "app/controllers/map_members_controller.rb",
-      "line": 69,
-      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "member.send((params[:address] or \"contact\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MapMembersController",
-        "method": "get_address_data_for_section"
-      },
-      "user_input": "params[:address]",
-      "confidence": "High",
-      "note": "Line 64 provides sanitisation of the value."
-    },
-    {
       "warning_type": "Remote Code Execution",
       "warning_code": 25,
       "fingerprint": "ce3963f8f52ed4c5bd7ce96f88e40a7a3210c003c6d94df22404996113049575",
       "check_name": "Deserialize",
       "message": "YAML.load called with parameter value",
       "file": "app/controllers/delayed_job_controller.rb",
-      "line": 12,
+      "line": 13,
       "link": "https://brakemanscanner.org/docs/warning_types/unsafe_deserialization",
       "code": "YAML.load(Delayed::Job.find(params[:id]).handler)",
       "render_path": null,
@@ -141,6 +101,6 @@
       "note": ""
     }
   ],
-  "updated": "2018-05-23 18:23:35 +0100",
-  "brakeman_version": "4.3.0"
+  "updated": "2019-01-14 10:08:52 +0000",
+  "brakeman_version": "4.3.1"
 }
