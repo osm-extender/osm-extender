@@ -30,4 +30,3 @@ jQuery(document).ready(function(){
                 return false;
         }).next().hide();
 });
-

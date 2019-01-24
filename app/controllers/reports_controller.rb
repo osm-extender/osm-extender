@@ -320,7 +320,7 @@ class ReportsController < ApplicationController
               end
             end
           end # tsv
-        end # respond_to    
+        end # respond_to
       else
         render :waiting
       end
@@ -339,7 +339,8 @@ class ReportsController < ApplicationController
       redirect_to(
         action: :badge_completion_matrix,
         waiting: '1',
-        badge_completion_matrix: @report_params
+        badge_completion_matrix: @report_params,
+        format: request.format.symbol
       )
     end
   end
@@ -419,7 +420,8 @@ class ReportsController < ApplicationController
       redirect_to(
         action: :missing_badge_requirements,
         waiting: '1',
-        missing_badge_requirements: @report_params
+        missing_badge_requirements: @report_params,
+        format: request.format.symbol
       )
     end
   end
@@ -499,7 +501,8 @@ class ReportsController < ApplicationController
       redirect_to(
         action: :planned_badge_requirements,
         waiting: '1',
-        planned_badge_requirements: @report_params
+        planned_badge_requirements: @report_params,
+        format: request.format.symbol
       )
     end
   end

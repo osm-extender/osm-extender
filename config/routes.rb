@@ -97,7 +97,7 @@ OSMExtender::Application.routes.draw do
   get 'reports/awarded_badges' => 'reports#awarded_badges', :as => 'awarded_badges_report'
   get 'reports/missing_badge_requirements' => 'reports#missing_badge_requirements', :as => 'missing_badge_requirements_report'
   get 'reports/members_photos' => 'reports#members_photos', :as => 'members_photos_report'
-  get 'reports/badge_completion_matrix' => 'reports#badge_completion_matrix', :as => 'badge_completion_matrix_report'
+  get 'reports/badge_completion_matrix(.:format)' => 'reports#badge_completion_matrix', :as => 'badge_completion_matrix_report'
   get 'reports/badge_stock_check' => 'reports#badge_stock_check', :as => 'badge_stock_check_report'
   get 'reports/planned_badge_requirements' => 'reports#planned_badge_requirements', :as => 'planned_badge_requirements_report'
   get 'reports/leader_access_audit' => 'reports#leader_access_audit', :as => 'leader_access_audit'
