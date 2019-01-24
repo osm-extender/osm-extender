@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
     @message = "You failed to specify at least one required attribute "
     @message += "(#{exception.param.inspect})."
     log_error(exception)
-    email_error(exception)
     render :template => 'error/422', :status => 422
   end
 
@@ -30,7 +29,6 @@ class ApplicationController < ActionController::Base
     @message = "You specified at least one attribute which you don't have permission to set "
     @message += "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
     log_error(exception)
-    email_error(exception)
     render :template => 'error/422', :status => 422
   end
 
