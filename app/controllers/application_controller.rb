@@ -20,28 +20,33 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActionController::ParameterMissing do |exception|
     begin
-      @message = "You failed to specify at least one required attribute "
-      @message += "(#{exception.param.inspect})."
-      log_error(exception)
+      @message = 'You failed to specify at least one required attribute ' \
+                 "(#{exception.param.inspect})."
+      log_error exception
       render :template => 'error/422', :status => 422
     rescue ActionView::MissingTemplate
-      render nothing: true, status: 422
+      render :plain => @message, :status => 422
     end
   end
 
   rescue_from ActionController::UnpermittedParameters do |exception|
-    @message = "You specified at least one attribute which you don't have permission to set "
-    @message += "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
-    log_error(exception)
-    render :template => 'error/422', :status => 422
-  rescue ActionView::MissingTemplate
-    render nothing: true, status: 422
+    begin
+      @message = 'You specified at least one attribute which you don\'t ' \
+                 'have permission to set '
+                 "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
+      log_error exception
+      render :template => 'error/422', :status => 422
+    rescue ActionView::MissingTemplate
+      render :plain => @message, :status => 422
+    end
   end
 
   rescue_from ActionController::InvalidAuthenticityToken do
-    render :template => 'error/invalid_authenticity_token', :status => 422
-  rescue ActionView::MissingTemplate
-    render nothing: true, status: 422
+    begin
+      render :template => 'error/invalid_authenticity_token', :status => 422
+    rescue ActionView::MissingTemplate
+      render nothing: true, status: 422
+    end
   end
 
 
