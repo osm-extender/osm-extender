@@ -19,10 +19,14 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionController::ParameterMissing do |exception|
-    @message = "You failed to specify at least one required attribute "
-    @message += "(#{exception.param.inspect})."
-    log_error(exception)
-    render :template => 'error/422', :status => 422
+    begin
+      @message = "You failed to specify at least one required attribute "
+      @message += "(#{exception.param.inspect})."
+      log_error(exception)
+      render :template => 'error/422', :status => 422
+    rescue ActionView::MissingTemplate
+      render nothing: true, status: 422
+    end
   end
 
   rescue_from ActionController::UnpermittedParameters do |exception|
@@ -30,10 +34,14 @@ class ApplicationController < ActionController::Base
     @message += "(#{exception.params.map{ |i| i.inspect }.join(', ')})."
     log_error(exception)
     render :template => 'error/422', :status => 422
+  rescue ActionView::MissingTemplate
+    render nothing: true, status: 422
   end
 
   rescue_from ActionController::InvalidAuthenticityToken do
     render :template => 'error/invalid_authenticity_token', :status => 422
+  rescue ActionView::MissingTemplate
+    render nothing: true, status: 422
   end
 
 
@@ -216,12 +224,16 @@ class ApplicationController < ActionController::Base
 
   def render_not_found
     render :template => "error/404", :status => 404
+  rescue ActionView::MissingTemplate
+    render plain: "The page you were looking for doesn't exist!", status: 404
   end
 
   def render_error(exception)
     log_error(exception)
     Rollbar.error(exception)
     render :template => "error/500", :status => 500
+  rescue ActionView::MissingTemplate
+    render plain: "We're sorry, but something went wrong.\n>We've been notified about this issue and we'll take a look at it shortly.", status: 500
   end
 
   def log_error(exception)
