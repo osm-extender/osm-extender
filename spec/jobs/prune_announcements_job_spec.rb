@@ -3,7 +3,9 @@ describe PruneAnnouncementsJob do
 
   it 'Performs' do
     Timecop.freeze
-    expect(Announcement).to receive(:destroy_all).with(['updated_at <= :when AND finish <= :when', when: 6.months.ago]).and_return([:a, :b])
+    where = double(ActiveRecord::QueryMethods::WhereChain)
+    expect(Announcement).to receive(:where).with(['updated_at <= :when AND finish <= :when', when: 6.months.ago]).and_return(where)
+    expect(where).to receive(:destroy_all).and_return([:a, :b])
     expect { subject.perform }.not_to raise_error
   end
 

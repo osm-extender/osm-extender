@@ -3,7 +3,9 @@ describe PrunePaperTrailsJob do
 
   it 'Performs' do
     Timecop.freeze
-    expect(PaperTrail::Version).to receive(:destroy_all).with(['created_at <= ?', 3.months.ago]).and_return([:a, :b, :c, :d, :e, :f])
+    where = double(ActiveRecord::QueryMethods::WhereChain)
+    expect(PaperTrail::Version).to receive(:where).with(['created_at <= ?', 3.months.ago]).and_return(where)
+    expect(where).to receive(:destroy_all).and_return([:a, :b, :c, :d, :e, :f])
     expect { subject.perform }.not_to raise_error
   end
 
