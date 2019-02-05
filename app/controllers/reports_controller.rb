@@ -311,6 +311,7 @@ class ReportsController < ApplicationController
           exclude_not_started: @my_params[:hide_not_started].eql?('1'),
           exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
         )
+        fail @data if @data.is_a?(Exception)
 
         respond_to do |format|
           format.html # html
@@ -414,6 +415,7 @@ class ReportsController < ApplicationController
           include_activity: @my_params[:include_activity].eql?('1'),
           include_staged: @my_params[:include_staged].eql?('1'),
         )
+        fail @data if @data.is_a?(Exception)
       else
         render :waiting
       end
@@ -493,6 +495,7 @@ class ReportsController < ApplicationController
           check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
           check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
         )
+        fail @data if @data.is_a?(Exception)
       else
         render :waiting
       end

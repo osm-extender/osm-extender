@@ -1,17 +1,13 @@
 class BadgeCompletionMatrixReport < LongRunningReport
-  def self.data_for?(user_id, section_id, include_core:, include_challenge:, include_staged:, include_activity:, exclude_not_started:, exclude_all_finished:)
-    cache_key = "#{self.name}-a-#{user_id}-#{section_id}-"
-                + [include_core, include_challenge, include_staged, include_activity, exclude_not_started, exclude_all_finished]
-                  .map { |v| v ? 't' : 'f' }.join
-    Rails.cache.exist?(cache_key)
-  end
+  class << self
+    private
+    def cache_key(user_id, section_id, include_core:, include_challenge:, include_staged:, include_activity:, exclude_not_started:, exclude_all_finished:)
+      "#{self.name}-a-#{user_id}-#{section_id}-"
+      + [include_core, include_challenge, include_staged, include_activity, exclude_not_started, exclude_all_finished]
+        .map { |v| v ? 't' : 'f' }.join
+    end
 
-  def self.data_for(user_id, section_id, include_core:, include_challenge:, include_staged:, include_activity:, exclude_not_started:, exclude_all_finished:)
-    cache_key = "#{self.name}-a-#{user_id}-#{section_id}-"
-                + [include_core, include_challenge, include_staged, include_activity, exclude_not_started, exclude_all_finished]
-                  .map { |v| v ? 't' : 'f' }.join
-
-    Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+    def fetch_data(user_id, section_id, include_core:, include_challenge:, include_staged:, include_activity:, exclude_not_started:, exclude_all_finished:)
       user = User.find(user_id)
       osm_api = user.osm_api
       section = Osm::Section.get(osm_api, section_id)
