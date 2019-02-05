@@ -14,7 +14,7 @@
 
 <p>
   <b>Arguments:</b>
-  <%= @handler.args.inspect %>
+  <%= @handler.args.inspect if @handler.respond_to?(:args) %>
 </p>
 
 <p>
