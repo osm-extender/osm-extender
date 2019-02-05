@@ -63,7 +63,7 @@ class OsmFlexiRecordsController < ApplicationController
     @records.each do |record|
       @total_count_fields.each do |field|
         @totals[field] += record.fields[field].to_i
-        @counts[field] += 1 unless (record.fields[field].blank? || record.fields[field][0].eql?('x'))
+        @counts[field] += 1 unless (record.fields[field].blank? || record.fields[field].to_s.start_with?('x'))
       end
     end
   end
