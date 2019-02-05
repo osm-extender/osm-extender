@@ -26,6 +26,8 @@ class ReportsController < ApplicationController
   def due_badges
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
+    return if performed? # The above either redirected or rendered
+
     due_badges = Osm::Badges.get_due_badges(osm_api, current_section)
     @check_stock = @my_params[:check_stock].eql?('1')
     @by_member = due_badges.by_member
@@ -46,6 +48,7 @@ class ReportsController < ApplicationController
   def event_attendance
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     require_osm_permission(:read, :events)
+    return if performed? # The above either redirected or rendered
 
     unless @my_params['events'].is_a?(Hash)
       flash[:error] = 'You must select at least one event to get the attendance for.'
@@ -128,6 +131,8 @@ class ReportsController < ApplicationController
       end
     end
 
+    return if performed? # The above either redirected or rendered
+
     @items = Report.calendar(current_user, @my_params.merge(start: @start, finish: @finish))
 
     respond_to do |format|
@@ -164,6 +169,8 @@ class ReportsController < ApplicationController
       return
     end
     (@start, @finish) = dates.sort
+
+    return if performed? # The above either redirected or rendered
 
     badge_clases = { core: Osm::CoreBadge, staged: Osm::StagedBadge, activity: Osm::ActivityBadge, challenge: Osm::ChallengeBadge }
     @badge_types = {
@@ -278,6 +285,7 @@ class ReportsController < ApplicationController
   def badge_completion_matrix
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     require_osm_permission(:read, :badge)
+    return if performed? # The above either redirected or rendered
 
     @report_params = params.require(:badge_completion_matrix)
                            .permit(:include_core, :include_activity, :include_challenge, :include_staged, :hide_not_started, :hide_all_finished)
@@ -349,6 +357,7 @@ class ReportsController < ApplicationController
   def badge_stock_check
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     require_osm_permission(:read, :events)
+    return if performed? # The above either redirected or rendered
 
     options = {
       :include_core => @my_params[:include_core].eql?('1'),
@@ -383,6 +392,7 @@ class ReportsController < ApplicationController
   def missing_badge_requirements
     require_section_type Constants::YOUTH_SECTIONS
     require_osm_permission(:read, :badge)
+    return if performed? # The above either redirected or rendered
 
     @report_params = params.require(:missing_badge_requirements)
                            .permit(:include_core, :include_activity, :include_challenge, :include_staged)
@@ -452,6 +462,8 @@ class ReportsController < ApplicationController
       redirect_back_or_to reports_path
       return
     end
+
+    return if performed? # The above either redirected or rendered
 
     @report_params = params.require(:planned_badge_requirements)
                            .permit(:start, :finish, :check_earnt, :check_stock, :check_event_attendance, :check_meeting_attendance, :check_participation, :check_birthday)
@@ -555,6 +567,8 @@ class ReportsController < ApplicationController
 
   def members_photos
     require_osm_permission(:read, :member)
+    return if performed? # The above either redirected or rendered
+
     members = Osm::Member.get_for_section(current_user.osm_api, current_section).group_by{ |i| i.grouping_id }
     grouping_names = Osm::Grouping.get_for_section(current_user.osm_api, current_section).map{ |i| [i.id, i.name] }.to_h
     grouping_names.default = 'Members not in a grouping'
