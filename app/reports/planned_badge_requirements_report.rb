@@ -1,7 +1,7 @@
 class PlannedBadgeRequirementsReport < LongRunningReport
   class << self
     private
-    def cache_key(user_id, section_id, include_core:, include_challenge:, include_staged:, include_activity:, exclude_not_started:, exclude_all_finished:)
+    def cache_key(user_id, section_id, start:, finish:, check_earnt:, check_stock:, check_participation:, check_birthday:, check_event_attendance:, check_meeting_attendance:)
       "#{self.name}-a-#{user_id}-#{section_id}-#{start}-#{finish}-"
       + [check_earnt, check_stock, check_participation, check_birthday, check_event_attendance, check_meeting_attendance]
         .map { |v| v ? 't' : 'f' }.join

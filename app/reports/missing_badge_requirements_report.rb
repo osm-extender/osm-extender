@@ -1,7 +1,7 @@
 class MissingBadgeRequirementsReport < LongRunningReport
   class << self
     private
-    def cache_key(user_id, section_id, include_core:, include_challenge:, include_staged:, include_activity:, exclude_not_started:, exclude_all_finished:)
+    def cache_key(user_id, section_id, include_core:, include_activity:, include_challenge:, include_staged:)
       "#{self.name}-a-#{user_id}-#{section_id}-"
       + [include_core, include_activity, include_challenge, include_staged]
         .map { |v| v ? 't' : 'f' }.join
