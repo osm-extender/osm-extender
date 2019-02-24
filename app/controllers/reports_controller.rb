@@ -331,6 +331,7 @@ class ReportsController < ApplicationController
           end # tsv
         end # respond_to
       else
+        self.formats = ['html']
         render :waiting
       end
     else
@@ -417,6 +418,7 @@ class ReportsController < ApplicationController
         )
         fail @data if @data.is_a?(Exception)
       else
+        self.formats = ['html']
         render :waiting
       end
     else
@@ -497,6 +499,7 @@ class ReportsController < ApplicationController
         )
         fail @data if @data.is_a?(Exception)
       else
+        self.formats = ['html']
         render :waiting
       end
     else
