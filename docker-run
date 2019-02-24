@@ -1,9 +1,0 @@
-#!/bin/bash
-
-docker run --rm -it \
-  --net=host \
-  -p 127.0.0.1:3000:3000 \
-  --env-file docker.envfile \
-  --name osmx-$(git rev-parse --abbrev-ref HEAD) \
-  eu.gcr.io/tangy-orange/osmx:$(git rev-parse --abbrev-ref HEAD) \
-  $@ \
