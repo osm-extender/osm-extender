@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby File.read(File.join(__dir__, '.ruby-version')).chomp
 
 # Rails
-gem 'rails', '~> 5.2', '>= 5.2.2'
+gem 'rails', '~> 5.2', '>= 5.2.2.1'
 # gem 'activerecord-session_store', '~> 1.0'
 # gem 'rb-readline'
 gem 'responders', '~> 2.0'
