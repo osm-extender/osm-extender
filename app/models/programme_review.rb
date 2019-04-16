@@ -4,8 +4,8 @@ class ProgrammeReview
   # of arrays containging the label and alternative tags
 
   # Programme Zones for each section
-  @@zones = {
-    :beavers   => [
+  ZONES = {
+    beavers: [
       ['Beliefs and attitudes', 'belief', 'attitude', 'beliefs', 'attitudes'],
       ['Community'],
       ['Fitness'],
@@ -13,7 +13,7 @@ class ProgrammeReview
       ['Global'],
       ['Outdoor and adventure', 'outdoor', 'adventure', 'outdoors']
     ],
-    :cubs      => [
+    cubs: [
       ['Beliefs and attitudes', 'belief', 'attitude', 'beliefs', 'attitudes'],
       ['Community'],
       ['Fitness'],
@@ -21,7 +21,7 @@ class ProgrammeReview
       ['Global'],
       ['Outdoor and adventure', 'outdoor', 'adventure', 'outdoors']
     ],
-    :scouts    => [
+    scouts: [
       ['Beliefs and attitudes', 'belief', 'attitude', 'beliefs', 'attitudes'],
       ['Community'],
       ['Fit for life'],
@@ -29,7 +29,7 @@ class ProgrammeReview
       ['Global'],
       ['Outdoor and adventure', 'outdoor', 'adventure', 'outdoors']
     ],
-    :explorers => [
+    explorers: [
       ['Values and relationships', 'value', 'relationship', 'values', 'relationships'],
       ['Community service', 'community', 'service'],
       ['Physical recreation'],
@@ -37,10 +37,11 @@ class ProgrammeReview
       ['Global'],
       ['Outdoor and adventure', 'outdoor', 'adventure']
     ]
-  }
+  }.freeze
+
   # Programme Methods for each section
-  @@methods = {
-    :beavers   => [
+  METHODS = {
+    beavers: [
       ['Help others'],
       ['Go on visits', 'visit'],
       ['Play games', 'game'],
@@ -53,7 +54,7 @@ class ProgrammeReview
       ['Follow themes', 'themes'],
       ['Go outdoors', 'outdoors']
     ],
-    :cubs      => [
+    cubs: [
       ['Make things', 'make'],
       ['Singing, stories and drama', 'act', 'sing', 'music', 'acting', 'singing', 'drama', 'story', 'stories'],
       ['Visits and visitors', 'visits', 'visit', 'visitor', 'visitors'],
@@ -65,7 +66,7 @@ class ProgrammeReview
       ['Team challenges', 'team challenge'],
       ['Try new things']
     ],
-    :scouts    => [
+    scouts: [
       ['Activities outdoors', 'outdoors'],
       ['Games', 'game'],
       ['Design and creativity', 'design', 'creativity'],
@@ -77,7 +78,7 @@ class ProgrammeReview
       ['Themes'],
       ['Prayer, worship and reflection', 'prayer', 'worship', 'reflection']
     ],
-    :explorers => [
+    explorers: [
       ['Visits'],
       ['Games', 'game'],
       ['Outdoor activities', 'outdoors'],
@@ -86,15 +87,15 @@ class ProgrammeReview
       ['Networking activities', 'networking'],
       ['Discussion']
     ]
-  }
+  }.freeze
 
   #Section duration - the number of time a young member will expect to be in each section
-  @@section_duration = {
-    :beavers => 2.years,
-    :cubs => 30.months,   # 2 and a half years
-    :scouts => 42.months, # 3 and a half years
-    :explorers => 4.years,
-  }
+  SECTION_DURATION = {
+    beavers: 2.years,
+    cubs: 30.months,   # 2 and a half years
+    scouts: 42.months, # 3 and a half years
+    explorers: 4.years,
+  }.freeze
 
 
   def initialize(user, section)
@@ -103,177 +104,91 @@ class ProgrammeReview
   end
 
 
-  def balanced(start=@@section_duration[@section.type].ago, finish=@@section_duration[@section.type].from_now)
+  def balanced(start=SECTION_DURATION[@section.type].ago, finish=SECTION_DURATION[@section.type].from_now)
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
     earliest = Date.current
     latest = Date.current
 
-    Osm::Term.get_for_section(@user.osm_api, @section.id).each do |term|
-      next if term.before?(start) || term.after?(finish)
+    terms = Osm::Term.get_for_section(@user.osm_api, @section.id)
+                     .reject { |term| term.before?(start) || term.after?(finish) }
+
+    cached_terms = ProgrammeReviewBalancedCache.where(term_id: terms)
+                                               .group_by(&:term_id)
+
+    terms.each do |term|
       earliest = term.start if term.start < earliest
       latest = term.finish if term.finish > latest
 
-      cached_term_data = ProgrammeReviewBalancedCache.find_by(term_id: term.id)
-      if cached_term_data.nil? || cached_term_data.data[:version] != 1
-        # We need to make it
-        data = get_balanced_term_data(term)
-
-        # Cache it if the term is in the past
-        if term.past?
-          cached_term_data = ProgrammeReviewBalancedCache.create({
-            :term_id => term.id,
-            :term_name => term.name,
-            :term_start => term.start,
-            :term_finish => term.finish,
-            :section_id => term.section_id,
-            :data => data,
-            :last_used_at => Time.now.utc,
-          })
-          cached_term_data.save
-        end
-      else
-        # Use cahed data
-        cached_term_data.last_used_at = Time.now.utc
-        cached_term_data.save
-        data = cached_term_data.data
+      # Get/generate cached data
+      cached_term = cached_terms[term.id]&.first
+      if cached_term.nil?
+        # Didn't exist, make a temporary one
+        cached_term = ProgrammeReviewBalancedCache.new(
+          term_id: term.id,
+          term_name: term.name,
+          term_start: term.start,
+          term_finish: term.finish,
+          section_id: term.section_id,
+          last_used_at: Time.now.utc,
+        )
       end
 
-      term_methods = data[:methods]
-      term_zones = data[:zones]
+      if cached_term.data[:version] != 1
+        # Make the data
+        cached_term.get_balanced_term_data(@user, @section)
+      end
+
+      term_methods = cached_term.data[:methods]
+      term_zones = cached_term.data[:zones]
 
       # Add term data into totals
       [:number, :time].each do |num_or_time|
         term_methods[:number].each_key do |date_key|
-          methods[num_or_time][date_key] = blank_hash_for(@@methods) if methods[num_or_time][date_key].nil?
+          methods[num_or_time][date_key] = blank_hash_for(METHODS) if methods[num_or_time][date_key].nil?
           term_methods[num_or_time][date_key].each_key do |method|
             methods[num_or_time][date_key][method] += term_methods[num_or_time][date_key][method]
           end
         end
         term_zones[num_or_time].each_key do |date_key|
-          zones[num_or_time][date_key] = blank_hash_for(@@zones) if zones[num_or_time][date_key].nil?
+          zones[num_or_time][date_key] = blank_hash_for(ZONES) if zones[num_or_time][date_key].nil?
           term_zones[:number][date_key].each_key do |zone|
             zones[num_or_time][date_key][zone] += term_zones[num_or_time][date_key][zone]
           end
         end
       end
-
     end
 
     # Ensure that all months are covered
     (earliest.year..latest.year).each do |year|
       (((earliest.year==year) ? earliest.month : 1)..((latest.year==year) ? latest.month : 12)).each do |month|
         date_key = "#{year}_#{"%02d" % month}"
-        zones[:number][date_key] = blank_hash_for(@@zones) if zones[:number][date_key].nil?
-        methods[:number][date_key] = blank_hash_for(@@methods) if methods[:number][date_key].nil?
-        zones[:time][date_key] = blank_hash_for(@@zones) if zones[:time][date_key].nil?
-        methods[:time][date_key] = blank_hash_for(@@methods) if methods[:time][date_key].nil?
+        zones[:number][date_key] = blank_hash_for(ZONES) if zones[:number][date_key].nil?
+        methods[:number][date_key] = blank_hash_for(METHODS) if methods[:number][date_key].nil?
+        zones[:time][date_key] = blank_hash_for(ZONES) if zones[:time][date_key].nil?
+        methods[:time][date_key] = blank_hash_for(METHODS) if methods[:time][date_key].nil?
       end
     end
 
-    return {
-      :zones => zones,
-      :methods => methods,
-      :zone_labels => @@zones[@section.type].clone,
-      :method_labels => @@methods[@section.type].clone,
-      :statistics => {
-        :earliest_date => earliest,
-        :latest_date => latest,
-        :zones => get_balanced_statistics(zones, @@zones),
-        :methods => get_balanced_statistics(methods, @@methods),
+    # Update used at
+    ProgrammeReviewBalancedCache.where(term_id: terms).update_all(last_used_at: Time.now.utc)
+
+    {
+      zones: zones,
+      methods: methods,
+      zone_labels: ZONES[@section.type].clone,
+      method_labels: METHODS[@section.type].clone,
+      statistics: {
+        earliest_date: earliest,
+        latest_date: latest,
+        zones: get_balanced_statistics(zones, ZONES),
+        methods: get_balanced_statistics(methods, METHODS)
       }
     }
   end
 
-  def self.zones
-    return @@zones.clone
-  end
-
-  def self.methods
-    return @@methods.clone
-  end
-
 
   private
-  def tags_in_array(tags, array)
-    tags_in_array_r = []
-
-    array.each do |method_or_zone|
-      tags.each do |tag|
-        tags_in_array_r.push method_or_zone if similar?(method_or_zone, tag)
-      end
-    end
-
-    return tags_in_array_r
-  end
-
-  def similar?(a, b)
-    if a.is_a? Array
-      a.each do |item|
-        return true if similar?(item, b)
-      end
-    end
-
-    if b.is_a? Array
-      b.each do |item|
-        return true if similar?(a, item)
-      end
-    end
-
-    if a.is_a?(String)  &&  b.is_a?(String)
-      a = a.downcase.gsub(/[^a-z0-9]/, '')
-      b = b.downcase.gsub(/[^a-z0-9]/, '')
-      return a.eql?(b)
-    end
-
-    return false
-  end
-
-  def blank_hash_for(zones_or_methods)
-    to_return = {}
-
-    zones_or_methods[@section.type].each do |key|
-      key = key[0]
-      to_return[key] = 0
-    end
-
-    return to_return
-  end
-
-  def get_balanced_term_data(term)
-    zones = {:number => {}, :time => {}}
-    methods = {:number => {}, :time => {}}
-
-    Osm::Meeting.get_for_section(@user.osm_api, @section.id, term, {:no_cache => true}).each do |programme|
-      date_key = programme.date.strftime('%Y_%m')
-      zones[:number][date_key] = blank_hash_for(@@zones) if zones[:number][date_key].nil?
-      zones[:time][date_key] = blank_hash_for(@@zones) if zones[:time][date_key].nil?
-      methods[:number][date_key] = blank_hash_for(@@methods) if methods[:number][date_key].nil?
-      methods[:time][date_key] = blank_hash_for(@@methods) if methods[:time][date_key].nil?
-
-      programme.activities.each do |activity|
-        activity_details = Osm::Activity.get(@user.osm_api, activity.activity_id, nil, {:no_cache => true})
-        unless activity_details.nil?
-          tags_in_array(activity_details.tags, @@zones[@section.type]).each do |tag|
-            zone_or_method = tag[0]
-            zones[:number][date_key][zone_or_method] += 1
-            zones[:time][date_key][zone_or_method] += activity_details.running_time
-          end
-          tags_in_array(activity_details.tags, @@methods[@section.type]).each do |tag|
-            zone_or_method = tag[0]
-            methods[:number][date_key][zone_or_method] += 1
-            methods[:time][date_key][zone_or_method] += activity_details.running_time
-          end
-        end
-      end
-    end
-
-    return {
-      :version => 1,
-      :zones => zones,
-      :methods => methods
-    }
-  end
 
   def get_balanced_statistics(data, type)
     statistics = {}
@@ -323,4 +238,9 @@ class ProgrammeReview
     return statistics
   end
 
+  def blank_hash_for(zones_or_methods)
+    zones_or_methods[@section.type].each_with_object({}) do |key, hash|
+      hash[key.first] = 0
+    end
+  end
 end

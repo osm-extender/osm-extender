@@ -9,7 +9,9 @@ class ProgrammeReviewBalancedCacheController < ApplicationController
   end
 
   def destroy_multiple
-    ProgrammeReviewBalancedCache.for_section(current_section).destroy_all(:id => params[:ids])
+    ProgrammeReviewBalancedCache.for_section(current_section)
+                                .where(:id => params[:ids])
+                                .destroy_all
     redirect_to programme_review_balanced_path
   end
 
