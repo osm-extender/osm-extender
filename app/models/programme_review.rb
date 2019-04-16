@@ -116,7 +116,7 @@ class ProgrammeReview
     cached_terms = ProgrammeReviewBalancedCache.where(term_id: terms)
                                                .group_by(&:term_id)
 
-    terms.each do |term|
+    Parallel.each(terms, in_threads: 2) do |term|
       earliest = term.start if term.start < earliest
       latest = term.finish if term.finish > latest
 

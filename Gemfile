@@ -106,3 +106,5 @@ gem 'tzinfo-data', '~> 1.2018'
 group :production do
   gem 'scout_apm', '~> 2.4'
 end
+
+gem 'parallel', '~> 1.17'

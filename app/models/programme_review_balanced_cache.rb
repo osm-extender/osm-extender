@@ -16,7 +16,8 @@ class ProgrammeReviewBalancedCache < ApplicationRecord
     zones = {:number => {}, :time => {}}
     methods = {:number => {}, :time => {}}
 
-    Osm::Meeting.get_for_section(user.osm_api, section_id, term_id, {:no_cache => true}).each do |programme|
+    meetings = Osm::Meeting.get_for_section(user.osm_api, section_id, term_id, {:no_cache => true})
+    Parallel.each(meetings, in_threads: 4) do |programme|
       date_key = programme.date.strftime('%Y_%m')
       zones[:number][date_key] = blank_hash_for(ProgrammeReview::ZONES[section.type]) if zones[:number][date_key].nil?
       zones[:time][date_key] = blank_hash_for(ProgrammeReview::ZONES[section.type]) if zones[:time][date_key].nil?
