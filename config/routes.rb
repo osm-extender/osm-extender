@@ -16,6 +16,10 @@ OSMExtender::Application.routes.draw do
 
   get 'privacy_policy.html', to: 'static#privacy_policy', format: false, as: 'privacy_policy'
 
+  get 'closing', to: 'static#closing', format: false, as: 'closing'
+  post 'closing_start_updates', to: 'static#closing_start_updates', format: false, as: 'closing_start_updates'
+  post 'closing_stop_updates', to: 'static#closing_stop_updates', format: false, as: 'closing_stop_updates'
+
   get 'my_account' => 'my_account#show', :as => 'my_account'
   get 'my_account/change_password' => 'my_account#change_password', :as => 'change_my_password'
   put 'my_account/update_password' => 'my_account#update_password', :as => 'update_my_password'

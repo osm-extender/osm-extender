@@ -6,6 +6,7 @@
     padding:            10px;
     min-height:         60px;
     @include top_border_radius(20px);
+    text-align:         center;
 }
 #primary_menu_nav {
     float:              left;
