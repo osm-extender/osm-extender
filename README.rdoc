@@ -54,5 +54,5 @@ This allows you to view a selection of your flexi records' data in a way which a
 Alows you to search for members from a selection of your sections where one of a selection of their details include a search term.
 
 
-== Setting up \OSM Extender
-Please follow the information in the {project's wiki}[https://github.com/robertgauld/OSMExtender/wiki/Running-the-system].
+== Setting up OSM Extender
+Please follow the information in the doc folder.
