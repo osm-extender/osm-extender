@@ -17,7 +17,7 @@ gem 'redis' , '~> 4.1'
 gem 'pg', '~> 1.1'                      # Use a postgresql database
 
 # Misc
-gem 'osm', '~> 1.3', '>= 1.3.4'       # For using the OSM API
+gem 'osm', '~> 1.3', '>= 1.3.6'       # For using the OSM API
 #gem 'osm', :path => '../../osm/osm-code'
 gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-logged in users are human (i.e. on contact form)
 gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.

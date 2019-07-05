@@ -7,6 +7,7 @@ Osm::configure(
       :name  => Figaro.env.osm_api_name!,
     },
     :debug => Rails.env.development?,
+    :i_know => :unsupported
   },
   :cache => {
     :cache  => Rails.cache,
