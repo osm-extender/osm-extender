@@ -5,11 +5,11 @@
 | osm_api_name                    | yes       |                       | Allows user's to tell your API from others in OSM | You'll give this to OSM when getting API keys               |
 | osm_api_id                      | yes       |                       | Used to make API requests to OSM                  | OSM will provide this to you getting API keys               |
 | osm_api_token                   | yes       |                       | Used to make API requests to OSM                  | OSM will provide this to you getting API keys               |
-| recaptcha_public_key            | yes       |                       | Used to prevent abuse of contact us form          |                                                             |
-| recaptcha_private_key           | yes       |                       | Used to prevent abuse of contact us form          |                                                             |
+| recaptcha_public_key            | no        |                       | Used to prevent abuse of contact us form          |                                                             |
+| recaptcha_private_key           | no        |                       | Used to prevent abuse of contact us form          |                                                             |
 | ga_tracking_id                  |           |                       | Used to get usage analytics for the site          |                                                             |
 | signup_code                     |           |                       | Used to limit signups to people with this code    |                                                             |
-| rollbar_access_token            | yes       |                       | Used for reporting errors to rollbar              |                                                             |
+| rollbar_access_token            | no        |                       | Used for reporting errors to rollbar              |                                                             |
 | mailgun_domain                  | yes       |                       | The domain OSMX will be sending email from        |                                                             |
 | mailgun_api_key                 | yes       |                       | Used to authenticate OSMX to mailgun              |                                                             |
 | mailgun_api_host                |           | api.eu.mailgun.net    |                                                   |                                                             |

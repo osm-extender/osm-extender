@@ -24,7 +24,7 @@
     <%= f.text_area :message, :rows=>20, :cols=>80 %>
   </div>
 
-  <%- unless current_user %>
+  <%- if recaptcha? %>
   <div class="field">
     <%= f.label :recaptcha %><br/>
     <%= recaptcha_tags %>
