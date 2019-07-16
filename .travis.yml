@@ -38,9 +38,3 @@ script:
   - brakeman -c .brakeman-config --no-pager
 after_script:
   - bundle exec rails runner 'require "coveralls"; FakeWeb.allow_net_connect = true; Coveralls.push!'
-notifications:
-  slack:
-    on_success: always
-    on_failure: always
-    rooms:
-    - secure: 1lx1VAIZrVtE1HhjJYm8wtYR2jWYzJDYR2SeAGqP7qlBVIO14PX8sEMPGCezonxyPnUhBwQHZ1xphAJvnGuJtfSvPDHb9HxjGwa4m9RMkhwHsat7Pxlm2qmQnf/dRVVMb6/3dLlDy5Ey09LsUxNEL7+lVjPTEHMjalcGA157phw=
