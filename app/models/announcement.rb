@@ -26,30 +26,33 @@ class Announcement < ApplicationRecord
     (start < now) && (finish > now)
   end
 
-  def self.email_announcement(id)
+  def self.email_announcement(id, batches_of: 75)
     announcement = find(id)
-    users = User.all
-    success = true
 
-    users.each do |user|
-      unless user.emailed_announcements.pluck(:announcement_id).include?(announcement.id)
-        # We've not already sent to this user
-        if announcement.email_announcement_to(user)
-          # It sent successfully
-          user.emailed_announcements.create(:announcement => announcement)
-          success &&= true
-        end
+    send_time = Time.now.utc.beginning_of_hour
+    User.all.each_slice(batches_of) do |users|
+      send_time += 1.hour
+      send_time += 1.hour if send_time.utc.hour == 3 # Add another hour if the scheduled tasks will be running
+                                                     # and therefore generating more emails.
+      users.each do |user|
+        next if user.emailed_announcements.pluck(:announcement_id).eql?(announcement.id)
+
+        Announcement.delay(run_at: send_time).email_announcement_to(announcement.id, user.id)   # Setup job to send it
       end
     end
 
-    if success # We've sent to everyone we should have
-      announcement.emailed_at = Time.zone.now
-      announcement.save
-    end
+    announcement.emailed_at = Time.zone.now
+    announcement.save
   end
 
   def email_announcement_to(user)
     UserMailer.announcement(user, self).deliver_later
   end
 
+  def self.email_announcement_to(announcement, user)
+    announcement = Announcement.find(announcement)
+    user = User.find(user)
+    UserMailer.announcement(user, announcement).deliver_later
+    user.emailed_announcements.create(:announcement => announcement)
+  end
 end
