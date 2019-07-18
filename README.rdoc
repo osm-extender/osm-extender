@@ -1,11 +1,11 @@
 Master branch:
-{<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=master"/>}[http://travis-ci.org/robertgauld/OSMExtender]
-{<img src="https://coveralls.io/repos/robertgauld/OSMExtender/badge.png?branch=master" />}[https://coveralls.io/r/robertgauld/OSMExtender]
-{<img src="https://codeclimate.com/github/robertgauld/OSMExtender.png?branch=master" />}[https://codeclimate.com/github/robertgauld/OSMExtender]
+{<img src="https://secure.travis-ci.org/osm-extender/osm-extender.png?branch=master"/>}[http://travis-ci.org/osm-extender/osm-extender]
+{<img src="https://coveralls.io/repos/osm-extender/osm-extender/badge.png?branch=master" />}[https://coveralls.io/r/osm-extender/osm-extender]
+{<img src="https://codeclimate.com/github/osm-extender/osm-extender.png?branch=master" />}[https://codeclimate.com/github/osm-extender/osm-extender]
 
 Staging branch:
-{<img src="https://secure.travis-ci.org/robertgauld/OSMExtender.png?branch=staging"/>}[http://travis-ci.org/robertgauld/OSMExtender]
-{<img src="https://coveralls.io/repos/robertgauld/OSMExtender/badge.png?branch=staging" />}[https://coveralls.io/r/robertgauld/OSMExtender]
+{<img src="https://secure.travis-ci.org/osm-extender/osm-extender.png?branch=staging"/>}[http://travis-ci.org/osm-extender/osm-extender]
+{<img src="https://coveralls.io/repos/osm-extender/osm-extender/badge.png?branch=staging" />}[https://coveralls.io/r/osm-extender/osm-extender]
 
 
 ==Welcome to \OSM Extender
