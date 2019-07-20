@@ -62,13 +62,16 @@ Rails.application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  # Highlight code that triggered database queries in logs.
-  config.active_record.verbose_query_logs = true
+  # Don't generate logs for static assets
+  config.assets.quiet = true
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = false
+
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
 
   # Don't deliver emails, open them in a new browser window instead
   # unless mailgun_api_key env var is present
