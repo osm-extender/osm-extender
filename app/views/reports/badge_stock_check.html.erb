@@ -23,8 +23,8 @@
   </table>
 </div>
 
-<%= link_to '[Export as CSV]', badge_stock_check_report_path(params.merge(:format => :csv)) %><br/>
-<%= link_to '[Export as TSV]', badge_stock_check_report_path(params.merge(:format => :tsv)) %><br/>
+<%= link_to '[Export as CSV]', badge_stock_check_report_path(:badge_stock_check => @my_params, :format => :csv) %><br/>
+<%= link_to '[Export as TSV]', badge_stock_check_report_path(:badge_stock_check => @my_params, :format => :tsv) %><br/>
 
 <script type="text/javascript">
   $(document).ready(function() {

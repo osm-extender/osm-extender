@@ -357,6 +357,9 @@ class ReportsController < ApplicationController
 
 
   def badge_stock_check
+    @my_params = params.require(:badge_stock_check)
+                       .permit(:include_core, :include_activity, :include_challenge, :include_staged, :hide_no_stock)
+
     require_section_type Constants::YOUTH_AND_ADULT_SECTIONS
     require_osm_permission(:read, :events)
     return if performed? # The above either redirected or rendered
