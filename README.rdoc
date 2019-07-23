@@ -1,12 +1,6 @@
-Master branch:
 {<img src="https://secure.travis-ci.org/osm-extender/osm-extender.png?branch=master"/>}[http://travis-ci.org/osm-extender/osm-extender]
 {<img src="https://coveralls.io/repos/osm-extender/osm-extender/badge.png?branch=master" />}[https://coveralls.io/r/osm-extender/osm-extender]
 {<img src="https://codeclimate.com/github/osm-extender/osm-extender.png?branch=master" />}[https://codeclimate.com/github/osm-extender/osm-extender]
-
-Staging branch:
-{<img src="https://secure.travis-ci.org/osm-extender/osm-extender.png?branch=staging"/>}[http://travis-ci.org/osm-extender/osm-extender]
-{<img src="https://coveralls.io/repos/osm-extender/osm-extender/badge.png?branch=staging" />}[https://coveralls.io/r/osm-extender/osm-extender]
-
 
 ==Welcome to \OSM Extender
 \OSM Extender was created to add some personally desired features to {the Online Scout Manager}[https://www.onlinescoutmanager.co.uk], since it took little extra effort to allow other people to also benefit from these features the project was born. Currently the features that \OSM Extender provides are:
