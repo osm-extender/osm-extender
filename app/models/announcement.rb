@@ -26,33 +26,36 @@ class Announcement < ApplicationRecord
     (start < now) && (finish > now)
   end
 
-  def self.email_announcement(id, batches_of: 75)
+  def self.email_announcement(id)
     announcement = find(id)
 
-    send_time = Time.now.utc.beginning_of_hour
-    User.all.each_slice(batches_of) do |users|
-      send_time += 1.hour
-      send_time += 1.hour if send_time.utc.hour == 3 # Add another hour if the scheduled tasks will be running
-                                                     # and therefore generating more emails.
+    # Mailgun limits us to 100 message per hour.
+    # So queue 1 per minute to trikle them out in batches when the worker runs.
+    send_time = Time.now
+    User.all.each_slice(100) do |users|
       users.each do |user|
-        next if user.emailed_announcements.pluck(:announcement_id).eql?(announcement.id)
+        next if user.emailed_announcements.pluck(:announcement_id).include?(announcement.id)
+
+        send_time += 1.minute
+        send_time += 1.hour if send_time.utc.hour == 3 # Add another hour if the scheduled tasks will be running
+                                                       # and therefore generating more emails.
 
         Announcement.delay(run_at: send_time).email_announcement_to(announcement.id, user.id)   # Setup job to send it
       end
     end
 
-    announcement.emailed_at = Time.zone.now
+    announcement.emailed_at = Time.now
     announcement.save
   end
 
   def email_announcement_to(user)
-    UserMailer.announcement(user, self).deliver_later
+    UserMailer.announcement(user, self).deliver_now
   end
 
   def self.email_announcement_to(announcement, user)
     announcement = Announcement.find(announcement)
     user = User.find(user)
-    UserMailer.announcement(user, announcement).deliver_later
+    UserMailer.announcement(user, announcement).deliver_now
     user.emailed_announcements.create(:announcement => announcement)
   end
 end

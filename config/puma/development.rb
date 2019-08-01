@@ -1,6 +1,6 @@
 bind ENV.fetch('BIND', "tcp://#{ENV.fetch('HOST', '127.0.0.1')}:#{ENV.fetch('PORT', 3000)}")
 threads 2, 2
-workers 2
+workers 1
 preload_app!
 GC.copy_on_write_friendly = true if GC.respond_to?('copy_on_write_friendly=')
 PumaWorkerKiller.config do |config|

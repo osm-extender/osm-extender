@@ -2,7 +2,6 @@ class ReportsController < ApplicationController
   before_action :require_connected_to_osm
   before_action { @my_params = (params[params[:action]] || {}) }
 
-
   def index
     @sections = Osm::Section.get_all(osm_api)
 
@@ -335,17 +334,18 @@ class ReportsController < ApplicationController
         render :waiting
       end
     else
-      # Add job
-      BadgeCompletionMatrixReport.delay.data_for(
-        current_user.id,
-        current_section.id,
-        include_core: @my_params[:include_core].eql?('1'),
-        include_challenge: @my_params[:include_challenge].eql?('1'),
-        include_staged: @my_params[:include_staged].eql?('1'),
-        include_activity: @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
-        exclude_not_started: @my_params[:hide_not_started].eql?('1'),
-        exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
-      )
+      in_thread('getting data for badge completion matrix') do
+        BadgeCompletionMatrixReport.data_for(
+          current_user.id,
+          current_section.id,
+          include_core: @my_params[:include_core].eql?('1'),
+          include_challenge: @my_params[:include_challenge].eql?('1'),
+          include_staged: @my_params[:include_staged].eql?('1'),
+          include_activity: @my_params[:include_activity].eql?('1') && current_section.subscription_at_least?(:silver), # Bronze does not include activity badges
+          exclude_not_started: @my_params[:hide_not_started].eql?('1'),
+          exclude_all_finished: @my_params[:hide_all_finished].eql?('1'),
+        )
+      end
       redirect_to(
         action: :badge_completion_matrix,
         waiting: '1',
@@ -425,15 +425,16 @@ class ReportsController < ApplicationController
         render :waiting
       end
     else
-      # Add job
-      MissingBadgeRequirementsReport.delay.data_for(
-        current_user.id,
-        current_section.id,
-        include_core: @my_params[:include_core].eql?('1'),
-        include_challenge: @my_params[:include_challenge].eql?('1'),
-        include_activity: @my_params[:include_activity].eql?('1'),
-        include_staged: @my_params[:include_staged].eql?('1'),
-      )
+      in_thread('getting data for missing badge requirements') do
+        MissingBadgeRequirementsReport.data_for(
+          current_user.id,
+          current_section.id,
+          include_core: @my_params[:include_core].eql?('1'),
+          include_challenge: @my_params[:include_challenge].eql?('1'),
+          include_activity: @my_params[:include_activity].eql?('1'),
+          include_staged: @my_params[:include_staged].eql?('1'),
+        )
+      end
       redirect_to(
         action: :missing_badge_requirements,
         waiting: '1',
@@ -506,19 +507,20 @@ class ReportsController < ApplicationController
         render :waiting
       end
     else
-      # Add job
-      PlannedBadgeRequirementsReport.delay.data_for(
-        current_user.id,
-        current_section.id,
-        start: dates.first,
-        finish: dates.last,
-        check_earnt: @my_params[:check_earnt].eql?('1'),
-        check_stock: @my_params[:check_stock].eql?('1') && @my_params[:check_earnt].eql?('1'),
-        check_participation: @my_params[:check_participation].eql?('1') && @my_params[:check_earnt].eql?('1'),
-        check_birthday: @my_params[:check_birthday].eql?('1') && @my_params[:check_earnt].eql?('1'),
-        check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
-        check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
-      )
+      in_thread('getting data for planned badge requirements') do
+        PlannedBadgeRequirementsReport.data_for(
+          current_user.id,
+          current_section.id,
+          start: dates.first,
+          finish: dates.last,
+          check_earnt: @my_params[:check_earnt].eql?('1'),
+          check_stock: @my_params[:check_stock].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_participation: @my_params[:check_participation].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_birthday: @my_params[:check_birthday].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_event_attendance: @my_params[:check_event_attendance].eql?('1') && @my_params[:check_earnt].eql?('1'),
+          check_meeting_attendance: @my_params[:check_meeting_attendance].eql?('1') && @my_params[:check_earnt].eql?('1')
+        )
+      end
       redirect_to(
         action: :planned_badge_requirements,
         waiting: '1',
@@ -590,6 +592,26 @@ class ReportsController < ApplicationController
   end
 
   private
+
+  def in_thread(action, &block)
+    Thread.new do
+      Rails.logger.tagged("Thread: #{Thread.current.object_id}") do
+        Rails.logger.debug "Starting thread for #{action}."
+        block.call
+        Rails.logger.debug "Finished thread for #{action}."
+      end
+    rescue => exception
+      Rails.logger.tagged("Thread: #{Thread.current.object_id}") do
+        Rollbar.error(exception)
+        Rails.logger.error(
+          "\n\nException in thread performing #{action} - #{exception.class} (#{exception.message}):\n    " +
+          Rails.backtrace_cleaner.send(:filter, exception.backtrace).join("\n    ") +
+          "\n\n"
+        )
+      end
+    end
+  end
+
   def send_sv_file(options={}, file_name, mime_type, &generate_data)
     options.reverse_merge!({
       :col_sep => ',',

@@ -10,6 +10,5 @@ In order to run the Online Scout Manager Extender System you need to follow thes
 1. Prepare your database "RAILS_ENV=production bundle exec rake db:setup" (use db:migrate to update it when downloading new code!)
 1. Pre compile the asssets - "RAILS_ENV=production bundle exec rake assets:precompile"
 1. Integrate it into your web serving architecture (running OSMX in the production environment uses unicorn).
-1. Setup cron (or other scheduler) to run the required [rake tasks](/robertgauld/OSMExtender/wiki/Custom-rake-tasks)
-1. Start the delayed_job daemon (you'll probably want to create an init.d etc. files for this)
+1. Setup the delayed job runner to run every hour - bundle exec rake jobs:workoff
 1. Run rake app:setup to create your first user

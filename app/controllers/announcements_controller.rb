@@ -75,7 +75,7 @@ class AnnouncementsController < ApplicationController
   private
   def email_to_users
     @announcement.emailed_announcements.delete_all            # Clear list of whoose had it since we're resending it
-    Announcement.delay.email_announcement(@announcement.id)   # Setup job to resend it
+    Announcement.email_announcement(@announcement.id)   # Setup job to resend it
     flash[:information] = 'Emailing the announcement has been added to the job queue.'
   end
 end

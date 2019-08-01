@@ -72,12 +72,12 @@ class EmailReminderShare < ApplicationRecord
 
   def email_sharee
     if @was_new
-      EmailReminderMailer.shared_with_you(self).deliver_later
+      EmailReminderMailer.shared_with_you(self).deliver_now
     end
 
     if @was_state != state
       unless state == 'pending'
-        EmailReminderMailer.send(state, self).deliver_later
+        EmailReminderMailer.send(state, self).deliver_now
       end
     end
   end
