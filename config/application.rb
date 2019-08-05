@@ -1,6 +1,7 @@
 require_relative 'boot'
 require_relative '../app/middleware/redirect_www_middleware'
 require_relative '../app/middleware/filter_apple_icons'
+require_relative '../app/middleware/filter_wordpress'
 
 require 'rails/all'
 
@@ -43,6 +44,7 @@ module OSMExtender
     # Redirect www.... host to ...
     config.middleware.insert_before 0, RedirectWwwMiddleware
     config.middleware.insert_before 1, FilterAppleIcons
+    config.middleware.insert_before 2, FilterWordpress
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

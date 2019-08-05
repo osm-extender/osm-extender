@@ -1,5 +1,3 @@
-require 'rack/request'
-
 class FilterAppleIcons
   FILTER = %w[
     /apple-touch-icon.png
