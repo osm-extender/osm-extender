@@ -48,7 +48,7 @@ describe 'rake app:deploy:rollbar' do
         end
 
         it 'Bad body' do
-           request = double(Net::HTTP::Post)
+          request = double(Net::HTTP::Post)
           http = double(Net::HTTP)
           response = double(Net::HTTPOK)
           expect(Net::HTTP::Post).to receive(:new).with('/api/1/deploy/').and_return(request)
@@ -56,8 +56,8 @@ describe 'rake app:deploy:rollbar' do
           expect(Net::HTTP).to receive(:new).with('api.rollbar.com', 443).and_return(http)
           expect(http).to receive(:use_ssl=).with(true)
           expect(http).to receive(:request).with(request).and_return(response)
-          expect(response).to receive(:is_a?).with(Net::HTTPOK).and_return(true).twice
-          expect(response).to receive(:body).and_return('').twice
+          expect(response).to receive(:is_a?).with(Net::HTTPOK).and_return(true)
+          expect(response).to receive(:body).and_return("{\n  \"data\": {\n    \"deploy_id\": 1234567890\n  }\n}")
 
           expect { task.execute }.not_to raise_error
        end

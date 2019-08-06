@@ -22,8 +22,9 @@ namespace :app do
       http.use_ssl = true
       response = http.request(request)
 
-      if response.is_a?(Net::HTTPOK) and response.body.eql?("{\n  \"data\": {}\n}")
-        Rails.logger.info 'Success'
+      if response.is_a?(Net::HTTPOK)
+        depolyment_id = JSON.parse(response.body)&.dig('data', 'deploy_id')
+        Rails.logger.info "Sucessfully made deployment in Rollbar#{ " (#{depolyment_id })" if depolyment_id }."
       elsif response.is_a?(Net::HTTPOK)
         Rails.logger.error "Rollbar returned an unexpected body - #{response.body.inspect}"
       else
