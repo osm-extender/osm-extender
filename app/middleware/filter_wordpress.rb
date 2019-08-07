@@ -1,7 +1,7 @@
 class FilterWordpress
-  FILTER = %w[
-    /wp-login
-    /wp-login.php
+  FILTER = [
+    %r{\A/wp-login},
+    %r{\A/wp/}
   ].freeze
 
   def initialize(app)
@@ -10,7 +10,7 @@ class FilterWordpress
 
   def call(env)
     request = Rack::Request.new(env)
-    return @app.call(env) if FILTER.exclude?(request.path)
+    return @app.call(env) if FILTER.none? { |pattern| request.path.match?(pattern) }
 
     Rails.logger.debug "FilterWordpress activated for \"#{request.path}\""
     [404, {}, []]
