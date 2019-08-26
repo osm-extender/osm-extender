@@ -34,7 +34,7 @@ script:
   - bundle exec rake assets:precompile
   - bundle exec rspec
   - bundle exec cucumber
-  - bundle audit
+  - bundle audit check --update
   - brakeman -c .brakeman-config --no-pager
 after_script:
   - bundle exec rails runner 'require "coveralls"; FakeWeb.allow_net_connect = true; Coveralls.push!'
