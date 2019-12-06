@@ -275,7 +275,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (3.1.1)
-    puma (3.12.1)
+    puma (3.12.2)
     puma-rails (0.0.2)
       puma
       rack
@@ -480,7 +480,7 @@ DEPENDENCIES
   pg (~> 1.1)
   premailer-rails (~> 1.9)
   pry (~> 0.9)
-  puma (~> 3.11)
+  puma (~> 3.12)
   puma-rails (~> 0.0.2)
   puma_worker_killer (~> 0.1.0)
   rack-mini-profiler (~> 0.9)
