@@ -8,7 +8,7 @@ gem 'rails', '~> 5.2', '>= 5.2.2.1'
 gem 'responders', '~> 2.0'
 
 # Authentication / Authorisation
-gem 'sorcery', '~> 0.11'
+gem 'sorcery', '~> 0.15'
 #gem 'cancan', '~> 1.6'
 gem 'cancan', path: File.join(File.dirname(__FILE__), '/vendor/gems/cancan-1.6.10.rob')
 
