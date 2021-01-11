@@ -20,7 +20,7 @@ gem 'pg', '~> 1.1'                      # Use a postgresql database
 gem 'osm', '~> 1.3', '>= 1.3.6'       # For using the OSM API
 #gem 'osm', :path => '../../osm/osm-code'
 gem 'recaptcha', '~> 4.0', require: 'recaptcha/rails'   # Used to confirm non-logged in users are human (i.e. on contact form)
-gem 'redcarpet', '~> 3.0'             # Format FAQ Answers, Announcements etc.
+gem 'redcarpet', '~> 3.5'             # Format FAQ Answers, Announcements etc.
 gem 'will_paginate', '~> 3.0'         # Paginate big index pages (e.g. Users)
 gem 'premailer-rails', '~> 1.9'       # Easily generate HTML emails (also does plain text counterpart)
   gem 'nokogiri', '~> 1.10' # Adapter for premailer
