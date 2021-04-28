@@ -1,0 +1,17 @@
+version: 2
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+  open-pull-requests-limit: 10
+  allow:
+  - dependency-name: osm
+  ignore:
+  - dependency-name: nokogiri
+    versions:
+    - 1.11.0
+    - 1.11.2
+  commit-message:
+    prefix: dependabot
