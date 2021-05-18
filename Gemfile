@@ -65,7 +65,7 @@ group :development do
 end
 
 # Puma webserver
-gem 'puma', '~> 3.12'                # Use puma as the web server
+gem 'puma', '~> 4.3'                 # Use puma as the web server
 gem 'puma-rails', '~> 0.0.2'         # rails server command will use puma by default
 gem 'puma_worker_killer', '~> 0.1.0' # Manage RAM growth by performing rolling restarts
 
