@@ -42,7 +42,7 @@ gem 'daemons', '~> 1.3'
 #gem 'daemon-spawn', '~> 0.4'
 
 # Javascript / Assets
-gem 'jquery-rails', '~> 4.0', '>= 4.0.4'
+gem 'jquery-rails', '~> 4.4'
 gem 'jquery-ui-rails', '~> 6.0', '>= 6.0.1'
 gem 'jquery-tablesorter', '~> 1.23'
 gem 'sass-rails', '~> 5.0'
